@@ -1,0 +1,27 @@
+.item {
+    position: absolute;
+    white-space: nowrap;
+    overflow: visible;
+}
+
+.diamond {
+    position: absolute;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.full-size {
+  width: 100%; height:100%;
+}
+
+.background {
+  background-repeat: repeat;
+  background-size: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: 10000px; height:10000px;
+  position: absolute;
+}
