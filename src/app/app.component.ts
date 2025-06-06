@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { WorldMapComponent } from '../feature/world-map/world-map.component';
+import { MainLayoutComponent } from '../feature/main-layout/main-layout.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, WorldMapComponent],
+  imports: [RouterOutlet, MainLayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
