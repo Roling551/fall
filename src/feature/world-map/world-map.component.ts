@@ -22,10 +22,14 @@ export class WorldMapComponent {
 
   public tiles
   public mapAction
+  public doRenderTileInfoFunction
+  public tileInfo
 
   constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService){
     this.tiles = this.worldStateService.tiles
     this.mapAction = this.uiStateService.mapAction
+    this.doRenderTileInfoFunction = this.uiStateService.doRenderTileInfoFunction
+    this.tileInfo = this.uiStateService.tileInfo
   }
 
   getTexture(name: string): string {

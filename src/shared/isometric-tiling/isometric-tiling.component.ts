@@ -112,8 +112,8 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
     return (this.sizeY * (x + y)) / 2
   }
 
-  public onTileClick(x: number, y:number, t:T) {
-    this.tileClick.emit({key: new Coordiante(x,y), value:t})
+  public onTileClick(tile:KeyValuePair<Coordiante, T>) {
+    this.tileClick.emit(tile)
     this.panStartTransform = null
   }
 
@@ -127,5 +127,9 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   getRange(n: number): ArrayIterator<number> {
     return Array(n).keys()
+  }
+
+  public getKeyValuePair(x: number, y: number, value: T) {
+    return {key: new Coordiante(x,y), value}
   }
 }

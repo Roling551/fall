@@ -21,7 +21,7 @@ export class MainLayoutComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.uiStateService.setContainerRef(this.sideContainer)
-    this.uiStateService.setAction(ActionsListComponent)
+    this.uiStateService.setUI({component:ActionsListComponent})
   }
 
   onRightClick(event: MouseEvent) {
