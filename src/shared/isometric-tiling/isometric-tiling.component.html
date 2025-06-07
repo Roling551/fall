@@ -22,7 +22,7 @@
             class="item"
             [style.left.px]="getTransformX(x, y)"
             [style.top.px]="getTransformY(x, y)"
-            (click)="onTileClick({key:{x, y}, value: tile})"
+            (click)="onTileClick(x, y, tile)"
         >
             <div
                 class="diamond"

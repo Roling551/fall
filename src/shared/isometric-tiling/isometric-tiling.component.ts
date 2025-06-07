@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, HostListener, Input, input, OnInit, output, signal, TemplateRef } from '@angular/core';
 import panzoom, { PanZoom, Transform } from 'panzoom';
+import { KeyValuePair } from '../../models/key-value-pair';
+import { Coordiante } from '../../models/coordinate';
 
 @Component({
   selector: 'app-isometric-tiling',
@@ -24,7 +26,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   @Input() allowedPixelsMovedForClick = 5;
 
-  tileClick = output<{key:{x:number, y:number}, value:T}>();
+  tileClick = output<KeyValuePair<Coordiante, T>>();
   updateTiles = output<{x: number, y:number}>();
 
   public positionRectX = 0
@@ -110,19 +112,8 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
     return (this.sizeY * (x + y)) / 2
   }
 
-  public onTileClick(tileData:{key:{x:number, y:number}, value:any}) {
-    // console.log("click")
-    // if(
-    //   !this.panStartTransform || 
-    //   this.getOnScreenTransformDistance(this.panStartTransform, this.currentTransform) < this.allowedPixelsMovedForClick
-    // ) {
-    //   this.tileClick.emit(tileData)
-    // } else {
-    //   console.log("click didnt happen")
-    //   console.log(this.panStartTransform)
-    //   console.log(this.getOnScreenTransformDistance(this.panStartTransform, this.currentTransform))
-    // }
-    this.tileClick.emit(tileData)
+  public onTileClick(x: number, y:number, t:T) {
+    this.tileClick.emit({key: new Coordiante(x,y), value:t})
     this.panStartTransform = null
   }
 
