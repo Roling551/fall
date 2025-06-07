@@ -21,19 +21,14 @@ export class WorldMapComponent {
   public lightBorder = '/assets/pictures/light-border.png'
 
   public tiles
-  public mapTileAction
+  public mapAction
 
   constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService){
     this.tiles = this.worldStateService.tiles
-    this.mapTileAction = this.uiStateService.mapTileAction
+    this.mapAction = this.uiStateService.mapAction
   }
 
   getTexture(name: string): string {
     return `assets/pictures/${name}.png`
   }
-
-  onTileClick(tile: KeyValuePair<Coordiante, Tile>) {
-    console.log("tile")
-  }
-
 }

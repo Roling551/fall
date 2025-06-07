@@ -17,15 +17,15 @@ export class MainLayoutComponent implements AfterViewInit {
 
   @ViewChild('sideContainer', { read: ViewContainerRef }) sideContainer!: ViewContainerRef;
 
-  constructor(public stateService: UIStateService) {}
+  constructor(public uiStateService: UIStateService) {}
 
   ngAfterViewInit(): void {
-    this.stateService.setContainerRef(this.sideContainer)
-    this.stateService.renderComponent(ActionsListComponent)
+    this.uiStateService.setContainerRef(this.sideContainer)
+    this.uiStateService.setAction(ActionsListComponent)
   }
 
   onRightClick(event: MouseEvent) {
     event.preventDefault();
-    this.stateService.clearMapFunction();
+    this.uiStateService.clearAction();
   }
 }

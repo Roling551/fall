@@ -6,6 +6,7 @@ import { UIStateService } from '../../services/ui-state.service';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
+import { SimpleTextComponent } from '../../shared/simple-text/simple-text.component';
 
 @Component({
   selector: 'app-actions-list',
@@ -17,9 +18,10 @@ export class ActionsListComponent {
   constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService) {}
 
   onClick(): void {
-    this.uiStateService.mapTileAction.set((tile: KeyValuePair<Coordiante, Tile>)=>{
+    const mapAction = (tile: KeyValuePair<Coordiante, Tile>)=>{
       this.worldStateService.tiles.get().get(tile.key.getKey())!.mapEntity = new MapEntity("city", new City())
       this.worldStateService.tiles.forceUpdate()
-    })
+    }
+    this.uiStateService.setAction(SimpleTextComponent, {text:"Create city"}, mapAction)
   }
 }
