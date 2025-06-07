@@ -1,0 +1,11 @@
+.container {
+    display: grid;
+    grid-template-rows: 20px auto;
+    grid-template-columns: 70px auto;
+    height: 100%;
+}
+
+.header {
+    grid-column: span 2;
+    grid-row: span 1;
+}

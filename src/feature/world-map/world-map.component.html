@@ -1,0 +1,19 @@
+<app-isometric-tiling 
+    [tilesData]="tiles.get()"
+    [sizeX]="sizeX"
+    [sizeY]="sizeY"
+    [tileTemplate]="tileTemplate"
+    [backgroundImage]="backgroundImage"
+    (tileClick)="mapTileAction()($event)"
+/>
+
+<ng-template #tileTemplate let-tile="tile">
+    <div [style.top.px]="(sizeY-sizeX)/2" style="position: absolute;">
+        <img [src]="getTexture(tile.terrainType)">
+        <img [src]="lightBorder">
+        @if(tile.mapEntity; as mapEntity) {
+            <img [src]="getTexture(mapEntity.type)">
+        }
+    </div>
+
+</ng-template>
