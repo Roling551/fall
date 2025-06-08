@@ -9,7 +9,7 @@ import { KeyValuePair } from '../models/key-value-pair';
 })
 export class WorldStateService {
 
-  tiles = forceSignal(this.getTiles(0,0,5))
+  tiles = this.getTiles(0,0,5)
 
   constructor() { }
   

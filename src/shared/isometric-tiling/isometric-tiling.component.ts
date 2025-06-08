@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, HostListener, Input, input, OnInit, output, signal, TemplateRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, HostListener, Input, input, OnInit, output, signal, TemplateRef } from '@angular/core';
 import panzoom, { PanZoom, Transform } from 'panzoom';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
@@ -8,7 +8,8 @@ import { Coordiante } from '../../models/coordinate';
   selector: 'app-isometric-tiling',
   imports: [CommonModule],
   templateUrl: './isometric-tiling.component.html',
-  styleUrl: './isometric-tiling.component.scss'
+  styleUrl: './isometric-tiling.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input({required: true}) tilesData! : Map<string, T>;
@@ -32,8 +33,8 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   public positionRectX = 0
   public positionRectY = 0
 
-  public positionX = 0
-  public positionY = 0
+  public positionX = signal(0)
+  public positionY = signal(0)
 
   public centerPositionX = 0
   public centerPositionY = 0
@@ -43,6 +44,8 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   public tileOnScreenX = 0
   public tileOnScreenY = 0
+
+  public backgroundTransform = signal("0px, 0px")
 
   currentTransform: Transform = {x:0, y:0, scale:1}
   panStartTransform: Transform | null = null
@@ -62,10 +65,11 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
       component.currentTransform = transform
       component.positionRectX = Math.floor(transform.x/component.sizeX/transform.scale)
       component.positionRectY = Math.floor(transform.y/component.sizeY/transform.scale)
-      component.positionX = Math.floor((-transform.x/component.sizeX - transform.y/component.sizeY)/transform.scale)
-      component.positionY = Math.floor((transform.x/component.sizeX - transform.y/component.sizeY)/transform.scale + 0.5)
+      component.positionX.set(Math.floor((-transform.x/component.sizeX - transform.y/component.sizeY)/transform.scale))
+      component.positionY.set(Math.floor((transform.x/component.sizeX - transform.y/component.sizeY)/transform.scale + 0.5))
       component.calculateTilesOnScreen()
       component.calcuateCenterPosition()
+      component.calculateBackgroundTransform()
     });
 
     instance.on('panstart', function(e: any) {
@@ -121,8 +125,10 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
     return Math.sqrt((t1.x - t2.x) ** 2 + (t1.y - t2.y) ** 2)
   }
 
-  get backgroundTransform(): string {
-     return `translate(${(-this.positionRectX-1) *this.sizeX}px, ${(-this.positionRectY-1) *this.sizeY}px)`;
+  private calculateBackgroundTransform() {
+     this.backgroundTransform.set(
+      `translate(${(-this.positionRectX-1) *this.sizeX}px, ${(-this.positionRectY-1) *this.sizeY}px)`
+    )
   }
 
   getRange(n: number): ArrayIterator<number> {

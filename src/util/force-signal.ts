@@ -12,7 +12,6 @@ export function forceSignal<T>(initialValue: T) {
     set: (value: T) => base.set(value),
     update: (fn: (current: T) => T) => base.update(fn),
     forceUpdate: () => forceTrigger.update(x => !x),
-    readonly: base.asReadonly()
   };
 
   return exposed;

@@ -14,9 +14,9 @@ export class UIStateService {
   private _tileInfo = forceSignal<null|Type<any>>(null);
   private _doRenderTileInfoFunction = forceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
 
-  public mapAction = this._mapAction.readonly;
-  public tileInfo = this._tileInfo.readonly
-  public doRenderTileInfoFunction = this._doRenderTileInfoFunction.readonly
+  public mapAction = this._mapAction.get;
+  public tileInfo = this._tileInfo.get
+  public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
 
   setContainerRef(vcRef: ViewContainerRef) {
     this.viewContainerRef = vcRef;

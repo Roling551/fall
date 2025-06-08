@@ -1,4 +1,4 @@
-import { Component, effect, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, Signal } from '@angular/core';
 import { Tile } from '../../models/tile';
 import { IsometricTilingComponent } from '../../shared/isometric-tiling/isometric-tiling.component';
 import { WorldStateService } from '../../services/world-state.service';
@@ -11,7 +11,8 @@ import { UIStateService } from '../../services/ui-state.service';
   selector: 'app-world-map',
   imports: [IsometricTilingComponent, CommonModule],
   templateUrl: './world-map.component.html',
-  styleUrl: './world-map.component.scss'
+  styleUrl: './world-map.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorldMapComponent {
   public sizeX = 128

@@ -20,14 +20,14 @@ export class ActionsListComponent {
 
   onClick(): void {
     const mapAction = (tile: KeyValuePair<Coordiante, Tile>)=>{
-      this.worldStateService.tiles.get().get(tile.key.getKey())!.mapEntity = new MapEntity("city", new City())
-      this.worldStateService.tiles.forceUpdate()
+      this.worldStateService.tiles.get(tile.key.getKey())!.mapEntity = new MapEntity("city", new City())
     }
     this.uiStateService.setUI({
       component:SimpleTextComponent, 
       inputs:{text:"Create city"}, 
       mapAction,
       doRenderTileInfoFunction: (tile)=> {
+        console.log("doRenderTileInfoFunction")
         return !tile.value?.mapEntity
       },
       tileInfo: MapMarkingComponent

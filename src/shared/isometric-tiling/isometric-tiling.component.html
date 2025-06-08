@@ -4,14 +4,14 @@
         <div
             class="background"
             id="background"
-            [style.transform]="backgroundTransform"
+            [style.transform]="backgroundTransform()"
             [style.background-image] = "backgroundImage">
         </div>   
     }
     @for(x of getRange(tileOnScreenX+3); track x) {
         @for(y of getRange(tileOnScreenY+3); track y) {
-            <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX-2, y:y-x+positionY}"></ng-container>
-            <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX-2, y:y-x+positionY-1}"></ng-container>
+            <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()}"></ng-container>
+            <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()-1}"></ng-container>
         }
     }
 </div>
