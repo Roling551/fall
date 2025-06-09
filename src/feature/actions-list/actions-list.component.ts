@@ -20,7 +20,7 @@ export class ActionsListComponent {
 
   onClick(): void {
     const mapAction = (tile: KeyValuePair<Coordiante, Tile>)=>{
-      this.worldStateService.tiles.get(tile.key.getKey())!.mapEntity = new MapEntity("city", new City())
+      this.worldStateService.tiles.get(tile.key.getKey())!.value.mapEntity = new MapEntity("city", new City())
     }
     this.uiStateService.setUI({
       component:SimpleTextComponent, 

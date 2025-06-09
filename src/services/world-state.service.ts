@@ -13,12 +13,12 @@ export class WorldStateService {
 
   constructor() { }
   
-  public getTiles(x: number, y:number, range: number): Map<string, Tile> {
-    let tiles = new Map<string, Tile>()
+  public getTiles(x: number, y:number, range: number): Map<string, KeyValuePair<Coordiante, Tile>> {
+    let tiles = new Map<string, KeyValuePair<Coordiante, Tile>>()
     for(let i = -range; i <= range; i++) {
       for(let j = -range; j <= range; j++) {
         const tile = {key:new Coordiante(i+x, j+y), value:new Tile("ground")}
-        tiles.set(tile.key.getKey(), tile.value)
+        tiles.set(tile.key.getKey(), tile)
       } 
     }
     return tiles

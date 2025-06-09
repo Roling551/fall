@@ -27,7 +27,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   @Input() allowedPixelsMovedForClick = 5;
 
-  tileClick = output<KeyValuePair<Coordiante, T>>();
+  tileClick = output<T>();
 
   public positionRectX = 0
   public positionRectY = 0
@@ -114,7 +114,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
     return (this.sizeY * (x + y)) / 2
   }
 
-  public onTileClick(tile:KeyValuePair<Coordiante, T>) {
+  public onTileClick(tile:T) {
     this.tileClick.emit(tile)
     this.panStartTransform = null
   }
