@@ -4,6 +4,7 @@ import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { UIStateService } from '../../services/ui-state.service';
 import { CommonModule } from '@angular/common';
+import { ForceSignal } from '../../util/force-signal';
 
 @Component({
   selector: 'app-map-tile',
@@ -12,8 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './map-tile.component.scss'
 })
 export class MapTileComponent {
-  //@Input({required: true}) tile!: Signal<KeyValuePair<Coordiante, Tile>>
-  tile = input.required<KeyValuePair<Coordiante, Tile>>()
+  @Input({required: true}) tile!: ForceSignal<KeyValuePair<Coordiante, Tile>>
   @Input({required: true}) sizeX!:number;
   @Input({required: true}) sizeY!:number;
 
@@ -30,6 +30,8 @@ export class MapTileComponent {
   }
 
   doRenderTileInfo = computed(()=> {
-    return this.uiStateService.doRenderTileInfoFunction()(this.tile())
+    const doRender = this.uiStateService.doRenderTileInfoFunction()(this.tile.get())
+    console.log(doRender)
+    return doRender
   })
 }

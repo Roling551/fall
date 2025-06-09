@@ -1,6 +1,13 @@
 import { signal, Signal, WritableSignal } from '@angular/core';
 
-export function forceSignal<T>(initialValue: T) {
+export type ForceSignal<T> = {
+    get: () => T;
+    set: (value: T) => void;
+    update: (fn: (current: T) => T) => void;
+    forceUpdate: () => void;
+}
+
+export function createForceSignal<T>(initialValue: T) {
   const base = signal(initialValue);
   const forceTrigger = signal(true);
 

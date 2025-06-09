@@ -1,7 +1,7 @@
 <div [style.top.px]="(sizeY-sizeX)/2" class="tile-container">
-    <img [src]="getTexture(tile().value.terrainType)">
+    <img [src]="getTexture(tile.get().value.terrainType)">
     <img [src]="lightBorder">
-    @if(tile().value.mapEntity; as mapEntity) {
+    @if(tile.get().value.mapEntity; as mapEntity) {
         <img [src]="getTexture(mapEntity.type)">
     }
     @if(doRenderTileInfo()) {

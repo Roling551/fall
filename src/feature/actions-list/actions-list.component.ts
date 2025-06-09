@@ -8,6 +8,7 @@ import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { SimpleTextComponent } from '../../shared/simple-text/simple-text.component';
 import { MapMarkingComponent } from '../../shared/map-marking/map-marking.component';
+import { ForceSignal } from '../../util/force-signal';
 
 @Component({
   selector: 'app-actions-list',
@@ -19,8 +20,9 @@ export class ActionsListComponent {
   constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService) {}
 
   onClick(): void {
-    const mapAction = (tile: KeyValuePair<Coordiante, Tile>)=>{
-      this.worldStateService.tiles.get(tile.key.getKey())!.value.mapEntity = new MapEntity("city", new City())
+    const mapAction = (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+      tile.get().value.mapEntity = new MapEntity("city", new City());
+      tile.forceUpdate()
     }
     this.uiStateService.setUI({
       component:SimpleTextComponent, 

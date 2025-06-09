@@ -1,5 +1,5 @@
 import { Injectable, signal, Type, ViewContainerRef } from "@angular/core";
-import { forceSignal } from "../util/force-signal";
+import { createForceSignal, ForceSignal } from "../util/force-signal";
 import { KeyValuePair } from "../models/key-value-pair";
 import { Coordiante } from "../models/coordinate";
 import { Tile } from "../models/tile";
@@ -9,10 +9,10 @@ import { ActionsListComponent } from "../feature/actions-list/actions-list.compo
   providedIn: 'root'
 })
 export class UIStateService {
-  private _mapAction = forceSignal(this.defaultMapFunction)
+  private _mapAction = createForceSignal(this.defaultMapFunction)
   private viewContainerRef!: ViewContainerRef;
-  private _tileInfo = forceSignal<null|Type<any>>(null);
-  private _doRenderTileInfoFunction = forceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
+  private _tileInfo = createForceSignal<null|Type<any>>(null);
+  private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
 
   public mapAction = this._mapAction.get;
   public tileInfo = this._tileInfo.get
@@ -60,8 +60,8 @@ export class UIStateService {
     }
   }
 
-  defaultMapFunction(tile: KeyValuePair<Coordiante, Tile>) {
-    console.log(tile.value.terrainType)
+  defaultMapFunction(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
+    console.log(tile.get().value.terrainType)
   }
 
   clearAction() {
