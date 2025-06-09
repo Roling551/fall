@@ -28,7 +28,6 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input() allowedPixelsMovedForClick = 5;
 
   tileClick = output<KeyValuePair<Coordiante, T>>();
-  updateTiles = output<{x: number, y:number}>();
 
   public positionRectX = 0
   public positionRectY = 0
@@ -103,7 +102,6 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
             Math.abs(this.centerPositionY - this.previousCenterPositionY) >=
             this.distanceToUpdate
         ) {
-          this.updateTiles.emit({x:this.centerPositionX, y:this.centerPositionY})
           this.previousCenterPositionX = this.centerPositionX
           this.previousCenterPositionY = this.centerPositionY
       }
