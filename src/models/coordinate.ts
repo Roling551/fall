@@ -3,6 +3,6 @@ export class Coordiante {
     }
 
     getKey() {
-        return this.x + "-" + this.y
+        return this.x + "_" + this.y
     }
 }

@@ -8,14 +8,31 @@
             [style.background-image] = "backgroundImage">
         </div>   
     }
-    @for(x of getRange(tileOnScreenX+3); track x) {
+    <!--@for(x of getRange(tileOnScreenX+3); track x) {
         @for(y of getRange(tileOnScreenY+3); track y) {
             <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()}"></ng-container>
             <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()-1}"></ng-container>
         }
+    }-->
+    @for(tile of tilesData.entries(); track tile[0]) {
+        <div
+            class="item"
+            [style.left.px]="getTransformX(tile[0])"
+            [style.top.px]="getTransformY(tile[0])"
+            (click)="onTileClick(tile[1])"
+        >
+            <div
+                class="diamond"
+                [style.width.px]="sizeX"
+                [style.height.px]="sizeY"
+                >
+            </div>
+            <ng-container *ngTemplateOutlet="tileTemplate; context:{tile:tile[1]}"></ng-container>
+        </div>
     }
 </div>
 
+<!--
 <ng-template #fullTileTemplate let-x="x" let-y="y">
     @if(tilesData.get(x+"-"+y); as tile) {
         <div
@@ -33,4 +50,4 @@
             <ng-container *ngTemplateOutlet="tileTemplate; context:{tile}"></ng-container>
         </div>
     }
-</ng-template>
+</ng-template> -->

@@ -107,10 +107,12 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
       }
   }
 
-  public getTransformX(x: number, y:number) {
+  public getTransformX(coordinate: string) {
+    const [x, y] = coordinate.split("_").map(n=>Number(n))
     return (this.sizeX * (x - y)) / 2
   }
-  public getTransformY(x: number, y:number) {
+  public getTransformY(coordinate: string) {
+    const [x, y] = coordinate.split("_").map(n=>Number(n))
     return (this.sizeY * (x + y)) / 2
   }
 
