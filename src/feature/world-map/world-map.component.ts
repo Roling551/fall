@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, Signal } from '@angular/core';
 import { Tile } from '../../models/tile';
 import { IsometricTilingComponent } from '../../shared/isometric-tiling/isometric-tiling.component';
 import { WorldStateService } from '../../services/world-state.service';
@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { Coordiante } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { UIStateService } from '../../services/ui-state.service';
+import { MapTileComponent } from '../map-tile/map-tile.component';
 
 @Component({
   selector: 'app-world-map',
-  imports: [IsometricTilingComponent, CommonModule],
+  imports: [IsometricTilingComponent, CommonModule, MapTileComponent],
   templateUrl: './world-map.component.html',
   styleUrl: './world-map.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,18 +20,13 @@ export class WorldMapComponent {
   public sizeY = 92
 
   public backgroundImage = "url('/assets/pictures/fog.png')"
-  public lightBorder = '/assets/pictures/light-border.png'
 
   public tiles
   public mapAction
-  public doRenderTileInfoFunction
-  public tileInfo
 
   constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService){
     this.tiles = this.worldStateService.tiles
     this.mapAction = this.uiStateService.mapAction
-    this.doRenderTileInfoFunction = this.uiStateService.doRenderTileInfoFunction
-    this.tileInfo = this.uiStateService.tileInfo
   }
 
   getTexture(name: string): string {

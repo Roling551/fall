@@ -8,15 +8,9 @@
 />
 
 <ng-template #tileTemplate let-tile="tile">
-    <div [style.top.px]="(sizeY-sizeX)/2" class="tile-container">
-        <img [src]="getTexture(tile.value.terrainType)">
-        <img [src]="lightBorder">
-        @if(tile.value.mapEntity; as mapEntity) {
-            <img [src]="getTexture(mapEntity.type)">
-        }
-        @if(doRenderTileInfoFunction()(tile)) {
-            <ng-container *ngComponentOutlet="tileInfo()!;"></ng-container> 
-        }
-    </div>
-
+    <app-map-tile
+        [tile]="tile"
+        [sizeX]="sizeX"
+        [sizeY]="sizeY"
+    />
 </ng-template>
