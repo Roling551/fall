@@ -2,7 +2,7 @@ import { Component, computed, input, Input, Signal } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
-import { UIStateService } from '../../services/ui-state.service';
+import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { CommonModule } from '@angular/common';
 import { ForceSignal } from '../../util/force-signal';
 

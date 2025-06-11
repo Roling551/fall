@@ -5,7 +5,7 @@ import { Tile } from '../../models/tile';
 import { MapEntity } from '../../models/map-entity';
 import { City } from '../../models/city';
 import { ActionsListComponent } from '../actions-list/actions-list.component';
-import { UIStateService } from '../../services/ui-state.service';
+import { UIStateService } from '../../services/ui-state/ui-state.service';
 
 @Component({
   selector: 'app-main-layout',

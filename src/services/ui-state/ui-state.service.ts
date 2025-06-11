@@ -1,11 +1,11 @@
 import { Injectable, signal, Type, ViewContainerRef } from "@angular/core";
-import { createForceSignal, ForceSignal } from "../util/force-signal";
-import { KeyValuePair } from "../models/key-value-pair";
-import { Coordiante } from "../models/coordinate";
-import { Tile } from "../models/tile";
-import { ActionsListComponent } from "../feature/actions-list/actions-list.component";
-import { getCityUI } from "../logic/common-ui-settings";
-import { WorldStateService } from "./world-state.service";
+import { createForceSignal, ForceSignal } from "../../util/force-signal";
+import { KeyValuePair } from "../../models/key-value-pair";
+import { Coordiante } from "../../models/coordinate";
+import { Tile } from "../../models/tile";
+import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
+import { getCityUI, getCreateCityUI } from "./common-ui-settings";
+import { WorldStateService } from "../world-state.service";
 
 export type UISettings = {
     component: Type<any>;
@@ -19,8 +19,10 @@ export type UISettings = {
   providedIn: 'root'
 })
 export class UIStateService {
-  private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
+
   private viewContainerRef!: ViewContainerRef;
+
+  private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _tileInfo = createForceSignal<null|Type<any>>(null);
   private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
 
@@ -66,15 +68,20 @@ export class UIStateService {
     }
   }
 
-  getDefaultMapFunction(service: UIStateService) {
+  private getDefaultMapFunction(service: UIStateService) {
     return (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => {
       if(tile.get().value.mapEntity) {
-        this.setUI(getCityUI(tile, this.worldStateService))
+        this.setUI_.city(tile)
       }
     }
   }
 
   clearAction() {
     this.setUI({component:ActionsListComponent})
+  }
+
+  public setUI_ = {
+    city: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => this.setUI(getCityUI(tile, this.worldStateService)),
+    createCity: () => this.setUI(getCreateCityUI())
   }
 }

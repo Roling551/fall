@@ -5,7 +5,7 @@ import { WorldStateService } from '../../services/world-state.service';
 import { CommonModule } from '@angular/common';
 import { Coordiante } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { UIStateService } from '../../services/ui-state.service';
+import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { MapTileComponent } from '../map-tile/map-tile.component';
 
 @Component({
