@@ -1,0 +1,12 @@
+@import '../../styles/variables';
+
+div {
+    width: $size-x;
+    height: $size-y;
+    position: absolute;
+}
+
+p {
+  text-align: center;
+  margin-top: calc($size-y/4);
+}
