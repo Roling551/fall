@@ -31,7 +31,6 @@ export class MapTileComponent {
 
   doRenderTileInfo = computed(()=> {
     const doRender = this.uiStateService.doRenderTileInfoFunction()(this.tile.get())
-    console.log(doRender)
     return doRender
   })
 }

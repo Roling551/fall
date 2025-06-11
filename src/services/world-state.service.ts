@@ -13,7 +13,7 @@ export class WorldStateService {
 
   constructor() { }
   
-  public getTiles(x: number, y:number, range: number): Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>> {
+  private getTiles(x: number, y:number, range: number): Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>> {
     let tiles = new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>()
     for(let i = -range; i <= range; i++) {
       for(let j = -range; j <= range; j++) {

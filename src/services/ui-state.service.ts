@@ -4,12 +4,22 @@ import { KeyValuePair } from "../models/key-value-pair";
 import { Coordiante } from "../models/coordinate";
 import { Tile } from "../models/tile";
 import { ActionsListComponent } from "../feature/actions-list/actions-list.component";
+import { getCityUI } from "../logic/common-ui-settings";
+import { WorldStateService } from "./world-state.service";
+
+export type UISettings = {
+    component: Type<any>;
+    inputs?: any;
+    mapAction?: any;
+    tileInfo?: Type<any>;
+    doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UIStateService {
-  private _mapAction = createForceSignal(this.defaultMapFunction)
+  private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private viewContainerRef!: ViewContainerRef;
   private _tileInfo = createForceSignal<null|Type<any>>(null);
   private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
@@ -18,17 +28,13 @@ export class UIStateService {
   public tileInfo = this._tileInfo.get
   public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
 
+  constructor(public worldStateService: WorldStateService) {}
+
   setContainerRef(vcRef: ViewContainerRef) {
     this.viewContainerRef = vcRef;
   }
 
-  setUI(ui:{
-      component: Type<any>; 
-      inputs?: any; 
-      mapAction?: any, 
-      tileInfo?: Type<any>,
-      doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean,
-  }) {
+  setUI(ui:UISettings) {
     if(ui.doRenderTileInfoFunction) {
       this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
     } else {
@@ -46,7 +52,7 @@ export class UIStateService {
     if(ui.mapAction) {
       this._mapAction.set(ui.mapAction)
     } else {
-      this._mapAction.set(this.defaultMapFunction)
+      this._mapAction.set(this.getDefaultMapFunction(this))
     }
     this._mapAction.forceUpdate()
     this.viewContainerRef.clear();
@@ -60,8 +66,12 @@ export class UIStateService {
     }
   }
 
-  defaultMapFunction(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
-    console.log(tile.get().value.terrainType)
+  getDefaultMapFunction(service: UIStateService) {
+    return (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => {
+      if(tile.get().value.mapEntity) {
+        this.setUI(getCityUI(tile, this.worldStateService))
+      }
+    }
   }
 
   clearAction() {

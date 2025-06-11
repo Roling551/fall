@@ -29,7 +29,6 @@ export class ActionsListComponent {
       inputs:{text:"Create city"}, 
       mapAction,
       doRenderTileInfoFunction: (tile)=> {
-        console.log("doRenderTileInfoFunction")
         return !tile.value?.mapEntity
       },
       tileInfo: MapMarkingComponent

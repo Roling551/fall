@@ -5,7 +5,8 @@ export class Tile {
 
     constructor(
         public terrainType: string,
-        public mapEntity?: MapEntity
+        public mapEntity?: MapEntity,
+        public belongsTo?: MapEntity
     ) {}
 
 }
