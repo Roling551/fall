@@ -25,6 +25,7 @@ export class CityPanelComponent {
   }
 
   isAddTileSlected = computed(()=>{
+    console.log(this.uiStateService.additionalInfo()["currentAction"])
     return this.uiStateService.additionalInfo()["currentAction"] === "addTileToCity"
   })
 }

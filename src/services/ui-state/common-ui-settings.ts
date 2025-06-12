@@ -15,7 +15,7 @@ export function getCityUI(
     cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
     worldStateService: WorldStateService, 
 ):UISettings {
-    const ui:UISettings = {
+    return {
         component:CityPanelComponent, 
         inputs:{city:cityTile.get().value.mapEntity?.entity as City},
         additionalInfo: {cityTile},
@@ -27,8 +27,6 @@ export function getCityUI(
         },
         tileInfo: MapMarkingComponent
     }
-    ui.additionalInfo["previousUI"] = ui
-    return ui
 }
 
 export function getCreateCityUI(worldStateService: WorldStateService):UISettings {
@@ -69,7 +67,7 @@ export function getAddTileToCityAction(
             }
             tile.forceUpdate()
         },
-        additionalInfo: ()=>{currentAction: "addTileToCity"},
+        additionalInfo: {currentAction: "addTileToCity"},
 
     }
 }
