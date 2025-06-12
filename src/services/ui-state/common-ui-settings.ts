@@ -17,22 +17,8 @@ export function getCityUI(
 ):UISettings {
     return {
         component:CityPanelComponent, 
-        inputs:{city:cityTile.get().value.mapEntity?.entity as City}, 
-        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-            if(tile.get().value.mapEntity) {
-                return
-            }
-            const city = (cityTile.get().value.mapEntity?.entity) as City
-            if(!tile.get().value.belongsTo) {
-                tile.get().value.belongsTo = cityTile.get().value.mapEntity
-                city.addOwnedTile(tile)
-                
-            } else {
-                tile.get().value.belongsTo = undefined
-                city.removeOwnedTile(tile)
-            }
-            tile.forceUpdate()
-        },
+        inputs:{city:cityTile.get().value.mapEntity?.entity as City},
+        additionalInfo: {cityTile},
         doRenderTileInfoFunction: (tile)=> {
             if(!tile.value.belongsTo) {
                 return false
@@ -59,5 +45,24 @@ export function getCreateCityUI(worldStateService: WorldStateService):UISettings
         return !tile.value?.mapEntity
         },
         tileInfo: MapMarkingComponent
+    }
+}
+
+export function getAddTileToCityAction(cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
+    return (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+        if(tile.get().value.mapEntity) {
+            return
+        }
+        const mapEntity = cityTile.get().value.mapEntity!
+        const city = mapEntity.entity as City
+        if(!tile.get().value.belongsTo) {
+            tile.get().value.belongsTo = mapEntity
+            city.addOwnedTile(tile)
+            
+        } else {
+            tile.get().value.belongsTo = undefined
+            city.removeOwnedTile(tile)
+        }
+        tile.forceUpdate()
     }
 }
