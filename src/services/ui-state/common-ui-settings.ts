@@ -51,9 +51,7 @@ export function getCreateCityUI(worldStateService: WorldStateService):UISettings
 }
 
 export function getAddTileToCityAction(
-        cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
-        previousUI: UISettings,
-        uiStateService: UIStateService):UISettings {
+        cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>):UISettings {
     return {
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
             if(tile.get().value.mapEntity) {
@@ -70,10 +68,6 @@ export function getAddTileToCityAction(
                 city.removeOwnedTile(tile)
             }
             tile.forceUpdate()
-        },
-        cancelButtonAction: ()=>{
-            console.log(previousUI)
-            uiStateService.setUI(previousUI)
         },
         additionalInfo: ()=>{currentAction: "addTileToCity"},
 

@@ -24,6 +24,8 @@ export class UIStateService {
 
   private viewContainerRef!: ViewContainerRef;
 
+  private _ui?: UISettings
+
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _cancelButtonAction = createForceSignal(this.getDefaultCancelButtonAction())
   private _tileInfo = createForceSignal<null|Type<any>>(null);
@@ -43,6 +45,8 @@ export class UIStateService {
   }
 
   setUI(ui:UISettings) {
+    this._ui = ui
+
     if(ui.doRenderTileInfoFunction) {
       this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
     } else {
@@ -85,10 +89,13 @@ export class UIStateService {
     }
   }
 
-  setMapAction(ui:UISettings) {
+  setMapAction(ui:UISettings, goBack = true) {
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
     this._mapAction.set(ui.mapAction)
     this._cancelButtonAction.set(ui.cancelButtonAction)
+    if(goBack) {
+      this._cancelButtonAction.set(()=>this.setUI(this._ui!))
+    }
   }
 
   private getDefaultMapFunction(service: UIStateService) {
@@ -113,9 +120,7 @@ export class UIStateService {
   public setMapAction_ = {
     addTileToCity: () => {
       this.setMapAction(getAddTileToCityAction(
-        this._additionalInfo.get()["cityTile"], 
-        this._additionalInfo.get()["previousUI"],
-        this
+        this._additionalInfo.get()["cityTile"]
       ))
     }
   }
