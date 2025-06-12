@@ -8,10 +8,11 @@ import { getAddTileToCityAction, getCityUI, getCreateCityUI } from "./common-ui-
 import { WorldStateService } from "../world-state.service";
 
 export type UISettings = {
-    component: Type<any>;
+    component?: Type<any>;
     inputs?: any;
     additionalInfo?: any;
     mapAction?: any;
+    cancelButtonAction?: any;
     tileInfo?: Type<any>;
     doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean;
 }
@@ -24,11 +25,13 @@ export class UIStateService {
   private viewContainerRef!: ViewContainerRef;
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
+  private _cancelButtonAction = createForceSignal(this.getDefaultCancelButtonAction())
   private _tileInfo = createForceSignal<null|Type<any>>(null);
   private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
   private _additionalInfo = createForceSignal<any>(null);
 
   public mapAction = this._mapAction.get;
+  public cancelButtonAction = this._cancelButtonAction.get
   public tileInfo = this._tileInfo.get
   public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
   public additionalInfo = this._additionalInfo.get
@@ -60,22 +63,32 @@ export class UIStateService {
       this._mapAction.set(this.getDefaultMapFunction(this))
     }
     this._mapAction.forceUpdate()
+
+    if(ui.cancelButtonAction) {
+      this._cancelButtonAction.set(ui.cancelButtonAction)
+    } else {
+      this._cancelButtonAction.set(this.getDefaultCancelButtonAction())
+    }
+    this._cancelButtonAction.forceUpdate()
+
     this.viewContainerRef.clear();
 
     this._additionalInfo.set(ui.additionalInfo)
+
     if(ui.inputs) {
-      const compRef = this.viewContainerRef.createComponent(ui.component, ui.inputs);
+      const compRef = this.viewContainerRef.createComponent(ui.component!, ui.inputs);
       Object.assign(compRef.instance, ui.inputs);
       compRef.changeDetectorRef.detectChanges();
     }
     else {
-      this.viewContainerRef.createComponent(ui.component);
+      this.viewContainerRef.createComponent(ui.component!);
     }
   }
 
-  setMapAction(mapAction: any, updateAdditionalInfo: any) {
-    this._additionalInfo.set({...this._additionalInfo.get(), ...updateAdditionalInfo})
-    this._mapAction.set(mapAction)
+  setMapAction(ui:UISettings) {
+    this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
+    this._mapAction.set(ui.mapAction)
+    this._cancelButtonAction.set(ui.cancelButtonAction)
   }
 
   private getDefaultMapFunction(service: UIStateService) {
@@ -86,8 +99,10 @@ export class UIStateService {
     }
   }
 
-  clearAction() {
-    this.setUI({component:ActionsListComponent})
+  private getDefaultCancelButtonAction() {
+    return () => {
+      this.setUI({component:ActionsListComponent})
+    }
   }
 
   public setUI_ = {
@@ -96,6 +111,12 @@ export class UIStateService {
   }
 
   public setMapAction_ = {
-    addTileToCity: () => this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["cityTile"]), {currentAction: "addTileToCity"})
+    addTileToCity: () => {
+      this.setMapAction(getAddTileToCityAction(
+        this._additionalInfo.get()["cityTile"], 
+        this._additionalInfo.get()["previousUI"],
+        this
+      ))
+    }
   }
 }

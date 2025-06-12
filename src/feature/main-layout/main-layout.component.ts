@@ -27,6 +27,6 @@ export class MainLayoutComponent implements AfterViewInit {
 
   onRightClick(event: MouseEvent) {
     event.preventDefault();
-    this.uiStateService.clearAction();
+    this.uiStateService.cancelButtonAction()();
   }
 }
