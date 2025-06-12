@@ -10,6 +10,7 @@ import { createForceSignal, ForceSignal } from '../util/force-signal';
 export class WorldStateService {
 
   tiles = this.getTiles(0,0,5)
+  turn = signal(0)
 
   constructor() { }
   
@@ -22,5 +23,9 @@ export class WorldStateService {
       } 
     }
     return tiles
+  }
+
+  public nextTurn() {
+    this.turn.update(x=>x+1)
   }
 }

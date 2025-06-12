@@ -6,10 +6,11 @@ import { MapEntity } from '../../models/map-entity';
 import { City } from '../../models/city';
 import { ActionsListComponent } from '../actions-list/actions-list.component';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
+import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.component';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [WorldMapComponent],
+  imports: [WorldMapComponent, GameInfoPanelComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
