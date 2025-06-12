@@ -9,6 +9,7 @@ import { ForceSignal } from "../../util/force-signal"
 import { City } from "../../models/city"
 import { MapEntity } from "../../models/map-entity"
 import { CityPanelComponent } from "../../feature/city-panel/city-panel.component"
+import { Building } from "../../models/building"
 
 
 export function getCityUI(
@@ -68,6 +69,19 @@ export function getAddTileToCityAction(
             tile.forceUpdate()
         },
         additionalInfo: {currentAction: "addTileToCity"},
+
+    }
+}
+export function getAddBuildingAction():UISettings {
+    return {
+        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+                if(!!tile.get().value.mapEntity) {
+                    return
+                }
+                tile.get().value.mapEntity = new MapEntity("farm", new Building("farm"));
+                tile.forceUpdate()
+        },
+        additionalInfo: {currentAction: "addBuilding"},
 
     }
 }

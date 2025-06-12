@@ -4,7 +4,7 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddTileToCityAction, getCityUI, getCreateCityUI } from "./common-ui-settings";
+import { getAddBuildingAction, getAddTileToCityAction, getCityUI, getCreateCityUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
 
 export type UISettings = {
@@ -119,9 +119,8 @@ export class UIStateService {
 
   public setMapAction_ = {
     addTileToCity: () => {
-      this.setMapAction(getAddTileToCityAction(
-        this._additionalInfo.get()["cityTile"]
-      ))
-    }
+      this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["cityTile"]))},
+    addBuilding: () => {
+      this.setMapAction(getAddBuildingAction())},
   }
 }

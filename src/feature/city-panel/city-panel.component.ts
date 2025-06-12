@@ -25,7 +25,14 @@ export class CityPanelComponent {
   }
 
   isAddTileSlected = computed(()=>{
-    console.log(this.uiStateService.additionalInfo()["currentAction"])
     return this.uiStateService.additionalInfo()["currentAction"] === "addTileToCity"
+  })
+
+  public onAddBuildingActionClick() {
+    this.uiStateService.setMapAction_.addBuilding()
+  }
+
+  isAddBuildingSlected = computed(()=>{
+    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding"
   })
 }
