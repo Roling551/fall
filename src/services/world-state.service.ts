@@ -1,8 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Tile } from '../models/tile';
 import { Coordiante } from '../models/coordinate';
 import { KeyValuePair } from '../models/key-value-pair';
 import { createForceSignal, ForceSignal } from '../util/force-signal';
+import { City } from '../models/city';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,16 @@ export class WorldStateService {
 
   tiles = this.getTiles(0,0,5)
   turn = signal(0)
+  cities = createForceSignal(new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>());
+  canNextTurn = computed(()=>{
+    for (const [coordinate, cityTile] of this.cities.get().entries()) {
+      const city = (cityTile.get().value.mapEntity?.entity) as City
+      if(!city.canNextTurn()) {
+        return false;
+      }
+    }
+    return true;
+  })
 
   constructor() { }
   
@@ -27,5 +38,15 @@ export class WorldStateService {
 
   public nextTurn() {
     this.turn.update(x=>x+1)
+  }
+
+  public addCity(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
+      this.cities.get().set(tile.get().key.getKey(), tile)
+      this.cities.forceUpdate()
+  }
+
+  public removeCity(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
+      this.cities.get().delete(tile.get().key.getKey())
+      this.cities.forceUpdate()
   }
 }

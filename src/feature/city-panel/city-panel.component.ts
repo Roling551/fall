@@ -10,6 +10,6 @@ import { City } from '../../models/city';
 export class CityPanelComponent {
   @Input({required: true}) city!: City;
   public ownedTilesNumber() {
-    return this.city.ownedTiles.get().size
+    return this.city.ownedTilesNumber()
   }
 }

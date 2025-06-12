@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 import { WorldStateService } from '../../services/world-state.service';
 
 @Component({
@@ -8,7 +8,12 @@ import { WorldStateService } from '../../services/world-state.service';
   styleUrl: './game-info-panel.component.scss'
 })
 export class GameInfoPanelComponent {
-  constructor(public worldStateService: WorldStateService){}
+
+  canNextTurn: Signal<boolean>
+
+  constructor(public worldStateService: WorldStateService){
+    this.canNextTurn = this.worldStateService.canNextTurn
+  }
 
   public turn = computed(()=>{
     return "Turn: " + this.worldStateService.turn()

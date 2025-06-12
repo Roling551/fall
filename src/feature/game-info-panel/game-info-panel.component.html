@@ -1,5 +1,5 @@
 <div class="container">
     <p>Game</p>
-    <button (click)="onNextTurn()">Next turn</button>
+    <button (click)="onNextTurn()" [disabled]="!canNextTurn()">Next turn</button>
     <p>{{turn()}}</p>
 </div>

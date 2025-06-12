@@ -43,13 +43,17 @@ export function getCityUI(
     }
 }
 
-export function getCreateCityUI():UISettings {
+export function getCreateCityUI(worldStateService: WorldStateService):UISettings {
     return {
         component:SimpleTextComponent, 
         inputs:{text:"Create city"}, 
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-              tile.get().value.mapEntity = new MapEntity("city", new City());
-              tile.forceUpdate()
+                if(!!tile.get().value.mapEntity || !!tile.get().value.belongsTo) {
+                    return
+                }
+                tile.get().value.mapEntity = new MapEntity("city", new City());
+                tile.forceUpdate()
+                worldStateService.addCity(tile)
             },
         doRenderTileInfoFunction: (tile)=> {
         return !tile.value?.mapEntity

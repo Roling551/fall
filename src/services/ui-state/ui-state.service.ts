@@ -82,6 +82,6 @@ export class UIStateService {
 
   public setUI_ = {
     city: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => this.setUI(getCityUI(tile, this.worldStateService)),
-    createCity: () => this.setUI(getCreateCityUI())
+    createCity: () => this.setUI(getCreateCityUI(this.worldStateService))
   }
 }
