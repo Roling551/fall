@@ -8,6 +8,7 @@ import { SimpleTextComponent } from "../../shared/simple-text/simple-text.compon
 import { ForceSignal } from "../../util/force-signal"
 import { City } from "../../models/city"
 import { MapEntity } from "../../models/map-entity"
+import { CityPanelComponent } from "../../feature/city-panel/city-panel.component"
 
 
 export function getCityUI(
@@ -15,11 +16,22 @@ export function getCityUI(
     worldStateService: WorldStateService, 
 ):UISettings {
     return {
-        component:SimpleTextComponent, 
-        inputs:{text:"City info"}, 
+        component:CityPanelComponent, 
+        inputs:{city:cityTile.get().value.mapEntity?.entity as City}, 
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-           tile.get().value.belongsTo = cityTile.get().value.mapEntity
-           tile.forceUpdate()
+            if(tile.get().value.mapEntity) {
+                return
+            }
+            const city = (cityTile.get().value.mapEntity?.entity) as City
+            if(!tile.get().value.belongsTo) {
+                tile.get().value.belongsTo = cityTile.get().value.mapEntity
+                city.addOwnedTile(tile)
+                
+            } else {
+                tile.get().value.belongsTo = undefined
+                city.removeOwnedTile(tile)
+            }
+            tile.forceUpdate()
         },
         doRenderTileInfoFunction: (tile)=> {
             if(!tile.value.belongsTo) {

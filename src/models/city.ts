@@ -1,3 +1,19 @@
+import { createForceSignal, ForceSignal } from "../util/force-signal"
+import { Coordiante } from "./coordinate"
+import { KeyValuePair } from "./key-value-pair"
+import { Tile } from "./tile"
+
 export class City {
-    constructor() {}
+
+    ownedTiles = createForceSignal(new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>());
+
+    addOwnedTile(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
+        this.ownedTiles.get().set(tile.get().key.getKey(), tile)
+        this.ownedTiles.forceUpdate()
+    }
+
+    removeOwnedTile(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
+        this.ownedTiles.get().delete(tile.get().key.getKey())
+        this.ownedTiles.forceUpdate()
+    }
 }
