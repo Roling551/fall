@@ -9,7 +9,7 @@ import { ForceSignal } from "../../util/force-signal"
 import { City } from "../../models/city"
 import { MapEntity } from "../../models/map-entity"
 import { CityPanelComponent } from "../../feature/city-panel/city-panel.component"
-import { Building } from "../../models/building"
+import { GenericMapEntity } from "../../models/generic-map-entity"
 
 
 export function getCityUI(
@@ -53,7 +53,7 @@ export function getAddTileToCityAction(
         cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>):UISettings {
     return {
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-            if(tile.get().value.mapEntity) {
+            if(tile.get().value.mapEntity?.type === "city") {
                 return
             }
             const mapEntity = cityTile.get().value.mapEntity!
@@ -62,7 +62,13 @@ export function getAddTileToCityAction(
                 tile.get().value.belongsTo = mapEntity
                 city.addOwnedTile(tile)
                 
-            } else {
+            } else if(tile.get().value.belongsTo!==mapEntity) {
+                const otherCity = tile.get().value.belongsTo as City
+                otherCity.removeOwnedTile(tile)
+                tile.get().value.belongsTo = mapEntity
+                city.addOwnedTile(tile)
+            }
+            else {
                 tile.get().value.belongsTo = undefined
                 city.removeOwnedTile(tile)
             }
@@ -72,13 +78,13 @@ export function getAddTileToCityAction(
 
     }
 }
-export function getAddBuildingAction():UISettings {
+export function getAddBuildingAction(cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>):UISettings {
     return {
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-                if(!!tile.get().value.mapEntity) {
+                if(!!tile.get().value.mapEntity || tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
                     return
                 }
-                tile.get().value.mapEntity = new Building("farm");
+                tile.get().value.mapEntity = new GenericMapEntity("farm");
                 tile.forceUpdate()
         },
         additionalInfo: {currentAction: "addBuilding"},

@@ -1,7 +1,7 @@
 import { MapEntity } from "./map-entity";
 
-export class Building extends MapEntity{
+export class GenericMapEntity extends MapEntity{
     constructor(public name: string) {
-        super("building", name)
+        super("genericMapEntity", name)
     }
 }

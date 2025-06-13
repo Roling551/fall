@@ -121,6 +121,6 @@ export class UIStateService {
     addTileToCity: () => {
       this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["cityTile"]))},
     addBuilding: () => {
-      this.setMapAction(getAddBuildingAction())},
+      this.setMapAction(getAddBuildingAction(this._additionalInfo.get()["cityTile"]))},
   }
 }
