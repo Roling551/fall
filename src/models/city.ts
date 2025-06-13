@@ -3,8 +3,13 @@ import { createForceSignal, ForceSignal } from "../util/force-signal"
 import { Coordiante } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Tile } from "./tile"
+import { MapEntity } from "./map-entity";
 
-export class City {
+export class City extends MapEntity {
+
+    constructor() {
+        super("city", "city")
+    }
 
     maxTiles = 3
 

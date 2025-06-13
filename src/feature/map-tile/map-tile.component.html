@@ -6,7 +6,7 @@
     <img [src]="getTexture(tile.get().value.terrainType)">
     <img [src]="lightBorder">
     @if(tile.get().value.mapEntity; as mapEntity) {
-        <img [src]="getTexture(mapEntity.type)">
+        <img [src]="getTexture(mapEntity.textureName)">
     }
     @if(doRenderTileInfo()) {
         <ng-container *ngComponentOutlet="tileInfo()!;"></ng-container> 

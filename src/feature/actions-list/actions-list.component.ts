@@ -20,10 +20,6 @@ export class ActionsListComponent {
   constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService) {}
 
   onClick(): void {
-    const mapAction = (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-      tile.get().value.mapEntity = new MapEntity("city", new City());
-      tile.forceUpdate()
-    }
     this.uiStateService.setUI_.createCity()
   }
 }

@@ -18,7 +18,7 @@ export function getCityUI(
 ):UISettings {
     return {
         component:CityPanelComponent, 
-        inputs:{city:cityTile.get().value.mapEntity?.entity as City},
+        inputs:{city:cityTile.get().value.mapEntity as City},
         additionalInfo: {cityTile},
         doRenderTileInfoFunction: (tile)=> {
             if(!tile.value.belongsTo) {
@@ -38,7 +38,7 @@ export function getCreateCityUI(worldStateService: WorldStateService):UISettings
                 if(!!tile.get().value.mapEntity || !!tile.get().value.belongsTo) {
                     return
                 }
-                tile.get().value.mapEntity = new MapEntity("city", new City());
+                tile.get().value.mapEntity = new City();
                 tile.forceUpdate()
                 worldStateService.addCity(tile)
             },
@@ -57,7 +57,7 @@ export function getAddTileToCityAction(
                 return
             }
             const mapEntity = cityTile.get().value.mapEntity!
-            const city = mapEntity.entity as City
+            const city = mapEntity as City
             if(!tile.get().value.belongsTo) {
                 tile.get().value.belongsTo = mapEntity
                 city.addOwnedTile(tile)
@@ -78,7 +78,7 @@ export function getAddBuildingAction():UISettings {
                 if(!!tile.get().value.mapEntity) {
                     return
                 }
-                tile.get().value.mapEntity = new MapEntity("farm", new Building("farm"));
+                tile.get().value.mapEntity = new Building("farm");
                 tile.forceUpdate()
         },
         additionalInfo: {currentAction: "addBuilding"},

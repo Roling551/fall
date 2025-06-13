@@ -15,7 +15,7 @@ export class WorldStateService {
   cities = createForceSignal(new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>());
   canNextTurn = computed(()=>{
     for (const [coordinate, cityTile] of this.cities.get().entries()) {
-      const city = (cityTile.get().value.mapEntity?.entity) as City
+      const city = (cityTile.get().value.mapEntity) as City
       if(!city.canNextTurn()) {
         return false;
       }

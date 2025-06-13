@@ -1,3 +1,3 @@
 export class MapEntity {
-    constructor(public type: string, public entity: object){};
+    constructor(public type: string, public textureName: string){};
 }
