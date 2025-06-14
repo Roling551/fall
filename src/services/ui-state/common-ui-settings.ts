@@ -31,13 +31,18 @@ export function getCityUI(
 }
 
 export function getCreateCityUI(worldStateService: WorldStateService):UISettings {
+    const cityPrice = 10;
     return {
         component:SimpleTextComponent, 
         inputs:{text:"Create city"},
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+                if(worldStateService.gold() < cityPrice) {
+                    return
+                }
                 if(!!tile.get().value.mapEntity || !!tile.get().value.belongsTo) {
                     return
                 }
+                worldStateService.gold.update(x=>x-10)
                 tile.get().value.mapEntity = new City();
                 tile.forceUpdate()
                 worldStateService.addCity(tile)
