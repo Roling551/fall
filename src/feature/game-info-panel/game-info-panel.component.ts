@@ -15,8 +15,12 @@ export class GameInfoPanelComponent {
     this.canNextTurn = this.worldStateService.canNextTurn
   }
 
-  public turn = computed(()=>{
+  public turnText = computed(()=>{
     return "Turn: " + this.worldStateService.turn()
+  })
+
+  public goldText = computed(()=> {
+    return "Gold: " + this.worldStateService.gold()
   })
 
   onNextTurn() {

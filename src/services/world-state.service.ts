@@ -12,6 +12,7 @@ export class WorldStateService {
 
   tiles = this.getTiles(0,0,5)
   turn = signal(0)
+  gold = signal(25)
   cities = createForceSignal(new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>());
   canNextTurn = computed(()=>{
     for (const [coordinate, cityTile] of this.cities.get().entries()) {
@@ -37,6 +38,10 @@ export class WorldStateService {
   }
 
   public nextTurn() {
+    for (const [coordinate, cityTile] of this.cities.get().entries()) {
+      const city = (cityTile.get().value.mapEntity) as City
+      this.gold.update(x=>x+(city.produced().get("gold")||0))
+    }
     this.turn.update(x=>x+1)
   }
 

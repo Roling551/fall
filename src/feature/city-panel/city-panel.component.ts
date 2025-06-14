@@ -40,4 +40,12 @@ export class CityPanelComponent {
   isAddTowerSelected = computed(()=>{
     return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding-tower"
   })
+
+  public onAddMineActionClick() {
+    this.uiStateService.setMapAction_.addBuilding(()=>new GenericMapEntity("mine", new Map([["gold",1]])), "mine")
+  }
+
+  isAddMineSelected = computed(()=>{
+    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding-mine"
+  })
 }

@@ -37,7 +37,7 @@ export class City extends MapEntity {
     })
 
     produced = computed(()=>{
-        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0]])
+        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0]])
         for (const [key, tile] of this.ownedTiles.get().entries()) {
             const mapEntity = tile.get().value.mapEntity
             if(!!mapEntity && mapEntity.type === "genericMapEntity") {
