@@ -104,20 +104,38 @@ export function getAddTileToCityAction(
 
     }
 }
-export function getAddBuildingAction(
+export function getCreateGenericMapEntityAction(
     cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
-    getBuilding: ()=>GenericMapEntity,
-    buildingName: string
+    getGenericMapEntity: ()=>GenericMapEntity,
+    entityName: string
 ):UISettings {
     return {
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
                 if(!!tile.get().value.mapEntity || tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
                     return
                 }
-                tile.get().value.mapEntity = getBuilding();
+                tile.get().value.mapEntity = getGenericMapEntity();
                 tile.forceUpdate()
         },
-        additionalInfo: {currentAction: "addBuilding-" + buildingName},
+        additionalInfo: {currentAction: "createGenericMapEntityAction-" + entityName},
+
+    }
+}
+
+export function getRemoveGenericMapEntityAction(
+    cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>
+):UISettings {
+    return {
+        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+                if(
+                    tile.get().value.mapEntity?.type != "genericMapEntity" ||
+                    tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
+                    return
+                }
+                tile.get().value.mapEntity = undefined;
+                tile.forceUpdate()
+        },
+        additionalInfo: {currentAction: "removeGenericMapEntityAction"},
 
     }
 }

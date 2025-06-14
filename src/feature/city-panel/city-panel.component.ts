@@ -26,26 +26,35 @@ export class CityPanelComponent {
   })
 
   public onAddFarmActionClick() {
-    this.uiStateService.setMapAction_.addBuilding(()=>new GenericMapEntity("farm", new Map([["food",2], ["food-need", 1]])), "farm")
+    this.uiStateService.setMapAction_.createGenericMapEntity(()=>new GenericMapEntity("farm", new Map([["food",2], ["food-need", 1]])), "farm")
   }
 
   isAddFarmSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding-farm"
+    console.log(this.uiStateService.additionalInfo()["currentAction"])
+    return this.uiStateService.additionalInfo()["currentAction"] === "createGenericMapEntityAction-farm"
   })
 
   public onAddTowerActionClick() {
-    this.uiStateService.setMapAction_.addBuilding(()=>new GenericMapEntity("tower", new Map([["authority",5], ["food-need", 1]])), "tower")
+    this.uiStateService.setMapAction_.createGenericMapEntity(()=>new GenericMapEntity("tower", new Map([["authority",5], ["food-need", 1]])), "tower")
   }
 
   isAddTowerSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding-tower"
+    return this.uiStateService.additionalInfo()["currentAction"] === "createGenericMapEntityAction-tower"
   })
 
   public onAddMineActionClick() {
-    this.uiStateService.setMapAction_.addBuilding(()=>new GenericMapEntity("mine", new Map([["gold",1], ["food-need", 1]])), "mine")
+    this.uiStateService.setMapAction_.createGenericMapEntity(()=>new GenericMapEntity("mine", new Map([["gold",1], ["food-need", 1]])), "mine")
   }
 
   isAddMineSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding-mine"
+    return this.uiStateService.additionalInfo()["currentAction"] === "createGenericMapEntityAction-mine"
+  })
+
+  public onRemoveGenericMapEntityActionClick() {
+    this.uiStateService.setMapAction_.removeGenericMapEntity();
+  }
+
+  public isRemoveGenericMapEntityActionSelected = computed(()=>{
+    return this.uiStateService.additionalInfo()["currentAction"] === "removeGenericMapEntityAction"
   })
 }
