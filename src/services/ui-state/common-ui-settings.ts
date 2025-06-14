@@ -78,16 +78,20 @@ export function getAddTileToCityAction(
 
     }
 }
-export function getAddBuildingAction(cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>):UISettings {
+export function getAddBuildingAction(
+    cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
+    getBuilding: ()=>GenericMapEntity,
+    buildingName: string
+):UISettings {
     return {
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
                 if(!!tile.get().value.mapEntity || tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
                     return
                 }
-                tile.get().value.mapEntity = new GenericMapEntity("farm", new Map([["food",1]]));
+                tile.get().value.mapEntity = getBuilding();
                 tile.forceUpdate()
         },
-        additionalInfo: {currentAction: "addBuilding"},
+        additionalInfo: {currentAction: "addBuilding-" + buildingName},
 
     }
 }

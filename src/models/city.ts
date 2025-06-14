@@ -15,8 +15,6 @@ export class City extends MapEntity {
 
     readonly type = "city"
 
-    maxTiles = 3
-
     ownedTiles = createForceSignal(new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>());
 
     addOwnedTile(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
@@ -34,11 +32,12 @@ export class City extends MapEntity {
     })
 
     canNextTurn = computed(()=>{
-        return this.ownedTilesNumber() <= this.maxTiles
+        return this.produced().get("authority")! >= this.produced().get("authority-need")! &&
+            this.produced().get("food")! >= this.produced().get("food-need")!
     })
 
     produced = computed(()=>{
-        const production = new Map([["food",0]])
+        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0]])
         for (const [key, tile] of this.ownedTiles.get().entries()) {
             const mapEntity = tile.get().value.mapEntity
             if(!!mapEntity && mapEntity.type === "genericMapEntity") {
@@ -46,6 +45,7 @@ export class City extends MapEntity {
                 addExistingNumericalValues(production, genericMapEntity.produced)
             }
         }
+        production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())
         return production
     })
 }

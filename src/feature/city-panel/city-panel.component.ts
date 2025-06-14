@@ -5,6 +5,7 @@ import { ForceSignal } from '../../util/force-signal';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
+import { GenericMapEntity } from '../../models/generic-map-entity';
 
 @Component({
   selector: 'app-city-panel',
@@ -20,15 +21,23 @@ export class CityPanelComponent {
     this.uiStateService.setMapAction_.addTileToCity()
   }
 
-  isAddTileSlected = computed(()=>{
+  isAddTileSelected = computed(()=>{
     return this.uiStateService.additionalInfo()["currentAction"] === "addTileToCity"
   })
 
-  public onAddBuildingActionClick() {
-    this.uiStateService.setMapAction_.addBuilding()
+  public onAddFarmActionClick() {
+    this.uiStateService.setMapAction_.addBuilding(()=>new GenericMapEntity("farm", new Map([["food",1]])), "farm")
   }
 
-  isAddBuildingSlected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding"
+  isAddFarmSelected = computed(()=>{
+    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding-farm"
+  })
+
+  public onAddTowerActionClick() {
+    this.uiStateService.setMapAction_.addBuilding(()=>new GenericMapEntity("tower", new Map([["authority",5]])), "tower")
+  }
+
+  isAddTowerSelected = computed(()=>{
+    return this.uiStateService.additionalInfo()["currentAction"] === "addBuilding-tower"
   })
 }
