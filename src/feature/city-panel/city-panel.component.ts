@@ -16,10 +16,6 @@ export class CityPanelComponent {
   @Input({required: true}) city!: City;
   constructor(public uiStateService: UIStateService) {}
 
-  public ownedTilesNumber() {
-    return this.city.ownedTilesNumber()
-  }
-
   public onAddTileActionClick() {
     this.uiStateService.setMapAction_.addTileToCity()
   }

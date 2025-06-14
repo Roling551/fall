@@ -1,3 +1,6 @@
-export class MapEntity {
-    constructor(public type: string, public textureName: string){};
+export type mapEntityType = "city" | "genericMapEntity"
+
+export abstract class MapEntity {
+    abstract readonly type: mapEntityType
+    constructor(public textureName: string){};
 }

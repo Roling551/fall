@@ -1,4 +1,5 @@
 <p>City</p>
-{{ownedTilesNumber()}}
+<div>{{"Owned tiles: " + city.ownedTilesNumber()}}</div>
+<div>{{"Food: " + city.produced().get('food')}}</div>
 <button (click)="onAddTileActionClick()" [class.active-button]="isAddTileSlected()">Add tile</button>
 <button (click)="onAddBuildingActionClick()" [class.active-button]="isAddBuildingSlected()">Add farm</button>

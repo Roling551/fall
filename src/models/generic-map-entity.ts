@@ -1,7 +1,10 @@
 import { MapEntity } from "./map-entity";
 
 export class GenericMapEntity extends MapEntity{
-    constructor(public name: string) {
-        super("genericMapEntity", name)
+
+    readonly type = "genericMapEntity"
+
+    constructor(public name: string, public produced: Map<string, number>) {
+        super(name)
     }
 }

@@ -84,7 +84,7 @@ export function getAddBuildingAction(cityTile: ForceSignal<KeyValuePair<Coordian
                 if(!!tile.get().value.mapEntity || tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
                     return
                 }
-                tile.get().value.mapEntity = new GenericMapEntity("farm");
+                tile.get().value.mapEntity = new GenericMapEntity("farm", new Map([["food",1]]));
                 tile.forceUpdate()
         },
         additionalInfo: {currentAction: "addBuilding"},

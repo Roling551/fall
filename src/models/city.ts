@@ -4,12 +4,16 @@ import { Coordiante } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Tile } from "./tile"
 import { MapEntity } from "./map-entity";
+import { GenericMapEntity } from "./generic-map-entity";
+import { addExistingNumericalValues } from "../util/map-functions";
 
 export class City extends MapEntity {
 
     constructor() {
-        super("city", "city")
+        super("city")
     }
+
+    readonly type = "city"
 
     maxTiles = 3
 
@@ -31,5 +35,17 @@ export class City extends MapEntity {
 
     canNextTurn = computed(()=>{
         return this.ownedTilesNumber() <= this.maxTiles
+    })
+
+    produced = computed(()=>{
+        const production = new Map([["food",0]])
+        for (const [key, tile] of this.ownedTiles.get().entries()) {
+            const mapEntity = tile.get().value.mapEntity
+            if(!!mapEntity && mapEntity.type === "genericMapEntity") {
+                const genericMapEntity = mapEntity as GenericMapEntity
+                addExistingNumericalValues(production, genericMapEntity.produced)
+            }
+        }
+        return production
     })
 }
