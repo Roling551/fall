@@ -30,6 +30,27 @@ export function getCityUI(
     }
 }
 
+export function getRemoveCityUI(worldStateService: WorldStateService):UISettings {
+    const cityPrice = 10;
+    return {
+        component:SimpleTextComponent, 
+        inputs:{text:"Remove city"},
+        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+                if(tile.get().value.mapEntity?.type != "city") {
+                    return
+                }
+                (tile.get().value.mapEntity as City).clearOwnedTiles()
+                worldStateService.removeCity(tile)
+                tile.get().value.mapEntity = undefined;
+                tile.forceUpdate()
+            },
+        doRenderTileInfoFunction: (tile)=> {
+        return !tile.value?.mapEntity
+        },
+        tileInfo: MapMarkingComponent
+    }
+}
+
 export function getCreateCityUI(worldStateService: WorldStateService):UISettings {
     const cityPrice = 10;
     return {

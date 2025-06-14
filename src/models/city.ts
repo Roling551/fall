@@ -27,6 +27,11 @@ export class City extends MapEntity {
         this.ownedTiles.forceUpdate()
     }
 
+    clearOwnedTiles() {
+        this.ownedTiles.get().clear()
+        this.ownedTiles.forceUpdate()
+    }
+
     ownedTilesNumber = computed(()=>{
         return this.ownedTiles.get().size
     })

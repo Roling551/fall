@@ -4,7 +4,7 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddBuildingAction, getAddTileToCityAction, getCityUI, getCreateCityUI } from "./common-ui-settings";
+import { getAddBuildingAction, getAddTileToCityAction, getCityUI, getCreateCityUI, getRemoveCityUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
 import { GenericMapEntity } from "../../models/generic-map-entity";
 
@@ -101,7 +101,7 @@ export class UIStateService {
 
   private getDefaultMapFunction(service: UIStateService) {
     return (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => {
-      if(tile.get().value.mapEntity) {
+      if(tile.get().value.mapEntity?.type == "city") {
         this.setUI_.city(tile)
       }
     }
@@ -115,7 +115,8 @@ export class UIStateService {
 
   public setUI_ = {
     city: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => this.setUI(getCityUI(tile, this.worldStateService)),
-    createCity: () => this.setUI(getCreateCityUI(this.worldStateService))
+    createCity: () => this.setUI(getCreateCityUI(this.worldStateService)),
+    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService)),
   }
 
   public setMapAction_ = {

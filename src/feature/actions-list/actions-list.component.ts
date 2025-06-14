@@ -19,7 +19,10 @@ import { ForceSignal } from '../../util/force-signal';
 export class ActionsListComponent {
   constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService) {}
 
-  onClick(): void {
+  onCreateCityClick(): void {
     this.uiStateService.setUI_.createCity()
+  }
+  onRemoveCityClick(): void {
+    this.uiStateService.setUI_.removeCity()
   }
 }
