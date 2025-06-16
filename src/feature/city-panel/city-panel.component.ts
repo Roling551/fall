@@ -6,6 +6,7 @@ import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
+import { Building } from '../../models/building';
 
 @Component({
   selector: 'app-city-panel',
@@ -15,6 +16,7 @@ import { Estate } from '../../models/estate';
 })
 export class CityPanelComponent {
   @Input({required: true}) city!: City;
+  @Input({required: true}) tile!: ForceSignal<KeyValuePair<Coordiante, Tile>>
   constructor(public uiStateService: UIStateService) {}
 
   public onAddTileActionClick() {
@@ -56,4 +58,9 @@ export class CityPanelComponent {
   public isRemoveEstateActionSelected = computed(()=>{
     return this.uiStateService.additionalInfo()["currentAction"] === "removeEstateAction"
   })
+
+  public onCreateTempleClick() {
+    this.city.createBuilding(new Building("temple", 1, new Map([["gold",1]])))
+    this.tile.forceUpdate()
+  }
 }

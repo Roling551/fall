@@ -1,6 +1,8 @@
+import { computed } from "@angular/core"
 import { createForceSignal, ForceSignal } from "../util/force-signal"
 import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
+import { addExistingNumericalValues } from "../util/map-functions"
 
 export type mapEntityType = "city" | "estate"
 
@@ -24,4 +26,14 @@ export abstract class MapEntity {
         this.buildings.get().delete(building)
         this.buildings.forceUpdate()
     }
+
+    public baseProduced = computed(()=>{
+        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0]])
+        for (const building of this.buildings.get().values()) {
+            addExistingNumericalValues(production, building.get().produced)
+        }
+        return production
+    })
+
+    public produced(){return this.baseProduced()}
 }

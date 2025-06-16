@@ -4,7 +4,7 @@ export class Estate extends MapEntity{
 
     readonly type = "estate"
 
-    constructor(public name: string, public produced: Map<string, number>) {
+    constructor(public name: string, public producedList: Map<string, number>) {
         super(name, 0)
     }
 }

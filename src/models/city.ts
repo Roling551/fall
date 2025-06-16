@@ -41,13 +41,13 @@ export class City extends MapEntity {
             this.produced().get("food")! >= this.produced().get("food-need")!
     })
 
-    produced = computed(()=>{
-        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0]])
+    override produced = computed(()=>{
+        const production = super.produced()
         for (const [key, tile] of this.ownedTiles.get().entries()) {
             const mapEntity = tile.get().value.mapEntity
             if(!!mapEntity && mapEntity.type === "estate") {
                 const estate = mapEntity as Estate
-                addExistingNumericalValues(production, estate.produced)
+                addExistingNumericalValues(production, estate.produced())
             }
         }
         production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())

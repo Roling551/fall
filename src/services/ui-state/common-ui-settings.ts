@@ -18,7 +18,7 @@ export function getCityUI(
 ):UISettings {
     return {
         component:CityPanelComponent, 
-        inputs:{city:cityTile.get().value.mapEntity as City},
+        inputs:{city:cityTile.get().value.mapEntity as City, tile: cityTile},
         additionalInfo: {cityTile},
         doRenderTileInfoFunction: (tile)=> {
             if(!tile.value.belongsTo) {
@@ -57,17 +57,19 @@ export function getCreateCityUI(worldStateService: WorldStateService):UISettings
         component:SimpleTextComponent, 
         inputs:{text:"Create city"},
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-                if(worldStateService.gold() < cityPrice) {
-                    return
-                }
-                if(!!tile.get().value.mapEntity || !!tile.get().value.belongsTo) {
-                    return
-                }
-                worldStateService.gold.update(x=>x-10)
-                tile.get().value.mapEntity = new City();
-                tile.forceUpdate()
-                worldStateService.addCity(tile)
-            },
+            const gold = worldStateService.resources.get().get("gold")!
+            if(gold < cityPrice) {
+                return
+            }
+            if(!!tile.get().value.mapEntity || !!tile.get().value.belongsTo) {
+                return
+            }
+            worldStateService.resources.get().set("gold", gold-cityPrice)
+            worldStateService.resources.forceUpdate()
+            tile.get().value.mapEntity = new City();
+            tile.forceUpdate()
+            worldStateService.addCity(tile)
+        },
         doRenderTileInfoFunction: (tile)=> {
         return !tile.value?.mapEntity
         },
