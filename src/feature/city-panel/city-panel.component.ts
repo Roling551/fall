@@ -63,4 +63,9 @@ export class CityPanelComponent {
     this.city.createBuilding(new Building("temple", 1, new Map([["gold",1]])))
     this.tile.forceUpdate()
   }
+
+  public onRemoveBuildingClick(building: ForceSignal<Building>) {
+    this.city.removeBuilding(building)
+    this.tile.forceUpdate()
+  }
 }

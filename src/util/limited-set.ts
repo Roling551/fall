@@ -14,8 +14,9 @@ export class LimitedSet<T> {
     }
 
     delete(item: T) {
-        this.currentCapacity += this.getSize(item)
-        this.set.delete(item)
+        if(this.set.delete(item)) {
+            this.currentCapacity -= this.getSize(item)
+        }
     }
 
     values() {

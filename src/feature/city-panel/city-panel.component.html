@@ -7,6 +7,14 @@
 <button (click)="onAddTowerActionClick()" [class.active-button]="isAddTowerSelected()">Add tower</button>
 <button (click)="onAddMineActionClick()" [class.active-button]="isAddMineSelected()">Add mine</button>
 
-<button (click)="onCreateTempleClick()">Add temple</button>
-
 <button (click)="onRemoveEstateActionClick()" [class.active-button]="isRemoveEstateActionSelected()">Remove estate</button>
+
+<div>Buildings:</div>
+@for(building of city.buildings.get().values(); track building) {
+    <div>
+        {{building.get().name}}
+        <button (click)="onRemoveBuildingClick(building)">X</button>
+    </div>
+    
+}
+<button (click)="onCreateTempleClick()">Add temple</button>
