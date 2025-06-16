@@ -42,12 +42,12 @@ export class City extends MapEntity {
     })
 
     override produced = computed(()=>{
-        const production = super.produced()
+        const production = new Map(super.produced())
         for (const [key, tile] of this.ownedTiles.get().entries()) {
             const mapEntity = tile.get().value.mapEntity
             if(!!mapEntity && mapEntity.type === "estate") {
                 const estate = mapEntity as Estate
-                addExistingNumericalValues(production, estate.produced())
+                addExistingNumericalValues(production, estate.producedList)
             }
         }
         production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())
