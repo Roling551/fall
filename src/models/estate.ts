@@ -1,8 +1,8 @@
 import { MapEntity } from "./map-entity";
 
-export class GenericMapEntity extends MapEntity{
+export class Estate extends MapEntity{
 
-    readonly type = "genericMapEntity"
+    readonly type = "estate"
 
     constructor(public name: string, public produced: Map<string, number>) {
         super(name, 0)

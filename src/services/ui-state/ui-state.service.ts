@@ -4,9 +4,9 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddTileToCityAction, getCityUI, getCreateCityUI, getCreateGenericMapEntityAction, getRemoveCityUI, getRemoveGenericMapEntityAction } from "./common-ui-settings";
+import { getAddTileToCityAction, getCityUI, getCreateCityUI, getCreateEstateAction, getRemoveCityUI, getRemoveEstateAction } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
-import { GenericMapEntity } from "../../models/generic-map-entity";
+import { Estate } from "../../models/estate";
 
 export type UISettings = {
     component?: Type<any>;
@@ -122,9 +122,9 @@ export class UIStateService {
   public setMapAction_ = {
     addTileToCity: () => {
       this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["cityTile"]))},
-    createGenericMapEntity: (getBuilding: ()=>GenericMapEntity, buildingName: string) => {
-      this.setMapAction(getCreateGenericMapEntityAction(this._additionalInfo.get()["cityTile"], getBuilding, buildingName))},
-    removeGenericMapEntity: () => {
-      this.setMapAction(getRemoveGenericMapEntityAction(this._additionalInfo.get()["cityTile"]))},
+    createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
+      this.setMapAction(getCreateEstateAction(this._additionalInfo.get()["cityTile"], getBuilding, buildingName))},
+    removeEstate: () => {
+      this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["cityTile"]))},
   }
 }

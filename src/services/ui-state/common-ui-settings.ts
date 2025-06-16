@@ -9,7 +9,7 @@ import { ForceSignal } from "../../util/force-signal"
 import { City } from "../../models/city"
 import { MapEntity } from "../../models/map-entity"
 import { CityPanelComponent } from "../../feature/city-panel/city-panel.component"
-import { GenericMapEntity } from "../../models/generic-map-entity"
+import { Estate } from "../../models/estate"
 
 
 export function getCityUI(
@@ -104,38 +104,38 @@ export function getAddTileToCityAction(
 
     }
 }
-export function getCreateGenericMapEntityAction(
+export function getCreateEstateAction(
     cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
-    getGenericMapEntity: ()=>GenericMapEntity,
-    entityName: string
+    getEstate: ()=>Estate,
+    estateName: string
 ):UISettings {
     return {
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
                 if(!!tile.get().value.mapEntity || tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
                     return
                 }
-                tile.get().value.mapEntity = getGenericMapEntity();
+                tile.get().value.mapEntity = getEstate();
                 tile.forceUpdate()
         },
-        additionalInfo: {currentAction: "createGenericMapEntityAction-" + entityName},
+        additionalInfo: {currentAction: "createEstateAction-" + estateName},
 
     }
 }
 
-export function getRemoveGenericMapEntityAction(
+export function getRemoveEstateAction(
     cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>
 ):UISettings {
     return {
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
                 if(
-                    tile.get().value.mapEntity?.type != "genericMapEntity" ||
+                    tile.get().value.mapEntity?.type != "estate" ||
                     tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
                     return
                 }
                 tile.get().value.mapEntity = undefined;
                 tile.forceUpdate()
         },
-        additionalInfo: {currentAction: "removeGenericMapEntityAction"},
+        additionalInfo: {currentAction: "removeEstateAction"},
 
     }
 }

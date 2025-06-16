@@ -4,7 +4,7 @@ import { Coordiante } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Tile } from "./tile"
 import { MapEntity } from "./map-entity";
-import { GenericMapEntity } from "./generic-map-entity";
+import { Estate } from "./estate";
 import { addExistingNumericalValues } from "../util/map-functions";
 
 export class City extends MapEntity {
@@ -45,9 +45,9 @@ export class City extends MapEntity {
         const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0]])
         for (const [key, tile] of this.ownedTiles.get().entries()) {
             const mapEntity = tile.get().value.mapEntity
-            if(!!mapEntity && mapEntity.type === "genericMapEntity") {
-                const genericMapEntity = mapEntity as GenericMapEntity
-                addExistingNumericalValues(production, genericMapEntity.produced)
+            if(!!mapEntity && mapEntity.type === "estate") {
+                const estate = mapEntity as Estate
+                addExistingNumericalValues(production, estate.produced)
             }
         }
         production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())

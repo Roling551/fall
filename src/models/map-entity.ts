@@ -2,7 +2,7 @@ import { createForceSignal, ForceSignal } from "../util/force-signal"
 import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
 
-export type mapEntityType = "city" | "genericMapEntity"
+export type mapEntityType = "city" | "estate"
 
 export abstract class MapEntity {
     abstract readonly type: mapEntityType

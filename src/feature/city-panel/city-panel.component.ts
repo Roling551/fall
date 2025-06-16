@@ -5,7 +5,7 @@ import { ForceSignal } from '../../util/force-signal';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
-import { GenericMapEntity } from '../../models/generic-map-entity';
+import { Estate } from '../../models/estate';
 
 @Component({
   selector: 'app-city-panel',
@@ -26,35 +26,34 @@ export class CityPanelComponent {
   })
 
   public onAddFarmActionClick() {
-    this.uiStateService.setMapAction_.createGenericMapEntity(()=>new GenericMapEntity("farm", new Map([["food",2], ["food-need", 1]])), "farm")
+    this.uiStateService.setMapAction_.createEstate(()=>new Estate("farm", new Map([["food",2], ["food-need", 1]])), "farm")
   }
 
   isAddFarmSelected = computed(()=>{
-    console.log(this.uiStateService.additionalInfo()["currentAction"])
-    return this.uiStateService.additionalInfo()["currentAction"] === "createGenericMapEntityAction-farm"
+    return this.uiStateService.additionalInfo()["currentAction"] === "createEstateAction-farm"
   })
 
   public onAddTowerActionClick() {
-    this.uiStateService.setMapAction_.createGenericMapEntity(()=>new GenericMapEntity("tower", new Map([["authority",5], ["food-need", 1]])), "tower")
+    this.uiStateService.setMapAction_.createEstate(()=>new Estate("tower", new Map([["authority",5], ["food-need", 1]])), "tower")
   }
 
   isAddTowerSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "createGenericMapEntityAction-tower"
+    return this.uiStateService.additionalInfo()["currentAction"] === "createEstateAction-tower"
   })
 
   public onAddMineActionClick() {
-    this.uiStateService.setMapAction_.createGenericMapEntity(()=>new GenericMapEntity("mine", new Map([["gold",1], ["food-need", 1]])), "mine")
+    this.uiStateService.setMapAction_.createEstate(()=>new Estate("mine", new Map([["gold",1], ["food-need", 1]])), "mine")
   }
 
   isAddMineSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "createGenericMapEntityAction-mine"
+    return this.uiStateService.additionalInfo()["currentAction"] === "createEstateAction-mine"
   })
 
-  public onRemoveGenericMapEntityActionClick() {
-    this.uiStateService.setMapAction_.removeGenericMapEntity();
+  public onRemoveEstateActionClick() {
+    this.uiStateService.setMapAction_.removeEstate();
   }
 
-  public isRemoveGenericMapEntityActionSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "removeGenericMapEntityAction"
+  public isRemoveEstateActionSelected = computed(()=>{
+    return this.uiStateService.additionalInfo()["currentAction"] === "removeEstateAction"
   })
 }
