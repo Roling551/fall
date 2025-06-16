@@ -10,7 +10,7 @@ import { addExistingNumericalValues } from "../util/map-functions";
 export class City extends MapEntity {
 
     constructor() {
-        super("city")
+        super("city", 4)
     }
 
     readonly type = "city"

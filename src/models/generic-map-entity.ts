@@ -5,6 +5,6 @@ export class GenericMapEntity extends MapEntity{
     readonly type = "genericMapEntity"
 
     constructor(public name: string, public produced: Map<string, number>) {
-        super(name)
+        super(name, 0)
     }
 }
