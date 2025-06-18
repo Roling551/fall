@@ -33,4 +33,24 @@ export class MapTileComponent {
     const doRender = this.uiStateService.doRenderTileInfoFunction()(this.tile.get())
     return doRender
   })
+
+  getBuildingPositionX(index: number): number {
+    switch(index) {
+      case 0: return 0.1 * this.sizeX
+      case 1: return 0.35 * this.sizeX
+      case 2: return 0.6 * this.sizeX
+      case 3: return 0.35 * this.sizeX
+      default: return 0.35 * this.sizeX
+    }
+  }
+
+  getBuildingPositionY(index: number): number {
+    switch(index) {
+      case 0: return 0.25 * this.sizeY
+      case 1: return 0.1 * this.sizeY
+      case 2: return 0.25 * this.sizeY
+      case 3: return 0.4 * this.sizeY
+      default: return 0.25 * this.sizeY
+    }
+  }
 }

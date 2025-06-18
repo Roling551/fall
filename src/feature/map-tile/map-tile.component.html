@@ -7,6 +7,13 @@
     <img [src]="lightBorder">
     @if(tile.get().value.mapEntity; as mapEntity) {
         <img [src]="getTexture(mapEntity.textureName)">
+            @for(building of tile.get().value.mapEntity!.buildings.get().values(); track building) {
+                <img 
+                    [src]="getTexture(building.get().name)"
+                    [style.left.px]="getBuildingPositionX($index)"
+                    [style.top.px]="getBuildingPositionY($index)"
+                >
+            }
     }
     @if(doRenderTileInfo()) {
         <ng-container *ngComponentOutlet="tileInfo()!;"></ng-container> 
