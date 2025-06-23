@@ -1,0 +1,9 @@
+@for(cell of cellInfo; track cell) {
+    <div
+        class="item"
+        [style.left.px]="getTransformX(cell.column)"
+        [style.top.px]="getTransformY(cell.row)"
+    >
+        test
+    </div>
+}
