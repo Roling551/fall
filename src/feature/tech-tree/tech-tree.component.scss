@@ -1,0 +1,10 @@
+.container {
+    display: grid;
+    grid-template-rows: 35px auto;
+    height: 100%;
+}
+
+.tree-container {
+    overflow: hidden;
+    position: relative;
+}

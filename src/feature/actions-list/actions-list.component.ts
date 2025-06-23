@@ -9,6 +9,7 @@ import { Tile } from '../../models/tile';
 import { SimpleTextComponent } from '../../shared/simple-text/simple-text.component';
 import { MapMarkingComponent } from '../../shared/map-marking/map-marking.component';
 import { ForceSignal } from '../../util/force-signal';
+import { CurrentWindowService } from '../../services/current-window.service';
 
 @Component({
   selector: 'app-actions-list',
@@ -17,12 +18,19 @@ import { ForceSignal } from '../../util/force-signal';
   styleUrl: './actions-list.component.scss'
 })
 export class ActionsListComponent {
-  constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService) {}
+  constructor(
+    public worldStateService: WorldStateService,
+    public uiStateService: UIStateService,
+    public currentWindowService:CurrentWindowService,
+  ) {}
 
   onCreateCityClick(): void {
     this.uiStateService.setUI_.createCity()
   }
   onRemoveCityClick(): void {
     this.uiStateService.setUI_.removeCity()
+  }
+  onTechTreeClick(): void {
+    this.currentWindowService.currentWindow.set("tech-tree")
   }
 }

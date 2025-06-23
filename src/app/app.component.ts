@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MainLayoutComponent } from '../feature/main-layout/main-layout.component';
+import { GameWindowComponent } from '../feature/game-window/game-window.component';
 
 @Component({
   selector: 'app-root',
-  imports: [MainLayoutComponent],
+  imports: [GameWindowComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
