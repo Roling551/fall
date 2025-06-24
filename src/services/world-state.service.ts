@@ -50,12 +50,17 @@ export class WorldStateService {
   }
 
   public addCity(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
-      this.cities.get().set(tile.get().key.getKey(), tile)
-      this.cities.forceUpdate()
+    this.cities.get().set(tile.get().key.getKey(), tile)
+    this.cities.forceUpdate()
   }
 
   public removeCity(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
-      this.cities.get().delete(tile.get().key.getKey())
-      this.cities.forceUpdate()
+    const city = tile.get().value.mapEntity as City
+    for(const [key, value] of city.ownedTiles.get().entries()) {
+      value.get().value.belongsTo = undefined;
+    }
+    city.clearOwnedTiles()
+    this.cities.get().delete(tile.get().key.getKey())
+    this.cities.forceUpdate()
   }
 }

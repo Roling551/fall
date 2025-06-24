@@ -39,7 +39,6 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UISettings
                 if(tile.get().value.mapEntity?.type != "city") {
                     return
                 }
-                (tile.get().value.mapEntity as City).clearOwnedTiles()
                 worldStateService.removeCity(tile)
                 tile.get().value.mapEntity = undefined;
                 tile.forceUpdate()
