@@ -3,8 +3,21 @@
         <button (click)="onGoBackClick()">Go back</button>
     </div>
     <div class="tree-container">
-    <div id="tree">
-        <app-tree/>
-    </div>
+        <div id="tree">
+            <app-tree
+                [cellTemplate]="cellTemplate"
+                [sizeX]="200"
+                [sizeY]="100"
+                [spaceX]="20"
+                [spaceY]="40"
+            />
+        </div>
     </div>
 </div>
+
+<ng-template #cellTemplate>
+    <div>
+        test cell
+    </div>
+</ng-template>
+

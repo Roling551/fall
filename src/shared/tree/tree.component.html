@@ -7,7 +7,7 @@
         [style.width.px]="sizeX-2"
         style="border: solid black 1px"
     >
-        test
+        <ng-container *ngTemplateOutlet="cellTemplate;"></ng-container>
     </div>
 }
 <svg [style.height.px]="getSvgHeight()" [style.width.px]="getSvgWidth()">

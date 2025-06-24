@@ -1,22 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { Cell, CellInfo } from '../../models/cell';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tree',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.scss'
 })
 export class TreeComponent {
 
-  // @Input({required: true}) sizeX!:number;
-  // @Input({required: true}) sizeY!:number;
+  @Input({required: true}) cellTemplate!: TemplateRef<any>;
 
-  @Input() sizeX = 50;
-  @Input() sizeY = 20;
+  @Input({required: true}) sizeX!: number;
+  @Input({required: true}) sizeY!: number;
 
-  @Input() spaceX = 10;
-  @Input() spaceY = 10;
+  @Input({required: true}) spaceX!: number;
+  @Input({required: true}) spaceY!: number;
 
   tree = new Cell<number>(0);
   cellInfoArray
