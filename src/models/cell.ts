@@ -2,6 +2,23 @@ export class TraverseTreeInfo {
     constructor(public width: number, public height: number){}
 }
 
+export interface CellCreationData<T>{
+    data: T, 
+    children?: CellCreationData<T>[]
+}
+
+export function createTree<T>(creationData: CellCreationData<T>):Cell<T> 
+{
+    const cell = new Cell(creationData.data)
+    if(!creationData.children) {
+        return cell
+    }
+    for(const child of creationData.children) {
+        cell.addChild(createTree(child));
+    }
+    return cell
+}
+
 export class CellInfo<T>{
     constructor(public cell: Cell<T>, public row: number, public column: number, public parent?: CellInfo<T>){}
 }
@@ -11,11 +28,10 @@ export class Cell<T> {
     public parent?: Cell<T>
     constructor(public value: T) {}
 
-    addChild(value: T): Cell<T> {
-        const childCell = new Cell(value)
-        childCell.parent = this
-        this.children.push(childCell)
-        return childCell;
+    addChild(child: Cell<T>): Cell<T> {
+        child.parent = this
+        this.children.push(child)
+        return child;
     }
 
     traverse(array: CellInfo<T>[], row: number, column: number, parent?: CellInfo<T>): TraverseTreeInfo {

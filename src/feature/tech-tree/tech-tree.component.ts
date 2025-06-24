@@ -13,6 +13,22 @@ import { CurrentWindowService } from '../../services/current-window.service';
 })
 export class TechTreeComponent {
 
+  cellCreationData = {
+    data: 1,
+    children: [
+      {
+        data: 11,
+        children: [
+          {data: 111},
+          {data: 112},
+          {data: 113},
+        ]
+      },
+      {data: 12},
+      {data: 13},
+    ]
+  }
+
   constructor(public currentWindowService: CurrentWindowService) {}
   
   ngAfterViewInit() {

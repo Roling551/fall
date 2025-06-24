@@ -6,6 +6,7 @@
         <div id="tree">
             <app-tree
                 [cellTemplate]="cellTemplate"
+                [cellCreationData]="cellCreationData"
                 [sizeX]="200"
                 [sizeY]="100"
                 [spaceX]="20"
@@ -15,9 +16,9 @@
     </div>
 </div>
 
-<ng-template #cellTemplate>
+<ng-template #cellTemplate let-data="data">
     <div>
-        test cell
+        {{data}}
     </div>
 </ng-template>
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { Cell, CellInfo } from '../../models/cell';
+import { Cell, CellCreationData, CellInfo, createTree, TraverseTreeInfo } from '../../models/cell';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,9 +8,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.scss'
 })
-export class TreeComponent {
+export class TreeComponent<T> implements OnInit {
 
   @Input({required: true}) cellTemplate!: TemplateRef<any>;
+  @Input({required: true}) cellCreationData!: CellCreationData<T>
 
   @Input({required: true}) sizeX!: number;
   @Input({required: true}) sizeY!: number;
@@ -18,25 +19,25 @@ export class TreeComponent {
   @Input({required: true}) spaceX!: number;
   @Input({required: true}) spaceY!: number;
 
-  tree = new Cell<number>(0);
-  cellInfoArray
-  traverseInfo
+  tree?: Cell<T>;
+  cellInfoArray?: CellInfo<T>[];
+  traverseInfo?: TraverseTreeInfo;
 
 
   constructor() {
-    const childA = this.tree.addChild(1);
-    this.tree.addChild(2);
-    childA.addChild(3);
-    childA.addChild(4);
-    const {cellInfoArray, traverseInfo} = this.traverse()
-    this.cellInfoArray = cellInfoArray
-    this.traverseInfo = traverseInfo
-    console.log(traverseInfo.height)
+
   }
 
-  traverse() {
-    const cellInfoArray:CellInfo<number>[] = []
-    const traverseInfo = this.tree.traverse(cellInfoArray, 0, 0)
+  ngOnInit(): void {
+    this.tree = createTree(this.cellCreationData)
+    const {cellInfoArray, traverseInfo} = this.traverse(this.tree)
+    this.cellInfoArray = cellInfoArray
+    this.traverseInfo = traverseInfo
+  }
+
+  traverse(tree: Cell<T>) {
+    const cellInfoArray:CellInfo<T>[] = []
+    const traverseInfo = tree.traverse(cellInfoArray, 0, 0)
     return {cellInfoArray, traverseInfo}
   }
 
@@ -47,10 +48,10 @@ export class TreeComponent {
     return (this.sizeY + this.spaceY) * row
   }
   public getSvgHeight() {
-    return (this.sizeY + this.spaceY) * this.traverseInfo.height 
+    return (this.sizeY + this.spaceY) * (this.traverseInfo? this.traverseInfo.height: 0)
   }
   public getSvgWidth() {
-    return (this.sizeX + this.spaceX) *  this.traverseInfo.width
+    return (this.sizeX + this.spaceX) *  (this.traverseInfo? this.traverseInfo.width: 0)
   }
   public getBottomY(row:number) {
     return (this.sizeY + this.spaceY) * row + this.sizeY

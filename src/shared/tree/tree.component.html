@@ -1,24 +1,26 @@
-@for(cell of cellInfoArray; track cell) {
-    <div
-        class="item"
-        [style.left.px]="getTransformX(cell.column)"
-        [style.top.px]="getTransformY(cell.row)"
-        [style.height.px]="sizeY-2"
-        [style.width.px]="sizeX-2"
-        style="border: solid black 1px"
-    >
-        <ng-container *ngTemplateOutlet="cellTemplate;"></ng-container>
-    </div>
-}
-<svg [style.height.px]="getSvgHeight()" [style.width.px]="getSvgWidth()">
+@if(tree && cellInfoArray && traverseInfo) {
     @for(cell of cellInfoArray; track cell) {
-        @if(cell.parent) {
-            <line 
-                [attr.x1]="getMiddleX(cell.parent.column)" 
-                [attr.y1]="getBottomY(cell.parent.row)"
-                [attr.x2]="getMiddleX(cell.column)"
-                [attr.y2]="getTransformY(cell.row)" 
-            style="stroke:black;stroke-width:2" />
-        }
+        <div
+            class="item"
+            [style.left.px]="getTransformX(cell.column)"
+            [style.top.px]="getTransformY(cell.row)"
+            [style.height.px]="sizeY-2"
+            [style.width.px]="sizeX-2"
+            style="border: solid black 1px"
+        >
+            <ng-container *ngTemplateOutlet="cellTemplate; context:{data:cell.cell.value}"></ng-container>
+        </div>
     }
-</svg>
+    <svg [style.height.px]="getSvgHeight()" [style.width.px]="getSvgWidth()">
+        @for(cell of cellInfoArray; track cell) {
+            @if(cell.parent) {
+                <line 
+                    [attr.x1]="getMiddleX(cell.parent.column)" 
+                    [attr.y1]="getBottomY(cell.parent.row)"
+                    [attr.x2]="getMiddleX(cell.column)"
+                    [attr.y2]="getTransformY(cell.row)" 
+                style="stroke:black;stroke-width:2" />
+            }
+        }
+    </svg>
+}
