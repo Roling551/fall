@@ -4,6 +4,8 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
 import panzoom from 'panzoom';
 import { TreeComponent } from '../../shared/tree/tree.component';
 import { CurrentWindowService } from '../../services/current-window.service';
+import { TechnologiesService } from '../../services/technologies.service';
+import { Cell } from '../../models/cell';
 
 @Component({
   selector: 'app-tech-tree',
@@ -13,23 +15,11 @@ import { CurrentWindowService } from '../../services/current-window.service';
 })
 export class TechTreeComponent {
 
-  cellCreationData = {
-    data: 1,
-    children: [
-      {
-        data: 11,
-        children: [
-          {data: 111},
-          {data: 112},
-          {data: 113},
-        ]
-      },
-      {data: 12},
-      {data: 13},
-    ]
-  }
+  technologies
 
-  constructor(public currentWindowService: CurrentWindowService) {}
+  constructor(public currentWindowService: CurrentWindowService, public technologiesService: TechnologiesService) {
+    this.technologies = technologiesService.technologies
+  }
   
   ngAfterViewInit() {
     const element = document.getElementById('tree');

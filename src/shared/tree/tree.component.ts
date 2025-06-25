@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, TemplateRef } from '@angular/core';
 import { Cell, CellCreationData, CellInfo, createTree, TraverseTreeInfo } from '../../models/cell';
 import { CommonModule } from '@angular/common';
 
@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.scss'
 })
-export class TreeComponent<T> implements OnInit {
+export class TreeComponent<T> implements OnChanges {
 
   @Input({required: true}) cellTemplate!: TemplateRef<any>;
-  @Input({required: true}) cellCreationData!: CellCreationData<T>
+  @Input({required: true}) tree!: Cell<T>
 
   @Input({required: true}) sizeX!: number;
   @Input({required: true}) sizeY!: number;
@@ -19,17 +19,11 @@ export class TreeComponent<T> implements OnInit {
   @Input({required: true}) spaceX!: number;
   @Input({required: true}) spaceY!: number;
 
-  tree?: Cell<T>;
   cellInfoArray?: CellInfo<T>[];
   traverseInfo?: TraverseTreeInfo;
 
 
-  constructor() {
-
-  }
-
-  ngOnInit(): void {
-    this.tree = createTree(this.cellCreationData)
+  ngOnChanges(): void {
     const {cellInfoArray, traverseInfo} = this.traverse(this.tree)
     this.cellInfoArray = cellInfoArray
     this.traverseInfo = traverseInfo
