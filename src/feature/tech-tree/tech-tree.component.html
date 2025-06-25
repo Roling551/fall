@@ -17,8 +17,17 @@
 </div>
 
 <ng-template #cellTemplate let-data="data">
-    <div>
-        {{data}}
+    <div 
+        class="technology-item"
+        [style.backgroundColor] = "data.unlocked() ? 'LightGreen': 'white'"
+    >
+        {{data.name}}
+        @if(data.unlocked()) {
+            Unlocked
+        } @else {
+            <button (click)="onUnlockClick(data)">Unlock</button>
+        }
+        
     </div>
 </ng-template>
 

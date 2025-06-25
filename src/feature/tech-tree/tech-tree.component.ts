@@ -6,6 +6,7 @@ import { TreeComponent } from '../../shared/tree/tree.component';
 import { CurrentWindowService } from '../../services/current-window.service';
 import { TechnologiesService } from '../../services/technologies.service';
 import { Cell } from '../../models/cell';
+import { Technology } from '../../models/technology';
 
 @Component({
   selector: 'app-tech-tree',
@@ -28,5 +29,9 @@ export class TechTreeComponent {
   
   onGoBackClick(): void {
     this.currentWindowService.currentWindow.set("world-map")
+  }
+
+  onUnlockClick(technology: Technology) {
+    this.technologiesService.unlock(technology);
   }
 }

@@ -2,10 +2,17 @@
 <div>{{"Owned tiles: " + city.ownedTilesNumber()}}</div>
 <div>{{"Food: " + city.produced().get('food') + " / " + city.produced().get('food-need')}}</div>
 <div>{{"Authority: " + city.produced().get('authority') + " / " + city.produced().get('authority-need')}}</div>
+
 <button (click)="onAddTileActionClick()" [class.active-button]="isAddTileSelected()">Add tile</button>
-<button (click)="onAddFarmActionClick()" [class.active-button]="isAddFarmSelected()">Add farm</button>
-<button (click)="onAddTowerActionClick()" [class.active-button]="isAddTowerSelected()">Add tower</button>
-<button (click)="onAddMineActionClick()" [class.active-button]="isAddMineSelected()">Add mine</button>
+
+@for(estateInfo of avaliableService.estates(); track estateInfo[0]) {
+    <button
+        (click)="onAddEstateActionClick(estateInfo[0], estateInfo[1])"
+        [class.active-button]="isAddEstateSelected(estateInfo[0])()"
+    >
+        Add {{estateInfo[0]}}
+    </button>
+}
 
 <button (click)="onRemoveEstateActionClick()" [class.active-button]="isRemoveEstateActionSelected()">Remove estate</button>
 

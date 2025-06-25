@@ -7,6 +7,7 @@ import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
 import { Building } from '../../models/building';
+import { AvaliableService } from '../../services/avaliable.service';
 
 @Component({
   selector: 'app-city-panel',
@@ -17,7 +18,7 @@ import { Building } from '../../models/building';
 export class CityPanelComponent {
   @Input({required: true}) city!: City;
   @Input({required: true}) tile!: ForceSignal<KeyValuePair<Coordiante, Tile>>
-  constructor(public uiStateService: UIStateService) {}
+  constructor(public uiStateService: UIStateService, public avaliableService: AvaliableService) {}
 
   public onAddTileActionClick() {
     this.uiStateService.setMapAction_.addTileToCity()
@@ -27,24 +28,14 @@ export class CityPanelComponent {
     return this.uiStateService.additionalInfo()["currentAction"] === "addTileToCity"
   })
 
-  public onAddFarmActionClick() {
-    this.uiStateService.setMapAction_.createEstate(()=>new Estate("farm", new Map([["food",2], ["food-need", 1]])), "farm")
+  public onAddEstateActionClick(estateName: string, getEstate: ()=> Estate) {
+    this.uiStateService.setMapAction_.createEstate(getEstate, estateName)
   }
 
-  isAddFarmSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "createEstateAction-farm"
-  })
-
-  public onAddTowerActionClick() {
-    this.uiStateService.setMapAction_.createEstate(()=>new Estate("tower", new Map([["authority",5], ["food-need", 1]])), "tower")
-  }
-
-  isAddTowerSelected = computed(()=>{
-    return this.uiStateService.additionalInfo()["currentAction"] === "createEstateAction-tower"
-  })
-
-  public onAddMineActionClick() {
-    this.uiStateService.setMapAction_.createEstate(()=>new Estate("mine", new Map([["gold",1], ["food-need", 1]])), "mine")
+  public isAddEstateSelected(estateName: string) {
+    return computed(()=>{
+      return this.uiStateService.additionalInfo()["currentAction"] === "createEstateAction-" + estateName
+    })
   }
 
   isAddMineSelected = computed(()=>{

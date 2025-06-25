@@ -31,7 +31,6 @@ export function getCityUI(
 }
 
 export function getRemoveCityUI(worldStateService: WorldStateService):UISettings {
-    const cityPrice = 10;
     return {
         component:SimpleTextComponent, 
         inputs:{text:"Remove city"},
