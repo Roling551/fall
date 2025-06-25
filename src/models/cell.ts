@@ -19,6 +19,19 @@ export function createTree<T>(creationData: CellCreationData<T>):Cell<T>
     return cell
 }
 
+export function createTreeFromPairs<T>(trunkName: string, dataSet: T[], parenthood: [string,string][], getName: (data:T)=>string):Cell<T>  {
+    const map = new Map<string,Cell<T>>();
+
+    for(const data of dataSet) {
+        map.set(getName(data), new Cell(data))
+    }
+
+    for(const [parentName, childName] of parenthood) {
+        map.get(parentName)!.addChild(map.get(childName)!)
+    }
+    return map.get(trunkName)!
+}
+
 export class CellInfo<T>{
     constructor(public cell: Cell<T>, public row: number, public column: number, public parent?: CellInfo<T>){}
 }

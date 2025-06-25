@@ -4,7 +4,7 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
 import panzoom from 'panzoom';
 import { TreeComponent } from '../../shared/tree/tree.component';
 import { CurrentWindowService } from '../../services/current-window.service';
-import { TechnologiesService } from '../../services/technologies.service';
+import { TechnologiesService } from '../../services/technologies/technologies.service';
 import { Cell } from '../../models/cell';
 import { Technology } from '../../models/technology';
 
