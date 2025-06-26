@@ -17,5 +17,8 @@ export type TechnologyBenefit =
 
 export class Technology {
     public unlocked = signal(false);
-    constructor(public name: string, public benefits: TechnologyBenefit[]) {}
+    public avaliable = signal(false);
+    constructor(public name: string, public benefits: TechnologyBenefit[], avaliable=false) {
+        this.avaliable.set(avaliable);
+    }
 }

@@ -3,7 +3,7 @@ import { createForceSignal } from "../../util/force-signal";
 import { Technology } from "../../models/technology";
 import { AvaliableService } from "../avaliable.service";
 import { Estate } from "../../models/estate";
-import { createTreeFromPairs } from "../../models/cell";
+import { Cell, createTreeFromPairs } from "../../models/cell";
 import { initialTechnologies, initiaTechnologiesParenthood, topTechnologyName } from "./initial-technologies";
 
 @Injectable({
@@ -11,13 +11,19 @@ import { initialTechnologies, initiaTechnologiesParenthood, topTechnologyName } 
 })
 export class TechnologiesService {
 
-    constructor(private avaliableService: AvaliableService) {}
+    constructor(private avaliableService: AvaliableService) {
+
+    }
 
     technologies_ = createForceSignal(createTreeFromPairs(topTechnologyName, initialTechnologies, initiaTechnologiesParenthood, (technology: Technology) => technology.name))
     technologies = this.technologies_.get
 
-    public unlock(technology: Technology) {
+    public unlock(cell: Cell<Technology>) {
+        const technology = cell.value
         technology.unlocked.set(true)
+        for(const childCell of cell.children) {
+            childCell.value.avaliable.set(true)
+        }
         for(const benefit of technology.benefits) {
             if(benefit.type === "unlock-estate") {
                 this.avaliableService.addAvaliabeEstate(benefit.estateName, benefit.getEstate)

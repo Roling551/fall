@@ -11,6 +11,5 @@ export class AvaliableService {
     addAvaliabeEstate(name: string, estateFunction:()=>Estate) {
         this.estates_.get().set(name, estateFunction)
         this.estates_.forceUpdate()
-        console.log(this.estates_.get())
     }
 }

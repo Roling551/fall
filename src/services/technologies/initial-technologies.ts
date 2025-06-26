@@ -3,7 +3,7 @@ import { Technology } from "../../models/technology";
 
 
 export const initialTechnologies:Technology[] = [
-    new Technology("Writing", []),
+    new Technology("Writing", [], true),
     new Technology("Masonry", []),
     new Technology("Farming", [
         {

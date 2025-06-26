@@ -31,7 +31,17 @@ export class TechTreeComponent {
     this.currentWindowService.currentWindow.set("world-map")
   }
 
-  onUnlockClick(technology: Technology) {
-    this.technologiesService.unlock(technology);
+  onUnlockClick(cell: Cell<Technology>) {
+    this.technologiesService.unlock(cell);
+  }
+
+  getCellColor(cell: Cell<Technology>) {
+    if(cell.value.unlocked())
+      return 'LightGreen'
+    else if(!cell.value.avaliable()) {
+      return 'Grey'
+    } else {
+      return 'White'
+    }
   }
 }

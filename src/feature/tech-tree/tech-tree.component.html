@@ -16,16 +16,19 @@
     </div>
 </div>
 
-<ng-template #cellTemplate let-data="data">
+<ng-template #cellTemplate let-cell="cell">
     <div 
         class="technology-item"
-        [style.backgroundColor] = "data.unlocked() ? 'LightGreen': 'white'"
+        [style.backgroundColor] = "getCellColor(cell)"
     >
-        {{data.name}}
-        @if(data.unlocked()) {
+        {{cell.value.name}}
+        {{cell.value.unlocked()}}
+        @if(cell.value.unlocked()) {
             Unlocked
+        } @else if(!cell.value.avaliable()) {
+            Not avaliable
         } @else {
-            <button (click)="onUnlockClick(data)">Unlock</button>
+            <button (click)="onUnlockClick(cell)">Unlock</button>
         }
         
     </div>
