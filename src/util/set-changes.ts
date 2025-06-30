@@ -1,42 +1,23 @@
-import { BehaviorSubject, first, skip, Subject } from "rxjs";
-import { createForceSignal, ForceSignal } from "./force-signal";
+import { BehaviorSubject, first, skip } from "rxjs";
 
-type ArrayAndChange<T> = {
-    array: Set<T>,
-    changeType: "None" | "Add" | "Delete",
-    change?: T
-}
 
 export class SetChangesEmitter<T>{
-    items = new Set<T>()
-    subject = new BehaviorSubject<ArrayAndChange<T>>({
-        array:this.items,
-        changeType: "None"
-    })
+    items:T[]=[]
+    subject = new BehaviorSubject<T[]>(this.items)
     add(item: T) {
-        this.items.add(item)
-        this.subject.next({
-            array:this.items,
-            changeType: "Add",
-            change: item
-        })
+        this.items.push(item)
+        this.subject.next(this.items)
     }
     remove(item: T) {
-        this.items.delete(item)
-        this.subject.next({
-            array:this.items,
-            changeType: "Delete",
-            change: item
-        })
+        this.items = this.items.filter(i => i !== item);
+        this.subject.next(this.items)
     }
     getListener(
-        forEachInit: (item: T)=>{},
-        forAdd: (item: T)=>{},
-        forDelete: (item: T)=>{})
+        forAdd: (item: T)=>void,
+        forDelete: (item: T)=>void)
     {
         return new SetChangesListener(
             this.subject,
-            forEachInit,
             forAdd,
             forDelete
         )
@@ -46,27 +27,25 @@ export class SetChangesEmitter<T>{
 
 export class SetChangesListener<T>{
     subscribtion
+    prieviousItems:T[] = []
     constructor(
-        public subject: BehaviorSubject<ArrayAndChange<T>>,
-        public forEachInit: (item: T)=>{},
-        public forAdd: (item: T)=>{},
-        public forDelete: (item: T)=>{})
+        public subject: BehaviorSubject<T[]>,
+        public forAdd: (item: T)=>void,
+        public forDelete: (item: T)=>void)
     {
-        subject.pipe(first()).subscribe(
-            (arrayAndChange=>{
-                for(const item of arrayAndChange.array) {
-                    forEachInit(item)
-                }
-            })
-        )
-        this.subscribtion = subject.pipe(skip(1)).subscribe(
-            (arrayAndChange=>{
-                if(arrayAndChange.changeType === "Add") {
-                    forAdd(arrayAndChange.change!)
-                } else if(arrayAndChange.changeType === "Delete") {
-                    forDelete(arrayAndChange.change!)
-                }
-            })
-        )
+        this.subscribtion = subject.pipe().subscribe((items: T[])=>{
+            const added = items.filter(x => !this.prieviousItems.includes(x));
+            const deleted = this.prieviousItems.filter(x => !items.includes(x));
+            for(const item of added) {
+                forAdd(item)
+            }
+            for(const item of deleted) {
+                forDelete(item)
+            }
+            this.prieviousItems = items
+        })
+    }
+    destroy() {
+        this.subscribtion.unsubscribe();
     }
 }
