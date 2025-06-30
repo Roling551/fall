@@ -42,7 +42,7 @@ export class SetChangesListener<T>{
             for(const item of deleted) {
                 forDelete(item)
             }
-            this.prieviousItems = items
+            this.prieviousItems = [...items]
         })
     }
     destroy() {

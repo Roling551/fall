@@ -10,6 +10,9 @@ import { City } from "../../models/city"
 import { MapEntity } from "../../models/map-entity"
 import { CityPanelComponent } from "../../feature/city-panel/city-panel.component"
 import { Estate } from "../../models/estate"
+import { SignalsGroup } from "../../util/signals-group"
+import { EstateProductionBonus } from "../../models/bonus"
+import { BonusesService } from "../bonuses.service"
 
 
 export function getCityUI(
@@ -105,6 +108,7 @@ export function getAddTileToCityAction(
     }
 }
 export function getCreateEstateAction(
+    bonusesService: BonusesService,
     cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
     getEstate: ()=>Estate,
     estateName: string
@@ -114,7 +118,9 @@ export function getCreateEstateAction(
                 if(!!tile.get().value.mapEntity || tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
                     return
                 }
-                tile.get().value.mapEntity = getEstate();
+                const estate = getEstate();
+                estate.bonus = bonusesService.listenForEstateProductionBonuses(estate)
+                tile.get().value.mapEntity = estate
                 tile.forceUpdate()
         },
         additionalInfo: {currentAction: "createEstateAction-" + estateName},

@@ -1,6 +1,7 @@
 import { signal } from "@angular/core";
 import { Building } from "./building"
 import { Estate } from "./estate"
+import { EstateProductionBonus } from "./bonus";
 
 export type TechnologyBenefit =
     {
@@ -13,6 +14,11 @@ export type TechnologyBenefit =
         type: "unlock-building";
         buidingName: string; 
         getBuilding: () => Building 
+    }
+        |
+    {
+        type: "estate-production-bonus";
+        bonus: EstateProductionBonus
     };
 
 export class Technology {

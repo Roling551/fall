@@ -1,17 +1,25 @@
+import { computed } from "@angular/core";
 import { addExistingNumericalValues } from "../util/map-functions";
+import { SignalsGroup } from "../util/signals-group";
+import { EstateProductionBonus } from "./bonus";
 import { MapEntity } from "./map-entity";
 
 export class Estate extends MapEntity{
 
     readonly type = "estate"
 
+    public bonus?: SignalsGroup<EstateProductionBonus, Map<any, number>>
+
     constructor(public name: string, public producedList: Map<string, number>) {
         super(name, 0)
     }
 
-    override produced(): Map<string, number> {
+    override produced = computed(()=> {
         const produced = new Map(this.producedList)
-        addExistingNumericalValues(produced, new Map(super.produced()))
+        addExistingNumericalValues(produced, new Map(super.baseProduced()))
+        if(this.bonus) {
+            addExistingNumericalValues(produced, this.bonus.output())
+        }
         return produced
-    }
+    })
 }

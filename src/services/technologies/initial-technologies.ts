@@ -12,6 +12,17 @@ export const initialTechnologies:Technology[] = [
             getEstate: () => new Estate("farm", new Map([["food",2], ["food-need", 1]]))
         },
     ]),
+    new Technology("Irrigation", [
+        {
+            type: "estate-production-bonus",
+            bonus: {
+                type: "estate-production",
+                name: "Irrigation",
+                qualifier: (estate: Estate)=>estate.name==="farm",
+                bonus: (estate: Estate)=>new Map([["food",1]])
+            }
+        }
+    ]),
     new Technology("Mining", [
         {
             type: "unlock-estate",
@@ -30,6 +41,7 @@ export const initialTechnologies:Technology[] = [
 
 export const initiaTechnologiesParenthood: [string, string][] = [
     ["Writing", "Farming"],
+    ["Farming", "Irrigation"],
     ["Writing", "Masonry"],
     ["Masonry", "Mining"],
     ["Masonry", "Towers"],

@@ -7,6 +7,7 @@ import { ActionsListComponent } from "../../feature/actions-list/actions-list.co
 import { getAddTileToCityAction, getCityUI, getCreateCityUI, getCreateEstateAction, getRemoveCityUI, getRemoveEstateAction } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
 import { Estate } from "../../models/estate";
+import { BonusesService } from "../bonuses.service";
 
 export type UISettings = {
     component?: Type<any>;
@@ -39,7 +40,7 @@ export class UIStateService {
   public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
   public additionalInfo = this._additionalInfo.get
 
-  constructor(public worldStateService: WorldStateService) {}
+  constructor(public worldStateService: WorldStateService, public bonusesService: BonusesService) {}
 
   setContainerRef(vcRef: ViewContainerRef) {
     this.viewContainerRef = vcRef;
@@ -123,7 +124,7 @@ export class UIStateService {
     addTileToCity: () => {
       this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["cityTile"]))},
     createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
-      this.setMapAction(getCreateEstateAction(this._additionalInfo.get()["cityTile"], getBuilding, buildingName))},
+      this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["cityTile"], getBuilding, buildingName))},
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["cityTile"]))},
   }

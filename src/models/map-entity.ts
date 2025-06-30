@@ -27,13 +27,13 @@ export abstract class MapEntity {
         this.buildings.forceUpdate()
     }
 
-    public baseProduced = computed(()=>{
+    public baseProduced (){
         const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0]])
         for (const building of this.buildings.get().values()) {
             addExistingNumericalValues(production, building.get().produced)
         }
         return production
-    })
+    }
 
-    public produced(){return this.baseProduced()}
+    public produced = computed(()=>{return this.baseProduced()})
 }
