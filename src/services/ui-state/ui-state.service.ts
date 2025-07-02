@@ -10,8 +10,8 @@ import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
 
 export type UISettings = {
-    component?: Type<any>;
-    inputs?: any;
+    sideComponent?: Type<any>;
+    sideComponentInputs?: any;
     additionalInfo?: any;
     mapAction?: any;
     cancelButtonAction?: any;
@@ -24,7 +24,8 @@ export type UISettings = {
 })
 export class UIStateService {
 
-  private viewContainerRef!: ViewContainerRef;
+  private viewSideContainerRef!: ViewContainerRef;
+  private viewHeaderContainerRef!: ViewContainerRef;
 
   private _ui?: UISettings
 
@@ -42,8 +43,12 @@ export class UIStateService {
 
   constructor(public worldStateService: WorldStateService, public bonusesService: BonusesService) {}
 
-  setContainerRef(vcRef: ViewContainerRef) {
-    this.viewContainerRef = vcRef;
+  setSideContainerRef(vcRef: ViewContainerRef) {
+    this.viewSideContainerRef = vcRef;
+  }
+
+  setHeaderContainerRef(vcRef: ViewContainerRef) {
+    this.viewHeaderContainerRef = vcRef;
   }
 
   setUI(ui:UISettings) {
@@ -77,18 +82,23 @@ export class UIStateService {
     }
     this._cancelButtonAction.forceUpdate()
 
-    this.viewContainerRef.clear();
+    this.viewSideContainerRef.clear();
 
     this._additionalInfo.set(ui.additionalInfo)
 
-    if(ui.inputs) {
-      const compRef = this.viewContainerRef.createComponent(ui.component!, ui.inputs);
-      Object.assign(compRef.instance, ui.inputs);
+    if(ui.sideComponentInputs) {
+      const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
+      Object.assign(compRef.instance, ui.sideComponentInputs);
       compRef.changeDetectorRef.detectChanges();
     }
     else {
-      this.viewContainerRef.createComponent(ui.component!);
+      this.viewSideContainerRef.createComponent(ui.sideComponent!);
     }
+  }
+
+  setHeaderComponent(headerComponent: Type<any>) {
+    this.viewHeaderContainerRef.clear();
+    this.viewHeaderContainerRef.createComponent(headerComponent);
   }
 
   setMapAction(ui:UISettings, goBack = true) {
@@ -110,7 +120,7 @@ export class UIStateService {
 
   private getDefaultCancelButtonAction() {
     return () => {
-      this.setUI({component:ActionsListComponent})
+      this.setUI({sideComponent:ActionsListComponent})
     }
   }
 

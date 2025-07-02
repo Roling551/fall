@@ -15,7 +15,6 @@ export class SignalsGroup<T, U> {
     ) {
         this.listener = emitter.getListener(
             (item: T)=>{
-                console.log("Add")
                 this.signals.get().set(item, {getter:computed(()=>getter(item)), qualifier:computed(()=>qualifier(item))})
                 this.signals.forceUpdate()
             },

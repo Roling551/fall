@@ -10,19 +10,22 @@ import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.compo
 
 @Component({
   selector: 'app-main-layout',
-  imports: [WorldMapComponent, GameInfoPanelComponent],
+  imports: [WorldMapComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent implements AfterViewInit {
 
   @ViewChild('sideContainer', { read: ViewContainerRef }) sideContainer!: ViewContainerRef;
+  @ViewChild('headerContainer', { read: ViewContainerRef }) headerContainer!: ViewContainerRef;
 
   constructor(public uiStateService: UIStateService) {}
 
   ngAfterViewInit(): void {
-    this.uiStateService.setContainerRef(this.sideContainer)
-    this.uiStateService.setUI({component:ActionsListComponent})
+    this.uiStateService.setSideContainerRef(this.sideContainer)
+    this.uiStateService.setHeaderContainerRef(this.headerContainer)
+    this.uiStateService.setUI({sideComponent:ActionsListComponent})
+    this.uiStateService.setHeaderComponent(GameInfoPanelComponent)
   }
 
   onRightClick(event: MouseEvent) {

@@ -20,8 +20,8 @@ export function getCityUI(
     worldStateService: WorldStateService, 
 ):UISettings {
     return {
-        component:CityPanelComponent, 
-        inputs:{city:cityTile.get().value.mapEntity as City, tile: cityTile},
+        sideComponent:CityPanelComponent, 
+        sideComponentInputs:{city:cityTile.get().value.mapEntity as City, tile: cityTile},
         additionalInfo: {cityTile},
         doRenderTileInfoFunction: (tile)=> {
             if(!tile.value.belongsTo) {
@@ -35,8 +35,8 @@ export function getCityUI(
 
 export function getRemoveCityUI(worldStateService: WorldStateService):UISettings {
     return {
-        component:SimpleTextComponent, 
-        inputs:{text:"Remove city"},
+        sideComponent:SimpleTextComponent, 
+        sideComponentInputs:{text:"Remove city"},
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
                 if(tile.get().value.mapEntity?.type != "city") {
                     return
@@ -55,8 +55,8 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UISettings
 export function getCreateCityUI(worldStateService: WorldStateService):UISettings {
     const cityPrice = 10;
     return {
-        component:SimpleTextComponent, 
-        inputs:{text:"Create city"},
+        sideComponent:SimpleTextComponent, 
+        sideComponentInputs:{text:"Create city"},
         mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
             const gold = worldStateService.resources.get().get("gold")!
             if(gold < cityPrice) {
