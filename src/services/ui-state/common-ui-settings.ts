@@ -5,7 +5,7 @@ import { UISettings, UIStateService } from "./ui-state.service"
 import { WorldStateService } from "../world-state.service"
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component"
 import { SimpleTextComponent } from "../../shared/simple-text/simple-text.component"
-import { ForceSignal } from "../../util/force-signal"
+import { createForceSignal, ForceSignal } from "../../util/force-signal"
 import { City } from "../../models/city"
 import { MapEntity } from "../../models/map-entity"
 import { CityPanelComponent } from "../../feature/city-panel/city-panel.component"
@@ -16,18 +16,18 @@ import { BonusesService } from "../bonuses.service"
 
 
 export function getCityUI(
-    cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
+    cityTile: KeyValuePair<Coordiante, Tile>,
     worldStateService: WorldStateService, 
 ):UISettings {
     return {
         sideComponent:CityPanelComponent, 
-        sideComponentInputs:{city:cityTile.get().value.mapEntity as City, tile: cityTile},
+        sideComponentInputs:{city:cityTile.value.mapEntity, tile: cityTile},
         additionalInfo: {cityTile},
         doRenderTileInfoFunction: (tile)=> {
-            if(!tile.value.belongsTo) {
+            if(!tile.value.belongsTo.get()) {
                 return false
             }
-            return tile.value.belongsTo === cityTile.get().value.mapEntity            
+            return tile.value.belongsTo.get() === cityTile.value.mapEntity.get()        
         },
         tileInfo: MapMarkingComponent
     }
@@ -37,16 +37,15 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UISettings
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Remove city"},
-        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-                if(tile.get().value.mapEntity?.type != "city") {
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+                if(tile.value.mapEntity.get()?.type != "city") {
                     return
                 }
                 worldStateService.removeCity(tile)
-                tile.get().value.mapEntity = undefined;
-                tile.forceUpdate()
+                tile.value.mapEntity.set(undefined);
             },
         doRenderTileInfoFunction: (tile)=> {
-        return !tile.value?.mapEntity
+            return !tile.value?.mapEntity.get()
         },
         tileInfo: MapMarkingComponent
     }
@@ -57,51 +56,51 @@ export function getCreateCityUI(worldStateService: WorldStateService):UISettings
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Create city"},
-        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
             const gold = worldStateService.resources.get().get("gold")!
             if(gold < cityPrice) {
                 return
             }
-            if(!!tile.get().value.mapEntity || !!tile.get().value.belongsTo) {
+            if(!!tile.value.mapEntity.get() || !!tile.value.belongsTo.get()) {
                 return
             }
             worldStateService.resources.get().set("gold", gold-cityPrice)
             worldStateService.resources.forceUpdate()
-            tile.get().value.mapEntity = new City();
-            tile.forceUpdate()
-            worldStateService.addCity(tile)
+            const city = new City()
+            tile.value.mapEntity.set(city);
+            const citySignal = tile.value.mapEntity as unknown as ForceSignal<City>
+            worldStateService.addCity(tile.key.getKey(), citySignal)
         },
         doRenderTileInfoFunction: (tile)=> {
-        return !tile.value?.mapEntity
+        return !tile.value?.mapEntity.get()
         },
         tileInfo: MapMarkingComponent
     }
 }
 
 export function getAddTileToCityAction(
-        cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>):UISettings {
+        cityTile: KeyValuePair<Coordiante, Tile>):UISettings {
     return {
-        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-            if(tile.get().value.mapEntity?.type === "city") {
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+            if(tile.value.mapEntity.get()?.type === "city") {
                 return
             }
-            const mapEntity = cityTile.get().value.mapEntity!
+            const mapEntity = cityTile.value.mapEntity.get()!
             const city = mapEntity as City
-            if(!tile.get().value.belongsTo) {
-                tile.get().value.belongsTo = mapEntity
+            if(!tile.value.belongsTo.get()) {
+                tile.value.belongsTo.set(mapEntity)
                 city.addOwnedTile(tile)
                 
-            } else if(tile.get().value.belongsTo!==mapEntity) {
-                const otherCity = tile.get().value.belongsTo as City
+            } else if(tile.value.belongsTo.get()!==mapEntity) {
+                const otherCity = tile.value.belongsTo.get() as City
                 otherCity.removeOwnedTile(tile)
-                tile.get().value.belongsTo = mapEntity
+                tile.value.belongsTo.set(mapEntity)
                 city.addOwnedTile(tile)
             }
             else {
-                tile.get().value.belongsTo = undefined
+                tile.value.belongsTo.set(undefined)
                 city.removeOwnedTile(tile)
             }
-            tile.forceUpdate()
         },
         additionalInfo: {currentAction: "addTileToCity"},
 
@@ -109,19 +108,18 @@ export function getAddTileToCityAction(
 }
 export function getCreateEstateAction(
     bonusesService: BonusesService,
-    cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>,
+    cityTile: KeyValuePair<Coordiante, Tile>,
     getEstate: ()=>Estate,
     estateName: string
 ):UISettings {
     return {
-        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
-                if(!!tile.get().value.mapEntity || tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+                if(!!tile.value.mapEntity.get() || tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
                     return
                 }
                 const estate = getEstate();
                 estate.bonus = bonusesService.listenForEstateProductionBonuses(estate)
-                tile.get().value.mapEntity = estate
-                tile.forceUpdate()
+                tile.value.mapEntity.set(estate)
         },
         additionalInfo: {currentAction: "createEstateAction-" + estateName},
 
@@ -129,17 +127,16 @@ export function getCreateEstateAction(
 }
 
 export function getRemoveEstateAction(
-    cityTile: ForceSignal<KeyValuePair<Coordiante, Tile>>
+    cityTile: KeyValuePair<Coordiante, Tile>
 ):UISettings {
     return {
-        mapAction: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>)=>{
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
                 if(
-                    tile.get().value.mapEntity?.type != "estate" ||
-                    tile.get().value.belongsTo != cityTile.get().value.mapEntity) {
+                    tile.value.mapEntity.get()?.type != "estate" ||
+                    tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
                     return
                 }
-                tile.get().value.mapEntity = undefined;
-                tile.forceUpdate()
+                tile.value.mapEntity.set(undefined);
         },
         additionalInfo: {currentAction: "removeEstateAction"},
 

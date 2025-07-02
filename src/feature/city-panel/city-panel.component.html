@@ -1,7 +1,7 @@
 <p>City</p>
-<div>{{"Owned tiles: " + city.ownedTilesNumber()}}</div>
-<div>{{"Food: " + city.produced().get('food') + " / " + city.produced().get('food-need')}}</div>
-<div>{{"Authority: " + city.produced().get('authority') + " / " + city.produced().get('authority-need')}}</div>
+<div>{{"Owned tiles: " + city.get().ownedTilesNumber()}}</div>
+<div>{{"Food: " + city.get().produced().get('food') + " / " + city.get().produced().get('food-need')}}</div>
+<div>{{"Authority: " + city.get().produced().get('authority') + " / " + city.get().produced().get('authority-need')}}</div>
 
 <button (click)="onAddTileActionClick()" [class.active-button]="isAddTileSelected()">Add tile</button>
 
@@ -17,7 +17,7 @@
 <button (click)="onRemoveEstateActionClick()" [class.active-button]="isRemoveEstateActionSelected()">Remove estate</button>
 
 <div>Buildings:</div>
-@for(building of city.buildings.get().values(); track building) {
+@for(building of city.get().buildings.get().values(); track building) {
     <div>
         {{building.get().name}}
         <button (click)="onRemoveBuildingClick(building)">X</button>

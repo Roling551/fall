@@ -16,8 +16,8 @@ import { AvaliableService } from '../../services/avaliable.service';
   styleUrl: './city-panel.component.scss'
 })
 export class CityPanelComponent {
-  @Input({required: true}) city!: City;
-  @Input({required: true}) tile!: ForceSignal<KeyValuePair<Coordiante, Tile>>
+  @Input({required: true}) city!: ForceSignal<City>;
+  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
   constructor(public uiStateService: UIStateService, public avaliableService: AvaliableService) {}
 
   public onAddTileActionClick() {
@@ -51,12 +51,12 @@ export class CityPanelComponent {
   })
 
   public onCreateTempleClick() {
-    this.city.createBuilding(new Building("temple", 1, new Map([["gold",1]])))
-    this.tile.forceUpdate()
+    this.city.get().createBuilding(new Building("temple", 1, new Map([["gold",1]])))
+    this.city.forceUpdate()
   }
 
   public onRemoveBuildingClick(building: ForceSignal<Building>) {
-    this.city.removeBuilding(building)
-    this.tile.forceUpdate()
+    this.city.get().removeBuilding(building)
+    this.city.forceUpdate()
   }
 }

@@ -16,11 +16,10 @@ export class WorldStateService {
 
   resources = createForceSignal(new Map([["gold",25]]))
 
-  cities = createForceSignal(new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>());
+  cities = createForceSignal(new Map<string, ForceSignal<City>>());
   canNextTurn = computed(()=>{
-    for (const [coordinate, cityTile] of this.cities.get().entries()) {
-      const city = (cityTile.get().value.mapEntity) as City
-      if(!city.canNextTurn()) {
+    for (const [coordinate, city] of this.cities.get().entries()) {
+      if(!city.get().canNextTurn()) {
         return false;
       }
     }
@@ -29,38 +28,39 @@ export class WorldStateService {
 
   constructor() { }
   
-  private getTiles(x: number, y:number, range: number): Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>> {
-    let tiles = new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>()
+  private getTiles(x: number, y:number, range: number): Map<string, KeyValuePair<Coordiante, Tile>> {
+    let tiles = new Map<string, KeyValuePair<Coordiante, Tile>>()
     for(let i = -range; i <= range; i++) {
       for(let j = -range; j <= range; j++) {
         const tile = {key:new Coordiante(i+x, j+y), value:new Tile("ground")}
-        tiles.set(tile.key.getKey(), createForceSignal(tile))
+        tiles.set(tile.key.getKey(), tile)
       } 
     }
     return tiles
   }
 
   public nextTurn() {
-    for (const [coordinate, cityTile] of this.cities.get().entries()) {
-      const city = (cityTile.get().value.mapEntity) as City
-      addExistingNumericalValues(this.resources.get(), city.produced());
+    for (const [coordinate, city] of this.cities.get().entries()) {
+      addExistingNumericalValues(this.resources.get(), city.get().produced());
       this.resources.forceUpdate();
     }
     this.turn.update(x=>x+1)
   }
 
-  public addCity(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
-    this.cities.get().set(tile.get().key.getKey(), tile)
+  public addCity(coordinate:string, city: ForceSignal<City>) {
+    this.cities.get().set(coordinate, city)
     this.cities.forceUpdate()
   }
 
-  public removeCity(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
-    const city = tile.get().value.mapEntity as City
-    for(const [key, value] of city.ownedTiles.get().entries()) {
-      value.get().value.belongsTo = undefined;
+  public removeCity(tile: KeyValuePair<Coordiante, Tile>) {
+    if(tile.value.mapEntity && tile.value.mapEntity.get()?.type === "city") {
+      const city = tile.value.mapEntity.get() as City
+      for(const [key, value] of city.ownedTiles.get().entries()) {
+        value.value.belongsTo.set(undefined);
+      }
+      city.clearOwnedTiles()
+      this.cities.get().delete(tile.key.getKey())
+      this.cities.forceUpdate()
     }
-    city.clearOwnedTiles()
-    this.cities.get().delete(tile.get().key.getKey())
-    this.cities.forceUpdate()
   }
 }

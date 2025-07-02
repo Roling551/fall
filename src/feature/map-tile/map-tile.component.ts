@@ -13,7 +13,7 @@ import { ForceSignal } from '../../util/force-signal';
   styleUrl: './map-tile.component.scss'
 })
 export class MapTileComponent {
-  @Input({required: true}) tile!: ForceSignal<KeyValuePair<Coordiante, Tile>>
+  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
   @Input({required: true}) sizeX!:number;
   @Input({required: true}) sizeY!:number;
 
@@ -30,7 +30,7 @@ export class MapTileComponent {
   }
 
   doRenderTileInfo = computed(()=> {
-    const doRender = this.uiStateService.doRenderTileInfoFunction()(this.tile.get())
+    const doRender = this.uiStateService.doRenderTileInfoFunction()(this.tile)
     return doRender
   })
 

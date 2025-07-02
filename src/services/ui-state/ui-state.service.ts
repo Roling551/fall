@@ -123,8 +123,8 @@ export class UIStateService {
   }
 
   private getDefaultMapFunction(service: UIStateService) {
-    return (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => {
-      if(tile.get().value.mapEntity?.type == "city") {
+    return (tile: KeyValuePair<Coordiante, Tile>) => {
+      if(tile.value.mapEntity?.get()?.type == "city") {
         this.setUI_.city(tile)
       }
     }
@@ -137,7 +137,7 @@ export class UIStateService {
   }
 
   public setUI_ = {
-    city: (tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) => this.setUI(getCityUI(tile, this.worldStateService)),
+    city: (tile: KeyValuePair<Coordiante, Tile>) => this.setUI(getCityUI(tile, this.worldStateService)),
     createCity: () => this.setUI(getCreateCityUI(this.worldStateService)),
     removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService)),
   }

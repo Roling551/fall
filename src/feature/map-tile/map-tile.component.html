@@ -3,11 +3,11 @@
     [style.height.px]="sizeY"
     class="tile-container">
 
-    <img [src]="getTexture(tile.get().value.terrainType)">
+    <img [src]="getTexture(tile.value.terrainType())">
     <img [src]="lightBorder">
-    @if(tile.get().value.mapEntity; as mapEntity) {
+    @if(tile.value.mapEntity.get(); as mapEntity) {
         <img [src]="getTexture(mapEntity.textureName)">
-            @for(building of tile.get().value.mapEntity!.buildings.get().values(); track building) {
+            @for(building of tile.value.mapEntity.get()!.buildings.get().values(); track building) {
                 <img 
                     [src]="getTexture(building.get().name)"
                     [style.left.px]="getBuildingPositionX($index)"

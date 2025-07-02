@@ -15,15 +15,15 @@ export class City extends MapEntity {
 
     readonly type = "city"
 
-    ownedTiles = createForceSignal(new Map<string, ForceSignal<KeyValuePair<Coordiante, Tile>>>());
+    ownedTiles = createForceSignal(new Map<string, KeyValuePair<Coordiante, Tile>>());
 
-    addOwnedTile(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
-        this.ownedTiles.get().set(tile.get().key.getKey(), tile)
+    addOwnedTile(tile: KeyValuePair<Coordiante, Tile>) {
+        this.ownedTiles.get().set(tile.key.getKey(), tile)
         this.ownedTiles.forceUpdate()
     }
 
-    removeOwnedTile(tile: ForceSignal<KeyValuePair<Coordiante, Tile>>) {
-        this.ownedTiles.get().delete(tile.get().key.getKey())
+    removeOwnedTile(tile: KeyValuePair<Coordiante, Tile>) {
+        this.ownedTiles.get().delete(tile.key.getKey())
         this.ownedTiles.forceUpdate()
     }
 
@@ -44,7 +44,7 @@ export class City extends MapEntity {
     override produced = computed(()=>{
         const production = new Map(super.baseProduced())
         for (const [key, tile] of this.ownedTiles.get().entries()) {
-            const mapEntity = tile.get().value.mapEntity
+            const mapEntity = tile.value.mapEntity.get()
             if(!!mapEntity && mapEntity.type === "estate") {
                 const estate = mapEntity as Estate
                 addExistingNumericalValues(production, estate.produced())
