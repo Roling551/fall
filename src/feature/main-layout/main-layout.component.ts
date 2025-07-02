@@ -24,8 +24,7 @@ export class MainLayoutComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.uiStateService.setSideContainerRef(this.sideContainer)
     this.uiStateService.setHeaderContainerRef(this.headerContainer)
-    this.uiStateService.setUI({sideComponent:ActionsListComponent})
-    this.uiStateService.setHeaderComponent(GameInfoPanelComponent)
+    this.uiStateService.setUIMode_.main()
   }
 
   onRightClick(event: MouseEvent) {

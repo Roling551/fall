@@ -8,15 +8,21 @@ import { getAddTileToCityAction, getCityUI, getCreateCityUI, getCreateEstateActi
 import { WorldStateService } from "../world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
+import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
+
+export type UIModeSettings = {
+  headerComponent: Type<any>
+  defaultSideComponent?: Type<any>;
+}
 
 export type UISettings = {
-    sideComponent?: Type<any>;
-    sideComponentInputs?: any;
-    additionalInfo?: any;
-    mapAction?: any;
-    cancelButtonAction?: any;
-    tileInfo?: Type<any>;
-    doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean;
+  sideComponent?: Type<any>;
+  sideComponentInputs?: any;
+  additionalInfo?: any;
+  mapAction?: any;
+  cancelButtonAction?: any;
+  tileInfo?: Type<any>;
+  doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean;
 }
 
 @Injectable({
@@ -28,6 +34,7 @@ export class UIStateService {
   private viewHeaderContainerRef!: ViewContainerRef;
 
   private _ui?: UISettings
+  private _uiMode?: UIModeSettings
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _cancelButtonAction = createForceSignal(this.getDefaultCancelButtonAction())
@@ -96,9 +103,14 @@ export class UIStateService {
     }
   }
 
-  setHeaderComponent(headerComponent: Type<any>) {
+  setUIMode(uiModeSettings: UIModeSettings) {
+    this._uiMode = uiModeSettings
+    this.viewSideContainerRef.clear();
+    if(uiModeSettings.defaultSideComponent){
+      this.viewSideContainerRef.createComponent(uiModeSettings.defaultSideComponent);
+    }
     this.viewHeaderContainerRef.clear();
-    this.viewHeaderContainerRef.createComponent(headerComponent);
+    this.viewHeaderContainerRef.createComponent(uiModeSettings.headerComponent);
   }
 
   setMapAction(ui:UISettings, goBack = true) {
@@ -120,7 +132,7 @@ export class UIStateService {
 
   private getDefaultCancelButtonAction() {
     return () => {
-      this.setUI({sideComponent:ActionsListComponent})
+      this.setUI({sideComponent:this._uiMode!.defaultSideComponent})
     }
   }
 
@@ -137,5 +149,14 @@ export class UIStateService {
       this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["cityTile"], getBuilding, buildingName))},
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["cityTile"]))},
+  }
+
+  public setUIMode_ = {
+    main: () => {
+      this.setUIMode(getMainMode())
+    },
+    battle: () => {
+      this.setUIMode(getBattleMode())
+    }
   }
 }
