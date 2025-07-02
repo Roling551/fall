@@ -15,6 +15,9 @@
                 >
             }
     }
+    @if(getUnit(); as unit) {
+        <img [src]="getTexture(unit.name)">
+    }
     @if(doRenderTileInfo()) {
         <ng-container *ngComponentOutlet="tileInfo()!;"></ng-container> 
     }

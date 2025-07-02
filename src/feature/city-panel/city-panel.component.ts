@@ -8,6 +8,7 @@ import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
 import { Building } from '../../models/building';
 import { AvaliableService } from '../../services/avaliable.service';
+import { Unit } from '../../models/unit';
 
 @Component({
   selector: 'app-city-panel',
@@ -58,5 +59,10 @@ export class CityPanelComponent {
   public onRemoveBuildingClick(building: ForceSignal<Building>) {
     this.city.get().removeBuilding(building)
     this.city.forceUpdate()
+  }
+
+  public onAddUnitClick() {
+    this.tile.value.units.get().add(new Unit("knight"))
+    this.tile.value.units.forceUpdate()
   }
 }

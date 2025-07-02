@@ -53,4 +53,14 @@ export class MapTileComponent {
       default: return 0.25 * this.sizeY
     }
   }
+
+  getUnit() {
+    const units = this.tile.value.units.get()
+    if(units.size > 0) {
+      for(let unit of units) {
+        return unit
+      }
+    }
+    return undefined
+  }
 }
