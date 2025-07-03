@@ -117,9 +117,15 @@ export class UIStateService {
   setMapAction(ui:UISettings, goBack = true) {
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
     this._mapAction.set(ui.mapAction)
-    this._cancelButtonAction.set(ui.cancelButtonAction)
     if(goBack) {
-      this._cancelButtonAction.set(()=>this.setUI(this._ui!))
+      this._cancelButtonAction.set(()=>{
+        if(ui.cancelButtonAction) {
+          ui.cancelButtonAction()
+        }
+        this.setUI(this._ui!)}
+      )
+    } else {
+      this._cancelButtonAction.set(ui.cancelButtonAction)
     }
   }
 
@@ -129,14 +135,14 @@ export class UIStateService {
     }
   }
 
-  private getDefaultCancelButtonAction() {
+  public getDefaultCancelButtonAction() {
     return () => {
       this.setUI({sideComponent:this._uiMode!.defaultSideComponent})
     }
   }
 
   public setUI_ = {
-    tile: (tile: KeyValuePair<Coordiante, Tile>) => this.setUI(getTileUI(tile, this.worldStateService)),
+    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits)),
     createCity: () => this.setUI(getCreateCityUI(this.worldStateService)),
     removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService)),
   }

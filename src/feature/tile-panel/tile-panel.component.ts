@@ -6,6 +6,7 @@ import { CityPanelComponent } from '../city-panel/city-panel.component';
 import { ForceSignal } from '../../util/force-signal';
 import { City } from '../../models/city';
 import { UnitsPanelComponent } from '../units-panel/units-panel.component';
+import { Unit } from '../../models/unit';
 
 @Component({
   selector: 'app-tile-panel',
@@ -15,6 +16,7 @@ import { UnitsPanelComponent } from '../units-panel/units-panel.component';
 })
 export class TilePanelComponent {
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
+  @Input() selectedUnits?: Set<Unit>
 
   entityType = computed(()=>{
     return this.tile.value.mapEntity.get()?.type || "none"

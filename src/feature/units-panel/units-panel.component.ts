@@ -1,4 +1,4 @@
-import { Component, computed, Input } from '@angular/core';
+import { AfterViewInit, Component, computed, Input, OnInit } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
@@ -11,12 +11,16 @@ import { UIStateService } from '../../services/ui-state/ui-state.service';
   templateUrl: './units-panel.component.html',
   styleUrl: './units-panel.component.scss'
 })
-export class UnitsPanelComponent {
+export class UnitsPanelComponent implements OnInit{
 
   constructor(public uiStateService: UIStateService){}
 
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
   @Input() selectedUnits?: Set<Unit>
+
+  ngOnInit(): void {
+    this.updateUnitAction()
+  }
 
   units = computed(()=>{
     return this.tile.value.units.get()
@@ -32,7 +36,15 @@ export class UnitsPanelComponent {
         this.selectedUnits.add(unit)
       }
     }
-    this.uiStateService.setMapAction_.moveUnits(this.tile, this.selectedUnits)
+    this.updateUnitAction()
+  }
+
+  updateUnitAction() {
+    if(this.selectedUnits && this.selectedUnits.size > 0) {
+      this.uiStateService.setMapAction_.moveUnits(this.tile, this.selectedUnits)
+    } else if(this.selectedUnits) {
+      this.uiStateService.cancelButtonAction()()
+    }
   }
 
   isUnitSelected(unit: Unit) {

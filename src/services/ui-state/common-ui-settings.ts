@@ -19,7 +19,8 @@ import { Unit } from "../../models/unit"
 
 export function getTileUI(
     tile: KeyValuePair<Coordiante, Tile>,
-    worldStateService: WorldStateService, 
+    worldStateService: WorldStateService,
+    selectedUnits?: Set<Unit>
 ):UISettings {
 
     let doRenderTileInfoFunction
@@ -34,7 +35,7 @@ export function getTileUI(
 
     return {
         sideComponent:TilePanelComponent, 
-        sideComponentInputs:{tile},
+        sideComponentInputs:{tile, selectedUnits},
         additionalInfo: {tile},
         doRenderTileInfoFunction,
         tileInfo: MapMarkingComponent
@@ -154,17 +155,20 @@ export function getRemoveEstateAction(
 export function getMoveUnitsAction(
     uiStateService: UIStateService,
     previousTile: KeyValuePair<Coordiante, Tile>,
-    units: Set<Unit>
+    selectedUnits: Set<Unit>
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            for(const unit of units) {
+            for(const unit of selectedUnits) {
                 previousTile.value.units.get().delete(unit)
                 previousTile.value.units.forceUpdate()
                 tile.value.units.get().add(unit)
                 tile.value.units.forceUpdate()
             }
-            uiStateService.cancelButtonAction()()
+            uiStateService.setUI_.tile(tile, selectedUnits)
         },
+        cancelButtonAction:() => {
+            selectedUnits.clear()
+        }
     }
 }
