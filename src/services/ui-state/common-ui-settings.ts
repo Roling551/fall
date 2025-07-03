@@ -20,16 +20,22 @@ export function getTileUI(
     tile: KeyValuePair<Coordiante, Tile>,
     worldStateService: WorldStateService, 
 ):UISettings {
+
+    let doRenderTileInfoFunction
+    if(tile.value.mapEntity.get()?.type === "city") {
+        doRenderTileInfoFunction = (clickedTile: KeyValuePair<Coordiante, Tile>)=> {
+            if(!clickedTile.value.belongsTo.get()) {
+                return false
+            }
+            return clickedTile.value.belongsTo.get() === tile.value.mapEntity.get()  
+        }      
+    }
+
     return {
         sideComponent:TilePanelComponent, 
         sideComponentInputs:{tile},
         additionalInfo: {tile},
-        doRenderTileInfoFunction: (tile)=> {
-            if(!tile.value.belongsTo.get()) {
-                return false
-            }
-            return tile.value.belongsTo.get() === tile.value.mapEntity.get()        
-        },
+        doRenderTileInfoFunction,
         tileInfo: MapMarkingComponent
     }
 }
