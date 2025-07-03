@@ -1,4 +1,4 @@
-import { Injectable, signal, Type, ViewContainerRef } from "@angular/core";
+import { effect, Injectable, signal, Type, untracked, ViewContainerRef } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
@@ -49,7 +49,33 @@ export class UIStateService {
   public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
   public additionalInfo = this._additionalInfo.get
 
-  constructor(public worldStateService: WorldStateService, public bonusesService: BonusesService) {}
+  public selectedUnitsSignal = createForceSignal(new Set<Unit>())
+
+  public selectUnit(unit: Unit) {
+    const selectedUnits = this.selectedUnitsSignal.get()
+    if(selectedUnits.has(unit)) {
+      selectedUnits.delete(unit)
+    } else {
+      selectedUnits.add(unit)
+    }
+    this.selectedUnitsSignal.forceUpdate()
+  }
+
+  constructor(public worldStateService: WorldStateService, public bonusesService: BonusesService) {
+    let initialRun = true
+    effect(() => {
+      const selectedUnits = this.selectedUnitsSignal.get()
+      if(!initialRun) {
+        if(selectedUnits.size > 0) {
+          untracked(()=>this.setMapAction_.moveUnits())
+        } else {
+          untracked(()=>this.setUI(this._ui!))
+        }
+      }
+      initialRun = false
+    });
+    
+  }
 
   setSideContainerRef(vcRef: ViewContainerRef) {
     this.viewSideContainerRef = vcRef;
@@ -163,8 +189,8 @@ export class UIStateService {
       this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
-    moveUnits: (previousTile: KeyValuePair<Coordiante, Tile>, units: Set<Unit>) => {
-      this.setMapAction(getMoveUnitsAction(this, previousTile, units))
+    moveUnits: () => {
+      this.setMapAction(getMoveUnitsAction(this, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
     }
   }
 

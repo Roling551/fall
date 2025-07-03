@@ -155,20 +155,22 @@ export function getRemoveEstateAction(
 export function getMoveUnitsAction(
     uiStateService: UIStateService,
     previousTile: KeyValuePair<Coordiante, Tile>,
-    selectedUnits: Set<Unit>
+    selectedUnitsSignal: ForceSignal<Set<Unit>>
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            for(const unit of selectedUnits) {
+            for(const unit of selectedUnitsSignal.get()) {
                 previousTile.value.units.get().delete(unit)
                 previousTile.value.units.forceUpdate()
                 tile.value.units.get().add(unit)
                 tile.value.units.forceUpdate()
             }
-            uiStateService.setUI_.tile(tile, selectedUnits)
+            uiStateService.setUI_.tile(tile)
+            uiStateService.setMapAction_.moveUnits()
         },
         cancelButtonAction:() => {
-            selectedUnits.clear()
+            selectedUnitsSignal.get().clear()
+            selectedUnitsSignal.forceUpdate()
         }
     }
 }

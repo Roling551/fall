@@ -4,6 +4,7 @@ import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { Unit } from '../../models/unit';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
+import { createForceSignal } from '../../util/force-signal';
 
 @Component({
   selector: 'app-units-panel',
@@ -11,43 +12,25 @@ import { UIStateService } from '../../services/ui-state/ui-state.service';
   templateUrl: './units-panel.component.html',
   styleUrl: './units-panel.component.scss'
 })
-export class UnitsPanelComponent implements OnInit{
+export class UnitsPanelComponent{
 
-  constructor(public uiStateService: UIStateService){}
+  selectedUnitsSignal
+  constructor(public uiStateService: UIStateService){
+    this.selectedUnitsSignal = this.uiStateService.selectedUnitsSignal
+  }
+  
 
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
-  @Input() selectedUnits?: Set<Unit>
-
-  ngOnInit(): void {
-    this.updateUnitAction()
-  }
 
   units = computed(()=>{
     return this.tile.value.units.get()
   })
 
   onUnitClick(unit: Unit) {
-    if(!this.selectedUnits || this.selectedUnits.size==0) {
-      this.selectedUnits = new Set([unit])
-    } else {
-      if(this.selectedUnits.has(unit)) {
-        this.selectedUnits.delete(unit)
-      } else {
-        this.selectedUnits.add(unit)
-      }
-    }
-    this.updateUnitAction()
-  }
-
-  updateUnitAction() {
-    if(this.selectedUnits && this.selectedUnits.size > 0) {
-      this.uiStateService.setMapAction_.moveUnits(this.tile, this.selectedUnits)
-    } else if(this.selectedUnits) {
-      this.uiStateService.cancel()
-    }
+    this.uiStateService.selectUnit(unit)
   }
 
   isUnitSelected(unit: Unit) {
-    return this.selectedUnits?.has(unit)
+    return this.selectedUnitsSignal.get().has(unit)
   }
 }
