@@ -13,21 +13,22 @@ import { Estate } from "../../models/estate"
 import { SignalsGroup } from "../../util/signals-group"
 import { EstateProductionBonus } from "../../models/bonus"
 import { BonusesService } from "../bonuses.service"
+import { TilePanelComponent } from "../../feature/tile-panel/tile-panel.component"
 
 
-export function getCityUI(
-    cityTile: KeyValuePair<Coordiante, Tile>,
+export function getTileUI(
+    tile: KeyValuePair<Coordiante, Tile>,
     worldStateService: WorldStateService, 
 ):UISettings {
     return {
-        sideComponent:CityPanelComponent, 
-        sideComponentInputs:{city:cityTile.value.mapEntity, tile: cityTile},
-        additionalInfo: {cityTile},
+        sideComponent:TilePanelComponent, 
+        sideComponentInputs:{tile},
+        additionalInfo: {tile},
         doRenderTileInfoFunction: (tile)=> {
             if(!tile.value.belongsTo.get()) {
                 return false
             }
-            return tile.value.belongsTo.get() === cityTile.value.mapEntity.get()        
+            return tile.value.belongsTo.get() === tile.value.mapEntity.get()        
         },
         tileInfo: MapMarkingComponent
     }

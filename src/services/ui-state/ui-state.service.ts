@@ -4,7 +4,7 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddTileToCityAction, getCityUI, getCreateCityUI, getCreateEstateAction, getRemoveCityUI, getRemoveEstateAction } from "./common-ui-settings";
+import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
@@ -124,9 +124,7 @@ export class UIStateService {
 
   private getDefaultMapFunction(service: UIStateService) {
     return (tile: KeyValuePair<Coordiante, Tile>) => {
-      if(tile.value.mapEntity?.get()?.type == "city") {
-        this.setUI_.city(tile)
-      }
+      this.setUI_.tile(tile)
     }
   }
 
@@ -137,18 +135,18 @@ export class UIStateService {
   }
 
   public setUI_ = {
-    city: (tile: KeyValuePair<Coordiante, Tile>) => this.setUI(getCityUI(tile, this.worldStateService)),
+    tile: (tile: KeyValuePair<Coordiante, Tile>) => this.setUI(getTileUI(tile, this.worldStateService)),
     createCity: () => this.setUI(getCreateCityUI(this.worldStateService)),
     removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService)),
   }
 
   public setMapAction_ = {
     addTileToCity: () => {
-      this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["cityTile"]))},
+      this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["tile"]))},
     createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
-      this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["cityTile"], getBuilding, buildingName))},
+      this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
-      this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["cityTile"]))},
+      this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
   }
 
   public setUIMode_ = {

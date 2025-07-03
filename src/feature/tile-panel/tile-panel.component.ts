@@ -1,0 +1,25 @@
+import { Component, computed, Input } from '@angular/core';
+import { KeyValuePair } from '../../models/key-value-pair';
+import { Coordiante } from '../../models/coordinate';
+import { Tile } from '../../models/tile';
+import { CityPanelComponent } from '../city-panel/city-panel.component';
+import { ForceSignal } from '../../util/force-signal';
+import { City } from '../../models/city';
+
+@Component({
+  selector: 'app-tile-panel',
+  imports: [CityPanelComponent],
+  templateUrl: './tile-panel.component.html',
+  styleUrl: './tile-panel.component.scss'
+})
+export class TilePanelComponent {
+  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
+
+  entityType = computed(()=>{
+    return this.tile.value.mapEntity.get()?.type || "none"
+  })
+
+  getCity() {
+    return this.tile.value.mapEntity as unknown as ForceSignal<City>
+  }
+}
