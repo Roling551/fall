@@ -1,4 +1,4 @@
-import { effect, Injectable, signal, Type, untracked, ViewContainerRef } from "@angular/core";
+import { computed, effect, Injectable, signal, Type, untracked, ViewContainerRef } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
@@ -11,8 +11,12 @@ import { BonusesService } from "../bonuses.service";
 import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
 import { Unit } from "../../models/unit";
 
+
+export type UIModeName = "main" | "battle"
+
 export type UIModeSettings = {
-  headerComponent: Type<any>
+  name: UIModeName
+  headerComponent: Type<any>;
   defaultSideComponent?: Type<any>;
 }
 
@@ -50,6 +54,8 @@ export class UIStateService {
   public additionalInfo = this._additionalInfo.get
 
   public selectedUnitsSignal = createForceSignal(new Set<Unit>())
+
+  public uiModeName = signal<UIModeName>("main")
 
   public selectUnit(unit: Unit) {
     const selectedUnits = this.selectedUnitsSignal.get()
@@ -133,6 +139,7 @@ export class UIStateService {
   setUIMode(uiModeSettings: UIModeSettings) {
     this.cancel();
     this._uiMode = uiModeSettings
+    this.uiModeName.set(uiModeSettings.name)
     this.viewSideContainerRef.clear();
     if(uiModeSettings.defaultSideComponent){
       this.viewSideContainerRef.createComponent(uiModeSettings.defaultSideComponent);

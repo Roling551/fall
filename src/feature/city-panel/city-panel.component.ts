@@ -21,6 +21,8 @@ export class CityPanelComponent {
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
   constructor(public uiStateService: UIStateService, public avaliableService: AvaliableService) {}
 
+  isMainMode = computed(()=>{return this.uiStateService.uiModeName()==="main"})
+
   public onAddTileActionClick() {
     this.uiStateService.setMapAction_.addTileToCity()
   }

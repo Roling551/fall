@@ -16,7 +16,6 @@ import { Unit } from '../../models/unit';
 })
 export class TilePanelComponent {
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
-  @Input() selectedUnits?: Set<Unit>
 
   entityType = computed(()=>{
     return this.tile.value.mapEntity.get()?.type || "none"

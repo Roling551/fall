@@ -18,7 +18,6 @@ export class UnitsPanelComponent{
   constructor(public uiStateService: UIStateService){
     this.selectedUnitsSignal = this.uiStateService.selectedUnitsSignal
   }
-  
 
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
 
