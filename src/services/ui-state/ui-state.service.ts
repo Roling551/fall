@@ -4,11 +4,12 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
+import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
 import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
+import { Unit } from "../../models/unit";
 
 export type UIModeSettings = {
   headerComponent: Type<any>
@@ -147,6 +148,9 @@ export class UIStateService {
       this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
+    moveUnits: (previousTile: KeyValuePair<Coordiante, Tile>, units: Set<Unit>) => {
+      this.setMapAction(getMoveUnitsAction(this, previousTile, units))
+    }
   }
 
   public setUIMode_ = {

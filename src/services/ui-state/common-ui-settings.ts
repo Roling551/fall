@@ -14,6 +14,7 @@ import { SignalsGroup } from "../../util/signals-group"
 import { EstateProductionBonus } from "../../models/bonus"
 import { BonusesService } from "../bonuses.service"
 import { TilePanelComponent } from "../../feature/tile-panel/tile-panel.component"
+import { Unit } from "../../models/unit"
 
 
 export function getTileUI(
@@ -147,5 +148,23 @@ export function getRemoveEstateAction(
         },
         additionalInfo: {currentAction: "removeEstateAction"},
 
+    }
+}
+
+export function getMoveUnitsAction(
+    uiStateService: UIStateService,
+    previousTile: KeyValuePair<Coordiante, Tile>,
+    units: Set<Unit>
+) {
+    return {
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+            for(const unit of units) {
+                previousTile.value.units.get().delete(unit)
+                previousTile.value.units.forceUpdate()
+                tile.value.units.get().add(unit)
+                tile.value.units.forceUpdate()
+            }
+            uiStateService.cancelButtonAction()()
+        },
     }
 }

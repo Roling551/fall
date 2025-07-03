@@ -1,4 +1,5 @@
 Units:
 @for(unit of units(); track unit) {
-    {{unit.name}}
+    <div (click)="onUnitClick(unit)" [class.active-class]="isUnitSelected(unit)">{{unit.name}}</div>
+    
 }
