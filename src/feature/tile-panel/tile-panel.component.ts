@@ -5,10 +5,11 @@ import { Tile } from '../../models/tile';
 import { CityPanelComponent } from '../city-panel/city-panel.component';
 import { ForceSignal } from '../../util/force-signal';
 import { City } from '../../models/city';
+import { UnitsPanelComponent } from '../units-panel/units-panel.component';
 
 @Component({
   selector: 'app-tile-panel',
-  imports: [CityPanelComponent],
+  imports: [CityPanelComponent, UnitsPanelComponent],
   templateUrl: './tile-panel.component.html',
   styleUrl: './tile-panel.component.scss'
 })
