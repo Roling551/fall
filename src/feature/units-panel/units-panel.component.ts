@@ -43,7 +43,7 @@ export class UnitsPanelComponent implements OnInit{
     if(this.selectedUnits && this.selectedUnits.size > 0) {
       this.uiStateService.setMapAction_.moveUnits(this.tile, this.selectedUnits)
     } else if(this.selectedUnits) {
-      this.uiStateService.cancelButtonAction()()
+      this.uiStateService.cancel()
     }
   }
 

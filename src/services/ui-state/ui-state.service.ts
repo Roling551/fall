@@ -105,6 +105,7 @@ export class UIStateService {
   }
 
   setUIMode(uiModeSettings: UIModeSettings) {
+    this.cancel();
     this._uiMode = uiModeSettings
     this.viewSideContainerRef.clear();
     if(uiModeSettings.defaultSideComponent){
@@ -135,9 +136,17 @@ export class UIStateService {
     }
   }
 
+  public cancel() {
+    if(this.cancelButtonAction && this.cancelButtonAction()) {
+      this.cancelButtonAction()()
+    }
+  }
+
   public getDefaultCancelButtonAction() {
     return () => {
-      this.setUI({sideComponent:this._uiMode!.defaultSideComponent})
+      if(this._uiMode && this._uiMode!.defaultSideComponent) {
+        this.setUI({sideComponent:this._uiMode!.defaultSideComponent})
+      }
     }
   }
 
