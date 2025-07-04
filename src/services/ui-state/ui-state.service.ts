@@ -210,7 +210,7 @@ export class UIStateService {
     moveUnits: () => {
       this.setMapAction(getMoveUnitsAction(this, this.unitsService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
     moveUnitsBattle: () => {
-      this.setMapAction(getMoveUnitsBattleAction(this, this.unitsService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
+      this.setMapAction(getMoveUnitsBattleAction(this, this.worldStateService, this.unitsService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
     }
   }
 
