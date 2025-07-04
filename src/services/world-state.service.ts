@@ -26,16 +26,16 @@ export class WorldStateService {
       const [x, y] = Coordiante.getComponents(node)
       const neighbors: string[] = []
       if(x>0) {
-        neighbors.push(Coordiante.getKey(x+1, y))
-      }
-      if(x<this.sizeX-1) {
         neighbors.push(Coordiante.getKey(x-1, y))
       }
+      if(x<this.sizeX-1) {
+        neighbors.push(Coordiante.getKey(x+1, y))
+      }
       if(y>0) {
-        neighbors.push(Coordiante.getKey(x, y+1))
+        neighbors.push(Coordiante.getKey(x, y-1))
       }
       if(y<this.sizeY-1) {
-        neighbors.push(Coordiante.getKey(x, y-1))
+        neighbors.push(Coordiante.getKey(x, y+1))
       }
       return neighbors
     }
