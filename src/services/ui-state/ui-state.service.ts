@@ -4,12 +4,13 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
+import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
 import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
 import { Unit } from "../../models/unit";
+import { UnitsService } from "../units.service";
 
 
 export type UIModeName = "main" | "battle"
@@ -67,13 +68,23 @@ export class UIStateService {
     this.selectedUnitsSignal.forceUpdate()
   }
 
-  constructor(public worldStateService: WorldStateService, public bonusesService: BonusesService) {
+  constructor(
+    public worldStateService: WorldStateService,
+    public bonusesService: BonusesService,
+    public unitsService: UnitsService
+  ) {
     let initialRun = true
     effect(() => {
       const selectedUnits = this.selectedUnitsSignal.get()
       if(!initialRun) {
         if(selectedUnits.size > 0) {
-          untracked(()=>this.setMapAction_.moveUnits())
+          untracked(()=> {
+            if(this.uiModeName()==="main") {
+              this.setMapAction_.moveUnits()
+            } else {
+              this.setMapAction_.moveUnitsBattle()
+            }
+          })
         } else {
           untracked(()=>this.setUI(this._ui!))
         }
@@ -197,7 +208,9 @@ export class UIStateService {
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     moveUnits: () => {
-      this.setMapAction(getMoveUnitsAction(this, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
+      this.setMapAction(getMoveUnitsAction(this, this.unitsService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
+    moveUnitsBattle: () => {
+      this.setMapAction(getMoveUnitsBattleAction(this, this.unitsService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
     }
   }
 

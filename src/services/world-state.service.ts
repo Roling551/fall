@@ -5,6 +5,7 @@ import { KeyValuePair } from '../models/key-value-pair';
 import { createForceSignal, ForceSignal } from '../util/force-signal';
 import { City } from '../models/city';
 import { addExistingNumericalValues } from '../util/map-functions';
+import { Unit } from '../models/unit';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,9 @@ export class WorldStateService {
 
   tiles = this.getTiles(0,0,5)
   turn = signal(0)
-
   resources = createForceSignal(new Map([["gold",25]]))
-
   cities = createForceSignal(new Map<string, ForceSignal<City>>());
+
   canNextTurn = computed(()=>{
     for (const [coordinate, city] of this.cities.get().entries()) {
       if(!city.get().canNextTurn()) {

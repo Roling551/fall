@@ -15,6 +15,7 @@ import { EstateProductionBonus } from "../../models/bonus"
 import { BonusesService } from "../bonuses.service"
 import { TilePanelComponent } from "../../feature/tile-panel/tile-panel.component"
 import { Unit } from "../../models/unit"
+import { UnitsService } from "../units.service"
 
 
 export function getTileUI(
@@ -154,17 +155,32 @@ export function getRemoveEstateAction(
 
 export function getMoveUnitsAction(
     uiStateService: UIStateService,
+    unitsService: UnitsService,
     previousTile: KeyValuePair<Coordiante, Tile>,
     selectedUnitsSignal: ForceSignal<Set<Unit>>
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            for(const unit of selectedUnitsSignal.get()) {
-                previousTile.value.units.get().delete(unit)
-                previousTile.value.units.forceUpdate()
-                tile.value.units.get().add(unit)
-                tile.value.units.forceUpdate()
-            }
+            unitsService.moveUnitStationed(selectedUnitsSignal.get(), previousTile, tile)
+            uiStateService.setUI_.tile(tile)
+            uiStateService.setMapAction_.moveUnits()
+        },
+        cancelButtonAction:() => {
+            selectedUnitsSignal.get().clear()
+            selectedUnitsSignal.forceUpdate()
+        }
+    }
+}
+
+export function getMoveUnitsBattleAction(
+    uiStateService: UIStateService,
+    unitsService: UnitsService,
+    previousTile: KeyValuePair<Coordiante, Tile>,
+    selectedUnitsSignal: ForceSignal<Set<Unit>>
+) {
+    return {
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+            unitsService.moveUnitsBattle(selectedUnitsSignal.get(), previousTile, tile)
             uiStateService.setUI_.tile(tile)
             uiStateService.setMapAction_.moveUnits()
         },
