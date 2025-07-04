@@ -10,8 +10,7 @@ import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
 import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
 import { Unit } from "../../models/unit";
-import { UnitsService } from "../units.service";
-
+import { BattleService } from "../battle.service";
 
 export type UIModeName = "main" | "battle"
 
@@ -71,7 +70,7 @@ export class UIStateService {
   constructor(
     public worldStateService: WorldStateService,
     public bonusesService: BonusesService,
-    public unitsService: UnitsService
+    public battleService: BattleService
   ) {
     let initialRun = true
     effect(() => {
@@ -208,9 +207,9 @@ export class UIStateService {
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     moveUnits: () => {
-      this.setMapAction(getMoveUnitsAction(this, this.unitsService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
+      this.setMapAction(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
     moveUnitsBattle: () => {
-      this.setMapAction(getMoveUnitsBattleAction(this, this.worldStateService, this.unitsService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
+      this.setMapAction(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
     }
   }
 

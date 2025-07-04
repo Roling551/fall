@@ -9,7 +9,7 @@ import { createForceSignal } from "../util/force-signal";
 @Injectable({
   providedIn: 'root'
 })
-export class UnitsService {
+export class BattleService {
 
     constructor(worldStateService:WorldStateService) {}
 

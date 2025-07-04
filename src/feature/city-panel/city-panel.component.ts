@@ -10,7 +10,7 @@ import { Building } from '../../models/building';
 import { AvaliableService } from '../../services/avaliable.service';
 import { Unit } from '../../models/unit';
 import { WorldStateService } from '../../services/world-state.service';
-import { UnitsService } from '../../services/units.service';
+import { BattleService } from '../../services/battle.service';
 
 @Component({
   selector: 'app-city-panel',
@@ -21,7 +21,7 @@ import { UnitsService } from '../../services/units.service';
 export class CityPanelComponent {
   @Input({required: true}) city!: ForceSignal<City>;
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
-  constructor(public uiStateService: UIStateService, public avaliableService: AvaliableService, public unitsService: UnitsService) {}
+  constructor(public uiStateService: UIStateService, public avaliableService: AvaliableService, public battleService: BattleService) {}
 
   isMainMode = computed(()=>{return this.uiStateService.uiModeName()==="main"})
 
@@ -67,6 +67,6 @@ export class CityPanelComponent {
 
   public onAddUnitClick() {
     const unit = new Unit("knight")
-    this.unitsService.addUnit(unit, this.tile)
+    this.battleService.addUnit(unit, this.tile)
   }
 }

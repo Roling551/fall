@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.component';
-import { UnitsService } from '../../services/units.service';
+import { BattleService } from '../../services/battle.service';
 
 @Component({
   selector: 'app-battle-info-panel',
@@ -11,11 +11,11 @@ import { UnitsService } from '../../services/units.service';
 })
 export class BattleInfoPanelComponent {
 
-  constructor(private uiStateService: UIStateService, private unitsService: UnitsService){
+  constructor(private uiStateService: UIStateService, private battleService: BattleService){
   }
 
   onNextTurn() {
-    this.unitsService.backToStationed()
+    this.battleService.backToStationed()
     this.uiStateService.setUIMode_.main()
   }
 }
