@@ -36,13 +36,35 @@ export class BattleService {
     }
 
     moveUnitsBattle(units: Set<Unit>, previousTile: KeyValuePair<Coordiante, Tile>, destinationTile: KeyValuePair<Coordiante, Tile>,) {
-        for(const unit of units) {
-            previousTile.value.units.get().delete(unit)
-            previousTile.value.units.forceUpdate()
-            destinationTile.value.units.get().add(unit)
-            destinationTile.value.units.forceUpdate()
-            this.unitsPosition.get().get(unit)!["current"] = destinationTile
+        const pathing = this.worldStateService.findPath(previousTile, destinationTile)
+        if(!pathing) {
+            return previousTile
         }
+
+        let movesLeft = Infinity
+        for(const unit of units) {
+            movesLeft = Math.min(movesLeft, unit.movesLeft)
+        }
+
+        const path = pathing.path
+        while(path.length > 0 && movesLeft>0) {
+            const nextLocation = path[0]
+            const nextTile = this.worldStateService.tiles.get(nextLocation)!
+            const weight = this.worldStateService.getEdgeWeight(previousTile.key.getKey(), nextLocation)
+            for(const unit of units) {
+
+                previousTile.value.units.get().delete(unit)
+                previousTile.value.units.forceUpdate()
+                nextTile.value.units.get().add(unit)
+                nextTile.value.units.forceUpdate()
+                this.unitsPosition.get().get(unit)!["current"] = nextTile
+                unit.movesLeft -= weight
+            }
+            movesLeft -= weight
+            path.shift()
+            previousTile = nextTile
+        }
+        return previousTile
     }
 
     backToStationed() {
@@ -85,7 +107,10 @@ export class BattleService {
 
     startBattleTurn() {
         for(const [army, _] of this.enemyArmies.get()) {
-            army.movesLeft.set(army.speed())
+            army.startBattleTurn()
+        }
+        for(const [unit, _] of this.unitsPosition.get()) {
+            unit.startBattleTurn()
         }
     }
 
@@ -114,18 +139,18 @@ export class BattleService {
             }
             while(army.path?.length > 0 && army.movesLeft()>0) {
                 const destination = army.path[0]
-                const destinationTile = this.worldStateService.tiles.get(destination)!
+                const nextTile = this.worldStateService.tiles.get(destination)!
                 for(const unit of army.units.get()) {
                     previousTile.value.units.get().delete(unit)
                     previousTile.value.units.forceUpdate()
 
-                    destinationTile.value.units.get().add(unit)
-                    destinationTile.value.units.forceUpdate()
+                    nextTile.value.units.get().add(unit)
+                    nextTile.value.units.forceUpdate()
                 }
-                this.enemyArmies.get().set(army, destinationTile)
+                this.enemyArmies.get().set(army, nextTile)
                 army.path.shift()
-                army.movesLeft.update(x=>x-this.worldStateService.getEdgeWeight(previousTile.key.getKey(), destinationTile.key.getKey()))
-                previousTile = destinationTile
+                army.movesLeft.update(x=>x-this.worldStateService.getEdgeWeight(previousTile.key.getKey(), nextTile.key.getKey()))
+                previousTile = nextTile
             }
         }
     }

@@ -13,7 +13,7 @@ export class Army {
         return speed_
     })
     movesLeft = signal(0)
-    nextBattleTurn() {
+    startBattleTurn() {
         this.movesLeft.set(this.speed())
     }
 }

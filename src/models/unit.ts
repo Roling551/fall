@@ -4,7 +4,7 @@ export class Unit {
         this.movesLeft = speed
     }
 
-    endBattleTurn() {
+    startBattleTurn() {
         this.movesLeft = this.speed
     }
 }

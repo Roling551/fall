@@ -181,8 +181,8 @@ export function getMoveUnitsBattleAction(
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            battleService.moveUnitsBattle(selectedUnitsSignal.get(), previousTile, tile)
-            uiStateService.setUI_.tile(tile)
+            const lastTile = battleService.moveUnitsBattle(selectedUnitsSignal.get(), previousTile, tile)
+            uiStateService.setUI_.tile(lastTile)
             uiStateService.setMapAction_.moveUnitsBattle()
         },
         cancelButtonAction:() => {
