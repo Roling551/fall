@@ -26,7 +26,9 @@ export class UnitsPanelComponent{
   })
 
   onUnitClick(unit: Unit) {
-    this.uiStateService.selectUnit(unit)
+    if(unit.belongsToPlayer) {
+      this.uiStateService.selectUnit(unit)
+    } 
   }
 
   isUnitSelected(unit: Unit) {

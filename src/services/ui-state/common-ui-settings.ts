@@ -184,7 +184,6 @@ export function getMoveUnitsBattleAction(
             const pathingResult = worldStateService.findPath(previousTile, tile)
             if(pathingResult) {
                 const {distance, path} = pathingResult
-                console.log(path)
                 battleService.moveUnitsBattle(selectedUnitsSignal.get(), previousTile, tile)
                 uiStateService.setUI_.tile(tile)
                 uiStateService.setMapAction_.moveUnitsBattle()

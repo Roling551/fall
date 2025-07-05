@@ -54,7 +54,7 @@ export class MapTileComponent {
     }
   }
 
-  getUnit() {
+  getUnit = computed(()=>{
     const units = this.tile.value.units.get()
     if(units.size > 0) {
       for(let unit of units) {
@@ -62,5 +62,5 @@ export class MapTileComponent {
       }
     }
     return undefined
-  }
+  })
 }

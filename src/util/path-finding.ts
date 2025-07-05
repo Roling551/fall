@@ -2,7 +2,8 @@ export function dijkstra<T>(
   getNeighbors: (node: T) => T[],
   getWeight: (from: T, to: T) => number,
   start: T,
-  end: T
+  end: T,
+  includeFirst = false
 ): { distance: number; path: T[] } | null {
   const distances = new Map<T, number>();
   const previous = new Map<T, T | null>();
@@ -25,6 +26,9 @@ export function dijkstra<T>(
       while (node !== null) {
         path.unshift(node);
         node = previous.get(node)!;
+      }
+      if(!includeFirst) {
+        path.shift()
       }
       return { distance: currentDistance, path };
     }

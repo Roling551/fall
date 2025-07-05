@@ -214,10 +214,15 @@ export class UIStateService {
   }
 
   public setUIMode_ = {
-    main: () => {
+    main: (options: {setup: boolean} = {setup:false}) => {
+      if(!options.setup) {
+        this.battleService.endBattle()
+      }
+      this.worldStateService.nextTurn()
       this.setUIMode(getMainMode())
     },
     battle: () => {
+      this.battleService.startBattle()
       this.setUIMode(getBattleMode())
     }
   }

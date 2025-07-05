@@ -11,11 +11,14 @@ import { BattleService } from '../../services/battle.service';
 })
 export class BattleInfoPanelComponent {
 
-  constructor(private uiStateService: UIStateService, private battleService: BattleService){
+  constructor(private battleService: BattleService, private uiStateService: UIStateService){
   }
 
   onNextTurn() {
-    this.battleService.backToStationed()
+    this.battleService.endBattleTurn()
+  }
+
+  onEndBattle() {
     this.uiStateService.setUIMode_.main()
   }
 }

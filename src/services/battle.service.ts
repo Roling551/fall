@@ -5,21 +5,24 @@ import { KeyValuePair } from "../models/key-value-pair";
 import { Coordiante } from "../models/coordinate";
 import { WorldStateService } from "./world-state.service";
 import { createForceSignal } from "../util/force-signal";
+import { UIStateService } from "./ui-state/ui-state.service";
+import { Army } from "../models/army";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BattleService {
 
-    constructor(worldStateService:WorldStateService) {}
+    constructor(private worldStateService: WorldStateService) {}
 
     unitsPosition = createForceSignal(new Map<Unit, {current:KeyValuePair<Coordiante, Tile>, stationed:KeyValuePair<Coordiante, Tile>}>())
+    enemyArmies = createForceSignal(new Map<Army, KeyValuePair<Coordiante, Tile>>)
 
-    addUnit(unit: Unit, tile: KeyValuePair<Coordiante, Tile>) {
+    addPlayerUnit(unit: Unit, tile: KeyValuePair<Coordiante, Tile>) {
         tile.value.units.get().add(unit)
         tile.value.units.forceUpdate()
         this.unitsPosition.get().set(unit, {current: tile, stationed:tile})
-        tile.value.units.forceUpdate()
+        this.unitsPosition.forceUpdate()
     }
 
     moveUnitStationed(units: Set<Unit>, previousTile: KeyValuePair<Coordiante, Tile>, destinationTile: KeyValuePair<Coordiante, Tile>,) {
@@ -52,4 +55,67 @@ export class BattleService {
             position.current = stationed
         }
     }
+
+    startBattle() {
+        const startLocation = "0_0"
+        const startTile = this.worldStateService.tiles.get(startLocation)
+        if(!startTile) {
+            return
+        }
+        const army = new Army()
+        this.enemyArmies.get().set(army, startTile)
+        const unit = new Unit("barbarian", 1, false)
+        army.units.get().add(unit)
+        army.units.forceUpdate()
+        startTile.value.units.get().add(unit)
+        startTile.value.units.forceUpdate()
+        if(this.worldStateService.cities.get().size<=0) {
+            return
+        }
+        for(const [cityLocation, city] of this.worldStateService.cities.get()) {
+            const pathing = this.worldStateService.findPathByKey(startLocation, cityLocation)
+            if(!pathing) {
+                return
+            }
+            army.path = pathing.path
+            break;
+        }
+    }
+
+    endBattle() {
+        this.backToStationed()
+        for(const [army, tile] of this.enemyArmies.get()) {
+            for(const unit of army.units.get()) {
+                tile.value.units.get().delete(unit)
+                tile.value.units.forceUpdate()
+            }
+        }
+        this.enemyArmies.get().clear()
+        this.enemyArmies.forceUpdate()
+    }
+
+    endBattleTurn() {
+       this.moveArmiesToDestination()
+    }
+
+
+    moveArmiesToDestination() {
+        for(const [army, previousTile] of this.enemyArmies.get()) {
+            if(!army.path || army.path.length <= 0) {
+                return
+            }
+            const destination = army.path[0]
+            const destinationTile = this.worldStateService.tiles.get(destination)!
+            for(const unit of army.units.get()) {
+                previousTile.value.units.get().delete(unit)
+                previousTile.value.units.forceUpdate()
+
+                destinationTile.value.units.get().add(unit)
+                destinationTile.value.units.forceUpdate()
+            }
+            this.enemyArmies.get().set(army, destinationTile)
+            army.path.shift()
+        }
+    }
+
 }

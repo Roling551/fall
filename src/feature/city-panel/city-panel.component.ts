@@ -66,7 +66,7 @@ export class CityPanelComponent {
   }
 
   public onAddUnitClick() {
-    const unit = new Unit("knight")
-    this.battleService.addUnit(unit, this.tile)
+    const unit = new Unit("knight", 2)
+    this.battleService.addPlayerUnit(unit, this.tile)
   }
 }

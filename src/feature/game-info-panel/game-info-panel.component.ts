@@ -26,7 +26,6 @@ export class GameInfoPanelComponent {
   })
 
   onNextTurn() {
-    this.worldStateService.nextTurn()
     this.uiStateService.setUIMode_.battle()
   }
 }

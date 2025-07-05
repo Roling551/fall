@@ -22,6 +22,10 @@ export class WorldStateService {
   cities = createForceSignal(new Map<string, ForceSignal<City>>());
 
   findPath(start: KeyValuePair<Coordiante, Tile>, end: KeyValuePair<Coordiante, Tile>) {
+    return this.findPathByKey(start.key.getKey(), end.key.getKey())
+  }
+
+  findPathByKey(start: string, end: string) {
     const getNeighbors = (node: string) => {
       const [x, y] = Coordiante.getComponents(node)
       const neighbors: string[] = []
@@ -40,7 +44,7 @@ export class WorldStateService {
       return neighbors
     }
     const getWeight = (from: string, to: string) => 1
-    return dijkstra<string>(getNeighbors, getWeight, start.key.getKey(), end.key.getKey())
+    return dijkstra<string>(getNeighbors, getWeight, start, end)
   }
 
   canNextTurn = computed(()=>{
