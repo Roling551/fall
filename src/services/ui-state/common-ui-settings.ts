@@ -181,14 +181,9 @@ export function getMoveUnitsBattleAction(
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            const pathingResult = worldStateService.findPath(previousTile, tile)
-            if(pathingResult) {
-                const {distance, path} = pathingResult
-                battleService.moveUnitsBattle(selectedUnitsSignal.get(), previousTile, tile)
-                uiStateService.setUI_.tile(tile)
-                uiStateService.setMapAction_.moveUnitsBattle()
-            }
-
+            battleService.moveUnitsBattle(selectedUnitsSignal.get(), previousTile, tile)
+            uiStateService.setUI_.tile(tile)
+            uiStateService.setMapAction_.moveUnitsBattle()
         },
         cancelButtonAction:() => {
             selectedUnitsSignal.get().clear()

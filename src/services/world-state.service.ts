@@ -25,6 +25,8 @@ export class WorldStateService {
     return this.findPathByKey(start.key.getKey(), end.key.getKey())
   }
 
+  getEdgeWeight = (from: string, to: string) => 1
+
   findPathByKey(start: string, end: string) {
     const getNeighbors = (node: string) => {
       const [x, y] = Coordiante.getComponents(node)
@@ -43,8 +45,8 @@ export class WorldStateService {
       }
       return neighbors
     }
-    const getWeight = (from: string, to: string) => 1
-    return dijkstra<string>(getNeighbors, getWeight, start, end)
+    
+    return dijkstra<string>(getNeighbors, this.getEdgeWeight, start, end)
   }
 
   canNextTurn = computed(()=>{

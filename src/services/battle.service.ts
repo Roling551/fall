@@ -64,7 +64,7 @@ export class BattleService {
         }
         const army = new Army()
         this.enemyArmies.get().set(army, startTile)
-        const unit = new Unit("barbarian", 1, false)
+        const unit = new Unit("barbarian", 2, false)
         army.units.get().add(unit)
         army.units.forceUpdate()
         startTile.value.units.get().add(unit)
@@ -79,6 +79,13 @@ export class BattleService {
             }
             army.path = pathing.path
             break;
+        }
+        this.startBattleTurn()
+    }
+
+    startBattleTurn() {
+        for(const [army, _] of this.enemyArmies.get()) {
+            army.movesLeft.set(army.speed())
         }
     }
 
@@ -96,25 +103,30 @@ export class BattleService {
 
     endBattleTurn() {
        this.moveArmiesToDestination()
+       this.startBattleTurn()
     }
 
 
     moveArmiesToDestination() {
-        for(const [army, previousTile] of this.enemyArmies.get()) {
+        for(let [army, previousTile] of this.enemyArmies.get()) {
             if(!army.path || army.path.length <= 0) {
                 return
             }
-            const destination = army.path[0]
-            const destinationTile = this.worldStateService.tiles.get(destination)!
-            for(const unit of army.units.get()) {
-                previousTile.value.units.get().delete(unit)
-                previousTile.value.units.forceUpdate()
+            while(army.path?.length > 0 && army.movesLeft()>0) {
+                const destination = army.path[0]
+                const destinationTile = this.worldStateService.tiles.get(destination)!
+                for(const unit of army.units.get()) {
+                    previousTile.value.units.get().delete(unit)
+                    previousTile.value.units.forceUpdate()
 
-                destinationTile.value.units.get().add(unit)
-                destinationTile.value.units.forceUpdate()
+                    destinationTile.value.units.get().add(unit)
+                    destinationTile.value.units.forceUpdate()
+                }
+                this.enemyArmies.get().set(army, destinationTile)
+                army.path.shift()
+                army.movesLeft.update(x=>x-this.worldStateService.getEdgeWeight(previousTile.key.getKey(), destinationTile.key.getKey()))
+                previousTile = destinationTile
             }
-            this.enemyArmies.get().set(army, destinationTile)
-            army.path.shift()
         }
     }
 
