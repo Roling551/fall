@@ -88,9 +88,7 @@ export class BattleService {
         this.enemyArmies.get().set(army, startTile)
         const unit = new EnemyUnit("barbarian", 2)
         army.units.get().add(unit)
-        army.units.forceUpdate()
-        startTile.value.units.get().add(unit)
-        startTile.value.units.forceUpdate()
+        this.addUnit(unit, startTile)
         if(this.worldStateService.cities.get().size<=0) {
             return
         }
