@@ -52,7 +52,6 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UISettings
                     return
                 }
                 worldStateService.removeCity(tile)
-                tile.value.mapEntity.set(undefined);
             },
         doRenderTileInfoFunction: (tile)=> {
             return !tile.value?.mapEntity.get()

@@ -91,6 +91,7 @@ export class WorldStateService {
         value.value.belongsTo.set(undefined);
       }
       city.clearOwnedTiles()
+      tile.value.mapEntity.set(undefined);
       this.cities.get().delete(tile.key.getKey())
       this.cities.forceUpdate()
     }

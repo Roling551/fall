@@ -7,6 +7,7 @@ import { WorldStateService } from "./world-state.service";
 import { createForceSignal } from "../util/force-signal";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { Army } from "../models/army";
+import { getFirstOfSet } from "../util/util";
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,7 @@ export class BattleService {
         while(path.length > 0 && movesLeft>0) {
             const nextLocation = path[0]
             const nextTile = this.worldStateService.tiles.get(nextLocation)!
+            this.encounter(units, nextTile)
             const weight = this.worldStateService.getEdgeWeight(previousTile.key.getKey(), nextLocation)
             for(const unit of units) {
                 previousTile.value.units.get().delete(unit)
@@ -66,6 +68,14 @@ export class BattleService {
             previousTile = nextTile
         }
         return previousTile
+    }
+
+    encounter(units: Set<Unit>, tile: KeyValuePair<Coordiante, Tile>) {
+        const anyUnit = getFirstOfSet(units)
+        if(!anyUnit.isEnemyOf(tile.value.units.get())) {
+            return
+        }
+        tile.value.units.get().forEach(unit=>this.deleteUnit(unit, tile))
     }
 
     startBattle() {
@@ -104,12 +114,11 @@ export class BattleService {
     deleteUnit(unit: Unit, tile: KeyValuePair<Coordiante, Tile>) {
         tile.value.units.get().delete(unit)
         tile.value.units.forceUpdate()
+        this.unitsPosition.get().delete(unit)
     }
 
     endBattle() {
         for(const [unit,tile] of this.unitsPosition.get()) {
-            tile.value.units.get().delete(unit)
-            tile.value.units.forceUpdate()
             unit.endBattle(this, tile)
         }
         this.enemyArmies.get().clear()
@@ -124,10 +133,14 @@ export class BattleService {
 
     moveArmiesToDestination() {
         for(let [army, previousTile] of this.enemyArmies.get()) {
-            if(!army.path || army.path.length <= 0) {
+            if(!army.path) {
                 return
             }
+            if(army.path.length == 0) {
+                this.worldStateService.removeCity(previousTile)
+            }
             this.enemyArmies.get().set(army, this.moveUnits(army.units.get(), previousTile, army.path))
+
         }
 
     }

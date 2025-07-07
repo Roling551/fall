@@ -13,6 +13,13 @@ export abstract class Unit {
         this.movesLeft = this.speed
     }
 
+    isEnemyOf(units: Set<Unit>) {
+        for(const unit of units) {
+            return this.belongsToPlayer != unit.belongsToPlayer
+        }
+        return false
+    }
+
     abstract endBattle(battleService: BattleService, tile: KeyValuePair<Coordiante, Tile>): void;
 }
 
