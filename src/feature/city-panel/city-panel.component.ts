@@ -8,7 +8,7 @@ import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
 import { Building } from '../../models/building';
 import { AvaliableService } from '../../services/avaliable.service';
-import { Unit } from '../../models/unit';
+import { PlayerUnit, Unit } from '../../models/unit';
 import { WorldStateService } from '../../services/world-state.service';
 import { BattleService } from '../../services/battle.service';
 
@@ -66,7 +66,7 @@ export class CityPanelComponent {
   }
 
   public onAddUnitClick() {
-    const unit = new Unit("knight", 2)
-    this.battleService.addPlayerUnit(unit, this.tile)
+    const unit = new PlayerUnit("knight", 2, this.tile)
+    this.battleService.addUnit(unit, this.tile)
   }
 }

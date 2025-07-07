@@ -14,7 +14,7 @@ import { SignalsGroup } from "../../util/signals-group"
 import { EstateProductionBonus } from "../../models/bonus"
 import { BonusesService } from "../bonuses.service"
 import { TilePanelComponent } from "../../feature/tile-panel/tile-panel.component"
-import { Unit } from "../../models/unit"
+import { PlayerUnit, Unit } from "../../models/unit"
 import { BattleService } from "../battle.service"
 
 
@@ -161,7 +161,12 @@ export function getMoveUnitsAction(
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            battleService.moveUnitStationed(selectedUnitsSignal.get(), previousTile, tile)
+            battleService.changeUnitsPosition(selectedUnitsSignal.get(), previousTile, tile)
+            for(const unit of selectedUnitsSignal.get()) {
+                if(unit instanceof PlayerUnit) {
+                    unit.stationedTile = tile
+                }
+            }
             uiStateService.setUI_.tile(tile)
             uiStateService.setMapAction_.moveUnits()
         },
@@ -181,9 +186,12 @@ export function getMoveUnitsBattleAction(
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            const lastTile = battleService.moveUnitsBattle(selectedUnitsSignal.get(), previousTile, tile)
-            uiStateService.setUI_.tile(lastTile)
-            uiStateService.setMapAction_.moveUnitsBattle()
+            const pathing = worldStateService.findPath(previousTile, tile)
+            if(pathing) {
+                const lastTile = battleService.moveUnits(selectedUnitsSignal.get(), previousTile, pathing.path)
+                uiStateService.setUI_.tile(lastTile)
+                uiStateService.setMapAction_.moveUnitsBattle()
+            }
         },
         cancelButtonAction:() => {
             selectedUnitsSignal.get().clear()
