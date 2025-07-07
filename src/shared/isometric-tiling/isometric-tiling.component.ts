@@ -117,7 +117,12 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   }
 
   public onTileClick(tile:T) {
-    this.tileClick.emit(tile)
+    if(
+      !this.panStartTransform || 
+      this.getOnScreenTransformDistance(this.panStartTransform, this.currentTransform) < this.allowedPixelsMovedForClick
+    ) {
+      this.tileClick.emit(tile)
+    }
     this.panStartTransform = null
   }
 
