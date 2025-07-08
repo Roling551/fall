@@ -3,20 +3,22 @@
     [style.height.px]="sizeY"
     class="tile-container">
 
-    <img [src]="getTexture(tile.value.terrainType())">
-    <img [src]="lightBorder">
+    <img [src]="getTexture(tile.value.terrainType())" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
+    <img [src]="lightBorder"  [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     @if(tile.value.mapEntity.get(); as mapEntity) {
-        <img [src]="getTexture(mapEntity.textureName)">
+        <img [src]="getTexture(mapEntity.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
             @for(building of tile.value.mapEntity.get()!.buildings.get().values(); track building) {
                 <img 
                     [src]="getTexture(building.get().name)"
                     [style.left.px]="getBuildingPositionX($index)"
                     [style.top.px]="getBuildingPositionY($index)"
+                    [style.width.px]="sizeX" [style.height.px]="sizeX"
+                    [style.top.px]="getImgTop()"
                 >
             }
     }
     @if(getUnit(); as unit) {
-        <img [src]="getTexture(unit.name)">
+        <img [src]="getTexture(unit.name)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }
     @if(doRenderTileInfo()) {
         <ng-container *ngComponentOutlet="tileInfo()!;"></ng-container> 

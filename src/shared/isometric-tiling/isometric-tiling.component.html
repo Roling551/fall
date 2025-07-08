@@ -5,7 +5,9 @@
             class="background"
             id="background"
             [style.transform]="backgroundTransform()"
-            [style.background-image] = "backgroundImage">
+            [style.background-image] = "backgroundImage"
+            [style.background-size] = "getBackgroundSize()">
+            
         </div>   
     }
     <!--@for(x of getRange(tileOnScreenX+3); track x) {

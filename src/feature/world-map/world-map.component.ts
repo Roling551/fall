@@ -16,8 +16,8 @@ import { MapTileComponent } from '../map-tile/map-tile.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorldMapComponent {
-  public sizeX = 128
-  public sizeY = 92
+  public sizeX = 128 * 8
+  public sizeY = 92 * 8
 
   public backgroundImage = "url('/assets/pictures/fog.png')"
 

@@ -1,11 +1,8 @@
-@import '../../styles/variables';
-
 * {
     pointer-events: none;
 }
 
 img {
-    top: calc(($size-y - $size-x)/2);
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     overflow: hidden;

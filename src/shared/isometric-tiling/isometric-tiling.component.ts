@@ -13,8 +13,8 @@ import { Coordiante } from '../../models/coordinate';
 })
 export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input({required: true}) tilesData! : Map<string, T>;
-  @Input() minZoom = 0.5;
-  @Input() maxZoom = 6;
+  @Input() minZoom = 0.1;
+  @Input() maxZoom = 10;
 
   @Input() backgroundImage?: string;
 
@@ -134,6 +134,10 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
      this.backgroundTransform.set(
       `translate(${(-this.positionRectX-1) *this.sizeX}px, ${(-this.positionRectY-1) *this.sizeY}px)`
     )
+  }
+
+  public getBackgroundSize() {
+    return this.sizeX/2 + 'px ' + this.sizeY/2 + 'px'
   }
 
   getRange(n: number): ArrayIterator<number> {
