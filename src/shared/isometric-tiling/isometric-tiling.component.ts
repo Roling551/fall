@@ -25,7 +25,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   @Input() distanceToUpdate = 20;
 
-  @Input() allowedPixelsMovedForClick = 5;
+  @Input() allowedPixelsMovedForClick = 10;
 
   tileClick = output<T>();
 
