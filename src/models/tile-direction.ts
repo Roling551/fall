@@ -1,0 +1,1 @@
+export type TileDirection = "yPlus" | "yMinus" | "xPlus" | "xMinus"

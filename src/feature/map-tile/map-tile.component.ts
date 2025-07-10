@@ -1,4 +1,4 @@
-import { Component, computed, input, Input, Signal } from '@angular/core';
+import { Component, computed, Injector, input, Input, Signal } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
@@ -21,7 +21,7 @@ export class MapTileComponent {
 
   public lightBorder = '/assets/pictures/light-border.png'
 
-  constructor(public uiStateService: UIStateService){
+  constructor(public uiStateService: UIStateService, private injector: Injector){
         this.tileInfo = this.uiStateService.tileInfo
   }
 

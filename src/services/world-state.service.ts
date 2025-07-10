@@ -7,6 +7,7 @@ import { City } from '../models/city';
 import { addExistingNumericalValues } from '../util/map-functions';
 import { Unit } from '../models/unit';
 import { dijkstra } from '../util/path-finding';
+import { TileDirection } from '../models/tile-direction';
 
 @Injectable({
   providedIn: 'root'
@@ -25,25 +26,20 @@ export class WorldStateService {
     return this.findPathByKey(start.key.getKey(), end.key.getKey())
   }
 
+  doesCoordinateExists(coordinate: Coordiante) {
+      return coordinate.x>0 && coordinate.x<this.sizeX-1 && coordinate.y>0 && coordinate.y<this.sizeY-1
+  }
+
+  getNeighborTiles(coordinate: Coordiante): Map<TileDirection, KeyValuePair<Coordiante, Tile>> {
+    const neighbors = new Map<TileDirection, KeyValuePair<Coordiante, Tile>>()
+    return new Map(coordinate.getNeighborsAndDirections(this.sizeX, this.sizeY).map(cd=>[cd.direction, this.tiles.get(cd.coordinate.getKey())!]))
+  }
+
   getEdgeWeight = (from: string, to: string) => 1
 
   findPathByKey(start: string, end: string) {
     const getNeighbors = (node: string) => {
-      const [x, y] = Coordiante.getComponents(node)
-      const neighbors: string[] = []
-      if(x>0) {
-        neighbors.push(Coordiante.getKey(x-1, y))
-      }
-      if(x<this.sizeX-1) {
-        neighbors.push(Coordiante.getKey(x+1, y))
-      }
-      if(y>0) {
-        neighbors.push(Coordiante.getKey(x, y-1))
-      }
-      if(y<this.sizeY-1) {
-        neighbors.push(Coordiante.getKey(x, y+1))
-      }
-      return neighbors
+      return Coordiante.fromKey(node).getNeighbors(this.sizeX, this.sizeY).map(coordiante=>coordiante.getKey())
     }
     
     return dijkstra<string>(getNeighbors, this.getEdgeWeight, start, end)

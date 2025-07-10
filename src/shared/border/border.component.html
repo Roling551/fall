@@ -1,0 +1,7 @@
+<div [style.width.px]="sizeX" [style.height.px]="sizeY" class="tile-container">
+    @if(directions) {
+        @for(direction of directions(); track direction) {
+            <img [src]="getTexture(direction)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
+        }
+    }
+</div>

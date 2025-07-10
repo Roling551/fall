@@ -27,6 +27,7 @@ export type UISettings = {
   mapAction?: any;
   cancelButtonAction?: any;
   tileInfo?: Type<any>;
+  tileInfoInput?: any;
   doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean;
 }
 
@@ -44,12 +45,14 @@ export class UIStateService {
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _cancelButtonAction = createForceSignal(this.getDefaultCancelButtonAction())
   private _tileInfo = createForceSignal<null|Type<any>>(null);
+  private _tileInfoInput = createForceSignal<Record<string, any>>({});
   private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
   private _additionalInfo = createForceSignal<any>(null);
 
   public mapAction = this._mapAction.get;
   public cancelButtonAction = this._cancelButtonAction.get
   public tileInfo = this._tileInfo.get
+  public tileInfoInput = this._tileInfoInput.get
   public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
   public additionalInfo = this._additionalInfo.get
 
@@ -131,6 +134,13 @@ export class UIStateService {
       this._cancelButtonAction.set(this.getDefaultCancelButtonAction())
     }
     this._cancelButtonAction.forceUpdate()
+
+    if(ui.tileInfoInput) {
+      this._tileInfoInput.set(ui.tileInfoInput)
+    } else {
+      this._tileInfoInput.set({})
+    }
+    this._tileInfoInput.forceUpdate()
 
     this.viewSideContainerRef.clear();
 

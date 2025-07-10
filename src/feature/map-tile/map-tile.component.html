@@ -4,7 +4,7 @@
     class="tile-container">
 
     <img [src]="getTexture(tile.value.terrainType())" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
-    <img [src]="lightBorder"  [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
+    <!--<img [src]="lightBorder"  [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">-->
     @if(tile.value.mapEntity.get(); as mapEntity) {
         <img [src]="getTexture(mapEntity.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
             @for(building of tile.value.mapEntity.get()!.buildings.get().values(); track building) {
@@ -21,6 +21,6 @@
         <img [src]="getTexture(unit.name)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }
     @if(doRenderTileInfo()) {
-        <ng-container *ngComponentOutlet="tileInfo()!;"></ng-container> 
+        <ng-container *ngComponentOutlet="tileInfo()!; inputs:{tile:tile}"></ng-container> 
     }
 </div>

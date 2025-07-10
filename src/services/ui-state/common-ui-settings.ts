@@ -16,6 +16,8 @@ import { BonusesService } from "../bonuses.service"
 import { TilePanelComponent } from "../../feature/tile-panel/tile-panel.component"
 import { PlayerUnit, Unit } from "../../models/unit"
 import { BattleService } from "../battle.service"
+import { BorderComponent } from "../../shared/border/border.component"
+import { computed } from "@angular/core"
 
 
 export function getTileUI(
@@ -25,13 +27,25 @@ export function getTileUI(
 ):UISettings {
 
     let doRenderTileInfoFunction
+    let tileInfoInput
     if(tile.value.mapEntity.get()?.type === "city") {
         doRenderTileInfoFunction = (clickedTile: KeyValuePair<Coordiante, Tile>)=> {
+            if(clickedTile.key.getKey() === tile.key.getKey()) {
+                return true
+            }
             if(!clickedTile.value.belongsTo.get()) {
                 return false
             }
             return clickedTile.value.belongsTo.get() === tile.value.mapEntity.get()  
-        }      
+        }
+        tileInfoInput = {
+            getDirections: (tileInfoIsAbout: KeyValuePair<Coordiante, Tile>)=> {
+                return computed(()=>[...worldStateService.getNeighborTiles(tileInfoIsAbout.key).entries()].
+                    filter(keyV=>keyV[1].value.belongsTo.get() !== tile.value.mapEntity.get() &&
+                    keyV[1].key.getKey() !== tile.key.getKey()).
+                    map(keyV=>keyV[0]))
+            }
+        }
     }
 
     return {
@@ -39,7 +53,8 @@ export function getTileUI(
         sideComponentInputs:{tile, selectedUnits},
         additionalInfo: {tile},
         doRenderTileInfoFunction,
-        tileInfo: MapMarkingComponent
+        tileInfo: BorderComponent,
+        tileInfoInput
     }
 }
 
