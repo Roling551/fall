@@ -4,7 +4,7 @@ import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
 import { addExistingNumericalValues } from "../util/map-functions"
 
-export type mapEntityType = "city" | "estate"
+export type mapEntityType = "city" | "estate" | "extractionSite"
 
 export abstract class MapEntity {
     abstract readonly type: mapEntityType
@@ -28,7 +28,7 @@ export abstract class MapEntity {
     }
 
     public baseProduced (){
-        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0]])
+        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0], ["workers", 0], ["workers-need", 0]])
         for (const building of this.buildings.get().values()) {
             addExistingNumericalValues(production, building.get().produced)
         }

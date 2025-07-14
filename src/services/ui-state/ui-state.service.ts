@@ -4,13 +4,14 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
+import { getAddExtractionAction, getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
 import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
+import { Extraction } from "../../models/extraction";
 
 export type UIModeName = "main" | "battle"
 
@@ -171,6 +172,21 @@ export class UIStateService {
   setMapAction(ui:UISettings, goBack = true) {
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
     this._mapAction.set(ui.mapAction)
+    if(ui.tileInfo) {
+      this._tileInfo.set(ui.tileInfo)
+      this._tileInfo.forceUpdate()
+    }
+    if(ui.doRenderTileInfoFunction) {
+      this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
+      this._doRenderTileInfoFunction.forceUpdate()
+    }
+    if(ui.tileInfoInput) {
+      this._tileInfoInput.set(ui.tileInfoInput)
+    } else {
+      this._tileInfoInput.set({})
+    }
+    this._tileInfoInput.forceUpdate()
+
     if(goBack) {
       this._cancelButtonAction.set(()=>{
         if(ui.cancelButtonAction) {
@@ -216,6 +232,8 @@ export class UIStateService {
       this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
+    addExtraction: (extraction: Extraction) => {
+      this.setMapAction(getAddExtractionAction(this._additionalInfo.get()["tile"], extraction))},
     moveUnits: () => {
       this.setMapAction(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
     moveUnitsBattle: () => {

@@ -6,9 +6,9 @@ import { Tile } from "./tile"
 import { MapEntity } from "./map-entity";
 import { Estate } from "./estate";
 import { addExistingNumericalValues } from "../util/map-functions";
+import { Extraction } from "./extraction";
 
 export class City extends MapEntity {
-
     constructor() {
         super("city", 4)
     }
@@ -16,6 +16,8 @@ export class City extends MapEntity {
     readonly type = "city"
 
     ownedTiles = createForceSignal(new Map<string, KeyValuePair<Coordiante, Tile>>());
+
+    extractions = createForceSignal(new Map<string, Extraction>())
 
     addOwnedTile(tile: KeyValuePair<Coordiante, Tile>) {
         this.ownedTiles.get().set(tile.key.getKey(), tile)
@@ -51,6 +53,22 @@ export class City extends MapEntity {
             }
         }
         production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())
+        production.set("workers", 10)
         return production
     })
+
+    getExtractionRate = computed(()=>{
+        
+    })
+
+    getOrCreateExtraction(extractionName: string, extractionConstructor: (belongsTo: any)=> Extraction) {
+        if(this.extractions.get().has(extractionName)) {
+            return this.extractions.get().get(extractionName)!
+        } else {
+            console.log(extractionConstructor)
+            const extraction = extractionConstructor(self)
+            this.extractions.get().set(extractionName, extraction)
+            return extraction
+        }
+    }
 }

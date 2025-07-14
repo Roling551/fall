@@ -18,6 +18,8 @@ import { PlayerUnit, Unit } from "../../models/unit"
 import { BattleService } from "../battle.service"
 import { BorderComponent } from "../../shared/border/border.component"
 import { computed } from "@angular/core"
+import { ExtractionInfoComponent } from "../../feature/extraction-info/extraction-info.component"
+import { Extraction } from "../../models/extraction"
 
 
 export function getTileUI(
@@ -211,5 +213,22 @@ export function getMoveUnitsBattleAction(
             selectedUnitsSignal.get().clear()
             selectedUnitsSignal.forceUpdate()
         }
+    }
+}
+
+export function getAddExtractionAction(
+    cityTile: KeyValuePair<Coordiante, Tile>,
+    extraction: Extraction
+):UISettings {
+    return {
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+            console.log("Map extraction")
+        },
+        additionalInfo: {currentAction: "addExtractionAction"},
+        doRenderTileInfoFunction: (tile)=> {
+            return tile.value.mapEntity.get()?.type === "extractionSite"
+        },
+        tileInfo: ExtractionInfoComponent,
+        tileInfoInput: {extraction}
     }
 }

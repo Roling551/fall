@@ -2,6 +2,7 @@
 <div>{{"Owned tiles: " + city.get().ownedTilesNumber()}}</div>
 <div>{{"Food: " + city.get().produced().get('food') + " / " + city.get().produced().get('food-need')}}</div>
 <div>{{"Authority: " + city.get().produced().get('authority') + " / " + city.get().produced().get('authority-need')}}</div>
+<div>{{"Workers: " + city.get().produced().get('workers') + " / " + city.get().produced().get('workers-need')}}</div>
 
 @if(isMainMode()) {
     <button (click)="onAddTileActionClick()" [class.active-button]="isAddTileSelected()">Add tile</button>
@@ -21,6 +22,12 @@
 @if(isMainMode()) {
     <button (click)="onRemoveEstateActionClick()" [class.active-button]="isRemoveEstateActionSelected()">Remove estate</button>
 }
+
+<div>Extraction:</div>
+@for(extraction of avaliableService.extractions(); track extraction[0]) {
+    <button (click)="onAddExtractionClick(extraction[0], extraction[1])">{{extraction[0]}}</button>
+}
+
 
 <div>Buildings:</div>
 @for(building of city.get().buildings.get().values(); track building) {

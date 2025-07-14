@@ -1,0 +1,19 @@
+<div [style.width.px]="sizeX" [style.height.px]="sizeY">
+    @for(extractionSiteItem of getAvaliableExtractionItems(); track extractionSiteItem[0]) {
+        <div>
+            <p [style.margin-top.px]="sizeY/4" [style.font-size.px]="sizeX/12">
+                {{extractionSiteItem[0]}} : {{getExtractorItemRate(extractionSiteItem[0])}}/{{getExtractionSiteRates().get(extractionSiteItem[0])}}/{{extractionSiteItem[1].capacity()}}</p>
+            <button
+                [style.margin-top.px]="sizeY/4"
+                [style.font-size.px]="sizeX/12"
+                [style.height.px]="sizeX/12"
+                [disabled] = "!canIncreaseExtraction(extractionSiteItem[0])"
+                (click)="changeExtraction(extractionSiteItem, 1)">+</button>
+            <button 
+                [style.margin-top.px]="sizeY/4"
+                [style.font-size.px]="sizeX/12"
+                [style.height.px]="sizeX/12"
+                (click)="changeExtraction(extractionSiteItem, -1)">-</button>
+        </div>
+    }
+</div>

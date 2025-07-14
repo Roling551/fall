@@ -1,4 +1,4 @@
-import { Component, computed, Input } from '@angular/core';
+import { Component, computed, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { City } from '../../models/city';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { ForceSignal } from '../../util/force-signal';
@@ -11,6 +11,7 @@ import { AvaliableService } from '../../services/avaliable.service';
 import { PlayerUnit, Unit } from '../../models/unit';
 import { WorldStateService } from '../../services/world-state.service';
 import { BattleService } from '../../services/battle.service';
+import { Extraction } from '../../models/extraction';
 
 @Component({
   selector: 'app-city-panel',
@@ -18,7 +19,7 @@ import { BattleService } from '../../services/battle.service';
   templateUrl: './city-panel.component.html',
   styleUrl: './city-panel.component.scss'
 })
-export class CityPanelComponent {
+export class CityPanelComponent{
   @Input({required: true}) city!: ForceSignal<City>;
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
   constructor(public uiStateService: UIStateService, public avaliableService: AvaliableService, public battleService: BattleService) {}
@@ -68,5 +69,11 @@ export class CityPanelComponent {
   public onAddUnitClick() {
     const unit = new PlayerUnit("knight", 2, this.tile)
     this.battleService.addUnit(unit, this.tile)
+  }
+
+  public onAddExtractionClick(extractionName: string, extractionConstructor: (belongsTo: any)=> Extraction) {
+    const extraction = this.city.get().getOrCreateExtraction(extractionName, extractionConstructor)
+    this.uiStateService.setMapAction_.addExtraction(extraction);
+
   }
 }
