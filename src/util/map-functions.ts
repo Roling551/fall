@@ -27,3 +27,17 @@ export function substractNumericalValuesFunctional(map1: Map<any, number>, map2:
     }
     return newMap
 }
+
+export function multiplyNumericalValues(map: Map<any, number>, multiplicant: number) {
+    for (const [key, num] of map.entries()) {
+        map.set(key, map.get(key)!*multiplicant)
+    }
+}
+
+export function multiplyNumericalValuesFunctional(map: Map<any, number>, multiplicant: number) {
+    const newMap = new Map<any, number>()
+    for (const [key, num] of map.entries()) {
+        newMap.set(key, num*multiplicant)
+    }
+    return newMap
+}

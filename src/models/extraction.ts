@@ -1,9 +1,10 @@
-import { Signal } from "@angular/core";
+import { computed, Signal } from "@angular/core";
 import { Coordiante } from "./coordinate";
 import { ExtractionSite, ExtractionSiteItem } from "./extraction-site";
 import { KeyValuePair } from "./key-value-pair";
 import { Tile } from "./tile";
 import { createForceSignal } from "../util/force-signal";
+import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../util/map-functions";
 
 
 // export class ExtractionSource {
@@ -16,7 +17,7 @@ import { createForceSignal } from "../util/force-signal";
 
 export class Extraction {
     sources = createForceSignal(new Map<string, Map<string, number>>())
-    constructor(public possibleExtractionItems: Set<string>){}
+    constructor(public possibleExtractionItems: Set<string>, public producedList: Map<string, number>){}
 
     changeExtraction(location: Coordiante, item: string, change: number) {
         const s = this.sources.get()
@@ -34,4 +35,19 @@ export class Extraction {
         items!.set(item, Math.max(0,change + n))
         this.sources.forceUpdate()
     }
+
+    sumOfSources = computed(()=>{
+        let num = 0
+        for(const [_, map1] of this.sources.get()) {
+            for(const [_, val] of map1) {
+                num += val
+            }   
+        }
+        return num
+    })
+
+    produced = computed(()=> {
+        this.sources.get()
+        return new Map(multiplyNumericalValuesFunctional(this.producedList, this.sumOfSources()))
+    })
 }

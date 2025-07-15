@@ -52,6 +52,9 @@ export class City extends MapEntity {
                 addExistingNumericalValues(production, estate.produced())
             }
         }
+        for (const [name, extraction] of this.extractions.get()) {
+            addExistingNumericalValues(production, extraction.produced())
+        }
         production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())
         production.set("workers", 10)
         return production
@@ -67,6 +70,7 @@ export class City extends MapEntity {
         } else {
             const extraction = extractionConstructor(self)
             this.extractions.get().set(extractionName, extraction)
+            this.extractions.forceUpdate()
             return extraction
         }
     }
