@@ -65,7 +65,6 @@ export class City extends MapEntity {
         if(this.extractions.get().has(extractionName)) {
             return this.extractions.get().get(extractionName)!
         } else {
-            console.log(extractionConstructor)
             const extraction = extractionConstructor(self)
             this.extractions.get().set(extractionName, extraction)
             return extraction

@@ -221,9 +221,7 @@ export function getAddExtractionAction(
     extraction: Extraction
 ):UISettings {
     return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            console.log("Map extraction")
-        },
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{},
         additionalInfo: {currentAction: "addExtractionAction"},
         doRenderTileInfoFunction: (tile)=> {
             return tile.value.mapEntity.get()?.type === "extractionSite"

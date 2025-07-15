@@ -29,10 +29,6 @@ export class ExtractionInfoComponent {
     return this.extraction.sources.get().get(this.tile.key.getKey())
   })
 
-  onButtonClick(change: number) {
-    console.log("Button click");
-  }
-
   getAvaliableExtractionItems = computed(()=> {
     const extractionSite = this.tile.value.mapEntity.get() as ExtractionSite
     const items = new Map<string, ExtractionSiteItem>()
