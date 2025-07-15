@@ -1,20 +1,20 @@
 import { BehaviorSubject, first, skip } from "rxjs";
 
 
-export class SetChangesEmitter<T>{
-    items:T[]=[]
-    subject = new BehaviorSubject<T[]>(this.items)
-    add(item: T) {
-        this.items.push(item)
+export class SetChangesEmitter<T,U>{
+    items=new Map<T,U>()
+    subject = new BehaviorSubject<Map<T,U>>(this.items)
+    add(key: T, value: U) {
+        this.items.set(key, value)
         this.subject.next(this.items)
     }
-    remove(item: T) {
-        this.items = this.items.filter(i => i !== item);
+    remove(key: T) {
+        this.items.delete(key);
         this.subject.next(this.items)
     }
     getListener(
-        forAdd: (item: T)=>void,
-        forDelete: (item: T)=>void)
+        forAdd: (key: T, value: U)=>void,
+        forDelete: (key: T, value: U)=>void)
     {
         return new SetChangesListener(
             this.subject,
@@ -25,24 +25,24 @@ export class SetChangesEmitter<T>{
 
 }
 
-export class SetChangesListener<T>{
+export class SetChangesListener<T,U>{
     subscribtion
-    prieviousItems:T[] = []
+    prieviousItems:Map<T,U> = new Map<T,U>()
     constructor(
-        public subject: BehaviorSubject<T[]>,
-        public forAdd: (item: T)=>void,
-        public forDelete: (item: T)=>void)
+        public subject: BehaviorSubject<Map<T,U>>,
+        public forAdd: (key: T, value: U)=>void,
+        public forDelete: (key: T, value: U)=>void)
     {
-        this.subscribtion = subject.pipe().subscribe((items: T[])=>{
-            const added = items.filter(x => !this.prieviousItems.includes(x));
-            const deleted = this.prieviousItems.filter(x => !items.includes(x));
+        this.subscribtion = subject.pipe().subscribe((items: Map<T,U>)=>{
+            const added = new Map([...items].filter(x => !this.prieviousItems.has(x[0])));
+            const deleted = new Map([...this.prieviousItems].filter(x => !items.has(x[0])));
             for(const item of added) {
-                forAdd(item)
+                forAdd(...item)
             }
             for(const item of deleted) {
-                forDelete(item)
+                forDelete(...item)
             }
-            this.prieviousItems = [...items]
+            this.prieviousItems = new Map(items)
         })
     }
     destroy() {

@@ -8,7 +8,7 @@ export class Estate extends MapEntity{
 
     readonly type = "estate"
 
-    public bonus?: SignalsGroup<EstateProductionBonus, Map<any, number>>
+    public bonus?: SignalsGroup<any, EstateProductionBonus, Map<any, number>>
 
     constructor(public name: string, public producedList: Map<string, number>) {
         super(name, 0)

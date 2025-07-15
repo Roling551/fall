@@ -9,7 +9,7 @@ import { EstateProductionBonus } from "../models/bonus";
   providedIn: 'root'
 })
 export class BonusesService {
-    estateProductionBonuses = new SetChangesEmitter<EstateProductionBonus>();
+    estateProductionBonuses = new SetChangesEmitter<any, EstateProductionBonus>();
     listenForEstateProductionBonuses(estate: Estate) {
         return new SignalsGroup(
             this.estateProductionBonuses,

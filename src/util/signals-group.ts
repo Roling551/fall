@@ -2,24 +2,24 @@ import { computed, Signal } from "@angular/core";
 import { SetChangesEmitter } from "./set-changes";
 import { createForceSignal } from "./force-signal";
 
-export class SignalsGroup<T, U> {
+export class SignalsGroup<T, U, V> {
     public output
     private listener
-    private signals = createForceSignal(new Map<T, {getter:Signal<U>, qualifier: Signal<boolean>}>());
+    private signals = createForceSignal(new Map<T, {getter:Signal<V>, qualifier: Signal<boolean>}>());
     constructor(
-        emitter: SetChangesEmitter<T>,
-        qualifier: (item: T)=>boolean,
-        getter: (item: T)=>U,
-        combinator: (cumulation: U, item: U) => U,
-        getCombinatorInitialValue: ()=>U
+        emitter: SetChangesEmitter<T, U>,
+        qualifier: (key: T, value: U)=>boolean,
+        getter: (key: T, value: U)=>V,
+        combinator: (cumulation: V, item: V) => V,
+        getCombinatorInitialValue: ()=>V
     ) {
         this.listener = emitter.getListener(
-            (item: T)=>{
-                this.signals.get().set(item, {getter:computed(()=>getter(item)), qualifier:computed(()=>qualifier(item))})
+            (key: T, value: U)=>{
+                this.signals.get().set(key, {getter:computed(()=>getter(key, value)), qualifier:computed(()=>qualifier(key, value))})
                 this.signals.forceUpdate()
             },
-            (item: T)=>{
-                this.signals.get().delete(item)
+            (key: T, value: U)=>{
+                this.signals.get().delete(key)
                 this.signals.forceUpdate()
             },
         )

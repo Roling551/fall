@@ -27,7 +27,7 @@ export class TechnologiesService {
             if(benefit.type === "unlock-estate") {
                 this.avaliableService.addAvaliabeEstate(benefit.estateName, benefit.getEstate)
             } else if(benefit.type === "estate-production-bonus") {
-                this.bonusesService.estateProductionBonuses.add(benefit.bonus)
+                this.bonusesService.estateProductionBonuses.add(benefit.bonus, benefit.bonus)
             }
         }
     }
