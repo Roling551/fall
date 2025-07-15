@@ -2,7 +2,7 @@
     @for(extractionSiteItem of getAvaliableExtractionItems(); track extractionSiteItem[0]) {
         <div>
             <p [style.margin-top.px]="sizeY/4" [style.font-size.px]="sizeX/12">
-                {{extractionSiteItem[0]}} : {{getExtractorItemRate(extractionSiteItem[0])}}/{{getExtractionSiteRates().get(extractionSiteItem[0])}}/{{extractionSiteItem[1].capacity()}}</p>
+                {{extractionSiteItem[0]}} : {{getExtractorItemRate(extractionSiteItem[0])}}/{{getExtractionSiteItemRate(extractionSiteItem[0])}}/{{extractionSiteItem[1].capacity()}}</p>
             <button
                 [style.margin-top.px]="sizeY/4"
                 [style.font-size.px]="sizeX/12"

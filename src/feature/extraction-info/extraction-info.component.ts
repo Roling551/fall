@@ -48,6 +48,10 @@ export class ExtractionInfoComponent {
     const extractionSite = this.tile.value.mapEntity.get() as ExtractionSite
     return extractionSite.getExtractionRates()
   })
+  
+  getExtractionSiteItemRate(item: string) {
+    return this.getExtractionSiteRates().get(item) || 0
+  }
 
   getExtractorItemRate(item: string) {
     return this.extractionAtLocation()?.get(item) || 0
