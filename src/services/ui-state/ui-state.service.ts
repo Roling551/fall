@@ -182,8 +182,6 @@ export class UIStateService {
     }
     if(ui.tileInfoInput) {
       this._tileInfoInput.set(ui.tileInfoInput)
-    } else {
-      this._tileInfoInput.set({})
     }
     this._tileInfoInput.forceUpdate()
 
