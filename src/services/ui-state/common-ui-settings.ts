@@ -20,6 +20,7 @@ import { BorderComponent } from "../../shared/border/border.component"
 import { computed } from "@angular/core"
 import { ExtractionInfoComponent } from "../../feature/extraction-info/extraction-info.component"
 import { Extraction } from "../../models/extraction"
+import { BenefitsService } from "../benefits.service"
 
 
 export function getTileUI(
@@ -133,7 +134,7 @@ export function getAddTileToCityAction(
     }
 }
 export function getCreateEstateAction(
-    bonusesService: BonusesService,
+    benefitsService: BenefitsService,
     cityTile: KeyValuePair<Coordiante, Tile>,
     getEstate: ()=>Estate,
     estateName: string
@@ -144,7 +145,7 @@ export function getCreateEstateAction(
                     return
                 }
                 const estate = getEstate();
-                estate.bonus = bonusesService.listenForEstateProductionBonuses(estate)
+                estate.bonus = benefitsService.listenForEstateProductionBonuses(estate)
                 tile.value.mapEntity.set(estate)
         },
         additionalInfo: {currentAction: "createEstateAction-" + estateName},

@@ -12,6 +12,7 @@ import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
 import { Extraction } from "../../models/extraction";
+import { BenefitsService } from "../benefits.service";
 
 export type UIModeName = "main" | "battle"
 
@@ -74,6 +75,7 @@ export class UIStateService {
   constructor(
     public worldStateService: WorldStateService,
     public bonusesService: BonusesService,
+    public benefitsService: BenefitsService,
     public battleService: BattleService
   ) {
     let initialRun = true
@@ -227,7 +229,7 @@ export class UIStateService {
     addTileToCity: () => {
       this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["tile"]))},
     createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
-      this.setMapAction(getCreateEstateAction(this.bonusesService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
+      this.setMapAction(getCreateEstateAction(this.benefitsService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
       this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     addExtraction: (extraction: Extraction) => {

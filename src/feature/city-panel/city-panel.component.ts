@@ -7,11 +7,11 @@ import { Coordiante } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
 import { Building } from '../../models/building';
-import { AvaliableService } from '../../services/avaliable.service';
 import { PlayerUnit, Unit } from '../../models/unit';
 import { WorldStateService } from '../../services/world-state.service';
 import { BattleService } from '../../services/battle.service';
 import { Extraction } from '../../models/extraction';
+import { BenefitsService } from '../../services/benefits.service';
 
 @Component({
   selector: 'app-city-panel',
@@ -22,7 +22,14 @@ import { Extraction } from '../../models/extraction';
 export class CityPanelComponent{
   @Input({required: true}) city!: ForceSignal<City>;
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
-  constructor(public uiStateService: UIStateService, public avaliableService: AvaliableService, public battleService: BattleService) {}
+
+  public avaliableEstates
+  public avaliableExtractions
+
+  constructor(public uiStateService: UIStateService, public battleService: BattleService, public benefitsService: BenefitsService) {
+    this.avaliableEstates = this.benefitsService.avaliableEstates
+    this.avaliableExtractions = this.benefitsService.avaliableExtractions
+  }
 
   isMainMode = computed(()=>{return this.uiStateService.uiModeName()==="main"})
 
@@ -74,6 +81,5 @@ export class CityPanelComponent{
   public onAddExtractionClick(extractionName: string, extractionConstructor: (belongsTo: any)=> Extraction) {
     const extraction = this.city.get().getOrCreateExtraction(extractionName, extractionConstructor)
     this.uiStateService.setMapAction_.addExtraction(extraction);
-
   }
 }

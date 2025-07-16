@@ -8,7 +8,7 @@
     <button (click)="onAddTileActionClick()" [class.active-button]="isAddTileSelected()">Add tile</button>
 }
 
-@for(estateInfo of avaliableService.estates(); track estateInfo[0]) {
+@for(estateInfo of avaliableEstates(); track estateInfo[0]) {
     @if(isMainMode()) {
         <button
             (click)="onAddEstateActionClick(estateInfo[0], estateInfo[1])"
@@ -24,7 +24,7 @@
 }
 
 <div>Extraction:</div>
-@for(extraction of avaliableService.extractions(); track extraction[0]) {
+@for(extraction of avaliableExtractions(); track extraction[0]) {
     <button (click)="onAddExtractionClick(extraction[0], extraction[1])">{{extraction[0]}}</button>
 }
 

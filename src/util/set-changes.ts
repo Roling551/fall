@@ -26,18 +26,12 @@ export class SetChangesEmitter<T,U>{
 }
 
 export class SignalChangesEmitter<T,U>{
-    items = computed(()=>{
-        let sumOfItems = new Map<T, U>()
-        for(const signal of this.signals()) {
-            sumOfItems = new Map<T, U>([...sumOfItems, ...signal()]);
-        }
-        return sumOfItems
-    })
-    subject = new BehaviorSubject<Map<T,U>>(this.items())
-    constructor(public signals:Signal<Set<Signal<Map<T,U>>>>) {
+    subject
+    constructor(public items:Signal<Map<T,U>>) {
         effect(()=>{
             this.subject.next(this.items())
         })
+        this.subject = new BehaviorSubject<Map<T,U>>(this.items())
     }
     getListener(
         forAdd: (key: T, value: U)=>void,
