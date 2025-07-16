@@ -1,5 +1,5 @@
 import { computed, Signal } from "@angular/core";
-import { SetChangesEmitter } from "./set-changes";
+import { SetChangesEmitter, SignalChangesEmitter } from "./set-changes";
 import { createForceSignal } from "./force-signal";
 
 export class SignalsGroup<T, U, V> {
@@ -7,7 +7,7 @@ export class SignalsGroup<T, U, V> {
     private listener
     private signals = createForceSignal(new Map<T, {getter:Signal<V>, qualifier: Signal<boolean>}>());
     constructor(
-        emitter: SetChangesEmitter<T, U>,
+        emitter: SetChangesEmitter<T, U> | SignalChangesEmitter<T, U>,
         qualifier: (key: T, value: U)=>boolean,
         getter: (key: T, value: U)=>V,
         combinator: (cumulation: V, item: V) => V,

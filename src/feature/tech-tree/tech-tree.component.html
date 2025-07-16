@@ -22,13 +22,13 @@
         [style.backgroundColor] = "getCellColor(cell)"
     >
         {{cell.value.name}}
-        {{cell.value.unlocked()}}
-        @if(cell.value.unlocked()) {
-            Unlocked
+        {{cell.value.discovered()}}
+        @if(cell.value.discovered()) {
+            Discovered
         } @else if(!cell.value.avaliable()) {
             Not avaliable
         } @else {
-            <button (click)="onUnlockClick(cell)">Unlock</button>
+            <button (click)="onDiscoverClick(cell)">Discover</button>
         }
         
     </div>

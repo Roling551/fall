@@ -1,3 +1,4 @@
+import { computed, effect, Signal } from "@angular/core";
 import { BehaviorSubject, first, skip } from "rxjs";
 
 
@@ -16,16 +17,41 @@ export class SetChangesEmitter<T,U>{
         forAdd: (key: T, value: U)=>void,
         forDelete: (key: T, value: U)=>void)
     {
-        return new SetChangesListener(
+        return new ChangesListener(
             this.subject,
             forAdd,
             forDelete
         )
     }
-
 }
 
-export class SetChangesListener<T,U>{
+export class SignalChangesEmitter<T,U>{
+    items = computed(()=>{
+        let sumOfItems = new Map<T, U>()
+        for(const signal of this.signals()) {
+            sumOfItems = new Map<T, U>([...sumOfItems, ...signal()]);
+        }
+        return sumOfItems
+    })
+    subject = new BehaviorSubject<Map<T,U>>(this.items())
+    constructor(public signals:Signal<Set<Signal<Map<T,U>>>>) {
+        effect(()=>{
+            this.subject.next(this.items())
+        })
+    }
+    getListener(
+        forAdd: (key: T, value: U)=>void,
+        forDelete: (key: T, value: U)=>void)
+    {
+        return new ChangesListener(
+            this.subject,
+            forAdd,
+            forDelete
+        )
+    }
+}
+
+export class ChangesListener<T,U>{
     subscribtion
     prieviousItems:Map<T,U> = new Map<T,U>()
     constructor(

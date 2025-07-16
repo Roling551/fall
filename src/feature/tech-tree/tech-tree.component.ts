@@ -31,12 +31,12 @@ export class TechTreeComponent {
     this.currentWindowService.currentWindow.set("world-map")
   }
 
-  onUnlockClick(cell: Cell<Technology>) {
-    this.technologiesService.unlock(cell);
+  onDiscoverClick(cell: Cell<Technology>) {
+    this.technologiesService.discover(cell);
   }
 
   getCellColor(cell: Cell<Technology>) {
-    if(cell.value.unlocked())
+    if(cell.value.discovered())
       return 'LightGreen'
     else if(!cell.value.avaliable()) {
       return 'Grey'

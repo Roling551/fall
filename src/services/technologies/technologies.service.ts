@@ -19,16 +19,16 @@ export class TechnologiesService {
     technologies_ = createForceSignal(createTreeFromPairs(topTechnologyName, initialTechnologies, initiaTechnologiesParenthood, (technology: Technology) => technology.name))
     technologies = this.technologies_.get
 
-    addTechnology = new Subject<Benefit>()
+    benefits = createForceSignal(new Map<string, Benefit>)
 
-    public unlock(cell: Cell<Technology>) {
+    public discover(cell: Cell<Technology>) {
         const technology = cell.value
-        technology.unlocked.set(true)
+        technology.discovered.set(true)
         for(const childCell of cell.children) {
             childCell.value.avaliable.set(true)
         }
-        for(const benefit of technology.benefits) {
-            this.addTechnology.next(benefit)
+        for(const [name, benefit] of technology.benefits) {
+            this.benefits.get().set(technology.name+">"+name, benefit)
         }
     }
 }
