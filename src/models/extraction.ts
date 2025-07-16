@@ -46,6 +46,10 @@ export class Extraction {
         return num
     })
 
+    // bonuses: Signal<> = computed(()=>{
+
+    // })
+
     produced = computed(()=> {
         this.sources.get()
         return new Map(multiplyNumericalValuesFunctional(this.producedList, this.sumOfSources()))
