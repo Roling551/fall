@@ -177,13 +177,27 @@ export class UIStateService {
     if(ui.tileInfo) {
       this._tileInfo.set(ui.tileInfo)
       this._tileInfo.forceUpdate()
+    } else {
+      if(this._ui?.tileInfo) {
+        this._tileInfo.set(this._ui!.tileInfo!)
+        this._tileInfo.forceUpdate()
+      }
     }
     if(ui.doRenderTileInfoFunction) {
       this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
       this._doRenderTileInfoFunction.forceUpdate()
+    } else {
+      if(this._ui?.doRenderTileInfoFunction) {
+        this._doRenderTileInfoFunction.set(this._ui.doRenderTileInfoFunction)
+        this._doRenderTileInfoFunction.forceUpdate()
+      }
     }
     if(ui.tileInfoInput) {
       this._tileInfoInput.set(ui.tileInfoInput)
+    } else {
+      if(this._ui?.tileInfoInput) {
+        this._tileInfoInput.set(this._ui.tileInfoInput)
+      }
     }
     this._tileInfoInput.forceUpdate()
 
