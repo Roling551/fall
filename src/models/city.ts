@@ -7,6 +7,7 @@ import { MapEntity } from "./map-entity";
 import { Estate } from "./estate";
 import { addExistingNumericalValues } from "../util/map-functions";
 import { Extraction } from "./extraction";
+import { Benefit } from "./benefit";
 
 export class City extends MapEntity {
     constructor() {
@@ -74,4 +75,12 @@ export class City extends MapEntity {
             return extraction
         }
     }
+
+    benefits = computed<Map<string, Benefit>>(()=>{
+        let result = new Map<string, Benefit>();
+        for(const [key, value] of this.extractions.get()) {
+            result = new Map([...result, ...value.benefits()])
+        }
+        return result
+    })
 }

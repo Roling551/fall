@@ -8,6 +8,8 @@ import { Extraction } from "../models/extraction";
 import { EstateProductionBonus } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
+import { InitService } from "./init.service";
+import { WorldStateService } from "./world-state.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,16 @@ export class BenefitsService {
     avaliableEstates = computed(() => {
         const result = new Map<string, (()=>Estate)>();
         for(const [key, benefit] of this.technologiesService.benefits.get()) {
+            if(benefit.type === "unlock-estate") {
+                result.set(benefit.estateName, benefit.getEstate)
+            }
+        }
+        for(const [key, benefit] of this.initService.benefits.get()) {
+            if(benefit.type === "unlock-estate") {
+                result.set(benefit.estateName, benefit.getEstate)
+            }
+        }
+        for(const [key, benefit] of this.worldStateService.benefits()) {
             if(benefit.type === "unlock-estate") {
                 result.set(benefit.estateName, benefit.getEstate)
             }
@@ -31,17 +43,40 @@ export class BenefitsService {
                 result.set(benefit.extractionName, benefit.getExtraction)
             }
         }
+        for(const [key, benefit] of this.initService.benefits.get()) {
+            if(benefit.type === "unlock-extraction") {
+                result.set(benefit.extractionName, benefit.getExtraction)
+            }
+        }
+        for(const [key, benefit] of this.worldStateService.benefits()) {
+            if(benefit.type === "unlock-extraction") {
+                result.set(benefit.extractionName, benefit.getExtraction)
+            }
+        }
         return result
     })
     estateBonuses
     estateProductionBonuses
     listenForEstateProductionBonuses
     constructor(
-        private technologiesService: TechnologiesService) 
+        private technologiesService: TechnologiesService,
+        private initService: InitService,
+        private worldStateService: WorldStateService
+    ) 
     {
         this.estateBonuses = computed(()=> {
             const result = new Map<string, EstateProductionBonus>();
             for(const [key, benefit] of this.technologiesService.benefits.get()) {
+                if(benefit.type === "estate-production-bonus") {
+                    result.set(key, benefit.bonus)
+                }
+            }
+            for(const [key, benefit] of this.initService.benefits.get()) {
+                if(benefit.type === "estate-production-bonus") {
+                    result.set(key, benefit.bonus)
+                }
+            }
+            for(const [key, benefit] of this.worldStateService.benefits()) {
                 if(benefit.type === "estate-production-bonus") {
                     result.set(key, benefit.bonus)
                 }

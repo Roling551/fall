@@ -5,6 +5,7 @@ import { KeyValuePair } from "./key-value-pair";
 import { Tile } from "./tile";
 import { createForceSignal } from "../util/force-signal";
 import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../util/map-functions";
+import { Benefit } from "./benefit";
 
 
 // export class ExtractionSource {
@@ -17,7 +18,7 @@ import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../u
 
 export class Extraction {
     sources = createForceSignal(new Map<string, Map<string, number>>())
-    constructor(public possibleExtractionItems: Set<string>, public producedList: Map<string, number>){}
+    constructor(public possibleExtractionItems: Set<string>, public producedList: Map<string, number>, public possibeBenefits: Map<string,Benefit>){}
 
     changeExtraction(location: Coordiante, item: string, change: number) {
         const s = this.sources.get()
@@ -46,9 +47,15 @@ export class Extraction {
         return num
     })
 
-    // bonuses: Signal<> = computed(()=>{
-
-    // })
+    benefits: Signal<Map<string,Benefit>> = computed(()=>{
+        const result = new Map<string,Benefit>();
+        for(const [key, value] of this.possibeBenefits) {
+            if(this.sumOfSources()>=1) {
+                result.set(key, value)
+            }
+        }
+        return result
+    })
 
     produced = computed(()=> {
         this.sources.get()

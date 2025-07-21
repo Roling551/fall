@@ -8,6 +8,7 @@ import { addExistingNumericalValues } from '../util/map-functions';
 import { Unit } from '../models/unit';
 import { dijkstra } from '../util/path-finding';
 import { TileDirection } from '../models/tile-direction';
+import { Benefit } from '../models/benefit';
 
 @Injectable({
   providedIn: 'root'
@@ -92,4 +93,12 @@ export class WorldStateService {
       this.cities.forceUpdate()
     }
   }
+
+  benefits = computed<Map<string, Benefit>>(()=>{
+      let result = new Map<string, Benefit>();
+      for(const [key, value] of this.cities.get()) {
+          result = new Map([...result, ...value.get().benefits()])
+      }
+      return result
+  })
 }
