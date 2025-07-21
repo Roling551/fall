@@ -1,4 +1,4 @@
-import { computed } from "@angular/core";
+import { computed, signal } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../util/force-signal"
 import { Coordiante } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
@@ -8,6 +8,7 @@ import { Estate } from "./estate";
 import { addExistingNumericalValues } from "../util/map-functions";
 import { Extraction } from "./extraction";
 import { Benefit } from "./benefit";
+import { Population } from "./population";
 
 export class City extends MapEntity {
     constructor() {
@@ -19,6 +20,8 @@ export class City extends MapEntity {
     ownedTiles = createForceSignal(new Map<string, KeyValuePair<Coordiante, Tile>>());
 
     extractions = createForceSignal(new Map<string, Extraction>())
+
+    population = new Population(5, this)
 
     addOwnedTile(tile: KeyValuePair<Coordiante, Tile>) {
         this.ownedTiles.get().set(tile.key.getKey(), tile)
@@ -40,12 +43,18 @@ export class City extends MapEntity {
     })
 
     canNextTurn = computed(()=>{
-        return this.produced().get("authority")! >= this.produced().get("authority-need")! &&
-            this.produced().get("food")! >= this.produced().get("food-need")!
+        return this.produced().get("authority")! >= this.produced().get("authority-need")! 
+        //     &&
+        // this.produced().get("food")! >= this.produced().get("food-need")!
     })
+
+    nextTurn() {
+        this.population.nextTurn()
+    }
 
     override produced = computed(()=>{
         const production = new Map(super.baseProduced())
+        addExistingNumericalValues(production, this.population.produced())
         for (const [key, tile] of this.ownedTiles.get().entries()) {
             const mapEntity = tile.value.mapEntity.get()
             if(!!mapEntity && mapEntity.type === "estate") {
@@ -57,7 +66,7 @@ export class City extends MapEntity {
             addExistingNumericalValues(production, extraction.produced())
         }
         production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())
-        production.set("workers", 10)
+        production.set("workers", this.population.amount())
         return production
     })
 

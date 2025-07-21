@@ -34,5 +34,7 @@ export class InitService {
           }
         )
         this.worldStateService.tiles.get("1_1")?.value.mapEntity.set(new ExtractionSite("forest", [["berries", 5]]))
+        this.worldStateService.tiles.get("1_2")?.value.mapEntity.set(new ExtractionSite("forest", [["berries", 5]]))
+        this.worldStateService.tiles.get("2_1")?.value.mapEntity.set(new ExtractionSite("forest", [["berries", 5]]))
     }
 }

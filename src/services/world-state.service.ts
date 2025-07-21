@@ -73,6 +73,9 @@ export class WorldStateService {
       addExistingNumericalValues(this.resources.get(), city.get().produced());
       this.resources.forceUpdate();
     }
+    for (const [coordinate, city] of this.cities.get().entries()) {
+      city.get().nextTurn()
+    }
     this.turn.update(x=>x+1)
   }
 
