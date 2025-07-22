@@ -45,3 +45,8 @@
 @if(isMainMode()) {
     <button (click)="onAddUnitClick()">Add unit</button>
 }
+<button (click)="onAddJobClick()">Add job</button>
+
+@for(job of city.get().jobs.get(); track job) {
+    <app-one-time-job-panel [oneTimeJob]="job"/>
+}

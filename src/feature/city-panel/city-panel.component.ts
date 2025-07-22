@@ -12,10 +12,12 @@ import { WorldStateService } from '../../services/world-state.service';
 import { BattleService } from '../../services/battle.service';
 import { Extraction } from '../../models/extraction';
 import { BenefitsService } from '../../services/benefits.service';
+import { OneTimeJobPanelComponent } from '../one-time-job-panel/one-time-job-panel.component';
+import { OneTimeJob } from '../../models/one-time-job';
 
 @Component({
   selector: 'app-city-panel',
-  imports: [],
+  imports: [OneTimeJobPanelComponent],
   templateUrl: './city-panel.component.html',
   styleUrl: './city-panel.component.scss'
 })
@@ -81,5 +83,9 @@ export class CityPanelComponent{
   public onAddExtractionClick(extractionName: string, extractionConstructor: (belongsTo: any)=> Extraction) {
     const extraction = this.city.get().getOrCreateExtraction(extractionName, extractionConstructor)
     this.uiStateService.setMapAction_.addExtraction(extraction);
+  }
+
+  public onAddJobClick() {
+    this.city.get().addJob(new OneTimeJob("Construction of building", 2, ()=>{console.log("Job done")}))
   }
 }

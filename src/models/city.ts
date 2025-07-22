@@ -9,6 +9,7 @@ import { addExistingNumericalValues } from "../util/map-functions";
 import { Extraction } from "./extraction";
 import { Benefit } from "./benefit";
 import { Population } from "./population";
+import { OneTimeJob } from "./one-time-job";
 
 export class City extends MapEntity {
     constructor() {
@@ -22,6 +23,8 @@ export class City extends MapEntity {
     extractions = createForceSignal(new Map<string, Extraction>())
 
     population = new Population(5, this)
+
+    public jobs = createForceSignal(new Set<OneTimeJob>())
 
     addOwnedTile(tile: KeyValuePair<Coordiante, Tile>) {
         this.ownedTiles.get().set(tile.key.getKey(), tile)
@@ -50,6 +53,16 @@ export class City extends MapEntity {
 
     nextTurn() {
         this.population.nextTurn()
+        let changeHappend = false;
+        for(const job of this.jobs.get()) {
+            if(job.work()) {
+                this.jobs.get().delete(job)
+                changeHappend = true
+            }
+        }
+        if(changeHappend) {
+            this.jobs.forceUpdate()
+        }
     }
 
     override produced = computed(()=>{
@@ -64,6 +77,9 @@ export class City extends MapEntity {
         }
         for (const [name, extraction] of this.extractions.get()) {
             addExistingNumericalValues(production, extraction.produced())
+        }
+        for (const job of this.jobs.get()) {
+            addExistingNumericalValues(production, job.produced())
         }
         production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())
         production.set("workers", this.population.amount())
@@ -92,4 +108,14 @@ export class City extends MapEntity {
         }
         return result
     })
+
+    addJob(job: OneTimeJob) {
+        this.jobs.get().add(job)
+        this.jobs.forceUpdate()
+    }
+
+    deleteJob(job: OneTimeJob) {
+        this.jobs.get().delete(job)
+        this.jobs.forceUpdate()
+    }
 }
