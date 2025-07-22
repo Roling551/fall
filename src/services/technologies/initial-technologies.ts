@@ -11,7 +11,7 @@ export const initialTechnologies:Technology[] = [
             {
                 type: "unlock-estate",
                 estateName: "farm",
-                getEstate: () => new Estate("farm", new Map([["food",2], ["food-need", 1]]))
+                getEstate: () => new Estate("farm", new Map([["food",2], ["workers-need", 1]]))
             }
         ]
     ])),
@@ -36,7 +36,7 @@ export const initialTechnologies:Technology[] = [
                 name: "unlock-tower",
                 type: "unlock-estate",
                 estateName: "tower",
-                getEstate: () => new Estate("tower", new Map([["authority",5], ["food-need", 1]]))
+                getEstate: () => new Estate("tower", new Map([["authority",5], ["workers-need", 1]]))
             }
         ]
     ])),
@@ -46,7 +46,7 @@ export const initialTechnologies:Technology[] = [
             {
                 type: "unlock-estate",
                 estateName: "mine",
-                getEstate: () => new Estate("mine", new Map([["gold",1], ["food-need", 1]]))
+                getEstate: () => new Estate("mine", new Map([["gold",1], ["workers-need", 1]]))
             }
         ]
     ])),

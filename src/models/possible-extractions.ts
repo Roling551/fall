@@ -5,7 +5,7 @@ import { Extraction } from "./extraction";
 export const possibleExtractions = new Map<string, () => Extraction>([
     [
         "forest-gathering",
-        ()=>new Extraction(new Set(["berries"]), new Map([["food",1]]), new Map())
+        ()=>new Extraction(new Set(["berries"]), new Map([["food",2], ["workers-need", 1]]), new Map())
     ],
     [
         "forest-warship",
