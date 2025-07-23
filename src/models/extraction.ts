@@ -7,6 +7,10 @@ import { createForceSignal } from "../util/force-signal";
 import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../util/map-functions";
 import { Benefit } from "./benefit";
 
+export interface ExtractionSettings {
+    changeStep: number;
+    maxExtraction: number;
+}
 
 // export class ExtractionSource {
 //     constructor(public item: string, public siteLocation: KeyValuePair<Coordiante, Tile>){}
@@ -18,7 +22,11 @@ import { Benefit } from "./benefit";
 
 export class Extraction {
     sources = createForceSignal(new Map<string, Map<string, number>>())
-    constructor(public possibleExtractionItems: Set<string>, public producedList: Map<string, number>, public possibeBenefits: Map<string,Benefit>){}
+    constructor(
+        public possibleExtractionItems: Set<string>,
+        public producedList: Map<string, number>,
+        public possibeBenefits: Map<string,Benefit>, 
+        public settings: ExtractionSettings = {changeStep:1, maxExtraction: Infinity}){}
 
     changeExtraction(location: Coordiante, item: string, change: number) {
         const s = this.sources.get()
@@ -33,9 +41,16 @@ export class Extraction {
         if(items!.has(item)) {
             n = items!.get(item)!
         }
-        items!.set(item, Math.max(0,change + n))
+        const newNumber = Math.max(0,change*this.settings.changeStep + n)
+        if(newNumber <= this.settings.maxExtraction) {
+            items!.set(item, newNumber)
+        }
         this.sources.forceUpdate()
     }
+
+    canIncreaseExtraction = computed(() => {
+        return this.sumOfSources() + this.settings.changeStep <= this.settings.maxExtraction
+    })
 
     sumOfSources = computed(()=>{
         let num = 0
@@ -59,6 +74,6 @@ export class Extraction {
 
     produced = computed(()=> {
         this.sources.get()
-        return new Map(multiplyNumericalValuesFunctional(this.producedList, this.sumOfSources()))
+        return new Map(multiplyNumericalValuesFunctional(this.producedList, this.sumOfSources()/this.settings.changeStep))
     })
 }

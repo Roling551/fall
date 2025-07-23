@@ -59,7 +59,8 @@ export class ExtractionInfoComponent {
   })
   
   canIncreaseExtraction(item: string) {
-    return (this.getExtractionSiteLeft().get(item) || 0) >= 1
+    return (this.getExtractionSiteLeft().get(item) || 0) >= this.extraction.settings.changeStep
+      && this.extraction.canIncreaseExtraction()
   }
 
   changeExtraction(item: [string, ExtractionSiteItem], change: number) {

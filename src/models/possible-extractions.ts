@@ -9,14 +9,20 @@ export const possibleExtractions = new Map<string, () => Extraction>([
     ],
     [
         "forest-warship",
-        ()=>new Extraction(new Set(["berries"]), new Map([]), new Map([["farm-bonus", {
-            type: "estate-production-bonus",
-            bonus: {
-                type: "estate-production",
-                name: "farm-bonus",
-                qualifier: (estate: Estate)=>estate.name==="farm",
-                bonus: (estate: Estate)=>new Map([["food",1]])
-            }
-        }]]))
+        ()=>new Extraction(
+            new Set(["berries"]), 
+            new Map([]), 
+            new Map([
+                ["farm-bonus", {
+                type: "estate-production-bonus",
+                bonus: {
+                    type: "estate-production",
+                    name: "farm-bonus",
+                    qualifier: (estate: Estate)=>estate.name==="farm",
+                    bonus: (estate: Estate)=>new Map([["food",1]]),
+                }
+                }]]),
+            {maxExtraction: 3, changeStep: 3}
+        )
     ]
 ])
