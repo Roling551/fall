@@ -59,4 +59,9 @@ export class Cell<T> {
         }
         return new TraverseTreeInfo(Math.max(currentWidth, this.width), height)
     }
+
+    replace(value: T, width: number) {
+        this.value = value
+        this.width = width
+    }
 }

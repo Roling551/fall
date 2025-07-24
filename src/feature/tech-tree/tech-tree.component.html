@@ -7,10 +7,10 @@
             <app-tree
                 [cellTemplate]="cellTemplate"
                 [tree]="technologies()"
-                [sizeX]="200"
-                [sizeY]="100"
-                [spaceX]="20"
-                [spaceY]="40"
+                [sizeX]="sizeX"
+                [sizeY]="sizeY"
+                [spaceX]="spaceX"
+                [spaceY]="spaceY"
             />
         </div>
     </div>
@@ -20,6 +20,9 @@
     <div class="technology-item">
         @if(cell.value.type === "technology") {
             <app-technology-tree-item [cell]="cell" [technology]="cell.value.item"/>
+        }
+        @else if(cell.value.type === "technology-selection") {
+            <app-technology-selection-tree-item [cell]="cell" [technologies]="cell.value.item" [sizeX]="sizeX" [spaceX]="spaceX" />
         }
     </div>
 </ng-template>

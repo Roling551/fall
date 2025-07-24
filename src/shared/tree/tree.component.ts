@@ -24,6 +24,10 @@ export class TreeComponent<T> implements OnChanges {
 
 
   ngOnChanges(): void {
+    this.update()
+  }
+
+  update() {
     const {cellInfoArray, traverseInfo} = this.traverse(this.tree)
     this.cellInfoArray = cellInfoArray
     this.traverseInfo = traverseInfo

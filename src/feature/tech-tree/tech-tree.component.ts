@@ -9,16 +9,22 @@ import { Cell } from '../../models/cell';
 import { Technology } from '../../models/technology';
 import { TechnologyTreeItem } from '../../models/technology-tree-item';
 import { TechnologyTreeItemComponent } from '../technology-tree-item/technology-tree-item.component';
+import { TechnologySelectionTreeItemComponent } from '../technology-selection-tree-item/technology-selection-tree-item.component';
 
 @Component({
   selector: 'app-tech-tree',
-  imports: [NgxGraphModule, TreeComponent, TechnologyTreeItemComponent],
+  imports: [NgxGraphModule, TreeComponent, TechnologyTreeItemComponent, TechnologySelectionTreeItemComponent],
   templateUrl: './tech-tree.component.html',
   styleUrl: './tech-tree.component.scss'
 })
 export class TechTreeComponent {
 
   technologies
+
+  public readonly sizeX=200
+  public readonly sizeY=100
+  public readonly spaceX=20
+  public readonly spaceY=40
 
   constructor(public currentWindowService: CurrentWindowService, public technologiesService: TechnologiesService) {
     this.technologies = technologiesService.technologies

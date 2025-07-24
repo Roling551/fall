@@ -1,0 +1,16 @@
+
+<div [style.backgroundColor] = "getCellColor()" class="container">
+    @for(technology of technologies().technologies; track technology.name) {
+        <div
+            class="item"
+            [style.left.px]="getTransformX($index)"
+            [style.width.px]="sizeX"
+            style="border-width: 0px 1px; border-style: solid; border-color: black; height: 100%;"
+        >
+            {{technology.name}}
+            @if(technologies().avaliable()) {
+                <button (click)="onTechnologySelect(technology)">Discover</button>
+            }
+        </div>
+    }
+</div>
