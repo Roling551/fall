@@ -17,20 +17,9 @@
 </div>
 
 <ng-template #cellTemplate let-cell="cell">
-    <div 
-        class="technology-item"
-        [style.backgroundColor] = "getCellColor(cell)"
-    >
-        {{cell.value.name}}
-        {{cell.value.discovered()}}
-        @if(cell.value.discovered()) {
-            Discovered
-        } @else if(!cell.value.avaliable()) {
-            Not avaliable
-        } @else {
-            <button (click)="onDiscoverClick(cell)">Discover</button>
+    <div class="technology-item">
+        @if(cell.value.type === "technology") {
+            <app-technology-tree-item [cell]="cell" [technology]="cell.value.item"/>
         }
-        
     </div>
 </ng-template>
-

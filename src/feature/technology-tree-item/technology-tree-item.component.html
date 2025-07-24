@@ -1,0 +1,14 @@
+<div
+    [style.backgroundColor] = "getCellColor()"
+    class="technology-item"
+>
+    {{technology().name}}
+    {{technology().discovered()}}
+    @if(technology().discovered()) {
+        Discovered
+    } @else if(!cell().value.avaliable()) {
+        Not avaliable
+    } @else {
+        <button (click)="onDiscoverClick()">Discover</button>
+    }
+</div>

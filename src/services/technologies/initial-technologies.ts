@@ -1,9 +1,10 @@
 import { Estate } from "../../models/estate";
 import { Technology } from "../../models/technology";
+import { getTechnologyTreeItem, TechnologyTreeItem } from "../../models/technology-tree-item";
 
 
-export const initialTechnologies:Technology[] = [
-    new Technology("Writing", new Map(), {avaliable: true}),
+export const initialTechnologies:TechnologyTreeItem[] = [
+    new Technology("Writing", new Map()),
     new Technology("Masonry", new Map()),
     new Technology("Farming", new Map([
         [
@@ -39,7 +40,7 @@ export const initialTechnologies:Technology[] = [
                 getEstate: () => new Estate("tower", new Map([["authority",5], ["workers-need", 1]]))
             }
         ]
-    ]), {width: 2}),
+    ])),
     new Technology("Towers", new Map([
         [
             "unlock-mine",
@@ -50,7 +51,7 @@ export const initialTechnologies:Technology[] = [
             }
         ]
     ])),
-]
+].map(x=>getTechnologyTreeItem(x)).filter(x=>!!x)
 
 export const initiaTechnologiesParenthood: [string, string][] = [
     ["Writing", "Farming"],

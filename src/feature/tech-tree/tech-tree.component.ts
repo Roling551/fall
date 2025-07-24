@@ -7,10 +7,12 @@ import { CurrentWindowService } from '../../services/current-window.service';
 import { TechnologiesService } from '../../services/technologies/technologies.service';
 import { Cell } from '../../models/cell';
 import { Technology } from '../../models/technology';
+import { TechnologyTreeItem } from '../../models/technology-tree-item';
+import { TechnologyTreeItemComponent } from '../technology-tree-item/technology-tree-item.component';
 
 @Component({
   selector: 'app-tech-tree',
-  imports: [NgxGraphModule, TreeComponent],
+  imports: [NgxGraphModule, TreeComponent, TechnologyTreeItemComponent],
   templateUrl: './tech-tree.component.html',
   styleUrl: './tech-tree.component.scss'
 })
@@ -29,19 +31,5 @@ export class TechTreeComponent {
   
   onGoBackClick(): void {
     this.currentWindowService.currentWindow.set("world-map")
-  }
-
-  onDiscoverClick(cell: Cell<Technology>) {
-    this.technologiesService.discover(cell);
-  }
-
-  getCellColor(cell: Cell<Technology>) {
-    if(cell.value.discovered())
-      return 'LightGreen'
-    else if(!cell.value.avaliable()) {
-      return 'Grey'
-    } else {
-      return 'White'
-    }
   }
 }
