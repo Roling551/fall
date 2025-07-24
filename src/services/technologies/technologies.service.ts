@@ -9,7 +9,7 @@ import { Benefit } from "../../models/benefit";
   providedIn: 'root'
 })
 export class TechnologiesService {
-    technologies_ = createForceSignal(createTreeFromPairs(topTechnologyName, initialTechnologies, initiaTechnologiesParenthood, (technology: Technology) => technology.name))
+    technologies_ = createForceSignal(createTreeFromPairs(topTechnologyName, initialTechnologies, initiaTechnologiesParenthood, (technology: Technology) => technology.name, (technology: Technology) => technology.settings!.width!))
     technologies = this.technologies_.get
 
     benefits = createForceSignal(new Map<string, Benefit>)

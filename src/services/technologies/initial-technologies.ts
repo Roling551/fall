@@ -3,7 +3,7 @@ import { Technology } from "../../models/technology";
 
 
 export const initialTechnologies:Technology[] = [
-    new Technology("Writing", new Map(), true),
+    new Technology("Writing", new Map(), {avaliable: true}),
     new Technology("Masonry", new Map()),
     new Technology("Farming", new Map([
         [
@@ -39,7 +39,7 @@ export const initialTechnologies:Technology[] = [
                 getEstate: () => new Estate("tower", new Map([["authority",5], ["workers-need", 1]]))
             }
         ]
-    ])),
+    ]), {width: 2}),
     new Technology("Towers", new Map([
         [
             "unlock-mine",

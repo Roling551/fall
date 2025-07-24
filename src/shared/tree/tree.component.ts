@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, TemplateRef } from '@angular/core';
-import { Cell, CellCreationData, CellInfo, createTree, TraverseTreeInfo } from '../../models/cell';
+import { Cell, CellInfo, TraverseTreeInfo } from '../../models/cell';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -52,5 +52,8 @@ export class TreeComponent<T> implements OnChanges {
   }
   public getMiddleX(column: number) {
     return (this.sizeX + this.spaceX) * column + this.sizeX / 2
+  }
+  public getWidth(cell:CellInfo<T>) {
+    return (cell.cell.width * this.sizeX) + ((cell.cell.width - 1) * this.spaceX)
   }
 }

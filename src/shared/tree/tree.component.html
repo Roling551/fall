@@ -5,7 +5,7 @@
             [style.left.px]="getTransformX(cell.column)"
             [style.top.px]="getTransformY(cell.row)"
             [style.height.px]="sizeY-2"
-            [style.width.px]="sizeX-2"
+            [style.width.px]="getWidth(cell)"
             style="border: solid black 1px"
         >
             <ng-container *ngTemplateOutlet="cellTemplate; context:{cell:cell.cell}"></ng-container>
