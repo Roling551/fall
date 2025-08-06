@@ -41,8 +41,8 @@ export const initialTechnologies:TechnologyTreeItem[] = [
                     {
                 name: "unlock-tower",
                 type: "unlock-estate",
-                estateName: "tower",
-                getEstate: () => new Estate("tower", new Map([["authority",5], ["workers-need", 1]]))
+                estateName: "mine",
+                getEstate: () => new Estate("mine", new Map([["gold",1], ["workers-need", 1]]))
             }
         ]
     ])),
@@ -51,8 +51,8 @@ export const initialTechnologies:TechnologyTreeItem[] = [
             "unlock-mine",
             {
                 type: "unlock-estate",
-                estateName: "mine",
-                getEstate: () => new Estate("mine", new Map([["gold",1], ["workers-need", 1]]))
+                estateName: "tower",
+                getEstate: () => new Estate("tower", new Map([["authority",5], ["workers-need", 1]]))
             }
         ]
     ])),
@@ -68,9 +68,9 @@ export const initiaTechnologiesParenthood: [string, string][] = [
     ["Writing", "Farming"],
     ["Farming", "Irrigation"],
     ["Writing", "Masonry"],
-    ["Masonry", "Mining"],
     ["Masonry", "Towers"],
     ["Writing", "Example_selection"],
+    ["Example_selection", "Mining"],
 ]
 
 export const topTechnologyName = "Writing"

@@ -26,12 +26,14 @@ export class TechnologySelectionTreeItemComponent {
     if(!treeItem) {
       return
     }
+    for(const childCell of this.cell().children) {
+      childCell.value.makeAvaliable()
+    }
     technology.discovered.set(true)
     this.cell().replace(treeItem, 1)
   }
 
   getCellColor() {
-    console.log(!this.cell().value.avaliable())
     if(!this.cell().value.avaliable()) {
       return 'Grey'
     } else {

@@ -17,11 +17,11 @@ export class TechnologyTreeItemComponent {
   constructor(private technologiesService: TechnologiesService) {}
   
   onDiscoverClick() {
-        this.technology().discovered.set(true)
-        for(const childCell of this.cell().children) {
-            childCell.value.makeAvaliable()
-        }
-        this.technologiesService.discover(this.technology())
+    this.technology().discovered.set(true)
+    for(const childCell of this.cell().children) {
+        childCell.value.makeAvaliable()
+    }
+    this.technologiesService.discover(this.technology())
   }
 
   getCellColor() {
