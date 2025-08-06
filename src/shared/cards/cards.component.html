@@ -2,22 +2,9 @@
     <div class="left">left</div>
     <div class="middle">
         <div class="hand">
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
-            <app-card></app-card>
+            @for(card of hand(); track card) {
+                <app-card [card]="card"></app-card>
+            }
         </div>
     </div>
     <div class="right">right</div>

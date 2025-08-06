@@ -259,8 +259,8 @@ export class UIStateService {
     main: (options: {setup: boolean} = {setup:false}) => {
       if(!options.setup) {
         this.battleService.endBattle()
+        this.worldStateService.nextTurn()
       }
-      this.worldStateService.nextTurn()
       this.setUIMode(getMainMode())
     },
     battle: () => {

@@ -9,6 +9,7 @@ import { Unit } from '../models/unit';
 import { dijkstra } from '../util/path-finding';
 import { TileDirection } from '../models/tile-direction';
 import { Benefit } from '../models/benefit';
+import { CardsService } from './cards.service';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +56,7 @@ export class WorldStateService {
     return true;
   })
 
-  constructor() { }
+  constructor(public cardService: CardsService) { }
   
   private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordiante, Tile>> {
     let tiles = new Map<string, KeyValuePair<Coordiante, Tile>>()
@@ -76,6 +77,7 @@ export class WorldStateService {
     for (const [coordinate, city] of this.cities.get().entries()) {
       city.get().nextTurn()
     }
+    this.cardService.nextTurn()
     this.turn.update(x=>x+1)
   }
 
