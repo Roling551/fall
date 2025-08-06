@@ -1,5 +1,5 @@
 import { Component, computed } from '@angular/core';
-import { CardComponent } from '../../feature/card/card.component';
+import { CardComponent } from '../card/card.component';
 import { CardsService } from '../../services/cards.service';
 
 @Component({
@@ -12,5 +12,11 @@ export class CardsComponent {
   constructor(private cardsService: CardsService) {}
   hand = computed(()=>{
     return this.cardsService.hand.get()
+  })
+  drawSize = computed(()=>{
+    return this.cardsService.drawDeck.get().length
+  })
+  discardSize = computed(()=>{
+    return this.cardsService.discardDeck.get().length
   })
 }

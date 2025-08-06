@@ -1,11 +1,11 @@
 <div class="container">
-    <div class="left">left</div>
+    <div class="left">{{drawSize()}}</div>
     <div class="middle">
         <div class="hand">
-            @for(card of hand(); track card) {
+            @for(card of hand(); track card.name) {
                 <app-card [card]="card"></app-card>
             }
         </div>
     </div>
-    <div class="right">right</div>
+    <div class="right">{{discardSize()}}</div>
 </div>

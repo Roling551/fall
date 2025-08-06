@@ -7,7 +7,7 @@ import { City } from '../../models/city';
 import { ActionsListComponent } from '../actions-list/actions-list.component';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.component';
-import { CardsComponent } from '../../shared/cards/cards.component';
+import { CardsComponent } from '../cards/cards.component';
 
 @Component({
   selector: 'app-main-layout',
