@@ -41,7 +41,7 @@ export class UIStateService {
   private viewSideContainerRef!: ViewContainerRef;
   private viewHeaderContainerRef!: ViewContainerRef;
 
-  private _ui?: UISettings
+  public _ui?: UISettings
   private _uiMode?: UIModeSettings
   private _previousUis: UISettings[] = []
 
@@ -59,46 +59,14 @@ export class UIStateService {
   public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
   public additionalInfo = this._additionalInfo.get
 
-  public selectedUnitsSignal = createForceSignal(new Set<Unit>())
-
   public uiModeName = signal<UIModeName>("main")
-
-  public selectUnit(unit: Unit) {
-    const selectedUnits = this.selectedUnitsSignal.get()
-    if(selectedUnits.has(unit)) {
-      selectedUnits.delete(unit)
-    } else {
-      selectedUnits.add(unit)
-    }
-    this.selectedUnitsSignal.forceUpdate()
-  }
 
   constructor(
     public worldStateService: WorldStateService,
     public bonusesService: BonusesService,
     public benefitsService: BenefitsService,
     public battleService: BattleService
-  ) {
-    let initialRun = true
-    effect(() => {
-      const selectedUnits = this.selectedUnitsSignal.get()
-      if(!initialRun) {
-        if(selectedUnits.size > 0) {
-          untracked(()=> {
-            if(this.uiModeName()==="main") {
-              this.setMapAction_.moveUnits()
-            } else {
-              this.setMapAction_.moveUnitsBattle()
-            }
-          })
-        } else {
-          untracked(()=>this.setUI(this._ui!))
-        }
-      }
-      initialRun = false
-    });
-    
-  }
+  ) {}
 
   setSideContainerRef(vcRef: ViewContainerRef) {
     this.viewSideContainerRef = vcRef;
@@ -269,10 +237,10 @@ export class UIStateService {
       this.setUI(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     addExtraction: (extraction: Extraction) => {
       this.setUI(getAddExtractionAction(this._additionalInfo.get()["tile"], extraction))},
-    moveUnits: () => {
-      this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
-    moveUnitsBattle: () => {
-      this.setUI(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
+    moveUnits: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
+      this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
+    moveUnitsBattle: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
+      this.setUI(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))
     }
   }
 

@@ -5,6 +5,7 @@ import { Tile } from '../../models/tile';
 import { Unit } from '../../models/unit';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { createForceSignal } from '../../util/force-signal';
+import { SelectedUnitsService } from '../../services/selected-units.service';
 
 @Component({
   selector: 'app-units-panel',
@@ -15,8 +16,8 @@ import { createForceSignal } from '../../util/force-signal';
 export class UnitsPanelComponent{
 
   selectedUnitsSignal
-  constructor(public uiStateService: UIStateService){
-    this.selectedUnitsSignal = this.uiStateService.selectedUnitsSignal
+  constructor(public uiStateService: UIStateService, public selectedUnitsServeice: SelectedUnitsService){
+    this.selectedUnitsSignal = this.selectedUnitsServeice.selectedUnitsSignal
   }
 
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
@@ -27,7 +28,7 @@ export class UnitsPanelComponent{
 
   onUnitClick(unit: Unit) {
     if(unit.belongsToPlayer) {
-      this.uiStateService.selectUnit(unit)
+      this.selectedUnitsServeice.selectUnit(unit)
     } 
   }
 

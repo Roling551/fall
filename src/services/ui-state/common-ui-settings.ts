@@ -185,7 +185,7 @@ export function getMoveUnitsAction(
                 }
             }
             uiStateService.setUI_.tile(tile)
-            uiStateService.setMapAction_.moveUnits()
+            uiStateService.setMapAction_.moveUnits(selectedUnitsSignal)
         },
         cancelButtonAction:() => {
             selectedUnitsSignal.get().clear()
@@ -207,7 +207,7 @@ export function getMoveUnitsBattleAction(
             if(pathing) {
                 const lastTile = battleService.moveUnits(selectedUnitsSignal.get(), previousTile, pathing.path)
                 uiStateService.setUI_.tile(lastTile)
-                uiStateService.setMapAction_.moveUnitsBattle()
+                uiStateService.setMapAction_.moveUnitsBattle(selectedUnitsSignal)
             }
         },
         cancelButtonAction:() => {
