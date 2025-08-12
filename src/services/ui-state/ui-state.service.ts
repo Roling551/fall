@@ -41,12 +41,13 @@ export class UIStateService {
   private viewSideContainerRef!: ViewContainerRef;
   private viewHeaderContainerRef!: ViewContainerRef;
 
-  private _ui?: UISettings
+  public _ui?: UISettings
   private _uiMode?: UIModeSettings
+  private _previousUis: UISettings[] = []
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
-  private _cancelButtonAction = createForceSignal(this.getDefaultCancelButtonAction())
-  private _tileInfo = createForceSignal<null|Type<any>>(null);
+  private _cancelButtonAction = createForceSignal(()=>{})
+  private _tileInfo = createForceSignal<undefined|Type<any>>(undefined);
   private _tileInfoInput = createForceSignal<Record<string, any>>({});
   private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
   private _additionalInfo = createForceSignal<any>(null);
@@ -58,46 +59,14 @@ export class UIStateService {
   public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
   public additionalInfo = this._additionalInfo.get
 
-  public selectedUnitsSignal = createForceSignal(new Set<Unit>())
-
   public uiModeName = signal<UIModeName>("main")
-
-  public selectUnit(unit: Unit) {
-    const selectedUnits = this.selectedUnitsSignal.get()
-    if(selectedUnits.has(unit)) {
-      selectedUnits.delete(unit)
-    } else {
-      selectedUnits.add(unit)
-    }
-    this.selectedUnitsSignal.forceUpdate()
-  }
 
   constructor(
     public worldStateService: WorldStateService,
     public bonusesService: BonusesService,
     public benefitsService: BenefitsService,
     public battleService: BattleService
-  ) {
-    let initialRun = true
-    effect(() => {
-      const selectedUnits = this.selectedUnitsSignal.get()
-      if(!initialRun) {
-        if(selectedUnits.size > 0) {
-          untracked(()=> {
-            if(this.uiModeName()==="main") {
-              this.setMapAction_.moveUnits()
-            } else {
-              this.setMapAction_.moveUnitsBattle()
-            }
-          })
-        } else {
-          untracked(()=>this.setUI(this._ui!))
-        }
-      }
-      initialRun = false
-    });
-    
-  }
+  ) {}
 
   setSideContainerRef(vcRef: ViewContainerRef) {
     this.viewSideContainerRef = vcRef;
@@ -107,55 +76,82 @@ export class UIStateService {
     this.viewHeaderContainerRef = vcRef;
   }
 
-  setUI(ui:UISettings) {
+  setUI(ui:UISettings, override=false) {
+    
+    if(override) {
+      this._previousUis = []
+    } else if(this._ui) {
+      this._previousUis.push(this._ui)
+    }
+
     this._ui = ui
 
-    if(ui.doRenderTileInfoFunction) {
-      this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
+    if(override) {
+      this._setUIOverride(this._ui)
     } else {
-      this._doRenderTileInfoFunction.set((t)=>false)
+      this._setUIUpdate(this._ui)
     }
-    this._doRenderTileInfoFunction.forceUpdate()
+  }
 
-    if(ui.tileInfo) {
-      this._tileInfo.set(ui.tileInfo)
-    } else {
-      this._tileInfo.set(null)
-    }
-    this._tileInfo.forceUpdate()
-
-    if(ui.mapAction) {
-      this._mapAction.set(ui.mapAction)
-    } else {
-      this._mapAction.set(this.getDefaultMapFunction(this))
-    }
-    this._mapAction.forceUpdate()
-
-    if(ui.cancelButtonAction) {
-      this._cancelButtonAction.set(ui.cancelButtonAction)
-    } else {
-      this._cancelButtonAction.set(this.getDefaultCancelButtonAction())
-    }
-    this._cancelButtonAction.forceUpdate()
-
-    if(ui.tileInfoInput) {
-      this._tileInfoInput.set(ui.tileInfoInput)
-    } else {
-      this._tileInfoInput.set({})
-    }
-    this._tileInfoInput.forceUpdate()
-
-    this.viewSideContainerRef.clear();
+  _setUIOverride(ui:UISettings) {
 
     this._additionalInfo.set(ui.additionalInfo)
+    this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction || ((t)=>false))
+    this._doRenderTileInfoFunction.forceUpdate()
+
+    this._tileInfo.set(ui.tileInfo)
+    this._tileInfo.forceUpdate()
+
+    this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
+    this._mapAction.forceUpdate()
+
+    this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
+    this._cancelButtonAction.forceUpdate()
+
+    this._tileInfoInput.set(ui.tileInfoInput || {})
+    this._tileInfoInput.forceUpdate()
 
     if(ui.sideComponentInputs) {
+      this.viewSideContainerRef.clear();
       const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
       Object.assign(compRef.instance, ui.sideComponentInputs);
       compRef.changeDetectorRef.detectChanges();
     }
     else {
+      this.viewSideContainerRef.clear();
       this.viewSideContainerRef.createComponent(ui.sideComponent!);
+    }
+  }
+
+  _setUIUpdate(ui:UISettings) {
+
+    this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
+    if(ui.doRenderTileInfoFunction) {
+      this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
+      this._doRenderTileInfoFunction.forceUpdate()
+    }
+
+    if(ui.tileInfo) {
+      this._tileInfo.set(ui.tileInfo)
+      this._tileInfo.forceUpdate()
+    }
+
+    this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
+    this._mapAction.forceUpdate()
+
+    this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
+    this._cancelButtonAction.forceUpdate()
+
+    if(ui.tileInfoInput) {
+      this._tileInfoInput.set(ui.tileInfoInput)
+    }
+    this._tileInfoInput.forceUpdate()
+
+    if(ui.sideComponentInputs) {
+      this.viewSideContainerRef.clear();
+      const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
+      Object.assign(compRef.instance, ui.sideComponentInputs);
+      compRef.changeDetectorRef.detectChanges();
     }
   }
 
@@ -171,47 +167,6 @@ export class UIStateService {
     this.viewHeaderContainerRef.createComponent(uiModeSettings.headerComponent);
   }
 
-  setMapAction(ui:UISettings, goBack = true) {
-    this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
-    this._mapAction.set(ui.mapAction)
-    if(ui.tileInfo) {
-      this._tileInfo.set(ui.tileInfo)
-      this._tileInfo.forceUpdate()
-    } else {
-      if(this._ui?.tileInfo) {
-        this._tileInfo.set(this._ui!.tileInfo!)
-        this._tileInfo.forceUpdate()
-      }
-    }
-    if(ui.doRenderTileInfoFunction) {
-      this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
-      this._doRenderTileInfoFunction.forceUpdate()
-    } else {
-      if(this._ui?.doRenderTileInfoFunction) {
-        this._doRenderTileInfoFunction.set(this._ui.doRenderTileInfoFunction)
-        this._doRenderTileInfoFunction.forceUpdate()
-      }
-    }
-    if(ui.tileInfoInput) {
-      this._tileInfoInput.set(ui.tileInfoInput)
-    } else {
-      if(this._ui?.tileInfoInput) {
-        this._tileInfoInput.set(this._ui.tileInfoInput)
-      }
-    }
-    this._tileInfoInput.forceUpdate()
-
-    if(goBack) {
-      this._cancelButtonAction.set(()=>{
-        if(ui.cancelButtonAction) {
-          ui.cancelButtonAction()
-        }
-        this.setUI(this._ui!)}
-      )
-    } else {
-      this._cancelButtonAction.set(ui.cancelButtonAction)
-    }
-  }
 
   private getDefaultMapFunction(service: UIStateService) {
     return (tile: KeyValuePair<Coordiante, Tile>) => {
@@ -223,35 +178,40 @@ export class UIStateService {
     if(this.cancelButtonAction && this.cancelButtonAction()) {
       this.cancelButtonAction()()
     }
+    if(this._previousUis.length == 0) {
+      this.defaultCancelButtonAction()
+      return
+    }
+    const previousUi = this._previousUis.pop()!
+    this._ui = previousUi
+    this._setUIOverride(previousUi)
   }
 
-  public getDefaultCancelButtonAction() {
-    return () => {
-      if(this._uiMode && this._uiMode!.defaultSideComponent) {
-        this.setUI({sideComponent:this._uiMode!.defaultSideComponent})
-      }
+  public defaultCancelButtonAction() {
+    if(this._uiMode && this._uiMode!.defaultSideComponent) {
+      this.setUI({sideComponent:this._uiMode!.defaultSideComponent}, true)
     }
   }
 
   public setUI_ = {
-    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits)),
-    createCity: () => this.setUI(getCreateCityUI(this.worldStateService)),
-    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService)),
+    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), true),
+    createCity: () => this.setUI(getCreateCityUI(this.worldStateService), true),
+    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService), true),
   }
 
   public setMapAction_ = {
     addTileToCity: () => {
-      this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["tile"]))},
+      this.setUI(getAddTileToCityAction(this._additionalInfo.get()["tile"]))},
     createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
-      this.setMapAction(getCreateEstateAction(this.benefitsService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
+      this.setUI(getCreateEstateAction(this.benefitsService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
-      this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
+      this.setUI(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     addExtraction: (extraction: Extraction) => {
-      this.setMapAction(getAddExtractionAction(this._additionalInfo.get()["tile"], extraction))},
-    moveUnits: () => {
-      this.setMapAction(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
-    moveUnitsBattle: () => {
-      this.setMapAction(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
+      this.setUI(getAddExtractionAction(this._additionalInfo.get()["tile"], extraction))},
+    moveUnits: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
+      this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
+    moveUnitsBattle: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
+      this.setUI(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))
     }
   }
 
