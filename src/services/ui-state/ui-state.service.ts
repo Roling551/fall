@@ -43,9 +43,10 @@ export class UIStateService {
 
   private _ui?: UISettings
   private _uiMode?: UIModeSettings
+  private _previousUis: UISettings[] = []
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
-  private _cancelButtonAction = createForceSignal(this.getDefaultCancelButtonAction())
+  private _cancelButtonAction = createForceSignal(()=>{})
   private _tileInfo = createForceSignal<null|Type<any>>(null);
   private _tileInfoInput = createForceSignal<Record<string, any>>({});
   private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
@@ -107,22 +108,37 @@ export class UIStateService {
     this.viewHeaderContainerRef = vcRef;
   }
 
-  setUI(ui:UISettings) {
+  setUI(ui:UISettings, override=false) {
+    
+    if(override) {
+      this._previousUis = []
+    } else if(this._ui) {
+      this._previousUis.push(this._ui)
+    }
+    
     this._ui = ui
 
+    if(override) {
+      this._additionalInfo.set(ui.additionalInfo)
+    } else {
+      this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
+    }
     if(ui.doRenderTileInfoFunction) {
       this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
-    } else {
+      this._doRenderTileInfoFunction.forceUpdate()
+    } else if(override) {
       this._doRenderTileInfoFunction.set((t)=>false)
+      this._doRenderTileInfoFunction.forceUpdate()
     }
-    this._doRenderTileInfoFunction.forceUpdate()
+
 
     if(ui.tileInfo) {
       this._tileInfo.set(ui.tileInfo)
-    } else {
+      this._tileInfo.forceUpdate()
+    } else if(override) {
       this._tileInfo.set(null)
+      this._tileInfo.forceUpdate()
     }
-    this._tileInfo.forceUpdate()
 
     if(ui.mapAction) {
       this._mapAction.set(ui.mapAction)
@@ -134,41 +150,28 @@ export class UIStateService {
     if(ui.cancelButtonAction) {
       this._cancelButtonAction.set(ui.cancelButtonAction)
     } else {
-      this._cancelButtonAction.set(this.getDefaultCancelButtonAction())
+      //this._cancelButtonAction.set(this.getDefaultCancelButtonAction())
+      this._cancelButtonAction.set(()=>{})
     }
     this._cancelButtonAction.forceUpdate()
 
     if(ui.tileInfoInput) {
       this._tileInfoInput.set(ui.tileInfoInput)
-    } else {
+    } else if(override) {
       this._tileInfoInput.set({})
     }
     this._tileInfoInput.forceUpdate()
 
-    this.viewSideContainerRef.clear();
-
-    this._additionalInfo.set(ui.additionalInfo)
-
     if(ui.sideComponentInputs) {
+      this.viewSideContainerRef.clear();
       const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
       Object.assign(compRef.instance, ui.sideComponentInputs);
       compRef.changeDetectorRef.detectChanges();
     }
-    else {
+    else if(override) {
+      this.viewSideContainerRef.clear();
       this.viewSideContainerRef.createComponent(ui.sideComponent!);
     }
-  }
-
-  setUIMode(uiModeSettings: UIModeSettings) {
-    this.cancel();
-    this._uiMode = uiModeSettings
-    this.uiModeName.set(uiModeSettings.name)
-    this.viewSideContainerRef.clear();
-    if(uiModeSettings.defaultSideComponent){
-      this.viewSideContainerRef.createComponent(uiModeSettings.defaultSideComponent);
-    }
-    this.viewHeaderContainerRef.clear();
-    this.viewHeaderContainerRef.createComponent(uiModeSettings.headerComponent);
   }
 
   setMapAction(ui:UISettings, goBack = true) {
@@ -213,6 +216,19 @@ export class UIStateService {
     }
   }
 
+  setUIMode(uiModeSettings: UIModeSettings) {
+    this.cancel();
+    this._uiMode = uiModeSettings
+    this.uiModeName.set(uiModeSettings.name)
+    this.viewSideContainerRef.clear();
+    if(uiModeSettings.defaultSideComponent){
+      this.viewSideContainerRef.createComponent(uiModeSettings.defaultSideComponent);
+    }
+    this.viewHeaderContainerRef.clear();
+    this.viewHeaderContainerRef.createComponent(uiModeSettings.headerComponent);
+  }
+
+
   private getDefaultMapFunction(service: UIStateService) {
     return (tile: KeyValuePair<Coordiante, Tile>) => {
       this.setUI_.tile(tile)
@@ -223,35 +239,40 @@ export class UIStateService {
     if(this.cancelButtonAction && this.cancelButtonAction()) {
       this.cancelButtonAction()()
     }
+    if(this._previousUis.length == 0) {
+      this.defaultCancelButtonAction()
+      return
+    }
+    const previousUi = this._previousUis.pop()!
+    this._ui = undefined
+    this.setUI(previousUi)
   }
 
-  public getDefaultCancelButtonAction() {
-    return () => {
-      if(this._uiMode && this._uiMode!.defaultSideComponent) {
-        this.setUI({sideComponent:this._uiMode!.defaultSideComponent})
-      }
+  public defaultCancelButtonAction() {
+    if(this._uiMode && this._uiMode!.defaultSideComponent) {
+      this.setUI({sideComponent:this._uiMode!.defaultSideComponent}, true)
     }
   }
 
   public setUI_ = {
-    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits)),
-    createCity: () => this.setUI(getCreateCityUI(this.worldStateService)),
-    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService)),
+    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), true),
+    createCity: () => this.setUI(getCreateCityUI(this.worldStateService), true),
+    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService), true),
   }
 
   public setMapAction_ = {
     addTileToCity: () => {
-      this.setMapAction(getAddTileToCityAction(this._additionalInfo.get()["tile"]))},
+      this.setUI(getAddTileToCityAction(this._additionalInfo.get()["tile"]))},
     createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
-      this.setMapAction(getCreateEstateAction(this.benefitsService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
+      this.setUI(getCreateEstateAction(this.benefitsService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
-      this.setMapAction(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
+      this.setUI(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     addExtraction: (extraction: Extraction) => {
-      this.setMapAction(getAddExtractionAction(this._additionalInfo.get()["tile"], extraction))},
+      this.setUI(getAddExtractionAction(this._additionalInfo.get()["tile"], extraction))},
     moveUnits: () => {
-      this.setMapAction(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
+      this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))},
     moveUnitsBattle: () => {
-      this.setMapAction(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
+      this.setUI(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], this.selectedUnitsSignal))
     }
   }
 
