@@ -47,7 +47,7 @@ export class UIStateService {
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _cancelButtonAction = createForceSignal(()=>{})
-  private _tileInfo = createForceSignal<null|Type<any>>(null);
+  private _tileInfo = createForceSignal<undefined|Type<any>>(undefined);
   private _tileInfoInput = createForceSignal<Record<string, any>>({});
   private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
   private _additionalInfo = createForceSignal<any>(null);
@@ -83,51 +83,32 @@ export class UIStateService {
     } else if(this._ui) {
       this._previousUis.push(this._ui)
     }
-    
+
     this._ui = ui
 
     if(override) {
-      this._additionalInfo.set(ui.additionalInfo)
+      this._setUIOverride(this._ui)
     } else {
-      this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
+      this._setUIUpdate(this._ui)
     }
-    if(ui.doRenderTileInfoFunction) {
-      this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
-      this._doRenderTileInfoFunction.forceUpdate()
-    } else if(override) {
-      this._doRenderTileInfoFunction.set((t)=>false)
-      this._doRenderTileInfoFunction.forceUpdate()
-    }
+  }
 
+  _setUIOverride(ui:UISettings) {
 
-    if(ui.tileInfo) {
-      this._tileInfo.set(ui.tileInfo)
-      this._tileInfo.forceUpdate()
-    } else if(override) {
-      this._tileInfo.set(null)
-      this._tileInfo.forceUpdate()
-    }
+    this._additionalInfo.set(ui.additionalInfo)
+    this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction || ((t)=>false))
+    this._doRenderTileInfoFunction.forceUpdate()
 
-    if(ui.mapAction) {
-      this._mapAction.set(ui.mapAction)
-    } else {
-      this._mapAction.set(this.getDefaultMapFunction(this))
-    }
+    this._tileInfo.set(ui.tileInfo)
+    this._tileInfo.forceUpdate()
+
+    this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
     this._mapAction.forceUpdate()
 
-    if(ui.cancelButtonAction) {
-      this._cancelButtonAction.set(ui.cancelButtonAction)
-    } else {
-      //this._cancelButtonAction.set(this.getDefaultCancelButtonAction())
-      this._cancelButtonAction.set(()=>{})
-    }
+    this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
     this._cancelButtonAction.forceUpdate()
 
-    if(ui.tileInfoInput) {
-      this._tileInfoInput.set(ui.tileInfoInput)
-    } else if(override) {
-      this._tileInfoInput.set({})
-    }
+    this._tileInfoInput.set(ui.tileInfoInput || {})
     this._tileInfoInput.forceUpdate()
 
     if(ui.sideComponentInputs) {
@@ -136,51 +117,41 @@ export class UIStateService {
       Object.assign(compRef.instance, ui.sideComponentInputs);
       compRef.changeDetectorRef.detectChanges();
     }
-    else if(override) {
+    else {
       this.viewSideContainerRef.clear();
       this.viewSideContainerRef.createComponent(ui.sideComponent!);
     }
   }
 
-  setMapAction(ui:UISettings, goBack = true) {
+  _setUIUpdate(ui:UISettings) {
+
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
-    this._mapAction.set(ui.mapAction)
-    if(ui.tileInfo) {
-      this._tileInfo.set(ui.tileInfo)
-      this._tileInfo.forceUpdate()
-    } else {
-      if(this._ui?.tileInfo) {
-        this._tileInfo.set(this._ui!.tileInfo!)
-        this._tileInfo.forceUpdate()
-      }
-    }
     if(ui.doRenderTileInfoFunction) {
       this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
       this._doRenderTileInfoFunction.forceUpdate()
-    } else {
-      if(this._ui?.doRenderTileInfoFunction) {
-        this._doRenderTileInfoFunction.set(this._ui.doRenderTileInfoFunction)
-        this._doRenderTileInfoFunction.forceUpdate()
-      }
     }
+
+    if(ui.tileInfo) {
+      this._tileInfo.set(ui.tileInfo)
+      this._tileInfo.forceUpdate()
+    }
+
+    this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
+    this._mapAction.forceUpdate()
+
+    this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
+    this._cancelButtonAction.forceUpdate()
+
     if(ui.tileInfoInput) {
       this._tileInfoInput.set(ui.tileInfoInput)
-    } else {
-      if(this._ui?.tileInfoInput) {
-        this._tileInfoInput.set(this._ui.tileInfoInput)
-      }
     }
     this._tileInfoInput.forceUpdate()
 
-    if(goBack) {
-      this._cancelButtonAction.set(()=>{
-        if(ui.cancelButtonAction) {
-          ui.cancelButtonAction()
-        }
-        this.setUI(this._ui!)}
-      )
-    } else {
-      this._cancelButtonAction.set(ui.cancelButtonAction)
+    if(ui.sideComponentInputs) {
+      this.viewSideContainerRef.clear();
+      const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
+      Object.assign(compRef.instance, ui.sideComponentInputs);
+      compRef.changeDetectorRef.detectChanges();
     }
   }
 
@@ -212,8 +183,8 @@ export class UIStateService {
       return
     }
     const previousUi = this._previousUis.pop()!
-    this._ui = undefined
-    this.setUI(previousUi)
+    this._ui = previousUi
+    this._setUIOverride(previousUi)
   }
 
   public defaultCancelButtonAction() {
