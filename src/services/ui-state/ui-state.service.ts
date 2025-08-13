@@ -26,7 +26,7 @@ export type UISettings = {
   sideComponent?: Type<any>;
   sideComponentInputs?: any;
   additionalInfo?: any;
-  mapAction?: any;
+  mapAction?: (tile: KeyValuePair<Coordiante, Tile>)=>void;
   cancelButtonAction?: any;
   tileInfo?: Type<any>;
   tileInfoInput?: any;

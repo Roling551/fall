@@ -2,6 +2,7 @@ import { Component, computed, Signal } from '@angular/core';
 import { WorldStateService } from '../../services/world-state.service';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { BattleInfoPanelComponent } from '../battle-info-panel/battle-info-panel.component';
+import { TurnService } from '../../services/turn-service';
 
 @Component({
   selector: 'app-game-info-panel',
@@ -13,12 +14,12 @@ export class GameInfoPanelComponent {
 
   canNextTurn: Signal<boolean>
 
-  constructor(private worldStateService: WorldStateService, private uiStateService: UIStateService){
-    this.canNextTurn = this.worldStateService.canNextTurn
+  constructor(private worldStateService: WorldStateService, private turnService: TurnService){
+    this.canNextTurn = this.turnService.canNextTurn
   }
 
   public turnText = computed(()=>{
-    return "Turn: " + this.worldStateService.turn()
+    return "Turn: " + this.turnService.turn()
   })
 
   public goldText = computed(()=> {
@@ -26,6 +27,6 @@ export class GameInfoPanelComponent {
   })
 
   onNextTurn() {
-    this.uiStateService.setUIMode_.battle()
+    this.turnService.nextTurn()
   }
 }

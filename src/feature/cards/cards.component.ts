@@ -1,6 +1,7 @@
 import { Component, computed } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 import { CardsService } from '../../services/cards.service';
+import { CardInfo } from '../../models/card-info';
 
 @Component({
   selector: 'app-cards',
@@ -18,5 +19,13 @@ export class CardsComponent {
   })
   discardSize = computed(()=>{
     return this.cardsService.discardDeck.get().length
+  })
+
+  onCardClick(card: CardInfo) {
+    this.cardsService.selectCard(card)
+  }
+
+  selectedCard = computed(()=>{
+    return this.cardsService.selectedCard.get()
   })
 }

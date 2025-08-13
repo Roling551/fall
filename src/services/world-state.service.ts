@@ -15,12 +15,10 @@ import { CardsService } from './cards.service';
   providedIn: 'root'
 })
 export class WorldStateService {
-
   sizeX = 10
   sizeY = 10
 
   tiles = this.getTiles(this.sizeX, this.sizeY)
-  turn = signal(0)
   resources = createForceSignal(new Map([["gold",25]]))
   cities = createForceSignal(new Map<string, ForceSignal<City>>());
 
@@ -56,7 +54,7 @@ export class WorldStateService {
     return true;
   })
 
-  constructor(public cardService: CardsService) { }
+  constructor() { }
   
   private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordiante, Tile>> {
     let tiles = new Map<string, KeyValuePair<Coordiante, Tile>>()
@@ -77,8 +75,6 @@ export class WorldStateService {
     for (const [coordinate, city] of this.cities.get().entries()) {
       city.get().nextTurn()
     }
-    this.cardService.nextTurn()
-    this.turn.update(x=>x+1)
   }
 
   public addCity(coordinate:string, city: ForceSignal<City>) {

@@ -3,7 +3,7 @@
     <div class="middle">
         <div class="hand">
             @for(card of hand(); track card.name) {
-                <app-card [card]="card"></app-card>
+                <app-card [card]="card" class="selected" [class.selected]="card==selectedCard()" (click)="onCardClick(card)"></app-card>
             }
         </div>
     </div>
