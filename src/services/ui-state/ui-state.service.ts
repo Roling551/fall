@@ -13,6 +13,7 @@ import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
 import { Extraction } from "../../models/extraction";
 import { BenefitsService } from "../benefits.service";
+import { skip } from "rxjs";
 
 export type UIModeName = "main" | "battle"
 
@@ -22,7 +23,7 @@ export type UIModeSettings = {
   defaultSideComponent?: Type<any>;
 }
 
-export type UISettings = {
+export type UIData = {
   sideComponent?: Type<any>;
   sideComponentInputs?: any;
   additionalInfo?: any;
@@ -33,6 +34,20 @@ export type UISettings = {
   doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean;
 }
 
+export type UISettings = {
+  override?: boolean;
+  skipBack?: boolean;
+  cantIterrupt?: boolean;
+  cantInterruptException?: UIData[]
+}
+
+const defaultUISettings: UISettings = {
+  override: false,
+  skipBack: false,
+  cantIterrupt: false,
+  cantInterruptException: []
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,9 +56,10 @@ export class UIStateService {
   private viewSideContainerRef!: ViewContainerRef;
   private viewHeaderContainerRef!: ViewContainerRef;
 
-  public _ui?: UISettings
+  public _ui?: UIData
+  public _uiSettings: UISettings = {...defaultUISettings}
   private _uiMode?: UIModeSettings
-  private _previousUis: UISettings[] = []
+  private _previousUis: UIData[] = []
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _cancelButtonAction = createForceSignal(()=>{})
@@ -76,24 +92,35 @@ export class UIStateService {
     this.viewHeaderContainerRef = vcRef;
   }
 
-  setUI(ui:UISettings, override=false) {
-    
+  setUI(ui:UIData, uiSettings: UISettings = {...defaultUISettings}) {
+    if(this._uiSettings.cantIterrupt && !uiSettings.cantInterruptException?.includes(ui)) {
+      console.log("cant iterrupt")
+      return
+    }
+    this._uiSettings = uiSettings
+    const {override, skipBack} = {...defaultUISettings, ...uiSettings}
+
+    const newUi = (override || !this._ui) ? ui : {...this._ui, ...ui}
+
     if(override) {
       this._previousUis = []
     } else if(this._ui) {
-      this._previousUis.push(this._ui)
+      if(!skipBack) {
+        this._previousUis.push(this._ui)
+      } else {
+        this._previousUis[this._previousUis.length-1] = newUi
+      }
     }
-
-    this._ui = ui
 
     if(override) {
-      this._setUIOverride(this._ui)
+      this._setUIOverride(ui)
     } else {
-      this._setUIUpdate(this._ui)
+      this._setUIUpdate(ui)
     }
+    this._ui = newUi
   }
 
-  _setUIOverride(ui:UISettings) {
+  _setUIOverride(ui:UIData) {
 
     this._additionalInfo.set(ui.additionalInfo)
     this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction || ((t)=>false))
@@ -111,7 +138,9 @@ export class UIStateService {
     this._tileInfoInput.set(ui.tileInfoInput || {})
     this._tileInfoInput.forceUpdate()
 
-    if(ui.sideComponentInputs) {
+    if(!ui.sideComponent) {
+      this.viewSideContainerRef.clear();
+    } else if(ui.sideComponentInputs) {
       this.viewSideContainerRef.clear();
       const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
       Object.assign(compRef.instance, ui.sideComponentInputs);
@@ -123,7 +152,7 @@ export class UIStateService {
     }
   }
 
-  _setUIUpdate(ui:UISettings) {
+  _setUIUpdate(ui:UIData) {
 
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
     if(ui.doRenderTileInfoFunction) {
@@ -142,16 +171,18 @@ export class UIStateService {
     this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
     this._cancelButtonAction.forceUpdate()
 
-    if(ui.tileInfoInput) {
-      this._tileInfoInput.set(ui.tileInfoInput)
-    }
-    this._tileInfoInput.forceUpdate()
+    if(ui.sideComponent) {
+      if(ui.tileInfoInput) {
+        this._tileInfoInput.set(ui.tileInfoInput)
+      }
+      this._tileInfoInput.forceUpdate()
 
-    if(ui.sideComponentInputs) {
-      this.viewSideContainerRef.clear();
-      const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
-      Object.assign(compRef.instance, ui.sideComponentInputs);
-      compRef.changeDetectorRef.detectChanges();
+      if(ui.sideComponentInputs) {
+        this.viewSideContainerRef.clear();
+        const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);
+        Object.assign(compRef.instance, ui.sideComponentInputs);
+        compRef.changeDetectorRef.detectChanges();
+      }
     }
   }
 
@@ -175,6 +206,7 @@ export class UIStateService {
   }
 
   public cancel() {
+    this._uiSettings = defaultUISettings
     if(this.cancelButtonAction && this.cancelButtonAction()) {
       this.cancelButtonAction()()
     }
@@ -182,21 +214,23 @@ export class UIStateService {
       this.defaultCancelButtonAction()
       return
     }
+    console.log(this._previousUis.length)
     const previousUi = this._previousUis.pop()!
+    console.log(previousUi)
     this._ui = previousUi
     this._setUIOverride(previousUi)
   }
 
   public defaultCancelButtonAction() {
     if(this._uiMode && this._uiMode!.defaultSideComponent) {
-      this.setUI({sideComponent:this._uiMode!.defaultSideComponent}, true)
+      this.setUI({sideComponent:this._uiMode!.defaultSideComponent}, {override:true})
     }
   }
 
   public setUI_ = {
-    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), true),
-    createCity: () => this.setUI(getCreateCityUI(this.worldStateService), true),
-    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService), true),
+    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), {override:true}),
+    createCity: () => this.setUI(getCreateCityUI(this.worldStateService), {override:true}),
+    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService), {override:true}),
   }
 
   public setMapAction_ = {

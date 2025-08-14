@@ -5,5 +5,6 @@ import { Tile } from "./tile";
 export class CardInfo {
     constructor(
         public name: string, 
-        public mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>void) {}
+        public actions: ((tile: KeyValuePair<Coordiante, Tile>)=>void)[],
+    ){}
 }

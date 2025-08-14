@@ -29,12 +29,13 @@ export class CardsService {
       this.discardDeck.get().push(
         new CardInfo(
           "c", 
-          (tile: KeyValuePair<Coordiante, Tile>)=>{
-            console.log("test")
-            this.discardCard(this.selectedCard.get()!)
-            this.uiStateService.cancel()
-          })
+          [
+            (tile: KeyValuePair<Coordiante, Tile>)=>{console.log("t1")},
+            (tile: KeyValuePair<Coordiante, Tile>)=>{console.log("t2")},
+            (tile: KeyValuePair<Coordiante, Tile>)=>{console.log("t3")},
+          ]
         )
+      )
     }
 
     discardCard(card: CardInfo) {
@@ -51,46 +52,64 @@ export class CardsService {
         return
       }
       this.selectedCard.set(card)
-      this.uiStateService.setUI({
-        mapAction: card.mapAction,
-        cancelButtonAction: ()=>{this.deselectCard()}
-      })
-    }
-
-    deselectCard() {
-      this.selectedCard.set(undefined)
-    }
-
-    nextTurn() {
-      this.endTurn()
-      this.startTurn()
-    }
-
-    startTurn() {
-      let drawsLeft = this.drawsPerTurn
-      while(drawsLeft > 0) {
-        if(this.drawDeck.get().length == 0) {
-          this.shuffleCards()
-        }
-        if(this.drawDeck.get().length > 0) {
-          const card = this.drawDeck.get().pop()!
-          this.hand.get().push(card)
-        } else {
-          break
-        }
-        drawsLeft -= 1
+      
+      const actions: ((tile: KeyValuePair<Coordiante, Tile>) => void)[] = new Array(card.actions.length)
+      
+      actions[card.actions.length-1] = (tile: KeyValuePair<Coordiante, Tile>) => {
+        card.actions[card.actions.length-1](tile)
+        this.discardCard(this.selectedCard.get()!)
+        this.uiStateService.cancel()
       }
-      this.drawDeck.forceUpdate()
-      this.hand.forceUpdate()
-    }
+      for(let i = card.actions.length-2; i>=0; i--) {
+        actions[i] = (tile: KeyValuePair<Coordiante, Tile>) => {
+          card.actions[i](tile);
+          this.setUI(actions[i+1])
+        }
+      }
+      this.uiStateService.setUI({mapAction:actions[0]}, {cantIterrupt: false})
+  }
 
-    shuffleCards() {
-      this.drawDeck.set(shuffleArray(this.discardDeck.get()))
-      this.discardDeck.set([])
-    }
+  private setUI(action: (tile: KeyValuePair<Coordiante, Tile>) => void, uiSettings = {skipBack: true, cantIterrupt: true}) {
+    this.uiStateService.setUI({
+      mapAction: action,
+      cancelButtonAction: ()=>{this.deselectCard()}
+    }, {skipBack: true, cantIterrupt: false})
+  }
 
-    endTurn() {
-      this.discardDeck.set([...this.discardDeck.get(), ...this.hand.get()])
-      this.hand.set([])
+  deselectCard() {
+    this.selectedCard.set(undefined)
+  }
+
+  nextTurn() {
+    this.endTurn()
+    this.startTurn()
+  }
+
+  startTurn() {
+    let drawsLeft = this.drawsPerTurn
+    while(drawsLeft > 0) {
+      if(this.drawDeck.get().length == 0) {
+        this.shuffleCards()
+      }
+      if(this.drawDeck.get().length > 0) {
+        const card = this.drawDeck.get().pop()!
+        this.hand.get().push(card)
+      } else {
+        break
+      }
+      drawsLeft -= 1
     }
+    this.drawDeck.forceUpdate()
+    this.hand.forceUpdate()
+  }
+
+  shuffleCards() {
+    this.drawDeck.set(shuffleArray(this.discardDeck.get()))
+    this.discardDeck.set([])
+  }
+
+  endTurn() {
+    this.discardDeck.set([...this.discardDeck.get(), ...this.hand.get()])
+    this.hand.set([])
+  }
 }

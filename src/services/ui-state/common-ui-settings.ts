@@ -1,7 +1,7 @@
 import { Coordiante } from "../../models/coordinate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
-import { UISettings, UIStateService } from "./ui-state.service"
+import { UIData, UIStateService } from "./ui-state.service"
 import { WorldStateService } from "../world-state.service"
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component"
 import { SimpleTextComponent } from "../../shared/simple-text/simple-text.component"
@@ -27,7 +27,7 @@ export function getTileUI(
     tile: KeyValuePair<Coordiante, Tile>,
     worldStateService: WorldStateService,
     selectedUnits?: Set<Unit>
-):UISettings {
+):UIData {
 
     let doRenderTileInfoFunction
     let tileInfoInput
@@ -61,7 +61,7 @@ export function getTileUI(
     }
 }
 
-export function getRemoveCityUI(worldStateService: WorldStateService):UISettings {
+export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Remove city"},
@@ -78,7 +78,7 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UISettings
     }
 }
 
-export function getCreateCityUI(worldStateService: WorldStateService):UISettings {
+export function getCreateCityUI(worldStateService: WorldStateService):UIData {
     const cityPrice = 10;
     return {
         sideComponent:SimpleTextComponent, 
@@ -106,7 +106,7 @@ export function getCreateCityUI(worldStateService: WorldStateService):UISettings
 }
 
 export function getAddTileToCityAction(
-        cityTile: KeyValuePair<Coordiante, Tile>):UISettings {
+        cityTile: KeyValuePair<Coordiante, Tile>):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
             if(tile.value.mapEntity.get()?.type === "city") {
@@ -138,7 +138,7 @@ export function getCreateEstateAction(
     cityTile: KeyValuePair<Coordiante, Tile>,
     getEstate: ()=>Estate,
     estateName: string
-):UISettings {
+):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
                 if(!!tile.value.mapEntity.get() || tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
@@ -155,7 +155,7 @@ export function getCreateEstateAction(
 
 export function getRemoveEstateAction(
     cityTile: KeyValuePair<Coordiante, Tile>
-):UISettings {
+):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
                 if(
@@ -220,7 +220,7 @@ export function getMoveUnitsBattleAction(
 export function getAddExtractionAction(
     cityTile: KeyValuePair<Coordiante, Tile>,
     extraction: Extraction
-):UISettings {
+):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{},
         additionalInfo: {currentAction: "addExtractionAction"},
