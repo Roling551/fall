@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { CardInfo } from "../models/card-info";
 import { createForceSignal } from "../util/force-signal";
 import { shuffleArray } from "../util/array-functions";
-import { UIStateService } from "./ui-state/ui-state.service";
+import { UIData, UIStateService } from "./ui-state/ui-state.service";
 import { KeyValuePair } from "../models/key-value-pair";
 import { Coordiante } from "../models/coordinate";
 import { Tile } from "../models/tile";
@@ -54,6 +54,7 @@ export class CardsService {
       this.selectedCard.set(card)
       
       const actions: ((tile: KeyValuePair<Coordiante, Tile>) => void)[] = new Array(card.actions.length)
+      const uis: UIData[] = new Array(card.actions.length)
       
       actions[card.actions.length-1] = (tile: KeyValuePair<Coordiante, Tile>) => {
         card.actions[card.actions.length-1](tile)
@@ -61,19 +62,16 @@ export class CardsService {
         this.uiStateService.cancel()
       }
       for(let i = card.actions.length-2; i>=0; i--) {
+        uis[i] = {
+          mapAction: actions[i+1],
+          cancelButtonAction: ()=>{this.deselectCard()}
+        }
         actions[i] = (tile: KeyValuePair<Coordiante, Tile>) => {
           card.actions[i](tile);
-          this.setUI(actions[i+1])
+          this.uiStateService.setUI(uis[i], {skipBack: true, cantIterrupt: true, cantInterruptException: [uis[i+1]]})
         }
       }
-      this.uiStateService.setUI({mapAction:actions[0]}, {cantIterrupt: false})
-  }
-
-  private setUI(action: (tile: KeyValuePair<Coordiante, Tile>) => void, uiSettings = {skipBack: true, cantIterrupt: true}) {
-    this.uiStateService.setUI({
-      mapAction: action,
-      cancelButtonAction: ()=>{this.deselectCard()}
-    }, {skipBack: true, cantIterrupt: false})
+      this.uiStateService.setUI({mapAction:actions[0]}, {cantIterrupt: true, cantInterruptException: [uis[0]]})
   }
 
   deselectCard() {

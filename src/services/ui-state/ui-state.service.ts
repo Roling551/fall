@@ -93,8 +93,7 @@ export class UIStateService {
   }
 
   setUI(ui:UIData, uiSettings: UISettings = {...defaultUISettings}) {
-    if(this._uiSettings.cantIterrupt && !uiSettings.cantInterruptException?.includes(ui)) {
-      console.log("cant iterrupt")
+    if(this._uiSettings.cantIterrupt && !this._uiSettings.cantInterruptException?.includes(ui)) {
       return
     }
     this._uiSettings = uiSettings
