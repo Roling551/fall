@@ -19,7 +19,7 @@ export class CardsService {
         const cards = [] 
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
-        this.cardHand = new CardsHand(cards)
+        this.cardHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()})
     }
 
     nextTurn() {
@@ -61,7 +61,7 @@ export class CardsService {
             }
             const uiChanged = this.uiStateService.setUI(
                 {mapAction:actions[0], cancelButtonAction: ()=>{this.cardHand.deselectCard()}}, 
-                {cantIterrupt: true, cantInterruptException: [uis[0]]}
+                {cantIterrupt: true, override:true, cantInterruptException: [uis[0]]}
             )
             return uiChanged
         }

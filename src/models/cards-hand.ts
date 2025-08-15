@@ -15,7 +15,7 @@ export class CardsHand {
 
     drawsPerTurn = 5
 
-    constructor(cards: CardInfo[]) {
+    constructor(cards: CardInfo[], private onManualDeselect:()=>void) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
@@ -33,7 +33,7 @@ export class CardsHand {
     selectCard(card: CardInfo) {
         if(card == this.selectedCard.get()) {
             this.deselectCard()
-            //this.uiStateService.cancel()
+            this.onManualDeselect()
             return
         }
         const canSelect = card.onSelect()
