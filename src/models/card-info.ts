@@ -7,7 +7,7 @@ export class CardInfo {
     id: number = 0
     constructor(
         public name: string, 
-        public actions: ((tile: KeyValuePair<Coordiante, Tile>)=>void)[],
+        public onSelect: (()=>boolean),
     ){
         this.id = CardInfo.cardsAmount
         CardInfo.cardsAmount += 1
