@@ -21,6 +21,7 @@ export class CardsService {
 
     constructor(private uiStateService: UIStateService) {
         this.createCard()
+        this.createCard()
         this.discardDeck.forceUpdate()
         this.startTurn()
     }
@@ -51,7 +52,6 @@ export class CardsService {
         this.uiStateService.cancel()
         return
       }
-      this.selectedCard.set(card)
       
       const actions: ((tile: KeyValuePair<Coordiante, Tile>) => void)[] = new Array(card.actions.length)
       const uis: UIData[] = new Array(card.actions.length)
@@ -71,7 +71,13 @@ export class CardsService {
           this.uiStateService.setUI(uis[i], {skipBack: true, cantIterrupt: true, cantInterruptException: [uis[i+1]]})
         }
       }
-      this.uiStateService.setUI({mapAction:actions[0]}, {cantIterrupt: true, cantInterruptException: [uis[0]]})
+      const uiChanged = this.uiStateService.setUI(
+        {mapAction:actions[0], cancelButtonAction: ()=>{this.deselectCard()}}, 
+        {cantIterrupt: true, cantInterruptException: [uis[0]]}
+      )
+      if(uiChanged) {
+        this.selectedCard.set(card)
+      }
   }
 
   deselectCard() {

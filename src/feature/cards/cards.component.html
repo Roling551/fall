@@ -2,7 +2,7 @@
     <div class="left">{{drawSize()}}</div>
     <div class="middle">
         <div class="hand">
-            @for(card of hand(); track card.name) {
+            @for(card of hand(); track card.id) {
                 <app-card [card]="card" class="selected" [class.selected]="card==selectedCard()" (click)="onCardClick(card)"></app-card>
             }
         </div>

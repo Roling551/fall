@@ -94,7 +94,7 @@ export class UIStateService {
 
   setUI(ui:UIData, uiSettings: UISettings = {...defaultUISettings}) {
     if(this._uiSettings.cantIterrupt && !this._uiSettings.cantInterruptException?.includes(ui)) {
-      return
+      return false
     }
     this._uiSettings = uiSettings
     const {override, skipBack} = {...defaultUISettings, ...uiSettings}
@@ -117,6 +117,7 @@ export class UIStateService {
       this._setUIUpdate(ui)
     }
     this._ui = newUi
+    return true
   }
 
   _setUIOverride(ui:UIData) {
@@ -213,9 +214,7 @@ export class UIStateService {
       this.defaultCancelButtonAction()
       return
     }
-    console.log(this._previousUis.length)
     const previousUi = this._previousUis.pop()!
-    console.log(previousUi)
     this._ui = previousUi
     this._setUIOverride(previousUi)
   }
