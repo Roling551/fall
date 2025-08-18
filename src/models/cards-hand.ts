@@ -15,7 +15,7 @@ export class CardsHand {
 
     drawsPerTurn = 5
 
-    constructor(cards: CardInfo[], private onManualDeselect:()=>void) {
+    constructor(cards: CardInfo[], private onManualDeselect:()=>void, private canSelectMultiple = true) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
@@ -34,6 +34,9 @@ export class CardsHand {
         if(card == this.selectedCard.get()) {
             this.deselectCard()
             this.onManualDeselect()
+            return
+        }
+        if(!this.canSelectMultiple && this.selectedCard.get()) {
             return
         }
         const canSelect = card.onSelect()

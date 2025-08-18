@@ -9,7 +9,6 @@ import { Unit } from '../models/unit';
 import { dijkstra } from '../util/path-finding';
 import { TileDirection } from '../models/tile-direction';
 import { Benefit } from '../models/benefit';
-import { CardsService } from './cards.service';
 
 @Injectable({
   providedIn: 'root'

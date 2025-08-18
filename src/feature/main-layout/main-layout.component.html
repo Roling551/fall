@@ -9,6 +9,12 @@
         <app-world-map/>
     </div>
     <div class="footer">
-        <app-cards></app-cards>
+        <div>
+            <app-cards [cardsHand]="actionsCards"></app-cards>
+        </div>
+        <div>
+            <app-cards [cardsHand]="charactersCards"></app-cards>
+        </div>
     </div>
+
 </div>

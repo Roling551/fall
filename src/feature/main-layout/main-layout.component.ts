@@ -8,6 +8,8 @@ import { ActionsListComponent } from '../actions-list/actions-list.component';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.component';
 import { CardsComponent } from '../cards/cards.component';
+import { ActionsCardsService } from '../../services/actions-cards.service';
+import { CharactersCardsService } from '../../services/characters-cards.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -17,19 +19,31 @@ import { CardsComponent } from '../cards/cards.component';
 })
 export class MainLayoutComponent implements AfterViewInit {
 
-  @ViewChild('sideContainer', { read: ViewContainerRef }) sideContainer!: ViewContainerRef;
-  @ViewChild('headerContainer', { read: ViewContainerRef }) headerContainer!: ViewContainerRef;
+    @ViewChild('sideContainer', { read: ViewContainerRef }) sideContainer!: ViewContainerRef;
+    @ViewChild('headerContainer', { read: ViewContainerRef }) headerContainer!: ViewContainerRef;
 
-  constructor(public uiStateService: UIStateService) {}
+    actionsCards
+    charactersCards
 
-  ngAfterViewInit(): void {
-    this.uiStateService.setSideContainerRef(this.sideContainer)
-    this.uiStateService.setHeaderContainerRef(this.headerContainer)
-    this.uiStateService.setUIMode_.main({setup:true})
-  }
+    constructor(
+        public uiStateService: UIStateService,
+        public actionsCardsService: ActionsCardsService,
+        public charactersCardsService: CharactersCardsService
+    ) {
+        this.actionsCards = this.actionsCardsService.cardsHand
+        this.charactersCards = this.charactersCardsService.cardsHand
+    }
 
-  onRightClick(event: MouseEvent) {
-    event.preventDefault();
-    this.uiStateService.cancel();
-  }
+    ngAfterViewInit(): void {
+        this.uiStateService.setSideContainerRef(this.sideContainer)
+        this.uiStateService.setHeaderContainerRef(this.headerContainer)
+        this.uiStateService.setUIMode_.main({setup:true})
+    }
+
+    onRightClick(event: MouseEvent) {
+        event.preventDefault();
+        this.uiStateService.cancel();
+    }
+
+
 }

@@ -11,19 +11,19 @@ import { CardsHand } from "../models/cards-hand";
 @Injectable({
   providedIn: 'root'
 })
-export class CardsService {
+export class ActionsCardsService {
 
-    public cardHand
+    public cardsHand
 
     constructor(private uiStateService: UIStateService) {
         const cards = [] 
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
-        this.cardHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()})
+        this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
     }
 
     nextTurn() {
-        this.cardHand.nextTurn()
+        this.cardsHand.nextTurn()
     }
 
     exampleCard() {
@@ -46,13 +46,13 @@ export class CardsService {
             
             actions[cardActions.length-1] = (tile: KeyValuePair<Coordiante, Tile>) => {
                 cardActions[cardActions.length-1](tile)
-                this.cardHand.discardCard(this.cardHand.selectedCard.get()!)
+                this.cardsHand.discardCard(this.cardsHand.selectedCard.get()!)
                 this.uiStateService.cancel()
             }
             for(let i = cardActions.length-2; i>=0; i--) {
                 uis[i] = {
                 mapAction: actions[i+1],
-                cancelButtonAction: ()=>{this.cardHand.deselectCard()}
+                cancelButtonAction: ()=>{this.cardsHand.deselectCard()}
                 }
                 actions[i] = (tile: KeyValuePair<Coordiante, Tile>) => {
                 cardActions[i](tile);
@@ -60,7 +60,7 @@ export class CardsService {
                 }
             }
             const uiChanged = this.uiStateService.setUI(
-                {mapAction:actions[0], cancelButtonAction: ()=>{this.cardHand.deselectCard()}}, 
+                {mapAction:actions[0], cancelButtonAction: ()=>{this.cardsHand.deselectCard()}}, 
                 {cantIterrupt: true, override:true, cantInterruptException: [uis[0]]}
             )
             return uiChanged

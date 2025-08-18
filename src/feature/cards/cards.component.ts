@@ -1,6 +1,6 @@
 import { Component, computed, Input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
-import { CardsService } from '../../services/cards.service';
+import { ActionsCardsService } from '../../services/actions-cards.service';
 import { CardInfo } from '../../models/card-info';
 import { CardsHand } from '../../models/cards-hand';
 
@@ -12,13 +12,9 @@ import { CardsHand } from '../../models/cards-hand';
 })
 export class CardsComponent {
 
-    //@Input({required: true}) cardsHand!: CardsHand;
+    @Input({required: true}) cardsHand!: CardsHand;
 
-    cardsHand
-
-    constructor(private cardsService: CardsService) {
-        this.cardsHand = cardsService.cardHand
-    }
+    constructor() {}
 
     hand = computed(()=>{
         return this.cardsHand.hand.get()
