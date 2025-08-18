@@ -11,7 +11,7 @@ export class CardsHand {
     hand = createForceSignal([] as CardInfo[])
     discardDeck = createForceSignal([] as CardInfo[])
 
-    selectedCard = createForceSignal<CardInfo | undefined>(undefined)
+    selectedCards = createForceSignal([] as CardInfo[])
 
     drawsPerTurn = 5
 
@@ -28,25 +28,28 @@ export class CardsHand {
         this.discardDeck.forceUpdate()
     }
 
-
+    isCardSelected(card: CardInfo) {
+        return this.selectedCards.get().includes(card)
+    }
 
     selectCard(card: CardInfo) {
-        if(card == this.selectedCard.get()) {
-            this.deselectCard()
+        if(this.isCardSelected(card)) {
+            this.deselectCard(card)
             this.onManualDeselect()
             return
         }
-        if(!this.canSelectMultiple && this.selectedCard.get()) {
+        if(!this.canSelectMultiple && this.selectedCards.get().length > 0) {
             return
         }
-        const canSelect = card.onSelect()
+        const canSelect = card.onSelect?.() || true
         if(canSelect) {
-            this.selectedCard.set(card)
+            this.selectedCards.get().push(card)
+            this.selectedCards.forceUpdate()
         }
     }
 
-    deselectCard() {
-        this.selectedCard.set(undefined)
+    deselectCard(card: CardInfo) {
+        this.selectedCards.set(this.selectedCards.get().filter(c=>c!=card))
     }
 
     nextTurn() {

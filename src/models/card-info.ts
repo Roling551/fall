@@ -7,7 +7,7 @@ export class CardInfo {
     id: number = 0
     constructor(
         public name: string, 
-        public onSelect: (()=>boolean),
+        public onSelect?: (()=>boolean),
     ){
         this.id = CardInfo.cardsAmount
         CardInfo.cardsAmount += 1

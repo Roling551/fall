@@ -30,7 +30,7 @@ export class CardsComponent {
         this.cardsHand.selectCard(card)
     }
 
-    selectedCard = computed(()=>{
-        return this.cardsHand.selectedCard.get()
-    })
+    isCardSelected(card: CardInfo) {
+        return this.cardsHand.isCardSelected(card)
+    }
 }

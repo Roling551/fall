@@ -38,21 +38,20 @@ export class ActionsCardsService {
     }
 
     createCard(name: string, cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>void)[]) {
-      return new CardInfo(
-        "c",
-        ()=>{
+        const card = new CardInfo("c")
+        card.onSelect = ()=>{
             const actions: ((tile: KeyValuePair<Coordiante, Tile>) => void)[] = new Array(cardActions.length)
             const uis: UIData[] = new Array(cardActions.length)
             
             actions[cardActions.length-1] = (tile: KeyValuePair<Coordiante, Tile>) => {
                 cardActions[cardActions.length-1](tile)
-                this.cardsHand.discardCard(this.cardsHand.selectedCard.get()!)
+                this.cardsHand.discardCard(card)
                 this.uiStateService.cancel()
             }
             for(let i = cardActions.length-2; i>=0; i--) {
                 uis[i] = {
                 mapAction: actions[i+1],
-                cancelButtonAction: ()=>{this.cardsHand.deselectCard()}
+                cancelButtonAction: ()=>{this.cardsHand.deselectCard(card)}
                 }
                 actions[i] = (tile: KeyValuePair<Coordiante, Tile>) => {
                 cardActions[i](tile);
@@ -60,10 +59,11 @@ export class ActionsCardsService {
                 }
             }
             const uiChanged = this.uiStateService.setUI(
-                {mapAction:actions[0], cancelButtonAction: ()=>{this.cardsHand.deselectCard()}}, 
+                {mapAction:actions[0], cancelButtonAction: ()=>{this.cardsHand.deselectCard(card)}}, 
                 {cantIterrupt: true, override:true, cantInterruptException: [uis[0]]}
             )
             return uiChanged
         }
-    )}
+        return card
+    }
 }
