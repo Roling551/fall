@@ -6,33 +6,33 @@ import { KeyValuePair } from "./key-value-pair";
 import { Coordiante } from "./coordinate";
 import { Tile } from "./tile";
 
-export class CardsHand {
-    drawDeck = createForceSignal([] as CardInfo[])
-    hand = createForceSignal([] as CardInfo[])
-    discardDeck = createForceSignal([] as CardInfo[])
+export class CardsHand<T extends CardInfo> {
+    drawDeck = createForceSignal([] as T[])
+    hand = createForceSignal([] as T[])
+    discardDeck = createForceSignal([] as T[])
 
-    selectedCards = createForceSignal([] as CardInfo[])
+    selectedCards = createForceSignal([] as T[])
 
     drawsPerTurn = 5
 
-    constructor(cards: CardInfo[], private onManualDeselect:()=>void, private canSelectMultiple = true) {
+    constructor(cards: T[], private onManualDeselect:()=>void, private canSelectMultiple = true) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
     }
 
-    discardCard(card: CardInfo) {
+    discardCard(card: T) {
         this.hand.set(this.hand.get().filter(c=>c!=card))
         this.hand.forceUpdate()
         this.discardDeck.get().push(card)
         this.discardDeck.forceUpdate()
     }
 
-    isCardSelected(card: CardInfo) {
+    isCardSelected(card: T) {
         return this.selectedCards.get().includes(card)
     }
 
-    selectCard(card: CardInfo) {
+    selectCard(card: T) {
         if(this.isCardSelected(card)) {
             this.deselectCard(card)
             this.onManualDeselect()
@@ -48,7 +48,7 @@ export class CardsHand {
         }
     }
 
-    deselectCard(card: CardInfo) {
+    deselectCard(card: T) {
         this.selectedCards.set(this.selectedCards.get().filter(c=>c!=card))
     }
 

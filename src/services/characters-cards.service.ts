@@ -1,6 +1,9 @@
-import { Injectable } from "@angular/core";
+import { computed, effect, Injectable } from "@angular/core";
 import { CardsHand } from "../models/cards-hand";
 import { CardInfo } from "../models/card-info";
+import { CharacterCardInfo } from "../models/character-card-info";
+import { baseZeroSkills } from "../models/skill";
+import { addExistingNumericalValues } from "../util/map-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +16,7 @@ export class CharactersCardsService {
     }
 
     constructor() {
-        const cards: CardInfo[] = []
+        const cards: CharacterCardInfo[] = []
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
@@ -22,14 +25,22 @@ export class CharactersCardsService {
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
-        this.cardsHand = new CardsHand(cards, ()=>{})
+        this.cardsHand = new CardsHand<CharacterCardInfo>(cards, ()=>{})
     }
 
     exampleCard() {
-        return new CardInfo(
+        return new CharacterCardInfo(
             "c",
-            ()=>{console.log("select"); return true}
+            new Map([["construction", 1]])
         )
     }
+
+    sumOfSkills = computed(() => {
+        const sum = new Map(baseZeroSkills)
+        for(const card of this.cardsHand.selectedCards.get()) {
+            addExistingNumericalValues(sum, card.skills)
+        }
+        return sum
+    })
 
 }

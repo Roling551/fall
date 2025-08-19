@@ -10,9 +10,9 @@ import { CardsHand } from '../../models/cards-hand';
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss'
 })
-export class CardsComponent {
+export class CardsComponent<T extends CardInfo> {
 
-    @Input({required: true}) cardsHand!: CardsHand;
+    @Input({required: true}) cardsHand!: CardsHand<T>;
 
     constructor() {}
 
@@ -26,11 +26,11 @@ export class CardsComponent {
         return this.cardsHand.discardDeck.get().length
     })
 
-    onCardClick(card: CardInfo) {
+    onCardClick(card: T) {
         this.cardsHand.selectCard(card)
     }
 
-    isCardSelected(card: CardInfo) {
+    isCardSelected(card: T) {
         return this.cardsHand.isCardSelected(card)
     }
 }
