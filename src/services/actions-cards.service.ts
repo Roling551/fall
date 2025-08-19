@@ -7,6 +7,8 @@ import { KeyValuePair } from "../models/key-value-pair";
 import { Coordiante } from "../models/coordinate";
 import { Tile } from "../models/tile";
 import { CardsHand } from "../models/cards-hand";
+import { CharactersCardsService } from "./characters-cards.service";
+import { createMultiStageAction } from "./ui-state/create-multi-stage-action";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class ActionsCardsService {
 
     public cardsHand
 
-    constructor(private uiStateService: UIStateService) {
+    constructor(private uiStateService: UIStateService, private charactersCardService: CharactersCardsService) {
         const cards = [] 
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
@@ -38,31 +40,14 @@ export class ActionsCardsService {
     }
 
     createCard(name: string, cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>void)[]) {
-        const card = new CardInfo("c")
+        const card = new CardInfo(name)
         card.onSelect = ()=>{
-            const actions: ((tile: KeyValuePair<Coordiante, Tile>) => void)[] = new Array(cardActions.length)
-            const uis: UIData[] = new Array(cardActions.length)
-            
-            actions[cardActions.length-1] = (tile: KeyValuePair<Coordiante, Tile>) => {
-                cardActions[cardActions.length-1](tile)
-                this.cardsHand.discardCard(card)
-                this.uiStateService.cancel()
-            }
-            for(let i = cardActions.length-2; i>=0; i--) {
-                uis[i] = {
-                mapAction: actions[i+1],
-                cancelButtonAction: ()=>{this.cardsHand.deselectCard(card)}
-                }
-                actions[i] = (tile: KeyValuePair<Coordiante, Tile>) => {
-                cardActions[i](tile);
-                this.uiStateService.setUI(uis[i], {skipBack: true, cantIterrupt: true, cantInterruptException: [uis[i+1]]})
-                }
-            }
-            const uiChanged = this.uiStateService.setUI(
-                {mapAction:actions[0], cancelButtonAction: ()=>{this.cardsHand.deselectCard(card)}}, 
-                {cantIterrupt: true, override:true, cantInterruptException: [uis[0]]}
+            return createMultiStageAction(
+                this.uiStateService,
+                cardActions,
+                ()=>this.cardsHand.deselectCard(card),
+                ()=>this.cardsHand.discardCard(card)
             )
-            return uiChanged
         }
         return card
     }
