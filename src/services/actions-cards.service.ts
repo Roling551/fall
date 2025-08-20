@@ -61,6 +61,7 @@ export class ActionsCardsService {
                 },
                 ()=>{
                     this.isActionHappening.set(false)
+                    this.charactersCardService.cardsHand.discardSelectedCards()
                     this.cardsHand.discardCard(card)
                 }
             )

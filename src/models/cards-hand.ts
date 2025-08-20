@@ -26,6 +26,17 @@ export class CardsHand<T extends CardInfo> {
         this.hand.forceUpdate()
         this.discardDeck.get().push(card)
         this.discardDeck.forceUpdate()
+        if(this.selectedCards.get().includes(card)) {
+            this.selectedCards.set(this.selectedCards.get().filter(c=>c!=card))
+        }
+    }
+
+    discardSelectedCards() {
+        this.hand.set(this.hand.get().filter(c=>!this.selectedCards.get().includes(c)))
+        this.hand.forceUpdate()
+        this.discardDeck.get().concat(this.selectedCards.get())
+        this.discardDeck.forceUpdate()
+        this.selectedCards.set([]);
     }
 
     isCardSelected(card: T) {
