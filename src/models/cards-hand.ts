@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { CardInfo } from "./card-info";
 import { createForceSignal } from "../util/force-signal";
 import { shuffleArray } from "../util/array-functions";
@@ -15,7 +15,7 @@ export class CardsHand<T extends CardInfo> {
 
     drawsPerTurn = 5
 
-    constructor(cards: T[], private onManualDeselect:()=>void, private canSelectMultiple = true) {
+    constructor(cards: T[], private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false)) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
@@ -33,6 +33,9 @@ export class CardsHand<T extends CardInfo> {
     }
 
     selectCard(card: T) {
+        if(this.frozen()) {
+            return
+        }
         if(this.isCardSelected(card)) {
             this.deselectCard(card)
             this.onManualDeselect()
@@ -49,6 +52,9 @@ export class CardsHand<T extends CardInfo> {
     }
 
     deselectCard(card: T) {
+        if(this.frozen()) {
+            return
+        }
         this.selectedCards.set(this.selectedCards.get().filter(c=>c!=card))
     }
 

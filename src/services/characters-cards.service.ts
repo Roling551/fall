@@ -1,4 +1,4 @@
-import { computed, effect, Injectable } from "@angular/core";
+import { computed, effect, Injectable, signal } from "@angular/core";
 import { CardsHand } from "../models/cards-hand";
 import { CardInfo } from "../models/card-info";
 import { CharacterCardInfo } from "../models/character-card-info";
@@ -10,6 +10,7 @@ import { addExistingNumericalValues } from "../util/map-functions";
 })
 export class CharactersCardsService {
     public cardsHand
+    public isHandFrozen = signal(false)
 
     nextTurn() {
         this.cardsHand.nextTurn()
@@ -25,7 +26,7 @@ export class CharactersCardsService {
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
-        this.cardsHand = new CardsHand<CharacterCardInfo>(cards, ()=>{})
+        this.cardsHand = new CardsHand<CharacterCardInfo>(cards, ()=>{}, true, this.isHandFrozen)
     }
 
     exampleCard() {
