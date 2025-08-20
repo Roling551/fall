@@ -41,3 +41,12 @@ export function multiplyNumericalValuesFunctional(map: Map<any, number>, multipl
     }
     return newMap
 }
+
+export function mapContainsMap(map1: Map<any, number>, map2: Map<any, number>) {
+    for (const [key, num] of map1.entries()) {
+        if(num < (map2.get(key) || 0)) {
+            return false
+        }
+    }
+    return true
+}

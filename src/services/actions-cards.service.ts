@@ -9,6 +9,8 @@ import { Tile } from "../models/tile";
 import { CardsHand } from "../models/cards-hand";
 import { CharactersCardsService } from "./characters-cards.service";
 import { createMultiStageAction } from "./ui-state/create-multi-stage-action";
+import { mapContainsMap } from "../util/map-functions";
+import { CharacterCardInfo } from "../models/character-card-info";
 
 @Injectable({
   providedIn: 'root'
@@ -44,9 +46,12 @@ export class ActionsCardsService {
     }
 
     createCard(name: string, cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[]) {
-        const card = new CardInfo(name)
+        const card = new CharacterCardInfo(name, new Map([["construction", 2]]))
         const oldCardActions0 = cardActions[0]
         cardActions[0] = (tile: KeyValuePair<Coordiante, Tile>)=>{
+            if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), card.skills))) {
+                return false
+            }
             const isSuccesfull = oldCardActions0(tile)
             this.isActionHappening.set(true)
             return isSuccesfull
