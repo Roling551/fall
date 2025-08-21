@@ -1,17 +1,21 @@
 import { effect, Injectable, signal } from "@angular/core";
-import { CardInfo } from "../models/card-info";
-import { createForceSignal } from "../util/force-signal";
-import { shuffleArray } from "../util/array-functions";
-import { UIData, UIStateService } from "./ui-state/ui-state.service";
-import { KeyValuePair } from "../models/key-value-pair";
-import { Coordiante } from "../models/coordinate";
-import { Tile } from "../models/tile";
-import { CardsHand } from "../models/cards-hand";
-import { CharactersCardsService } from "./characters-cards.service";
-import { createMultiStageAction } from "./ui-state/create-multi-stage-action";
-import { mapContainsMap } from "../util/map-functions";
-import { CharacterCardInfo } from "../models/character-card-info";
-import { ActionCardInfo } from "../models/action-card-info";
+import { CardInfo } from "../../models/card-info";
+import { createForceSignal } from "../../util/force-signal";
+import { shuffleArray } from "../../util/array-functions";
+import { UIData, UIStateService } from "../ui-state/ui-state.service";
+import { KeyValuePair } from "../../models/key-value-pair";
+import { Coordiante } from "../../models/coordinate";
+import { Tile } from "../../models/tile";
+import { CardsHand } from "../../models/cards-hand";
+import { CharactersCardsService } from "../characters-cards.service";
+import { createMultiStageAction } from "../ui-state/create-multi-stage-action";
+import { mapContainsMap } from "../../util/map-functions";
+import { CharacterCardInfo } from "../../models/character-card-info";
+import { ActionCardInfo } from "../../models/action-card-info";
+import { WorldStateService } from "../world-state/world-state.service";
+import { BenefitsService } from "../benefits.service";
+import { Estate } from "../../models/estate";
+import { getCreateEstateAction } from "./actions-cards-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +25,15 @@ export class ActionsCardsService {
     public cardsHand
     private isActionHappening = signal(false)
 
-    constructor(private uiStateService: UIStateService, private charactersCardService: CharactersCardsService) {
+    constructor(
+        private uiStateService: UIStateService,
+        private charactersCardService: CharactersCardsService,
+        private worldStateService: WorldStateService,
+        private benefitService: BenefitsService
+    ) {
         const cards = [] 
         cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
+        cards.push(this.createCardA())
         this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
@@ -46,8 +55,13 @@ export class ActionsCardsService {
             )
     }
 
-    createSimpleActionCard(name: string) {
-
+    createCardA() {
+        return this.createMultiStageActionCard(
+            "Create estate",
+            [
+                getCreateEstateAction(this.worldStateService, this.benefitService, () => new Estate("farm", new Map([["food",2], ["workers-need", 1]])))
+            ]
+        )
     }
 
     createMultiStageActionCard(name: string, cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[]) {

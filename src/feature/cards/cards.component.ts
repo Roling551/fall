@@ -1,6 +1,6 @@
 import { Component, computed, Input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
-import { ActionsCardsService } from '../../services/actions-cards.service';
+import { ActionsCardsService } from '../../services/action-cards/actions-cards.service';
 import { CardInfo } from '../../models/card-info';
 import { CardsHand } from '../../models/cards-hand';
 

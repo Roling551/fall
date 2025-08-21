@@ -130,26 +130,6 @@ export function getCreateEstateAction(
     }
 }
 
-export function getCreateEstateFromCardAction(
-    worldStateService: WorldStateService,
-    benefitsService: BenefitsService,
-    getEstate: ()=>Estate
-) {
-    return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            if(worldStateService.cities.get().size<1) {
-                return
-            }
-            let city
-            for(const city_ of worldStateService.cities.get()) {
-                city = worldStateService.tiles.get(city_[0])
-                break
-            }
-            createEstate(tile, city!, getEstate, benefitsService)
-        },
-    }
-}
-
 export function getRemoveEstateAction(
     cityTile: KeyValuePair<Coordiante, Tile>
 ):UIData {

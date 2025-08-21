@@ -4,7 +4,7 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
-import { getAddExtractionAction, getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getCreateEstateFromCardAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
+import { getAddExtractionAction, getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state/world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
@@ -244,8 +244,6 @@ export class UIStateService {
       this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
     moveUnitsBattle: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
       this.setUI(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
-    createEstateFromCard: (getEstate: ()=> Estate) => {
-        this.setUI(getCreateEstateFromCardAction(this.worldStateService, this.benefitsService, getEstate))},
   }
 
   public setUIMode_ = {

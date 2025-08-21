@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from "@angular/core";
 import { WorldStateService } from "./world-state/world-state.service";
 import { UIStateService } from "./ui-state/ui-state.service";
-import { ActionsCardsService } from "./actions-cards.service";
+import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { CharactersCardsService } from "./characters-cards.service";
 
 @Injectable({
