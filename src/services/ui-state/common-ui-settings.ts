@@ -21,6 +21,7 @@ import { computed } from "@angular/core"
 import { ExtractionInfoComponent } from "../../feature/extraction-info/extraction-info.component"
 import { Extraction } from "../../models/extraction"
 import { BenefitsService } from "../benefits.service"
+import { addOrRemoveTileToCity, createEstate } from "../world-state/functions"
 
 
 export function getTileUI(
@@ -109,30 +110,12 @@ export function getAddTileToCityAction(
         cityTile: KeyValuePair<Coordiante, Tile>):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            if(tile.value.mapEntity.get()?.type === "city") {
-                return
-            }
-            const mapEntity = cityTile.value.mapEntity.get()!
-            const city = mapEntity as City
-            if(!tile.value.belongsTo.get()) {
-                tile.value.belongsTo.set(mapEntity)
-                city.addOwnedTile(tile)
-                
-            } else if(tile.value.belongsTo.get()!==mapEntity) {
-                const otherCity = tile.value.belongsTo.get() as City
-                otherCity.removeOwnedTile(tile)
-                tile.value.belongsTo.set(mapEntity)
-                city.addOwnedTile(tile)
-            }
-            else {
-                tile.value.belongsTo.set(undefined)
-                city.removeOwnedTile(tile)
-            }
+            addOrRemoveTileToCity(tile, cityTile)
         },
         additionalInfo: {currentAction: "addTileToCity"},
-
     }
 }
+
 export function getCreateEstateAction(
     benefitsService: BenefitsService,
     cityTile: KeyValuePair<Coordiante, Tile>,
@@ -141,15 +124,29 @@ export function getCreateEstateAction(
 ):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-                if(!!tile.value.mapEntity.get() || tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
-                    return
-                }
-                const estate = getEstate();
-                estate.bonus = benefitsService.listenForEstateProductionBonuses(estate)
-                tile.value.mapEntity.set(estate)
+            createEstate(tile, cityTile, getEstate, benefitsService)
         },
         additionalInfo: {currentAction: "createEstateAction-" + estateName},
+    }
+}
 
+export function getCreateEstateFromCardAction(
+    worldStateService: WorldStateService,
+    benefitsService: BenefitsService,
+    getEstate: ()=>Estate
+) {
+    return {
+        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+            if(worldStateService.cities.get().size<1) {
+                return
+            }
+            let city
+            for(const city_ of worldStateService.cities.get()) {
+                city = worldStateService.tiles.get(city_[0])
+                break
+            }
+            createEstate(tile, city!, getEstate, benefitsService)
+        },
     }
 }
 

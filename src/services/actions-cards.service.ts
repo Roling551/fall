@@ -36,7 +36,7 @@ export class ActionsCardsService {
     }
 
     exampleCard() {
-       return this.createCard(
+       return this.createMultiStageActionCard(
             "c", 
             [
                 (tile: KeyValuePair<Coordiante, Tile>)=>{console.log("t1"); return tile.key.getKey()=="0_0"},
@@ -46,7 +46,11 @@ export class ActionsCardsService {
             )
     }
 
-    createCard(name: string, cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[]) {
+    createSimpleActionCard(name: string) {
+
+    }
+
+    createMultiStageActionCard(name: string, cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[]) {
         const card = new ActionCardInfo(name, new Map([["construction", 2]]))
         const oldCardActions0 = cardActions[0]
         cardActions[0] = (tile: KeyValuePair<Coordiante, Tile>)=>{
