@@ -1,6 +1,6 @@
 import { Injectable, Signal } from "@angular/core";
 import { Extraction } from "../models/extraction";
-import { WorldStateService } from "./world-state.service";
+import { WorldStateService } from "./world-state/world-state.service";
 import { ExtractionSite } from "../models/extraction-site";
 import { BenefitsService } from "./benefits.service";
 import { createForceSignal } from "../util/force-signal";

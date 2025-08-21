@@ -8,7 +8,7 @@ import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
 import { Building } from '../../models/building';
 import { PlayerUnit, Unit } from '../../models/unit';
-import { WorldStateService } from '../../services/world-state.service';
+import { WorldStateService } from '../../services/world-state/world-state.service';
 import { BattleService } from '../../services/battle.service';
 import { Extraction } from '../../models/extraction';
 import { BenefitsService } from '../../services/benefits.service';

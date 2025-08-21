@@ -5,7 +5,7 @@ import { Coordiante } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { getAddExtractionAction, getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
-import { WorldStateService } from "../world-state.service";
+import { WorldStateService } from "../world-state/world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
 import { getBattleMode, getMainMode } from "./common-ui-mode-settings";

@@ -3,7 +3,7 @@ import { EnemyUnit, Unit } from "../models/unit";
 import { Tile } from "../models/tile";
 import { KeyValuePair } from "../models/key-value-pair";
 import { Coordiante } from "../models/coordinate";
-import { WorldStateService } from "./world-state.service";
+import { WorldStateService } from "./world-state/world-state.service";
 import { createForceSignal } from "../util/force-signal";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { Army } from "../models/army";

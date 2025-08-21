@@ -1,14 +1,14 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { Tile } from '../models/tile';
-import { Coordiante } from '../models/coordinate';
-import { KeyValuePair } from '../models/key-value-pair';
-import { createForceSignal, ForceSignal } from '../util/force-signal';
-import { City } from '../models/city';
-import { addExistingNumericalValues } from '../util/map-functions';
-import { Unit } from '../models/unit';
-import { dijkstra } from '../util/path-finding';
-import { TileDirection } from '../models/tile-direction';
-import { Benefit } from '../models/benefit';
+import { Tile } from '../../models/tile';
+import { Coordiante } from '../../models/coordinate';
+import { KeyValuePair } from '../../models/key-value-pair';
+import { createForceSignal, ForceSignal } from '../../util/force-signal';
+import { City } from '../../models/city';
+import { addExistingNumericalValues } from '../../util/map-functions';
+import { Unit } from '../../models/unit';
+import { dijkstra } from '../../util/path-finding';
+import { TileDirection } from '../../models/tile-direction';
+import { Benefit } from '../../models/benefit';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, Signal } from '@angular/core';
 import { Tile } from '../../models/tile';
 import { IsometricTilingComponent } from '../../shared/isometric-tiling/isometric-tiling.component';
-import { WorldStateService } from '../../services/world-state.service';
+import { WorldStateService } from '../../services/world-state/world-state.service';
 import { CommonModule } from '@angular/common';
 import { Coordiante } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';

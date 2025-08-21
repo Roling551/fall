@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { WorldStateService } from '../../services/world-state.service';
+import { WorldStateService } from '../../services/world-state/world-state.service';
 import { MapEntity } from '../../models/map-entity';
 import { City } from '../../models/city';
 import { UIStateService } from '../../services/ui-state/ui-state.service';

@@ -9,7 +9,7 @@ import { EstateProductionBonus } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
-import { WorldStateService } from "./world-state.service";
+import { WorldStateService } from "./world-state/world-state.service";
 
 @Injectable({
   providedIn: 'root'

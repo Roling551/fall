@@ -1,5 +1,5 @@
 import { Component, computed, Signal } from '@angular/core';
-import { WorldStateService } from '../../services/world-state.service';
+import { WorldStateService } from '../../services/world-state/world-state.service';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { BattleInfoPanelComponent } from '../battle-info-panel/battle-info-panel.component';
 import { TurnService } from '../../services/turn-service';
