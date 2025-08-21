@@ -12,7 +12,6 @@ export function getCreateEstateAction(
     getEstate: ()=>Estate
 ) {
     return (tile: KeyValuePair<Coordiante, Tile>)=>{
-        console.log("Create estate")
         if(worldStateService.cities.get().size<1) {
             return false
         }
@@ -21,8 +20,6 @@ export function getCreateEstateAction(
             city = worldStateService.tiles.get(city_[0])
             break
         }
-        console.log("Create estate 1")
-        addTileToCityAndCreateEstate(tile, city!, getEstate, benefitsService)
-        return true
+        return addTileToCityAndCreateEstate(tile, city!, getEstate, benefitsService)
     }
 }

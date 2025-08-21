@@ -16,6 +16,7 @@ import { WorldStateService } from "../world-state/world-state.service";
 import { BenefitsService } from "../benefits.service";
 import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
+import { canAffordResources, spendResources } from "../world-state/functions";
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class ActionsCardsService {
     ) {
         const cards = [] 
         cards.push(this.exampleCard())
-        cards.push(this.createCardA())
+        cards.push(this.createEstateCard())
         this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
@@ -55,20 +56,30 @@ export class ActionsCardsService {
             )
     }
 
-    createCardA() {
+    createEstateCard() {
         return this.createMultiStageActionCard(
             "Create estate",
             [
-                getCreateEstateAction(this.worldStateService, this.benefitService, () => new Estate("farm", new Map([["food",2], ["workers-need", 1]])))
-            ]
+                (tile: KeyValuePair<Coordiante, Tile>)=> {
+                    return getCreateEstateAction(this.worldStateService, this.benefitService, () => new Estate("farm", new Map([["food",2]])))(tile)
+                }
+            ],
+            new Map([["gold", 10]])
         )
     }
 
-    createMultiStageActionCard(name: string, cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[]) {
-        const card = new ActionCardInfo(name, new Map([["construction", 2]]))
+    createMultiStageActionCard(
+        name: string, 
+        cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[],
+        price?: Map<string, number>,
+    ) {
+        const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
         const oldCardActions0 = cardActions[0]
         cardActions[0] = (tile: KeyValuePair<Coordiante, Tile>)=>{
             if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), card.requiredSkills))) {
+                return false
+            }
+            if(price && !canAffordResources(this.worldStateService, price)) {
                 return false
             }
             const isSuccesfull = oldCardActions0(tile)
@@ -86,6 +97,9 @@ export class ActionsCardsService {
                 ()=>{
                     this.isActionHappening.set(false)
                     this.charactersCardService.cardsHand.discardSelectedCards()
+                    if(price) {
+                        spendResources(this.worldStateService, price)
+                    }
                     this.cardsHand.discardCard(card)
                 }
             )

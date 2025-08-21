@@ -3,7 +3,9 @@ import { Coordiante } from "../../models/coordinate"
 import { Estate } from "../../models/estate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
+import { mapContainsMap, substractNumericalValuesFunctional } from "../../util/map-functions"
 import { BenefitsService } from "../benefits.service"
+import { WorldStateService } from "./world-state.service"
 
 export function addOrRemoveTileToCity(
     tile: KeyValuePair<Coordiante, Tile>, 
@@ -37,11 +39,12 @@ export function createEstate(
     benefitsService: BenefitsService,
 ) {
     if(!!tile.value.mapEntity.get() || tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
-        return
+        return false
     }
     const estate = getEstate();
     estate.bonus = benefitsService.listenForEstateProductionBonuses(estate)
     tile.value.mapEntity.set(estate)
+    return true
 }
 
 export function addTileToCityIfAllowed(
@@ -65,6 +68,16 @@ export function addTileToCityAndCreateEstate(
     benefitsService: BenefitsService,
 ) {
     if(addTileToCityIfAllowed(tile, cityTile)) {
-        createEstate(tile, cityTile, getEstate, benefitsService)
+        return createEstate(tile, cityTile, getEstate, benefitsService)
     }
+    return false
+}
+
+export function canAffordResources(worldStateService: WorldStateService, price: Map<string, number>) {
+    return mapContainsMap(worldStateService.resources.get(), price)
+}
+
+export function spendResources(worldStateService: WorldStateService, price: Map<string, number>) {
+    worldStateService.resources.set(substractNumericalValuesFunctional(worldStateService.resources.get(), price))
+    worldStateService.resources.forceUpdate()
 }
