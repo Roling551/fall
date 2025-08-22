@@ -32,7 +32,8 @@ export class CharactersCardsService {
     exampleCard() {
         return new CharacterCardInfo(
             "c",
-            new Map([["construction", 1]])
+            new Map([["construction", 1]],),
+            3
         )
     }
 

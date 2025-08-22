@@ -1,6 +1,6 @@
 import { effect, Injectable, signal } from "@angular/core";
 import { CardInfo } from "../../models/card-info";
-import { createForceSignal } from "../../util/force-signal";
+import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
 import { UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
@@ -17,6 +17,7 @@ import { BenefitsService } from "../benefits.service";
 import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
 import { canAffordResources, spendResources } from "../world-state/functions";
+import { City } from "../../models/city";
 
 @Injectable({
   providedIn: 'root'
@@ -76,11 +77,24 @@ export class ActionsCardsService {
         const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
         const oldCardActions0 = cardActions[0]
         cardActions[0] = (tile: KeyValuePair<Coordiante, Tile>)=>{
+            if(this.worldStateService.cities.get().size<1) {
+                return false
+            }
+            let city: [string, ForceSignal<City>]
+            for(const city_ of this.worldStateService.cities.get()) {
+                city = city_
+            }
             if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), card.requiredSkills))) {
                 return false
             }
             if(price && !canAffordResources(this.worldStateService, price)) {
                 return false
+            }
+            for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
+                const path = this.worldStateService.findPathByKey(city![0], tile.key.getKey())
+                if(!path || path.distance > characterCard.movement) {
+                    return false
+                }
             }
             const isSuccesfull = oldCardActions0(tile)
             this.isActionHappening.set(true)
@@ -105,5 +119,5 @@ export class ActionsCardsService {
             )
         }
         return card
-    }
+    } 
 }
