@@ -7,10 +7,11 @@ export function createMultiStageAction(
     uiStateService: UIStateService,
     stateActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[],
     cancelButtonAction: ()=>void,
-    afterFinishAction: ()=> void)
+    afterFinishAction: ()=> void,
+    uis?: UIData[])
 {
     const actions: ((tile: KeyValuePair<Coordiante, Tile>) => void)[] = new Array(stateActions.length)
-    const uis: UIData[] = new Array(stateActions.length)
+    const newUIs: UIData[] = new Array(stateActions.length)
     
     actions[stateActions.length-1] = (tile: KeyValuePair<Coordiante, Tile>) => {
         if(stateActions[stateActions.length-1](tile)) {
@@ -19,22 +20,24 @@ export function createMultiStageAction(
         }
     }
     for(let i = stateActions.length-2; i>=0; i--) {
-        uis[i] = {
-        mapAction: actions[i+1],
-        cancelButtonAction
+        newUIs[i] = {
+            ...(uis?.[i+1] || {}),
+            mapAction: actions[i+1],
+            cancelButtonAction
         }
         actions[i] = (tile: KeyValuePair<Coordiante, Tile>) => {
             if(stateActions[i](tile)) {
-                uiStateService.setUI(uis[i], {skipBack: true, cantIterrupt: true, cantInterruptException: [uis[i+1]]})
+                uiStateService.setUI(newUIs[i], {skipBack: true, cantIterrupt: true, cantInterruptException: [newUIs[i+1]]})
             }
         }
     }
     const uiChanged = uiStateService.setUI(
         {
+            ...(uis?.[0] || {}),
             mapAction:actions[0], 
             cancelButtonAction 
         },{
-            cantIterrupt: true, override:true, cantInterruptException: [uis[0]]
+            cantIterrupt: true, override:true, cantInterruptException: [newUIs[0]]
         }
     )
     return uiChanged

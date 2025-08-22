@@ -47,3 +47,60 @@ export function dijkstra<T>(
 
   return null;
 }
+
+export function dijkstraAllNodes<T>(
+    getNeighbors: (node: T) => T[],
+    getWeight: (from: T, to: T) => number,
+    start: T,
+    maxDistance = Infinity,
+    includeFirst = false,
+    ): { node: T; distance: number; path: T[] }[] 
+{
+    const distances = new Map<T, number>();
+    const previous = new Map<T, T | null>();
+    const visited = new Set<T>();
+    const priorityQueue: [T, number][] = [];
+
+    distances.set(start, 0);
+    previous.set(start, null);
+    priorityQueue.push([start, 0]);
+
+    while (priorityQueue.length > 0) {
+        priorityQueue.sort((a, b) => a[1] - b[1]);
+        const [currentNode, currentDistance] = priorityQueue.shift()!;
+        if (visited.has(currentNode)) continue;
+        visited.add(currentNode);
+
+        if (currentDistance > maxDistance) continue;
+
+        for (const neighbor of getNeighbors(currentNode)) {
+        const weight = getWeight(currentNode, neighbor);
+        const newDistance = currentDistance + weight;
+        const existingDistance = distances.get(neighbor) ?? Infinity;
+        if (newDistance < existingDistance && newDistance <= maxDistance) {
+            distances.set(neighbor, newDistance);
+            previous.set(neighbor, currentNode);
+            priorityQueue.push([neighbor, newDistance]);
+        }
+        }
+    }
+
+    // Build reachable nodes list
+    const reachable: { node: T; distance: number; path: T[] }[] = [];
+    for (const [node, distance] of distances) {
+        if (distance <= maxDistance) {
+        const path: T[] = [];
+        let n: T | null = node;
+        while (n !== null) {
+            path.unshift(n);
+            n = previous.get(n)!;
+        }
+        if (!includeFirst) {
+            path.shift();
+        }
+        reachable.push({ node, distance, path });
+        }
+    }
+
+    return reachable;
+}

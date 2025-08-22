@@ -1,4 +1,4 @@
-import { effect, Injectable, signal } from "@angular/core";
+import { computed, effect, Injectable, signal } from "@angular/core";
 import { CardInfo } from "../../models/card-info";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
@@ -18,6 +18,7 @@ import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
 import { canAffordResources, spendResources } from "../world-state/functions";
 import { City } from "../../models/city";
+import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +77,13 @@ export class ActionsCardsService {
     ) {
         const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
         const oldCardActions0 = cardActions[0]
+        const uis: UIData[] = cardActions.map(x=>{return {} as UIData})
+        uis[0]={
+            doRenderTileInfoFunction: (tile)=> {
+                return this.reachableTiles().includes(tile.key.getKey())
+            },
+            tileInfo: MapMarkingComponent
+        }
         cardActions[0] = (tile: KeyValuePair<Coordiante, Tile>)=>{
             if(this.worldStateService.cities.get().size<1) {
                 return false
@@ -115,9 +123,32 @@ export class ActionsCardsService {
                         spendResources(this.worldStateService, price)
                     }
                     this.cardsHand.discardCard(card)
-                }
+                },
+                uis
             )
         }
         return card
-    } 
+    }
+
+    reachableTiles = computed(()=>{
+        let city: [string, ForceSignal<City>]
+        if(this.worldStateService.cities.get().size<1) {
+            return [] as string[]
+        }
+        for(const city_ of this.worldStateService.cities.get()) {
+            city = city_
+        }
+        let firstTile = true
+        let tiles:string[] = []
+        for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
+            const cardsTiles = this.worldStateService.getReacheableTiles(city![0], characterCard.movement).map(x=>x.node)
+            if(firstTile) {
+                tiles = cardsTiles
+                firstTile = false
+            } else {
+                tiles = tiles.filter(x => cardsTiles.includes(x));
+            }
+        }
+        return tiles
+    })
 }
