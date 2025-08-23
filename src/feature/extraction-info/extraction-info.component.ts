@@ -15,14 +15,15 @@ import { ExtractionSite, ExtractionSiteItem } from '../../models/extraction-site
 })
 export class ExtractionInfoComponent {
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>;
+  @Input({required: true}) input!: any;
 
   sizeX
   sizeY
   extraction
-  constructor(public styleVariablesService: StyleVariablesService, public uiStateService: UIStateService) {
+  constructor(public styleVariablesService: StyleVariablesService) {
     this.sizeX = styleVariablesService.sizeX
     this.sizeY = styleVariablesService.sizeY
-    this.extraction = uiStateService.tileInfoInput()["extraction"] as Extraction
+    this.extraction = this.input["extraction"] as Extraction
   }
 
   extractionAtLocation = computed(()=> {

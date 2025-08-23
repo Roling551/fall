@@ -5,6 +5,7 @@
     [tileTemplate]="tileTemplate"
     [backgroundImage]="backgroundImage"
     (tileClick)="mapAction()($event)"
+    [additionalGraphics]="tileInfo()"
 />
 
 <ng-template #tileTemplate let-tile="tile">

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, HostListener, Input, input, OnInit, output, signal, TemplateRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, HostListener, Input, input, OnInit, output, signal, TemplateRef, Type } from '@angular/core';
 import panzoom, { PanZoom, Transform } from 'panzoom';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
@@ -22,6 +22,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input({required: true}) sizeY!:number;
 
   @Input({required: true}) tileTemplate!:TemplateRef<any>;
+  @Input() additionalGraphics:{doRender:((tile: T) => boolean), template:undefined|Type<any>, input:any}[] = [];
 
   @Input() distanceToUpdate = 20;
 

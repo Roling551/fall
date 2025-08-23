@@ -56,9 +56,11 @@ export function getTileUI(
         sideComponent:TilePanelComponent, 
         sideComponentInputs:{tile, selectedUnits},
         additionalInfo: {tile},
-        doRenderTileInfoFunction,
-        tileInfo: BorderComponent,
-        tileInfoInput
+        tileInfos: [{
+            template: BorderComponent,
+            doRender: (doRenderTileInfoFunction || ((tile: KeyValuePair<Coordiante, Tile>)=>{return false})),
+            input: tileInfoInput
+        }]
     }
 }
 
@@ -72,10 +74,12 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
                 }
                 worldStateService.removeCity(tile)
             },
-        doRenderTileInfoFunction: (tile)=> {
-            return !tile.value?.mapEntity.get()
-        },
-        tileInfo: MapMarkingComponent
+        tileInfos: [{
+            template: MapMarkingComponent,
+            doRender: (tile: KeyValuePair<Coordiante, Tile>)=> {
+                return !tile.value?.mapEntity.get()
+            }
+        }]
     }
 }
 
@@ -99,10 +103,12 @@ export function getCreateCityUI(worldStateService: WorldStateService):UIData {
             const citySignal = tile.value.mapEntity as unknown as ForceSignal<City>
             worldStateService.addCity(tile.key.getKey(), citySignal)
         },
-        doRenderTileInfoFunction: (tile)=> {
-        return !tile.value?.mapEntity.get()
-        },
-        tileInfo: MapMarkingComponent
+        tileInfos: [{
+            template: MapMarkingComponent,
+            doRender: (tile)=> {
+                return !tile.value?.mapEntity.get()
+            }
+        }]
     }
 }
 
@@ -201,10 +207,12 @@ export function getAddExtractionAction(
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{},
         additionalInfo: {currentAction: "addExtractionAction"},
-        doRenderTileInfoFunction: (tile)=> {
-            return tile.value.mapEntity.get()?.type === "extractionSite"
-        },
-        tileInfo: ExtractionInfoComponent,
-        tileInfoInput: {extraction}
+        tileInfos: [{
+            template: ExtractionInfoComponent,
+            doRender: (tile: KeyValuePair<Coordiante, Tile>)=> {
+                return tile.value.mapEntity.get()?.type === "extractionSite"
+            },
+            input: {extraction}
+        }],
     }
 }

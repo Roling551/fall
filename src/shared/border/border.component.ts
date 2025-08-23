@@ -17,19 +17,20 @@ import { createForceSignal } from '../../util/force-signal';
 })
 export class BorderComponent implements OnChanges {
   @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>;
+  @Input({required: true}) input!: any;
   getDirections?: (tileInfoIsAbout: KeyValuePair<Coordiante, Tile>) => Signal<TileDirection[]>
 
   directions? : Signal<TileDirection[]>
 
   sizeX
   sizeY
-  constructor(public styleVariablesService: StyleVariablesService, public uiStateService: UIStateService) {
+  constructor(public styleVariablesService: StyleVariablesService) {
     this.sizeX = styleVariablesService.sizeX
     this.sizeY = styleVariablesService.sizeY
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getDirections = this.uiStateService.tileInfoInput()["getDirections"]
+    this.getDirections = this.input["getDirections"]
     this.directions = this.getDirections!(this.tile!)!
   }
 

@@ -17,22 +17,14 @@ export class MapTileComponent {
   @Input({required: true}) sizeX!:number;
   @Input({required: true}) sizeY!:number;
 
-  public tileInfo
-
   public lightBorder = '/assets/pictures/light-border.png'
 
   constructor(public uiStateService: UIStateService, private injector: Injector){
-        this.tileInfo = this.uiStateService.tileInfo
   }
 
   getTexture(name: string): string {
     return `assets/pictures/${name}.png`
   }
-
-  doRenderTileInfo = computed(()=> {
-    const doRender = this.uiStateService.doRenderTileInfoFunction()(this.tile)
-    return doRender
-  })
 
   getBuildingPositionX(index: number): number {
     switch(index) {

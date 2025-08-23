@@ -32,4 +32,8 @@ export class WorldMapComponent {
   getTexture(name: string): string {
     return `assets/pictures/${name}.png`
   }
+
+  tileInfo = computed(() => {
+    return this.uiStateService.tileInfos()
+  })
 }

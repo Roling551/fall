@@ -13,6 +13,7 @@ import { Tile } from '../../models/tile';
 })
 export class MapMarkingComponent {
   @Input() tile?: KeyValuePair<Coordiante, Tile>;
+  @Input({required: true}) input!: any;
 
   sizeX
   sizeY

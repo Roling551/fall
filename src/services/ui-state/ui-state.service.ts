@@ -29,9 +29,7 @@ export type UIData = {
   additionalInfo?: any;
   mapAction?: (tile: KeyValuePair<Coordiante, Tile>)=>void;
   cancelButtonAction?: any;
-  tileInfo?: Type<any>;
-  tileInfoInput?: any;
-  doRenderTileInfoFunction?: (tile: KeyValuePair<Coordiante, Tile>) => boolean;
+  tileInfos?: TileInfo[];
 }
 
 export type UISettings = {
@@ -39,6 +37,12 @@ export type UISettings = {
   skipBack?: boolean;
   cantIterrupt?: boolean;
   cantInterruptException?: UIData[]
+}
+
+export type TileInfo = {
+    template: Type<any>,
+    input?: any,
+    doRender: (tile: KeyValuePair<Coordiante, Tile>) => boolean,
 }
 
 const defaultUISettings: UISettings = {
@@ -63,16 +67,12 @@ export class UIStateService {
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _cancelButtonAction = createForceSignal(()=>{})
-  private _tileInfo = createForceSignal<undefined|Type<any>>(undefined);
-  private _tileInfoInput = createForceSignal<Record<string, any>>({});
-  private _doRenderTileInfoFunction = createForceSignal<(tile: KeyValuePair<Coordiante, Tile>) => boolean>((t)=>false);
+  private _tileInfos = createForceSignal<TileInfo[]>([]);
   private _additionalInfo = createForceSignal<any>(null);
 
   public mapAction = this._mapAction.get;
   public cancelButtonAction = this._cancelButtonAction.get
-  public tileInfo = this._tileInfo.get
-  public tileInfoInput = this._tileInfoInput.get
-  public doRenderTileInfoFunction = this._doRenderTileInfoFunction.get
+  public tileInfos = this._tileInfos.get
   public additionalInfo = this._additionalInfo.get
 
   public uiModeName = signal<UIModeName>("main")
@@ -123,20 +123,15 @@ export class UIStateService {
   _setUIOverride(ui:UIData) {
 
     this._additionalInfo.set(ui.additionalInfo)
-    this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction || ((t)=>false))
-    this._doRenderTileInfoFunction.forceUpdate()
 
-    this._tileInfo.set(ui.tileInfo)
-    this._tileInfo.forceUpdate()
+    this._tileInfos.set(ui.tileInfos || [])
+    this._tileInfos.forceUpdate()
 
     this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
     this._mapAction.forceUpdate()
 
     this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
     this._cancelButtonAction.forceUpdate()
-
-    this._tileInfoInput.set(ui.tileInfoInput || {})
-    this._tileInfoInput.forceUpdate()
 
     if(!ui.sideComponent) {
       this.viewSideContainerRef.clear();
@@ -155,14 +150,10 @@ export class UIStateService {
   _setUIUpdate(ui:UIData) {
 
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
-    if(ui.doRenderTileInfoFunction) {
-      this._doRenderTileInfoFunction.set(ui.doRenderTileInfoFunction)
-      this._doRenderTileInfoFunction.forceUpdate()
-    }
 
-    if(ui.tileInfo) {
-      this._tileInfo.set(ui.tileInfo)
-      this._tileInfo.forceUpdate()
+    if(ui.tileInfos) {
+      this._tileInfos.set(ui.tileInfos)
+      this._tileInfos.forceUpdate()
     }
 
     this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
@@ -172,11 +163,6 @@ export class UIStateService {
     this._cancelButtonAction.forceUpdate()
 
     if(ui.sideComponent) {
-      if(ui.tileInfoInput) {
-        this._tileInfoInput.set(ui.tileInfoInput)
-      }
-      this._tileInfoInput.forceUpdate()
-
       if(ui.sideComponentInputs) {
         this.viewSideContainerRef.clear();
         const compRef = this.viewSideContainerRef.createComponent(ui.sideComponent!, ui.sideComponentInputs);

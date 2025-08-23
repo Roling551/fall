@@ -20,7 +20,4 @@
     @if(getUnit(); as unit) {
         <img [src]="getTexture(unit.name)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }
-    @if(doRenderTileInfo()) {
-        <ng-container *ngComponentOutlet="tileInfo()!; inputs:{tile:tile}"></ng-container> 
-    }
 </div>
