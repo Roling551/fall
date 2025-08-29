@@ -4,6 +4,7 @@ import panzoom, { PanZoom, Transform } from 'panzoom';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordiante } from '../../models/coordinate';
 
+
 @Component({
   selector: 'app-isometric-tiling',
   imports: [CommonModule],
@@ -22,7 +23,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input({required: true}) sizeY!:number;
 
   @Input({required: true}) tileTemplate!:TemplateRef<any>;
-  @Input() additionalGraphics:{doRender:((tile: T) => boolean), template:undefined|Type<any>, input:any}[] = [];
+  @Input() additionalGraphics:Map<string, {doRender:((tile: T) => boolean), template:undefined|Type<any>, input?:any}> = new Map();
 
   @Input() distanceToUpdate = 20;
 

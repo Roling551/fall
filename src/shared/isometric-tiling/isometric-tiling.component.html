@@ -29,13 +29,13 @@
 
     @for(additionalGraphic of additionalGraphics; track additionalGraphic) {
         @for(tile of tilesData.entries(); track tile[0]) {
-            @if(additionalGraphic.doRender(tile[1])) {
+            @if(additionalGraphic[1].doRender(tile[1])) {
                 <div
                     class="item"
                     [style.left.px]="getTransformX(tile[0])"
                     [style.top.px]="getTransformY(tile[0])"
                 >
-                    <ng-container *ngComponentOutlet="additionalGraphic.template!; inputs:{tile:tile[1], input:additionalGraphic.input}"></ng-container> 
+                    <ng-container *ngComponentOutlet="additionalGraphic[1].template!; inputs:{tile:tile[1], input:additionalGraphic[1].input}"></ng-container> 
                 </div>
             }
         }

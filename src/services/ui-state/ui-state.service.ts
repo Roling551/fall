@@ -29,7 +29,7 @@ export type UIData = {
   additionalInfo?: any;
   mapAction?: (tile: KeyValuePair<Coordiante, Tile>)=>void;
   cancelButtonAction?: any;
-  tileInfos?: TileInfo[];
+  tileInfos?: Map<string, TileInfo>;
 }
 
 export type UISettings = {
@@ -67,7 +67,7 @@ export class UIStateService {
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
   private _cancelButtonAction = createForceSignal(()=>{})
-  private _tileInfos = createForceSignal<TileInfo[]>([]);
+  private _tileInfos = createForceSignal<Map<string, TileInfo>>(new Map());
   private _additionalInfo = createForceSignal<any>(null);
 
   public mapAction = this._mapAction.get;
@@ -124,7 +124,7 @@ export class UIStateService {
 
     this._additionalInfo.set(ui.additionalInfo)
 
-    this._tileInfos.set(ui.tileInfos || [])
+    this._tileInfos.set(ui.tileInfos || (new Map<string, TileInfo>()))
     this._tileInfos.forceUpdate()
 
     this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))

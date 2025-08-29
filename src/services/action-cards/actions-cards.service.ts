@@ -79,12 +79,12 @@ export class ActionsCardsService {
         const oldCardActions0 = cardActions[0]
         const uis: UIData[] = cardActions.map(x=>{return {} as UIData})
         uis[0]={
-            tileInfos: [{
+            tileInfos: new Map([["mapMarking", {
                 template: MapMarkingComponent,
                 doRender: (tile: KeyValuePair<Coordiante, Tile>)=> {
                     return this.reachableTiles().includes(tile.key.getKey())
                 }
-            }]
+            }]])
         }
         cardActions[0] = (tile: KeyValuePair<Coordiante, Tile>)=>{
             if(this.worldStateService.cities.get().size<1) {
