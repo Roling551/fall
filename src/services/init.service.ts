@@ -13,12 +13,10 @@ import { UIStateService } from "./ui-state/ui-state.service";
 })
 export class InitService {
 
-    constructor(public worldStateService: WorldStateService) {}
-
-    benefits = createForceSignal(new Map<string, Benefit>)
+    constructor(public worldStateService: WorldStateService, public benefitsService: BenefitsService, public uiStateService: UIStateService) {}
 
     init() {
-        this.benefits.get().set(
+        this.benefitsService.initialBenefits.get().set(
           "forest-gathering", 
           {
             type:"unlock-extraction",
@@ -26,7 +24,7 @@ export class InitService {
             getExtraction: possibleExtractions.get("forest-gathering")!
           },
         )
-        this.benefits.get().set(
+        this.benefitsService.initialBenefits.get().set(
           "forest-warship",
           {
             type:"unlock-extraction",

@@ -10,11 +10,14 @@ import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
 import { WorldStateService } from "./world-state/world-state.service";
+import { createForceSignal } from "../util/force-signal";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BenefitsService {
+
+    initialBenefits = createForceSignal(new Map<string, Benefit>)
 
     avaliableEstates = computed(() => {
         const result = new Map<string, (()=>Estate)>();
@@ -23,7 +26,7 @@ export class BenefitsService {
                 result.set(benefit.estateName, benefit.getEstate)
             }
         }
-        for(const [key, benefit] of this.initService.benefits.get()) {
+        for(const [key, benefit] of this.initialBenefits.get()) {
             if(benefit.type === "unlock-estate") {
                 result.set(benefit.estateName, benefit.getEstate)
             }
@@ -43,7 +46,7 @@ export class BenefitsService {
                 result.set(benefit.extractionName, benefit.getExtraction)
             }
         }
-        for(const [key, benefit] of this.initService.benefits.get()) {
+        for(const [key, benefit] of this.initialBenefits.get()) {
             if(benefit.type === "unlock-extraction") {
                 result.set(benefit.extractionName, benefit.getExtraction)
             }
@@ -60,7 +63,6 @@ export class BenefitsService {
     listenForEstateProductionBonuses
     constructor(
         private technologiesService: TechnologiesService,
-        private initService: InitService,
         private worldStateService: WorldStateService
     ) 
     {
@@ -71,7 +73,7 @@ export class BenefitsService {
                     result.set(key, benefit.bonus)
                 }
             }
-            for(const [key, benefit] of this.initService.benefits.get()) {
+            for(const [key, benefit] of this.initialBenefits.get()) {
                 if(benefit.type === "estate-production-bonus") {
                     result.set(key, benefit.bonus)
                 }
