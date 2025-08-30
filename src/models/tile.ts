@@ -2,7 +2,9 @@ import { signal } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../util/force-signal";
 import { MapEntity } from "./map-entity";
 import { Unit } from "./unit";
+import { Resource } from "./resource";
 
+export type ResourceSource = {type: Resource, difficulty: number, amount: number}
 
 export class Tile {
 
@@ -12,7 +14,8 @@ export class Tile {
     units = createForceSignal(new Set<Unit>())
 
     constructor(
-        terrainType: string
+        terrainType: string,
+        resurceSources: ResourceSource[] = []
     ) {
         this.terrainType = signal(terrainType)
     }

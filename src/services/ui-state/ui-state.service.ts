@@ -70,6 +70,8 @@ export class UIStateService {
   private _tileInfos = createForceSignal<Map<string, TileInfo>>(new Map());
   private _additionalInfo = createForceSignal<any>(null);
 
+  private _baseTileInfo = createForceSignal<Map<string, TileInfo>>(new Map());
+
   public mapAction = this._mapAction.get;
   public cancelButtonAction = this._cancelButtonAction.get
   public tileInfos = this._tileInfos.get
@@ -124,7 +126,7 @@ export class UIStateService {
 
     this._additionalInfo.set(ui.additionalInfo)
 
-    this._tileInfos.set(ui.tileInfos || (new Map<string, TileInfo>()))
+    this._tileInfos.set(new Map([...(ui.tileInfos || []), ...this._baseTileInfo.get()]))
     this._tileInfos.forceUpdate()
 
     this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
@@ -152,7 +154,7 @@ export class UIStateService {
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
 
     if(ui.tileInfos) {
-      this._tileInfos.set(ui.tileInfos)
+      this._tileInfos.set(new Map([...(this._ui?.tileInfos || []), ...ui.tileInfos]))
       this._tileInfos.forceUpdate()
     }
 
@@ -244,5 +246,10 @@ export class UIStateService {
       this.battleService.startBattle()
       this.setUIMode(getBattleMode())
     }
+  }
+
+  public setBaseTileInfo(name: string, tileInfo: TileInfo) {
+    this._baseTileInfo.get().set(name, tileInfo)
+    this._baseTileInfo.forceUpdate()
   }
 }

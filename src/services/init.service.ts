@@ -6,6 +6,7 @@ import { BenefitsService } from "./benefits.service";
 import { createForceSignal } from "../util/force-signal";
 import { Benefit } from "../models/benefit";
 import { possibleExtractions } from "../models/possible-extractions";
+import { UIStateService } from "./ui-state/ui-state.service";
 
 @Injectable({
   providedIn: 'root'
