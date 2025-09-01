@@ -59,11 +59,20 @@
 
     constructor() { }
     
+    private getTile() {
+        return new Tile(
+            "ground", 
+            [
+                {type: "oil", difficulty: 0, amount: 10},
+                {type: "water", difficulty: 0, amount: 20},
+            ])
+    }
+
     private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordiante, Tile>> {
         let tiles = new Map<string, KeyValuePair<Coordiante, Tile>>()
         for(let i = 0; i < sizeX; i++) {
         for(let j = 0; j < sizeY; j++) {
-            const tile = {key:new Coordiante(i, j), value:new Tile("ground")}
+            const tile = {key:new Coordiante(i, j), value: this.getTile()}
             tiles.set(tile.key.getKey(), tile)
         } 
         }

@@ -7,6 +7,10 @@ import { createForceSignal } from "../util/force-signal";
 import { Benefit } from "../models/benefit";
 import { possibleExtractions } from "../models/possible-extractions";
 import { UIStateService } from "./ui-state/ui-state.service";
+import { ResourcesInfoComponent } from "../feature/resources-info/resources-info.component";
+import { Coordiante } from "../models/coordinate";
+import { Tile } from "../models/tile";
+import { KeyValuePair } from "../models/key-value-pair";
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +39,10 @@ export class InitService {
         this.worldStateService.tiles.get("1_1")?.value.mapEntity.set(new ExtractionSite("forest", [["berries", 5]]))
         this.worldStateService.tiles.get("1_2")?.value.mapEntity.set(new ExtractionSite("forest", [["berries", 5]]))
         this.worldStateService.tiles.get("2_1")?.value.mapEntity.set(new ExtractionSite("forest", [["berries", 5]]))
+
+        this.uiStateService.setBaseTileInfo("resourcesInfo", {
+            template: ResourcesInfoComponent,
+            doRender: (tile: KeyValuePair<Coordiante, Tile>) => true,
+        })
     }
 }

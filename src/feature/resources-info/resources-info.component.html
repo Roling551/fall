@@ -1,3 +1,7 @@
 <div [style.width.px]="sizeX" [style.height.px]="sizeY">
-    <p [style.margin-top.px]="sizeY/4" [style.font-size.px]="sizeX/8">--</p>
+    <div class="inner-container" [style.margin-top.px]="sizeY/4">
+        @for(resource of resources(); track $index) {
+            <p class="resource" [style.font-size.px]="sizeX/16">{{getText(resource)}}</p>
+        }
+    </div>
 </div>

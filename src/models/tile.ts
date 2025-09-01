@@ -13,11 +13,13 @@ export class Tile {
     belongsTo = createForceSignal<MapEntity|undefined>(undefined)
     units = createForceSignal(new Set<Unit>())
 
+    resourceSources = createForceSignal<ResourceSource[]>([])
+
     constructor(
         terrainType: string,
-        resurceSources: ResourceSource[] = []
+        resourceSources: ResourceSource[] = []
     ) {
         this.terrainType = signal(terrainType)
+        this.resourceSources.set(resourceSources)
     }
-
 }
