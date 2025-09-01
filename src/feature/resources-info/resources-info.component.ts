@@ -27,6 +27,6 @@ export class ResourcesInfoComponent {
     })
 
     getText(resourceSource: ResourceSource){
-        return getResourceSymbol(resourceSource.type) + "-q:" + resourceSource.amount + " d:" + resourceSource.difficulty
+        return getResourceSymbol(resourceSource.type) + "-" + resourceSource.amount + "/" + resourceSource.difficulty
     }
 }
