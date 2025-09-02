@@ -3,6 +3,7 @@ import { createForceSignal, ForceSignal } from "../util/force-signal";
 import { MapEntity } from "./map-entity";
 import { Unit } from "./unit";
 import { Resource } from "./resource";
+import { Coordinate } from "./coordinate";
 
 export type ResourceSource = {type: Resource, difficulty: number, amount: number}
 
@@ -16,6 +17,7 @@ export class Tile {
     resourceSources = createForceSignal<ResourceSource[]>([])
 
     constructor(
+        public coordinate: Coordinate,
         terrainType: string,
         resourceSources: ResourceSource[] = []
     ) {

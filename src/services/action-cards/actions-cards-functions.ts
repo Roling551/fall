@@ -10,7 +10,7 @@ import { WorldStateService } from "../world-state/world-state.service"
 export function getCreateEstateAction(
     worldStateService: WorldStateService,
     turnActorsService: TurnActorsService,
-    getEstate: ()=>Estate
+    getEstate: (tile: Tile)=>Estate
 ) {
     return (tile: KeyValuePair<Coordinate, Tile>)=>{
         if(worldStateService.cities.get().size<1) {

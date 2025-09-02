@@ -36,13 +36,13 @@ export function addOrRemoveTileToCity(
 export function createEstate(
     tile: KeyValuePair<Coordinate, Tile>, 
     cityTile: KeyValuePair<Coordinate, Tile>,
-    getEstate: ()=>Estate,
+    getEstate: (tile: Tile)=>Estate,
     turnActorsService: TurnActorsService,
 ) {
     if(!!tile.value.mapEntity.get() || tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
         return false
     }
-    const estate = getEstate();
+    const estate = getEstate(tile.value);
     tile.value.mapEntity.set(estate)
     turnActorsService.addActor(estate)
     return true
@@ -65,7 +65,7 @@ export function addTileToCityIfAllowed(
 export function addTileToCityAndCreateEstate(
     tile: KeyValuePair<Coordinate, Tile>, 
     cityTile: KeyValuePair<Coordinate, Tile>,
-    getEstate: ()=>Estate,
+    getEstate: (tile: Tile)=>Estate,
     turnActorsService: TurnActorsService,
 ) {
     if(addTileToCityIfAllowed(tile, cityTile)) {

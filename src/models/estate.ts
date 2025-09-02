@@ -4,12 +4,13 @@ import { SignalsGroup } from "../util/signals-group";
 import { EstateProductionBonus } from "./bonus";
 import { MapEntity } from "./map-entity";
 import { TurnActor } from "./turn-actor";
+import { Tile } from "./tile";
 
 export class Estate extends MapEntity implements TurnActor{
 
     readonly type = "estate"
 
-    constructor(public name: string) {
+    constructor(public tile: Tile, public name: string) {
         super(name, 0)
     }
 

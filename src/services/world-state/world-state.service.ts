@@ -62,6 +62,7 @@ export class WorldStateService {
     
     private getTile(coordinate: Coordinate) {
         return new Tile(
+            coordinate,
             "ground", 
             [
                 {type: "oil", difficulty: 0, amount: 10},
