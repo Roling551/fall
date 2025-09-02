@@ -90,14 +90,14 @@ export function getCreateCityUI(worldStateService: WorldStateService):UIData {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Create city"},
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            const gold = worldStateService.resources.get().get("gold")!
+            const gold = worldStateService.resources.get().get("oil")!
             if(gold < cityPrice) {
                 return
             }
             if(!!tile.value.mapEntity.get() || !!tile.value.belongsTo.get()) {
                 return
             }
-            worldStateService.resources.get().set("gold", gold-cityPrice)
+            worldStateService.resources.get().set("oil", gold-cityPrice)
             worldStateService.resources.forceUpdate()
             const city = new City()
             tile.value.mapEntity.set(city);

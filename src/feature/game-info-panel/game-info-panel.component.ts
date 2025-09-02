@@ -23,7 +23,7 @@ export class GameInfoPanelComponent {
   })
 
   public goldText = computed(()=> {
-    return "Gold: " + this.worldStateService.resources.get().get("gold")
+    return "Oil: " + this.worldStateService.resources.get().get("oil")
   })
 
   onNextTurn() {

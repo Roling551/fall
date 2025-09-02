@@ -9,6 +9,7 @@ import { Unit } from '../../models/unit';
 import { dijkstra, dijkstraAllNodes } from '../../util/path-finding';
 import { TileDirection } from '../../models/tile-direction';
 import { Benefit } from '../../models/benefit';
+import { Resource } from '../../models/resource';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,7 @@ export class WorldStateService {
     sizeY = 10
 
     tiles = this.getTiles(this.sizeX, this.sizeY)
-    resources = createForceSignal(new Map([["gold",25]]))
+    resources = createForceSignal<Map<Resource,number>>(new Map([["oil",25]]))
     cities = createForceSignal(new Map<string, ForceSignal<City>>());
 
     findPath(start: KeyValuePair<Coordiante, Tile>, end: KeyValuePair<Coordiante, Tile>) {
