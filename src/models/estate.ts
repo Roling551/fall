@@ -10,11 +10,11 @@ export class Estate extends MapEntity implements TurnActor{
 
     readonly type = "estate"
 
-    constructor(public tile: Tile, public name: string) {
+    constructor(public tile: Tile, public name: string, public action: (tile: Tile)=>void) {
         super(name, 0)
     }
 
     public turnAction() {
-        console.log("turn action: " + this.name)
+        this.action(this.tile)
     }
 }

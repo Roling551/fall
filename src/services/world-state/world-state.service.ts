@@ -65,7 +65,8 @@ export class WorldStateService {
             coordinate,
             "ground", 
             [
-                {type: "oil", difficulty: 0, amount: 10},
+                {type: "oil", difficulty: 0, amount: 5},
+                {type: "oil", difficulty: 1, amount: 5},
                 {type: "water", difficulty: 0, amount: 20},
             ])
     }

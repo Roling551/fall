@@ -50,3 +50,20 @@ export function mapContainsMap(map1: Map<any, number>, map2: Map<any, number>) {
     }
     return true
 }
+
+export function addToMapValue(map: Map<any, number>, key:any, addent: number) {
+    if(!map.has(key)) {
+        return false
+    }
+    map.set(key, map.get(key)!+addent)
+    return true
+}
+
+export function withdrawFromMapValue(map: Map<any, number>, key: any, max: number) {
+    if(!map.has) {
+        return 0
+    }
+    const amountToWithdraw = Math.max(Math.min(map.get(key)!, max),0)
+    addToMapValue(map, key, -amountToWithdraw)
+    return amountToWithdraw
+}
