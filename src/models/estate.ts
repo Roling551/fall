@@ -9,15 +9,9 @@ export class Estate extends MapEntity implements TurnActor{
 
     readonly type = "estate"
 
-    constructor(public name: string, public producedList: Map<string, number>) {
+    constructor(public name: string) {
         super(name, 0)
     }
-
-    override produced = computed(()=> {
-        const produced = new Map(this.producedList)
-        addExistingNumericalValues(produced, new Map(super.baseProduced()))
-        return produced
-    })
 
     public turnAction() {
         console.log("turn action: " + this.name)
