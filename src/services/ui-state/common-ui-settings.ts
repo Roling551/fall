@@ -23,6 +23,7 @@ import { Extraction } from "../../models/extraction"
 import { BenefitsService } from "../benefits.service"
 import { addOrRemoveTileToCity, createEstate } from "../world-state/functions"
 import { TurnActorsService } from "../turn-actors.service"
+import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component"
 
 
 export function getTileUI(
@@ -43,25 +44,29 @@ export function getTileUI(
             }
             return clickedTile.value.belongsTo.get() === tile.value.mapEntity.get()  
         }
-        tileInfoInput = {
-            getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
-                return computed(()=>[...worldStateService.getNeighborTiles(tileInfoIsAbout.key).entries()].
-                    filter(keyV=>keyV[1].value.belongsTo.get() !== tile.value.mapEntity.get() &&
-                    keyV[1].key.getKey() !== tile.key.getKey()).
-                    map(keyV=>keyV[0]))
-            }
-        }
+        // tileInfoInput = {
+        //     getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
+        //         return computed(()=>[...worldStateService.getNeighborTiles(tileInfoIsAbout.key).entries()].
+        //             filter(keyV=>keyV[1].value.belongsTo.get() !== tile.value.mapEntity.get() &&
+        //             keyV[1].key.getKey() !== tile.key.getKey()).
+        //             map(keyV=>keyV[0]))
+        //     }
+        // }
     }
 
     return {
         sideComponent:TilePanelComponent, 
         sideComponentInputs:{tile, selectedUnits},
         additionalInfo: {tile},
-        tileInfos: new Map([["border", {
-            template: BorderComponent,
-            doRender: (doRenderTileInfoFunction || ((tile: KeyValuePair<Coordinate, Tile>)=>{return false})),
-            input: tileInfoInput
-        }]])
+        tileInfos: 
+        new Map([
+            // [
+            //     "border", {
+            //     template: BorderComponent,
+            //     doRender: (doRenderTileInfoFunction || ((tile: KeyValuePair<Coordinate, Tile>)=>{return false})),
+            //     input: tileInfoInput
+            // }]
+        ])
     }
 }
 
@@ -75,10 +80,10 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
                 }
                 worldStateService.removeCity(tile)
             },
-        tileInfos: new Map([["mapMarking", {
-            template: MapMarkingComponent,
+        tileInfos: new Map([["unavaliable", {
+            template: UnavaliableComponent,
             doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
-                return !tile.value?.mapEntity.get()
+                return !!tile.value?.mapEntity.get()
             }
         }]])
     }
@@ -104,10 +109,10 @@ export function getCreateCityUI(worldStateService: WorldStateService):UIData {
             const citySignal = tile.value.mapEntity as unknown as ForceSignal<City>
             worldStateService.addCity(tile.key.getKey(), citySignal)
         },
-        tileInfos: new Map([["mapMarking", {
-            template: MapMarkingComponent,
+        tileInfos: new Map([["unavaliable", {
+            template: UnavaliableComponent,
             doRender: (tile)=> {
-                return !tile.value?.mapEntity.get()
+                return !!tile.value?.mapEntity.get()
             }
         }]])
     }

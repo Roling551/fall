@@ -1,0 +1,11 @@
+img {
+    image-rendering: pixelated;
+    overflow: hidden;
+}
+
+.tile-container {
+    position: absolute;
+    * {
+        position: absolute;
+    }
+}

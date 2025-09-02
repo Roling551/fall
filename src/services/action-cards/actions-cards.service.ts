@@ -21,6 +21,7 @@ import { City } from "../../models/city";
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
 import { TurnActorsService } from "../turn-actors.service";
 import { EstateFactoryService } from "../estate-factory.service";
+import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
 
 @Injectable({
   providedIn: 'root'
@@ -82,10 +83,10 @@ export class ActionsCardsService {
         const oldCardActions0 = cardActions[0]
         const uis: UIData[] = cardActions.map(x=>{return {} as UIData})
         uis[0]={
-            tileInfos: new Map([["mapMarking", {
-                template: MapMarkingComponent,
+            tileInfos: new Map([["unavaliable", {
+                template: UnavaliableComponent,
                 doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
-                    return this.reachableTiles().includes(tile.key.getKey())
+                    return !this.reachableTiles().includes(tile.key.getKey())
                 }
             }]])
         }
