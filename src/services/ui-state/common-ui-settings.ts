@@ -22,6 +22,7 @@ import { ExtractionInfoComponent } from "../../feature/extraction-info/extractio
 import { Extraction } from "../../models/extraction"
 import { BenefitsService } from "../benefits.service"
 import { addOrRemoveTileToCity, createEstate } from "../world-state/functions"
+import { TurnActorsService } from "../turn-actors.service"
 
 
 export function getTileUI(
@@ -123,14 +124,14 @@ export function getAddTileToCityAction(
 }
 
 export function getCreateEstateAction(
-    benefitsService: BenefitsService,
+    turnActorsService: TurnActorsService,
     cityTile: KeyValuePair<Coordiante, Tile>,
     getEstate: ()=>Estate,
     estateName: string
 ):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
-            createEstate(tile, cityTile, getEstate, benefitsService)
+            createEstate(tile, cityTile, getEstate, turnActorsService)
         },
         additionalInfo: {currentAction: "createEstateAction-" + estateName},
     }

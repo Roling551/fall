@@ -19,6 +19,7 @@ import { getCreateEstateAction } from "./actions-cards-functions";
 import { canAffordResources, spendResources } from "../world-state/functions";
 import { City } from "../../models/city";
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
+import { TurnActorsService } from "../turn-actors.service";
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class ActionsCardsService {
         private uiStateService: UIStateService,
         private charactersCardService: CharactersCardsService,
         private worldStateService: WorldStateService,
-        private benefitService: BenefitsService
+        private turnActorsService: TurnActorsService,
     ) {
         const cards = [] 
         cards.push(this.exampleCard())
@@ -63,7 +64,7 @@ export class ActionsCardsService {
             "Create estate",
             [
                 (tile: KeyValuePair<Coordiante, Tile>)=> {
-                    return getCreateEstateAction(this.worldStateService, this.benefitService, () => new Estate("farm", new Map([["food",2]])))(tile)
+                    return getCreateEstateAction(this.worldStateService, this.turnActorsService, () => new Estate("farm", new Map([["food",2]])))(tile)
                 }
             ],
             new Map([["gold", 10]])

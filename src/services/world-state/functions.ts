@@ -5,6 +5,7 @@ import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
 import { mapContainsMap, substractNumericalValuesFunctional } from "../../util/map-functions"
 import { BenefitsService } from "../benefits.service"
+import { TurnActorsService } from "../turn-actors.service"
 import { WorldStateService } from "./world-state.service"
 
 export function addOrRemoveTileToCity(
@@ -36,14 +37,14 @@ export function createEstate(
     tile: KeyValuePair<Coordiante, Tile>, 
     cityTile: KeyValuePair<Coordiante, Tile>,
     getEstate: ()=>Estate,
-    benefitsService: BenefitsService,
+    turnActorsService: TurnActorsService,
 ) {
     if(!!tile.value.mapEntity.get() || tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
         return false
     }
     const estate = getEstate();
-    estate.bonus = benefitsService.listenForEstateProductionBonuses(estate)
     tile.value.mapEntity.set(estate)
+    turnActorsService.addActor(estate)
     return true
 }
 
@@ -65,10 +66,10 @@ export function addTileToCityAndCreateEstate(
     tile: KeyValuePair<Coordiante, Tile>, 
     cityTile: KeyValuePair<Coordiante, Tile>,
     getEstate: ()=>Estate,
-    benefitsService: BenefitsService,
+    turnActorsService: TurnActorsService,
 ) {
     if(addTileToCityIfAllowed(tile, cityTile)) {
-        return createEstate(tile, cityTile, getEstate, benefitsService)
+        return createEstate(tile, cityTile, getEstate, turnActorsService)
     }
     return false
 }

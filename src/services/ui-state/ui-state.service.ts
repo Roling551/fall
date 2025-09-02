@@ -14,6 +14,7 @@ import { BattleService } from "../battle.service";
 import { Extraction } from "../../models/extraction";
 import { BenefitsService } from "../benefits.service";
 import { skip } from "rxjs";
+import { TurnActorsService } from "../turn-actors.service";
 
 export type UIModeName = "main" | "battle"
 
@@ -83,7 +84,8 @@ export class UIStateService {
     public worldStateService: WorldStateService,
     public bonusesService: BonusesService,
     public benefitsService: BenefitsService,
-    public battleService: BattleService
+    public battleService: BattleService,
+    public turnActorsService: TurnActorsService,
   ) {}
 
   setSideContainerRef(vcRef: ViewContainerRef) {
@@ -223,7 +225,7 @@ export class UIStateService {
     addTileToCity: () => {
       this.setUI(getAddTileToCityAction(this._additionalInfo.get()["tile"]))},
     createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
-      this.setUI(getCreateEstateAction(this.benefitsService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
+      this.setUI(getCreateEstateAction(this.turnActorsService, this._additionalInfo.get()["tile"], getBuilding, buildingName))},
     removeEstate: () => {
       this.setUI(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     addExtraction: (extraction: Extraction) => {

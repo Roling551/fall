@@ -1,19 +1,19 @@
-    import { computed, Injectable, signal } from '@angular/core';
-    import { Tile } from '../../models/tile';
-    import { Coordiante } from '../../models/coordinate';
-    import { KeyValuePair } from '../../models/key-value-pair';
-    import { createForceSignal, ForceSignal } from '../../util/force-signal';
-    import { City } from '../../models/city';
-    import { addExistingNumericalValues } from '../../util/map-functions';
-    import { Unit } from '../../models/unit';
-    import { dijkstra, dijkstraAllNodes } from '../../util/path-finding';
-    import { TileDirection } from '../../models/tile-direction';
-    import { Benefit } from '../../models/benefit';
+import { computed, Injectable, signal } from '@angular/core';
+import { Tile } from '../../models/tile';
+import { Coordiante } from '../../models/coordinate';
+import { KeyValuePair } from '../../models/key-value-pair';
+import { createForceSignal, ForceSignal } from '../../util/force-signal';
+import { City } from '../../models/city';
+import { addExistingNumericalValues } from '../../util/map-functions';
+import { Unit } from '../../models/unit';
+import { dijkstra, dijkstraAllNodes } from '../../util/path-finding';
+import { TileDirection } from '../../models/tile-direction';
+import { Benefit } from '../../models/benefit';
 
-    @Injectable({
+@Injectable({
     providedIn: 'root'
-    })
-    export class WorldStateService {
+})
+export class WorldStateService {
     sizeX = 10
     sizeY = 10
 
@@ -50,9 +50,9 @@
 
     canNextTurn = computed(()=>{
         for (const [coordinate, city] of this.cities.get().entries()) {
-        if(!city.get().canNextTurn()) {
-            return false;
-        }
+            if(!city.get().canNextTurn()) {
+                return false;
+            }
         }
         return true;
     })

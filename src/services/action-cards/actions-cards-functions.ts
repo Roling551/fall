@@ -3,12 +3,13 @@ import { Estate } from "../../models/estate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
 import { BenefitsService } from "../benefits.service"
+import { TurnActorsService } from "../turn-actors.service"
 import { addTileToCityAndCreateEstate, createEstate } from "../world-state/functions"
 import { WorldStateService } from "../world-state/world-state.service"
 
 export function getCreateEstateAction(
     worldStateService: WorldStateService,
-    benefitsService: BenefitsService,
+    turnActorsService: TurnActorsService,
     getEstate: ()=>Estate
 ) {
     return (tile: KeyValuePair<Coordiante, Tile>)=>{
@@ -20,6 +21,6 @@ export function getCreateEstateAction(
             city = worldStateService.tiles.get(city_[0])
             break
         }
-        return addTileToCityAndCreateEstate(tile, city!, getEstate, benefitsService)
+        return addTileToCityAndCreateEstate(tile, city!, getEstate, turnActorsService)
     }
 }

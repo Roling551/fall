@@ -46,9 +46,10 @@ export class City extends MapEntity {
     })
 
     canNextTurn = computed(()=>{
-        return this.produced().get("authority")! >= this.produced().get("authority-need")! 
-            &&
-        this.produced().get("workers")! >= this.produced().get("workers-need")!
+        return true
+        // return this.produced().get("authority")! >= this.produced().get("authority-need")! 
+        //     &&
+        // this.produced().get("workers")! >= this.produced().get("workers-need")!
     })
 
     nextTurn() {
