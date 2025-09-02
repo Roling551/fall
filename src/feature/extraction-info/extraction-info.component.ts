@@ -1,6 +1,6 @@
 import { Component, computed, Input } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { StyleVariablesService } from '../../services/style-variables.service';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
@@ -14,7 +14,7 @@ import { ExtractionSite, ExtractionSiteItem } from '../../models/extraction-site
   styleUrl: './extraction-info.component.scss'
 })
 export class ExtractionInfoComponent {
-  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>;
+  @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>;
   @Input({required: true}) input!: any;
 
   sizeX

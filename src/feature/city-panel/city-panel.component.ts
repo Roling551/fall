@@ -3,7 +3,7 @@ import { City } from '../../models/city';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { ForceSignal } from '../../util/force-signal';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
 import { Building } from '../../models/building';
@@ -23,7 +23,7 @@ import { OneTimeJob } from '../../models/one-time-job';
 })
 export class CityPanelComponent{
   @Input({required: true}) city!: ForceSignal<City>;
-  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
+  @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>
 
   public avaliableEstates
   public avaliableExtractions

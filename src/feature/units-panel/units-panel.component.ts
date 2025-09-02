@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, computed, Input, OnInit } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { Unit } from '../../models/unit';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
@@ -20,7 +20,7 @@ export class UnitsPanelComponent{
     this.selectedUnitsSignal = this.selectedUnitsServeice.selectedUnitsSignal
   }
 
-  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
+  @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>
 
   units = computed(()=>{
     return this.tile.value.units.get()

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, HostListener, Input, input, OnInit, output, signal, TemplateRef, Type } from '@angular/core';
 import panzoom, { PanZoom, Transform } from 'panzoom';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 
 
 @Component({
@@ -147,6 +147,6 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   }
 
   public getKeyValuePair(x: number, y: number, value: T) {
-    return {key: new Coordiante(x,y), value}
+    return {key: new Coordinate(x,y), value}
   }
 }

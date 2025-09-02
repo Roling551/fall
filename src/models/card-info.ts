@@ -1,4 +1,4 @@
-import { Coordiante } from "./coordinate";
+import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
 import { Tile } from "./tile";
 

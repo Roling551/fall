@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { EnemyUnit, Unit } from "../models/unit";
 import { Tile } from "../models/tile";
 import { KeyValuePair } from "../models/key-value-pair";
-import { Coordiante } from "../models/coordinate";
+import { Coordinate } from "../models/coordinate";
 import { WorldStateService } from "./world-state/world-state.service";
 import { createForceSignal } from "../util/force-signal";
 import { UIStateService } from "./ui-state/ui-state.service";
@@ -16,17 +16,17 @@ export class BattleService {
 
     constructor(private worldStateService: WorldStateService) {}
 
-    unitsPosition = createForceSignal(new Map<Unit, KeyValuePair<Coordiante, Tile>>())
-    enemyArmies = createForceSignal(new Map<Army, KeyValuePair<Coordiante, Tile>>)
+    unitsPosition = createForceSignal(new Map<Unit, KeyValuePair<Coordinate, Tile>>())
+    enemyArmies = createForceSignal(new Map<Army, KeyValuePair<Coordinate, Tile>>)
 
-    addUnit(unit: Unit, tile: KeyValuePair<Coordiante, Tile>) {
+    addUnit(unit: Unit, tile: KeyValuePair<Coordinate, Tile>) {
         tile.value.units.get().add(unit)
         tile.value.units.forceUpdate()
         this.unitsPosition.get().set(unit, tile)
         this.unitsPosition.forceUpdate()
     }
 
-    changeUnitPosition(unit: Unit, previousTile: KeyValuePair<Coordiante, Tile>, destinationTile: KeyValuePair<Coordiante, Tile>,) {
+    changeUnitPosition(unit: Unit, previousTile: KeyValuePair<Coordinate, Tile>, destinationTile: KeyValuePair<Coordinate, Tile>,) {
         previousTile.value.units.get().delete(unit)
         previousTile.value.units.forceUpdate()
         destinationTile.value.units.get().add(unit)
@@ -34,13 +34,13 @@ export class BattleService {
         this.unitsPosition.get().set(unit, destinationTile)
     }
 
-    changeUnitsPosition(units: Set<Unit>, previousTile: KeyValuePair<Coordiante, Tile>, destinationTile: KeyValuePair<Coordiante, Tile>,) {
+    changeUnitsPosition(units: Set<Unit>, previousTile: KeyValuePair<Coordinate, Tile>, destinationTile: KeyValuePair<Coordinate, Tile>,) {
         for(const unit of units) {
             this.changeUnitPosition(unit, previousTile, destinationTile)
         }
     }
 
-    moveUnits(units: Set<Unit>, previousTile: KeyValuePair<Coordiante, Tile>, path: string[]) {
+    moveUnits(units: Set<Unit>, previousTile: KeyValuePair<Coordinate, Tile>, path: string[]) {
         if(path.length==0) {
             return previousTile
         }
@@ -70,7 +70,7 @@ export class BattleService {
         return previousTile
     }
 
-    encounter(units: Set<Unit>, tile: KeyValuePair<Coordiante, Tile>) {
+    encounter(units: Set<Unit>, tile: KeyValuePair<Coordinate, Tile>) {
         const anyUnit = getFirstOfSet(units)
         if(!anyUnit.isEnemyOf(tile.value.units.get())) {
             return
@@ -109,7 +109,7 @@ export class BattleService {
         }
     }
 
-    deleteUnit(unit: Unit, tile: KeyValuePair<Coordiante, Tile>) {
+    deleteUnit(unit: Unit, tile: KeyValuePair<Coordinate, Tile>) {
         tile.value.units.get().delete(unit)
         tile.value.units.forceUpdate()
         this.unitsPosition.get().delete(unit)

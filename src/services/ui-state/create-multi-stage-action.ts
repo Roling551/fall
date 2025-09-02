@@ -1,19 +1,19 @@
-import { Coordiante } from "../../models/coordinate";
+import { Coordinate } from "../../models/coordinate";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Tile } from "../../models/tile";
 import { UIData, UIStateService } from "./ui-state.service";
 
 export function createMultiStageAction(
     uiStateService: UIStateService,
-    stateActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[],
+    stateActions: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean)[],
     cancelButtonAction: ()=>void,
     afterFinishAction: ()=> void,
     uis?: UIData[])
 {
-    const actions: ((tile: KeyValuePair<Coordiante, Tile>) => void)[] = new Array(stateActions.length)
+    const actions: ((tile: KeyValuePair<Coordinate, Tile>) => void)[] = new Array(stateActions.length)
     const newUIs: UIData[] = new Array(stateActions.length)
     
-    actions[stateActions.length-1] = (tile: KeyValuePair<Coordiante, Tile>) => {
+    actions[stateActions.length-1] = (tile: KeyValuePair<Coordinate, Tile>) => {
         if(stateActions[stateActions.length-1](tile)) {
             afterFinishAction()
             uiStateService.cancel()
@@ -25,7 +25,7 @@ export function createMultiStageAction(
             mapAction: actions[i+1],
             cancelButtonAction
         }
-        actions[i] = (tile: KeyValuePair<Coordiante, Tile>) => {
+        actions[i] = (tile: KeyValuePair<Coordinate, Tile>) => {
             if(stateActions[i](tile)) {
                 uiStateService.setUI(newUIs[i], {skipBack: true, cantIterrupt: true, cantInterruptException: [newUIs[i+1]]})
             }

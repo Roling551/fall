@@ -1,4 +1,4 @@
-import { Coordiante } from "../../models/coordinate"
+import { Coordinate } from "../../models/coordinate"
 import { Estate } from "../../models/estate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
@@ -12,7 +12,7 @@ export function getCreateEstateAction(
     turnActorsService: TurnActorsService,
     getEstate: ()=>Estate
 ) {
-    return (tile: KeyValuePair<Coordiante, Tile>)=>{
+    return (tile: KeyValuePair<Coordinate, Tile>)=>{
         if(worldStateService.cities.get().size<1) {
             return false
         }

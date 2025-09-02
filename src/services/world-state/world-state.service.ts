@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { Tile } from '../../models/tile';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { createForceSignal, ForceSignal } from '../../util/force-signal';
 import { City } from '../../models/city';
@@ -18,27 +18,27 @@ export class WorldStateService {
     sizeX = 10
     sizeY = 10
 
-    tiles = this.getTiles(this.sizeX, this.sizeY)
+    tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.getTiles(this.sizeX, this.sizeY)
     resources = createForceSignal<Map<Resource,number>>(new Map([["oil",25]]))
     cities = createForceSignal(new Map<string, ForceSignal<City>>());
 
-    findPath(start: KeyValuePair<Coordiante, Tile>, end: KeyValuePair<Coordiante, Tile>) {
+    findPath(start: KeyValuePair<Coordinate, Tile>, end: KeyValuePair<Coordinate, Tile>) {
         return this.findPathByKey(start.key.getKey(), end.key.getKey())
     }
 
-    doesCoordinateExists(coordinate: Coordiante) {
+    doesCoordinateExists(coordinate: Coordinate) {
         return coordinate.x>0 && coordinate.x<this.sizeX-1 && coordinate.y>0 && coordinate.y<this.sizeY-1
     }
 
-    getNeighborTiles(coordinate: Coordiante): Map<TileDirection, KeyValuePair<Coordiante, Tile>> {
-        const neighbors = new Map<TileDirection, KeyValuePair<Coordiante, Tile>>()
+    getNeighborTiles(coordinate: Coordinate): Map<TileDirection, KeyValuePair<Coordinate, Tile>> {
+        const neighbors = new Map<TileDirection, KeyValuePair<Coordinate, Tile>>()
         return new Map(coordinate.getNeighborsAndDirections(this.sizeX, this.sizeY).map(cd=>[cd.direction, this.tiles.get(cd.coordinate.getKey())!]))
     }
 
     getEdgeWeight = (from: string, to: string) => 1
 
     getNeighbors = (node: string) => {
-        return Coordiante.fromKey(node).getNeighbors(this.sizeX, this.sizeY).map(coordiante=>coordiante.getKey())
+        return Coordinate.fromKey(node).getNeighbors(this.sizeX, this.sizeY).map(coordiante=>coordiante.getKey())
     }
 
     findPathByKey(start: string, end: string) {
@@ -60,7 +60,7 @@ export class WorldStateService {
 
     constructor() { }
     
-    private getTile() {
+    private getTile(coordinate: Coordinate) {
         return new Tile(
             "ground", 
             [
@@ -69,11 +69,12 @@ export class WorldStateService {
             ])
     }
 
-    private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordiante, Tile>> {
-        let tiles = new Map<string, KeyValuePair<Coordiante, Tile>>()
+    private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordinate, Tile>> {
+        let tiles = new Map<string, KeyValuePair<Coordinate, Tile>>()
         for(let i = 0; i < sizeX; i++) {
         for(let j = 0; j < sizeY; j++) {
-            const tile = {key:new Coordiante(i, j), value: this.getTile()}
+            const coordinate = new Coordinate(i, j)
+            const tile = {key:coordinate, value: this.getTile(coordinate)}
             tiles.set(tile.key.getKey(), tile)
         } 
         }
@@ -95,7 +96,7 @@ export class WorldStateService {
         this.cities.forceUpdate()
     }
 
-    public removeCity(tile: KeyValuePair<Coordiante, Tile>) {
+    public removeCity(tile: KeyValuePair<Coordinate, Tile>) {
         if(tile.value.mapEntity && tile.value.mapEntity.get()?.type === "city") {
         const city = tile.value.mapEntity.get() as City
         for(const [key, value] of city.ownedTiles.get().entries()) {

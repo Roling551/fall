@@ -1,5 +1,5 @@
 import { BattleService } from "../services/battle.service"
-import { Coordiante } from "./coordinate"
+import { Coordinate } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Tile } from "./tile"
 
@@ -20,15 +20,15 @@ export abstract class Unit {
         return false
     }
 
-    abstract endBattle(battleService: BattleService, tile: KeyValuePair<Coordiante, Tile>): void;
+    abstract endBattle(battleService: BattleService, tile: KeyValuePair<Coordinate, Tile>): void;
 }
 
 export class PlayerUnit extends Unit{
-    constructor(name:string, speed: number, public stationedTile: KeyValuePair<Coordiante, Tile>) {
+    constructor(name:string, speed: number, public stationedTile: KeyValuePair<Coordinate, Tile>) {
         super(name, speed, true)
     }
 
-    override endBattle(battleService: BattleService, tile: KeyValuePair<Coordiante, Tile>): void {
+    override endBattle(battleService: BattleService, tile: KeyValuePair<Coordinate, Tile>): void {
         battleService.changeUnitPosition(this, tile, this.stationedTile)
     }
 }
@@ -38,7 +38,7 @@ export class EnemyUnit extends Unit{
         super(name, speed, false)
     }
 
-    override endBattle(battleService: BattleService, tile: KeyValuePair<Coordiante, Tile>): void {
+    override endBattle(battleService: BattleService, tile: KeyValuePair<Coordinate, Tile>): void {
         battleService.deleteUnit(this, tile)
     }
 }

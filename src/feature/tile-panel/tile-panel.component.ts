@@ -1,6 +1,6 @@
 import { Component, computed, Input } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { CityPanelComponent } from '../city-panel/city-panel.component';
 import { ForceSignal } from '../../util/force-signal';
@@ -15,7 +15,7 @@ import { Unit } from '../../models/unit';
   styleUrl: './tile-panel.component.scss'
 })
 export class TilePanelComponent {
-  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
+  @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>
 
   entityType = computed(()=>{
     return this.tile.value.mapEntity.get()?.type || "none"

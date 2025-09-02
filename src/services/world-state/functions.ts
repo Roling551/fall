@@ -1,5 +1,5 @@
 import { City } from "../../models/city"
-import { Coordiante } from "../../models/coordinate"
+import { Coordinate } from "../../models/coordinate"
 import { Estate } from "../../models/estate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
@@ -9,8 +9,8 @@ import { TurnActorsService } from "../turn-actors.service"
 import { WorldStateService } from "./world-state.service"
 
 export function addOrRemoveTileToCity(
-    tile: KeyValuePair<Coordiante, Tile>, 
-    cityTile: KeyValuePair<Coordiante, Tile>
+    tile: KeyValuePair<Coordinate, Tile>, 
+    cityTile: KeyValuePair<Coordinate, Tile>
 ) {
     if(tile.value.mapEntity.get()?.type === "city") {
         return
@@ -34,8 +34,8 @@ export function addOrRemoveTileToCity(
 }
 
 export function createEstate(
-    tile: KeyValuePair<Coordiante, Tile>, 
-    cityTile: KeyValuePair<Coordiante, Tile>,
+    tile: KeyValuePair<Coordinate, Tile>, 
+    cityTile: KeyValuePair<Coordinate, Tile>,
     getEstate: ()=>Estate,
     turnActorsService: TurnActorsService,
 ) {
@@ -49,8 +49,8 @@ export function createEstate(
 }
 
 export function addTileToCityIfAllowed(
-    tile: KeyValuePair<Coordiante, Tile>, 
-    cityTile: KeyValuePair<Coordiante, Tile>
+    tile: KeyValuePair<Coordinate, Tile>, 
+    cityTile: KeyValuePair<Coordinate, Tile>
 ) {
     if(tile.value.mapEntity.get()) {
         return false
@@ -63,8 +63,8 @@ export function addTileToCityIfAllowed(
 }
 
 export function addTileToCityAndCreateEstate(
-    tile: KeyValuePair<Coordiante, Tile>, 
-    cityTile: KeyValuePair<Coordiante, Tile>,
+    tile: KeyValuePair<Coordinate, Tile>, 
+    cityTile: KeyValuePair<Coordinate, Tile>,
     getEstate: ()=>Estate,
     turnActorsService: TurnActorsService,
 ) {

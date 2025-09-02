@@ -3,7 +3,7 @@ import { CardInfo } from "./card-info";
 import { createForceSignal } from "../util/force-signal";
 import { shuffleArray } from "../util/array-functions";
 import { KeyValuePair } from "./key-value-pair";
-import { Coordiante } from "./coordinate";
+import { Coordinate } from "./coordinate";
 import { Tile } from "./tile";
 
 export class CardsHand<T extends CardInfo> {

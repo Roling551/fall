@@ -1,6 +1,6 @@
 import { computed, signal } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../util/force-signal"
-import { Coordiante } from "./coordinate"
+import { Coordinate } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Tile } from "./tile"
 import { MapEntity } from "./map-entity";
@@ -18,7 +18,7 @@ export class City extends MapEntity {
 
     readonly type = "city"
 
-    ownedTiles = createForceSignal(new Map<string, KeyValuePair<Coordiante, Tile>>());
+    ownedTiles = createForceSignal(new Map<string, KeyValuePair<Coordinate, Tile>>());
 
     extractions = createForceSignal(new Map<string, Extraction>())
 
@@ -26,12 +26,12 @@ export class City extends MapEntity {
 
     public jobs = createForceSignal(new Set<OneTimeJob>())
 
-    addOwnedTile(tile: KeyValuePair<Coordiante, Tile>) {
+    addOwnedTile(tile: KeyValuePair<Coordinate, Tile>) {
         this.ownedTiles.get().set(tile.key.getKey(), tile)
         this.ownedTiles.forceUpdate()
     }
 
-    removeOwnedTile(tile: KeyValuePair<Coordiante, Tile>) {
+    removeOwnedTile(tile: KeyValuePair<Coordinate, Tile>) {
         this.ownedTiles.get().delete(tile.key.getKey())
         this.ownedTiles.forceUpdate()
     }

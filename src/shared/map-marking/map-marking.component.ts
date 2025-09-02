@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { StyleVariablesService } from '../../services/style-variables.service';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 
 @Component({
@@ -12,7 +12,7 @@ import { Tile } from '../../models/tile';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapMarkingComponent {
-  @Input() tile?: KeyValuePair<Coordiante, Tile>;
+  @Input() tile?: KeyValuePair<Coordinate, Tile>;
   @Input({required: true}) input!: any;
 
   sizeX

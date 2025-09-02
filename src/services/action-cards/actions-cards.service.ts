@@ -4,7 +4,7 @@ import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
 import { UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
-import { Coordiante } from "../../models/coordinate";
+import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { CardsHand } from "../../models/cards-hand";
 import { CharactersCardsService } from "../characters-cards.service";
@@ -54,9 +54,9 @@ export class ActionsCardsService {
        return this.createMultiStageActionCard(
             "c", 
             [
-                (tile: KeyValuePair<Coordiante, Tile>)=>{console.log("t1"); return tile.key.getKey()=="0_0"},
-                (tile: KeyValuePair<Coordiante, Tile>)=>{console.log("t2"); return tile.key.getKey()=="0_0"},
-                (tile: KeyValuePair<Coordiante, Tile>)=>{console.log("t3"); return tile.key.getKey()=="0_0"},
+                (tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t1"); return tile.key.getKey()=="0_0"},
+                (tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t2"); return tile.key.getKey()=="0_0"},
+                (tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t3"); return tile.key.getKey()=="0_0"},
             ]
             )
     }
@@ -65,7 +65,7 @@ export class ActionsCardsService {
         return this.createMultiStageActionCard(
             "Create estate",
             [
-                (tile: KeyValuePair<Coordiante, Tile>)=> {
+                (tile: KeyValuePair<Coordinate, Tile>)=> {
                     return getCreateEstateAction(this.worldStateService, this.turnActorsService, this.estateFactoryService.getCreateEstateFunction())(tile)
                 }
             ],
@@ -75,7 +75,7 @@ export class ActionsCardsService {
 
     createMultiStageActionCard(
         name: string, 
-        cardActions: ((tile: KeyValuePair<Coordiante, Tile>)=>boolean)[],
+        cardActions: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean)[],
         price?: Map<string, number>,
     ) {
         const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
@@ -84,12 +84,12 @@ export class ActionsCardsService {
         uis[0]={
             tileInfos: new Map([["mapMarking", {
                 template: MapMarkingComponent,
-                doRender: (tile: KeyValuePair<Coordiante, Tile>)=> {
+                doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
                     return this.reachableTiles().includes(tile.key.getKey())
                 }
             }]])
         }
-        cardActions[0] = (tile: KeyValuePair<Coordiante, Tile>)=>{
+        cardActions[0] = (tile: KeyValuePair<Coordinate, Tile>)=>{
             if(this.worldStateService.cities.get().size<1) {
                 return false
             }

@@ -1,4 +1,4 @@
-import { Coordiante } from "../../models/coordinate"
+import { Coordinate } from "../../models/coordinate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
 import { UIData, UIStateService } from "./ui-state.service"
@@ -26,7 +26,7 @@ import { TurnActorsService } from "../turn-actors.service"
 
 
 export function getTileUI(
-    tile: KeyValuePair<Coordiante, Tile>,
+    tile: KeyValuePair<Coordinate, Tile>,
     worldStateService: WorldStateService,
     selectedUnits?: Set<Unit>
 ):UIData {
@@ -34,7 +34,7 @@ export function getTileUI(
     let doRenderTileInfoFunction
     let tileInfoInput
     if(tile.value.mapEntity.get()?.type === "city") {
-        doRenderTileInfoFunction = (clickedTile: KeyValuePair<Coordiante, Tile>)=> {
+        doRenderTileInfoFunction = (clickedTile: KeyValuePair<Coordinate, Tile>)=> {
             if(clickedTile.key.getKey() === tile.key.getKey()) {
                 return true
             }
@@ -44,7 +44,7 @@ export function getTileUI(
             return clickedTile.value.belongsTo.get() === tile.value.mapEntity.get()  
         }
         tileInfoInput = {
-            getDirections: (tileInfoIsAbout: KeyValuePair<Coordiante, Tile>)=> {
+            getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
                 return computed(()=>[...worldStateService.getNeighborTiles(tileInfoIsAbout.key).entries()].
                     filter(keyV=>keyV[1].value.belongsTo.get() !== tile.value.mapEntity.get() &&
                     keyV[1].key.getKey() !== tile.key.getKey()).
@@ -59,7 +59,7 @@ export function getTileUI(
         additionalInfo: {tile},
         tileInfos: new Map([["border", {
             template: BorderComponent,
-            doRender: (doRenderTileInfoFunction || ((tile: KeyValuePair<Coordiante, Tile>)=>{return false})),
+            doRender: (doRenderTileInfoFunction || ((tile: KeyValuePair<Coordinate, Tile>)=>{return false})),
             input: tileInfoInput
         }]])
     }
@@ -69,7 +69,7 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Remove city"},
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
                 if(tile.value.mapEntity.get()?.type != "city") {
                     return
                 }
@@ -77,7 +77,7 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
             },
         tileInfos: new Map([["mapMarking", {
             template: MapMarkingComponent,
-            doRender: (tile: KeyValuePair<Coordiante, Tile>)=> {
+            doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
                 return !tile.value?.mapEntity.get()
             }
         }]])
@@ -89,7 +89,7 @@ export function getCreateCityUI(worldStateService: WorldStateService):UIData {
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Create city"},
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
             const gold = worldStateService.resources.get().get("oil")!
             if(gold < cityPrice) {
                 return
@@ -114,9 +114,9 @@ export function getCreateCityUI(worldStateService: WorldStateService):UIData {
 }
 
 export function getAddTileToCityAction(
-        cityTile: KeyValuePair<Coordiante, Tile>):UIData {
+        cityTile: KeyValuePair<Coordinate, Tile>):UIData {
     return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
             addOrRemoveTileToCity(tile, cityTile)
         },
         additionalInfo: {currentAction: "addTileToCity"},
@@ -125,12 +125,12 @@ export function getAddTileToCityAction(
 
 export function getCreateEstateAction(
     turnActorsService: TurnActorsService,
-    cityTile: KeyValuePair<Coordiante, Tile>,
+    cityTile: KeyValuePair<Coordinate, Tile>,
     getEstate: ()=>Estate,
     estateName: string
 ):UIData {
     return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
             createEstate(tile, cityTile, getEstate, turnActorsService)
         },
         additionalInfo: {currentAction: "createEstateAction-" + estateName},
@@ -138,10 +138,10 @@ export function getCreateEstateAction(
 }
 
 export function getRemoveEstateAction(
-    cityTile: KeyValuePair<Coordiante, Tile>
+    cityTile: KeyValuePair<Coordinate, Tile>
 ):UIData {
     return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
                 if(
                     tile.value.mapEntity.get()?.type != "estate" ||
                     tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
@@ -157,11 +157,11 @@ export function getRemoveEstateAction(
 export function getMoveUnitsAction(
     uiStateService: UIStateService,
     battleService: BattleService,
-    previousTile: KeyValuePair<Coordiante, Tile>,
+    previousTile: KeyValuePair<Coordinate, Tile>,
     selectedUnitsSignal: ForceSignal<Set<Unit>>
 ) {
     return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
             battleService.changeUnitsPosition(selectedUnitsSignal.get(), previousTile, tile)
             for(const unit of selectedUnitsSignal.get()) {
                 if(unit instanceof PlayerUnit) {
@@ -182,11 +182,11 @@ export function getMoveUnitsBattleAction(
     uiStateService: UIStateService,
     worldStateService: WorldStateService,
     battleService: BattleService,
-    previousTile: KeyValuePair<Coordiante, Tile>,
+    previousTile: KeyValuePair<Coordinate, Tile>,
     selectedUnitsSignal: ForceSignal<Set<Unit>>
 ) {
     return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
             const pathing = worldStateService.findPath(previousTile, tile)
             if(pathing) {
                 const lastTile = battleService.moveUnits(selectedUnitsSignal.get(), previousTile, pathing.path)
@@ -202,15 +202,15 @@ export function getMoveUnitsBattleAction(
 }
 
 export function getAddExtractionAction(
-    cityTile: KeyValuePair<Coordiante, Tile>,
+    cityTile: KeyValuePair<Coordinate, Tile>,
     extraction: Extraction
 ):UIData {
     return {
-        mapAction: (tile: KeyValuePair<Coordiante, Tile>)=>{},
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{},
         additionalInfo: {currentAction: "addExtractionAction"},
         tileInfos: new Map([["extractions",{
             template: ExtractionInfoComponent,
-            doRender: (tile: KeyValuePair<Coordiante, Tile>)=> {
+            doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
                 return tile.value.mapEntity.get()?.type === "extractionSite"
             },
             input: {extraction}

@@ -4,7 +4,7 @@ import { MapEntity } from '../../models/map-entity';
 import { City } from '../../models/city';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { SimpleTextComponent } from '../../shared/simple-text/simple-text.component';
 import { MapMarkingComponent } from '../../shared/map-marking/map-marking.component';

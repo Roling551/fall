@@ -1,5 +1,5 @@
 import { computed, Signal } from "@angular/core";
-import { Coordiante } from "./coordinate";
+import { Coordinate } from "./coordinate";
 import { ExtractionSite, ExtractionSiteItem } from "./extraction-site";
 import { KeyValuePair } from "./key-value-pair";
 import { Tile } from "./tile";
@@ -28,7 +28,7 @@ export class Extraction {
         public possibeBenefits: Map<string,Benefit>, 
         public settings: ExtractionSettings = {changeStep:1, maxExtraction: Infinity}){}
 
-    changeExtraction(location: Coordiante, item: string, change: number) {
+    changeExtraction(location: Coordinate, item: string, change: number) {
         const s = this.sources.get()
         let items
         if(!s.has(location.getKey())) {

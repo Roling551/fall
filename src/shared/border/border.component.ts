@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, Input, input, OnChanges, signal, Signal, SimpleChanges } from '@angular/core';
 import { StyleVariablesService } from '../../services/style-variables.service';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { TileDirection } from '../../models/tile-direction';
 import { CommonModule } from '@angular/common';
@@ -16,9 +16,9 @@ import { createForceSignal } from '../../util/force-signal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BorderComponent implements OnChanges {
-  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>;
+  @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>;
   @Input({required: true}) input!: any;
-  getDirections?: (tileInfoIsAbout: KeyValuePair<Coordiante, Tile>) => Signal<TileDirection[]>
+  getDirections?: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>) => Signal<TileDirection[]>
 
   directions? : Signal<TileDirection[]>
 

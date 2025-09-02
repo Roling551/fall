@@ -1,6 +1,6 @@
 import { Component, computed, Injector, input, Input, Signal } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { ForceSignal } from '../../util/force-signal';
   styleUrl: './map-tile.component.scss'
 })
 export class MapTileComponent {
-  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>
+  @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>
   @Input({required: true}) sizeX!:number;
   @Input({required: true}) sizeY!:number;
 

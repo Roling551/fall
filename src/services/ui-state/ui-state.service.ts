@@ -1,7 +1,7 @@
 import { computed, effect, Injectable, signal, Type, untracked, ViewContainerRef } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
-import { Coordiante } from "../../models/coordinate";
+import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { getAddExtractionAction, getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
@@ -28,7 +28,7 @@ export type UIData = {
   sideComponent?: Type<any>;
   sideComponentInputs?: any;
   additionalInfo?: any;
-  mapAction?: (tile: KeyValuePair<Coordiante, Tile>)=>void;
+  mapAction?: (tile: KeyValuePair<Coordinate, Tile>)=>void;
   cancelButtonAction?: any;
   tileInfos?: Map<string, TileInfo>;
 }
@@ -43,7 +43,7 @@ export type UISettings = {
 export type TileInfo = {
     template: Type<any>,
     input?: any,
-    doRender: (tile: KeyValuePair<Coordiante, Tile>) => boolean,
+    doRender: (tile: KeyValuePair<Coordinate, Tile>) => boolean,
 }
 
 const defaultUISettings: UISettings = {
@@ -190,7 +190,7 @@ export class UIStateService {
 
 
   private getDefaultMapFunction(service: UIStateService) {
-    return (tile: KeyValuePair<Coordiante, Tile>) => {
+    return (tile: KeyValuePair<Coordinate, Tile>) => {
       this.setUI_.tile(tile)
     }
   }
@@ -216,7 +216,7 @@ export class UIStateService {
   }
 
   public setUI_ = {
-    tile: (tile: KeyValuePair<Coordiante, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), {override:true}),
+    tile: (tile: KeyValuePair<Coordinate, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), {override:true}),
     createCity: () => this.setUI(getCreateCityUI(this.worldStateService), {override:true}),
     removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService), {override:true}),
   }

@@ -8,7 +8,7 @@ import { Benefit } from "../models/benefit";
 import { possibleExtractions } from "../models/possible-extractions";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { ResourcesInfoComponent } from "../feature/resources-info/resources-info.component";
-import { Coordiante } from "../models/coordinate";
+import { Coordinate } from "../models/coordinate";
 import { Tile } from "../models/tile";
 import { KeyValuePair } from "../models/key-value-pair";
 
@@ -42,7 +42,7 @@ export class InitService {
 
         this.uiStateService.setBaseTileInfo("resourcesInfo", {
             template: ResourcesInfoComponent,
-            doRender: (tile: KeyValuePair<Coordiante, Tile>) => true,
+            doRender: (tile: KeyValuePair<Coordinate, Tile>) => true,
         })
     }
 }

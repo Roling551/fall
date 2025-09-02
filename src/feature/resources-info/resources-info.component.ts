@@ -1,6 +1,6 @@
 import { Component, computed, Input } from '@angular/core';
 import { ResourceSource, Tile } from '../../models/tile';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { StyleVariablesService } from '../../services/style-variables.service';
 import { getResourceSymbol } from '../../models/resource';
@@ -12,7 +12,7 @@ import { getResourceSymbol } from '../../models/resource';
   styleUrl: './resources-info.component.scss'
 })
 export class ResourcesInfoComponent {
-  @Input({required: true}) tile!: KeyValuePair<Coordiante, Tile>;
+  @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>;
   @Input({required: true}) input!: any;
 
     sizeX

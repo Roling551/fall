@@ -3,7 +3,7 @@ import { Tile } from '../../models/tile';
 import { IsometricTilingComponent } from '../../shared/isometric-tiling/isometric-tiling.component';
 import { WorldStateService } from '../../services/world-state/world-state.service';
 import { CommonModule } from '@angular/common';
-import { Coordiante } from '../../models/coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { MapTileComponent } from '../map-tile/map-tile.component';

@@ -1,10 +1,10 @@
 import { TileDirection } from "./tile-direction"
 
-export class Coordiante {
+export class Coordinate {
 
     static fromKey(key: string) {
         const [x, y] = key.split("_").map(n=>Number(n))
-        return new Coordiante(x, y)
+        return new Coordinate(x, y)
     }
 
     constructor(public x: number, public y: number) {
@@ -23,35 +23,35 @@ export class Coordiante {
     }
 
     getNeighbors(sizeX: number, sizeY: number) {
-        const neighbors: Coordiante[] = []
+        const neighbors: Coordinate[] = []
         if(this.x>0) {
-            neighbors.push(new Coordiante(this.x-1, this.y))
+            neighbors.push(new Coordinate(this.x-1, this.y))
         }
         if(this.x<sizeX-1) {
-            neighbors.push(new Coordiante(this.x+1, this.y))
+            neighbors.push(new Coordinate(this.x+1, this.y))
         }
         if(this.y>0) {
-            neighbors.push(new Coordiante(this.x, this.y-1))
+            neighbors.push(new Coordinate(this.x, this.y-1))
         }
         if(this.y<sizeY-1) {
-            neighbors.push(new Coordiante(this.x, this.y+1))
+            neighbors.push(new Coordinate(this.x, this.y+1))
         }
         return neighbors
     }
 
     getNeighborsAndDirections(sizeX: number, sizeY: number) {
-        const neighbors: {direction: TileDirection, coordinate:Coordiante}[] = []
+        const neighbors: {direction: TileDirection, coordinate:Coordinate}[] = []
         if(this.x>0) {
-            neighbors.push({direction: "xMinus" ,coordinate:new Coordiante(this.x-1, this.y)})
+            neighbors.push({direction: "xMinus" ,coordinate:new Coordinate(this.x-1, this.y)})
         }
         if(this.x<sizeX-1) {
-            neighbors.push({direction: "xPlus" ,coordinate:new Coordiante(this.x+1, this.y)})
+            neighbors.push({direction: "xPlus" ,coordinate:new Coordinate(this.x+1, this.y)})
         }
         if(this.y>0) {
-            neighbors.push({direction: "yMinus" ,coordinate:new Coordiante(this.x, this.y-1)})
+            neighbors.push({direction: "yMinus" ,coordinate:new Coordinate(this.x, this.y-1)})
         }
         if(this.y<sizeY-1) {
-            neighbors.push({direction: "yPlus" ,coordinate:new Coordiante(this.x, this.y+1)})
+            neighbors.push({direction: "yPlus" ,coordinate:new Coordinate(this.x, this.y+1)})
         }
         return neighbors
     }
