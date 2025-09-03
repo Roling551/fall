@@ -36,4 +36,8 @@ export class WorldMapComponent {
   tileInfo = computed(() => {
     return this.uiStateService.tileInfos()
   })
+
+  onHoverChange(tile: KeyValuePair<Coordinate, Tile>|undefined) {
+    this.uiStateService.hoverTile.set(tile)
+  }
 }

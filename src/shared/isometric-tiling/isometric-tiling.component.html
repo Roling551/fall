@@ -47,6 +47,8 @@
             [style.left.px]="getTransformX(tile[0])"
             [style.top.px]="getTransformY(tile[0])"
             (click)="onTileClick(tile[1])"
+            (mouseenter)="onTileHover(tile[1])"
+            (mouseleave)="onTileHoverExit(tile[1])"
         >
             <div
                 class="diamond"

@@ -78,6 +78,8 @@ export class UIStateService {
   public tileInfos = this._tileInfos.get
   public additionalInfo = this._additionalInfo.get
 
+  public hoverTile = signal<KeyValuePair<Coordinate, Tile>|undefined>(undefined)
+
   public uiModeName = signal<UIModeName>("main")
 
   constructor(

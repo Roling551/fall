@@ -6,6 +6,7 @@
     [backgroundImage]="backgroundImage"
     (tileClick)="mapAction()($event)"
     [additionalGraphics]="tileInfo()"
+    (tileHover)="onHoverChange($event)"
 />
 
 <ng-template #tileTemplate let-tile="tile">

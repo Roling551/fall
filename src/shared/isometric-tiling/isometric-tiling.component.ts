@@ -30,6 +30,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input() allowedPixelsMovedForClick = 10;
 
   tileClick = output<T>();
+  tileHover = output<T|undefined>();
 
   public positionRectX = 0
   public positionRectY = 0
@@ -148,5 +149,13 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   public getKeyValuePair(x: number, y: number, value: T) {
     return {key: new Coordinate(x,y), value}
+  }
+  
+  onTileHover(t:T) {
+    this.tileHover.emit(t)
+  }
+
+  onTileHoverExit(t:T) {
+    this.tileHover.emit(undefined)
   }
 }
