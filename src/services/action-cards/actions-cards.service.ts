@@ -2,7 +2,7 @@ import { computed, effect, Injectable, signal } from "@angular/core";
 import { CardInfo } from "../../models/card-info";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
-import { UIData, UIStateService } from "../ui-state/ui-state.service";
+import { TileInfo, UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
@@ -22,6 +22,13 @@ import { MapMarkingComponent } from "../../shared/map-marking/map-marking.compon
 import { TurnActorsService } from "../turn-actors.service";
 import { EstateFactoryService } from "../estate-factory.service";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
+import { Resource } from "../../models/resource";
+import { BorderComponent } from "../../shared/border/border.component";
+
+interface CardCreationInfo {
+    action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
+    tileInfos?: Map<string,TileInfo>
+}
 
 @Injectable({
   providedIn: 'root'
@@ -55,42 +62,60 @@ export class ActionsCardsService {
        return this.createMultiStageActionCard(
             "c", 
             [
-                (tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t1"); return tile.key.getKey()=="0_0"},
-                (tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t2"); return tile.key.getKey()=="0_0"},
-                (tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t3"); return tile.key.getKey()=="0_0"},
+                {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t1"); return tile.key.getKey()=="0_0"}},
+                {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t2"); return tile.key.getKey()=="0_0"}},
+                {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t3"); return tile.key.getKey()=="0_0"}},
             ]
             )
     }
 
     createEstateCard() {
+        const createEstateInfo = this.estateFactoryService.getCreateEstateInfo()
+        const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
+            const doRender = createEstateInfo.affectedCoordinate.map(x=>x.getKey()).includes(tile.key.getKey())
+            if(doRender) {
+                console.log("Do render")
+            }
+            return doRender
+        }
         return this.createMultiStageActionCard(
             "Create estate",
             [
-                (tile: KeyValuePair<Coordinate, Tile>)=> {
-                    return getCreateEstateAction(this.worldStateService, this.turnActorsService, this.estateFactoryService.getCreateEstateFunction())(tile)
+                {
+                    action:(tile: KeyValuePair<Coordinate, Tile>)=> {
+                        return getCreateEstateAction(this.worldStateService, this.turnActorsService, createEstateInfo.getEstate)(tile)
+                    }, 
+                    tileInfos: new Map([[
+                        "border", 
+                        {
+                            template: BorderComponent,
+                            doRender: doRenderBorder,
+                            input: {getDirections: this.worldStateService.getDirectionsFunction(doRenderBorder)}
+                        }
+                    ]])
                 }
             ],
-            new Map([["gold", 10]])
+            new Map([["oil", 1]])
         )
     }
 
     createMultiStageActionCard(
         name: string, 
-        cardActions: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean)[],
-        price?: Map<string, number>,
+        cardCreationInfo: CardCreationInfo[],
+        price?: Map<Resource, number>,
     ) {
         const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
-        const oldCardActions0 = cardActions[0]
-        const uis: UIData[] = cardActions.map(x=>{return {} as UIData})
+        const oldCardActions0 = cardCreationInfo[0].action
+        const uis: UIData[] = cardCreationInfo.map(x=>{return {} as UIData})
         uis[0]={
-            tileInfos: new Map([["unavaliable", {
+            tileInfos: new Map([...(cardCreationInfo[0].tileInfos||[]),["unavaliable", {
                 template: UnavaliableComponent,
                 doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
                     return !this.reachableTiles().includes(tile.key.getKey())
                 }
             }]])
         }
-        cardActions[0] = (tile: KeyValuePair<Coordinate, Tile>)=>{
+        cardCreationInfo[0].action = (tile: KeyValuePair<Coordinate, Tile>)=>{
             if(this.worldStateService.cities.get().size<1) {
                 return false
             }
@@ -117,7 +142,7 @@ export class ActionsCardsService {
         card.onSelect = ()=>{
             return createMultiStageAction(
                 this.uiStateService,
-                cardActions,
+                cardCreationInfo.map(x=>x.action),
                 ()=>{
                     this.isActionHappening.set(false)
                     this.cardsHand.deselectCard(card)

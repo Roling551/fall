@@ -27,6 +27,7 @@ export class BorderComponent implements OnChanges {
   constructor(public styleVariablesService: StyleVariablesService) {
     this.sizeX = styleVariablesService.sizeX
     this.sizeY = styleVariablesService.sizeY
+    console.log("Border component created")
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -39,6 +40,7 @@ export class BorderComponent implements OnChanges {
   }
 
   getTexture(name: TileDirection): string {
+    console.log(name)
     switch(name) {
       case 'yPlus': return this.getTexture_('bottom-left-border')
       case 'yMinus': return this.getTexture_('top-right-border')

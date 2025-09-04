@@ -5,18 +5,25 @@ import { Tile } from "../models/tile";
 import { addToMapValue, withdrawFromMapValue } from "../util/map-functions";
 import { Resource } from "../models/resource";
 import { withdrawFromObjectsValue } from "../util/object-numerical-functions";
+import { Coordinate } from "../models/coordinate";
+
+export interface CreateEstateInfo {
+    getEstate: (tile: Tile) => Estate,
+    affectedCoordinate: Coordinate[]
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class EstateFactoryService {
 
-    constructor(private worldStateService: WorldStateService) {
+    constructor(private worldStateService: WorldStateService) {}
 
-    }
-
-    getCreateEstateFunction() {
-        return (tile_: Tile) => new Estate(tile_, "farm", this.getSimpleExtractionAction("oil", 3))
+    getCreateEstateInfo() {
+        return {
+            getEstate: (tile_: Tile) => new Estate(tile_, "farm", this.getSimpleExtractionAction("oil", 3)),
+            affectedCoordinate: [new Coordinate(0,0)]
+        }
     }
 
     private getSimpleExtractionAction(resource: Resource, amount: number) {
