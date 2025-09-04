@@ -33,7 +33,8 @@ export class CharactersCardsService {
         return new CharacterCardInfo(
             "c",
             new Map([["construction", 1]],),
-            3
+            3,
+            new Map([["mountain",1]])
         )
     }
 

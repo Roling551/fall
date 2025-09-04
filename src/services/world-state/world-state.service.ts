@@ -10,6 +10,7 @@ import { dijkstra, dijkstraAllNodes } from '../../util/path-finding';
 import { TileDirection } from '../../models/tile-direction';
 import { Benefit } from '../../models/benefit';
 import { Resource } from '../../models/resource';
+import { Obstacles } from '../../models/obstacles';
 
 @Injectable({
     providedIn: 'root'
@@ -41,12 +42,12 @@ export class WorldStateService {
         return Coordinate.fromKey(node).getNeighbors(this.sizeX, this.sizeY).map(coordiante=>coordiante.getKey())
     }
 
-    findPathByKey(start: string, end: string) {
-        return dijkstra<string>(this.getNeighbors, this.getEdgeWeight, start, end)
+    findPathByKey(start: string, end: string, getEdgeWeight: (from: string, to: string) => number = this.getEdgeWeight) {
+        return dijkstra<string>(this.getNeighbors, getEdgeWeight, start, end)
     }
 
-    getReacheableTiles(start: string, distance: number) {
-        return dijkstraAllNodes(this.getNeighbors, this.getEdgeWeight, start, distance)
+    getReacheableTiles(start: string, distance: number, getEdgeWeight: (from: string, to: string) => number = this.getEdgeWeight) {
+        return dijkstraAllNodes(this.getNeighbors, getEdgeWeight, start, distance)
     }
 
     canNextTurn = computed(()=>{
@@ -68,7 +69,9 @@ export class WorldStateService {
                 {type: "oil", difficulty: 0, amount: 5},
                 {type: "oil", difficulty: 1, amount: 5},
                 {type: "water", difficulty: 0, amount: 20},
-            ])
+            ],
+            new Obstacles(new Map([["mountain",1]]))
+        )
     }
 
     private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordinate, Tile>> {

@@ -172,7 +172,7 @@ export class ActionsCardsService {
         let firstTile = true
         let tiles:string[] = []
         for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-            const cardsTiles = this.worldStateService.getReacheableTiles(city![0], characterCard.movement).map(x=>x.node)
+            const cardsTiles = this.worldStateService.getReacheableTiles(city![0], characterCard.movement, this.getEdgeWidghtFunction(characterCard)).map(x=>x.node)
             if(firstTile) {
                 tiles = cardsTiles
                 firstTile = false
@@ -182,4 +182,10 @@ export class ActionsCardsService {
         }
         return tiles
     })
+
+    getEdgeWidghtFunction(characterCard: CharacterCardInfo) {
+        return (from: string, to: string)=>{
+            return this.worldStateService.tiles.get(to)!.value.obstacles.get().getDistance(characterCard.movementAdvantege)
+        }
+    }
 }
