@@ -37,7 +37,6 @@ export class EstateFactoryService {
                     const avaliableAmount = withdrawFromObjectsValue(source, "amount", amountLeft)
                     addToMapValue(this.worldStateService.resources.get(), resource, avaliableAmount)
                     this.worldStateService.resources.forceUpdate()
-                    console.log(this.worldStateService.resources.get())
                     amountLeft -= avaliableAmount
                 }
             }

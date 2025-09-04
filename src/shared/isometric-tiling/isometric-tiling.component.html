@@ -27,7 +27,7 @@
         </div>
     }
 
-    @for(additional of additionalGraphicsAndTilesToRender(); track additional) {
+    @for(additional of additionalGraphicsAndTilesToRender(); track $index) {
         <div
             class="item"
             [style.left.px]="getTransformX(additional.tile[0])"

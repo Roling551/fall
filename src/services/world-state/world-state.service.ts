@@ -121,13 +121,11 @@ export class WorldStateService {
 
     getDirectionsFunction(condition: (tile: KeyValuePair<Coordinate, Tile>)=>boolean) { 
         return (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
-            console.log("Get directions function")
             return computed(
                 ()=> {
                     const directions = [...this.getNeighborTiles(tileInfoIsAbout.key).entries()].
                     filter(keyV=>!condition(keyV[1])).
                     map(keyV=>keyV[0])
-                    console.log(directions)
                     return directions
                 }
             )

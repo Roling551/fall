@@ -72,11 +72,11 @@ export class ActionsCardsService {
     createEstateCard() {
         const createEstateInfo = this.estateFactoryService.getCreateEstateInfo()
         const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
-            const doRender = createEstateInfo.affectedCoordinate.map(x=>x.getKey()).includes(tile.key.getKey())
-            if(doRender) {
-                console.log("Do render")
+            if(this.uiStateService.hoverTile()) {
+                const doRender = createEstateInfo.affectedCoordinate.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
+                return doRender
             }
-            return doRender
+            return false
         }
         return this.createMultiStageActionCard(
             "Create estate",

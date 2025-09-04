@@ -55,4 +55,8 @@ export class Coordinate {
         }
         return neighbors
     }
+
+    public addCoordinates(c: Coordinate) {
+        return new Coordinate(this.x + c.x, this.y + c.y)
+    }
 }
