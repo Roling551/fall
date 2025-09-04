@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, HostListener, Input, input, OnInit, output, signal, TemplateRef, Type } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, HostListener, Input, input, OnInit, output, signal, TemplateRef, Type } from '@angular/core';
 import panzoom, { PanZoom, Transform } from 'panzoom';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
@@ -23,11 +23,12 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input({required: true}) sizeY!:number;
 
   @Input({required: true}) tileTemplate!:TemplateRef<any>;
-  @Input() additionalGraphics:Map<string, {doRender:((tile: T) => boolean), template:undefined|Type<any>, input?:any}> = new Map();
 
   @Input() distanceToUpdate = 20;
 
   @Input() allowedPixelsMovedForClick = 10;
+
+  additionalGraphics = input<Map<string, {doRender:((tile: T) => boolean), template:undefined|Type<any>, input?:any}>>(new Map());
 
   tileClick = output<T>();
   tileHover = output<T|undefined>();
@@ -158,4 +159,16 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   onTileHoverExit(t:T) {
     this.tileHover.emit(undefined)
   }
+
+  additionalGraphicsAndTilesToRender = computed(()=>{
+    const graphicsAndTiles = []
+    for(const additionalGraphic of this.additionalGraphics()) {
+        for(const tile of this.tilesData.entries()) {
+            if(additionalGraphic[1].doRender(tile[1])) {
+                graphicsAndTiles.push({tile, additionalGraphic})
+            }
+        }
+    }
+    return graphicsAndTiles
+  })
 }

@@ -24,6 +24,7 @@ export class UnavaliableComponent {
     constructor(public styleVariablesService: StyleVariablesService) {
         this.sizeX = styleVariablesService.sizeX
         this.sizeY = styleVariablesService.sizeY
+        console.log("unavaliable")
     }
 
     getImgTop() {

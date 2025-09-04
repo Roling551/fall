@@ -1,5 +1,4 @@
 <div class="full-size" id="zoom-target">
-
     @if(backgroundImage) {
         <div
             class="background"
@@ -10,6 +9,7 @@
             
         </div>   
     }
+
     <!--@for(x of getRange(tileOnScreenX+3); track x) {
         @for(y of getRange(tileOnScreenY+3); track y) {
             <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()}"></ng-container>
@@ -27,18 +27,15 @@
         </div>
     }
 
-    @for(additionalGraphic of additionalGraphics; track additionalGraphic) {
-        @for(tile of tilesData.entries(); track tile[0]) {
-            @if(additionalGraphic[1].doRender(tile[1])) {
-                <div
-                    class="item"
-                    [style.left.px]="getTransformX(tile[0])"
-                    [style.top.px]="getTransformY(tile[0])"
-                >
-                    <ng-container *ngComponentOutlet="additionalGraphic[1].template!; inputs:{tile:tile[1], input:additionalGraphic[1].input}"></ng-container> 
-                </div>
-            }
-        }
+    @for(additional of additionalGraphicsAndTilesToRender(); track additional) {
+        <div
+            class="item"
+            [style.left.px]="getTransformX(additional.tile[0])"
+            [style.top.px]="getTransformY(additional.tile[0])"
+        >
+        
+            <ng-container *ngComponentOutlet="additional.additionalGraphic[1].template!; inputs:{tile:additional.tile[1], input:additional.additionalGraphic[1].input}"></ng-container> 
+        </div>
     }
 
     @for(tile of tilesData.entries(); track tile[0]) {
