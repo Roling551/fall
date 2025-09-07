@@ -1,9 +1,10 @@
 import { Component, computed, Input } from '@angular/core';
-import { ResourceSource, Tile } from '../../models/tile';
+import { Tile } from '../../models/tile';
 import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { StyleVariablesService } from '../../services/style-variables.service';
 import { getResourceSymbol } from '../../models/resource';
+import { RegularResourceSource, ResourceSource } from '../../models/resource-source';
 
 @Component({
   selector: 'app-resources-info',
@@ -27,6 +28,10 @@ export class ResourcesInfoComponent {
     })
 
     getText(resourceSource: ResourceSource){
-        return getResourceSymbol(resourceSource.type) + "-" + resourceSource.amount + "/" + resourceSource.difficulty
+        if(resourceSource instanceof RegularResourceSource) {
+            return getResourceSymbol(resourceSource.resourceType) + "-" + resourceSource.resourceAmount
+        } else {
+            return ""
+        }
     }
 }

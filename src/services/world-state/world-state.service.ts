@@ -11,6 +11,7 @@ import { TileDirection } from '../../models/tile-direction';
 import { Benefit } from '../../models/benefit';
 import { Resource } from '../../models/resource';
 import { Obstacles } from '../../models/obstacles';
+import { RegularResourceSource } from '../../models/resource-source';
 
 @Injectable({
     providedIn: 'root'
@@ -66,9 +67,7 @@ export class WorldStateService {
             coordinate,
             "ground", 
             [
-                {type: "oil", difficulty: 0, amount: 5},
-                {type: "oil", difficulty: 1, amount: 5},
-                {type: "water", difficulty: 0, amount: 20},
+                new RegularResourceSource("mining", "oil", 10)
             ],
             new Obstacles(new Map([["mountain",1]]))
         )

@@ -2,12 +2,14 @@ import { Injectable } from "@angular/core";
 import { Estate } from "../models/estate";
 import { WorldStateService } from "./world-state/world-state.service";
 import { Tile } from "../models/tile";
-import { addToMapValue, withdrawFromMapValue } from "../util/map-functions";
+import { addExistingNumericalValues, addToMapValue, withdrawFromMapValue } from "../util/map-functions";
 import { Resource } from "../models/resource";
 import { withdrawFromObjectsValue } from "../util/object-numerical-functions";
 import { Coordinate } from "../models/coordinate";
+import { Skill } from "../models/skill";
 
 export interface CreateEstateInfo {
+    skills: Map<Skill, number>
     getEstate: (tile: Tile) => Estate,
     affectedCoordinate: Coordinate[]
 }
@@ -20,27 +22,33 @@ export class EstateFactoryService {
     constructor(private worldStateService: WorldStateService) {}
 
     getCreateEstateInfo() {
+        const skills = new Map<Skill, number>([["mining", 3]])
         return {
-            getEstate: (tile_: Tile) => new Estate(tile_, "farm", this.getSimpleExtractionAction("oil", 3)),
+            getEstate: (tile_: Tile) => new Estate(tile_, "farm", this.getSimpleExtractionAction(skills)),
+            skills,
             affectedCoordinate: [new Coordinate(0,0)]
         }
     }
 
-    private getSimpleExtractionAction(resource: Resource, amount: number) {
+    private getSimpleExtractionAction(skills: Map<Skill, number>, times: number=1) {
         return (tile: Tile)=>{
-            let amountLeft = amount
+            let t = times
             for(const source of tile.resourceSources.get()) {
-                if(amountLeft <= 0) {
-                    break;
-                }
-                if(source.type === resource) {
-                    const avaliableAmount = withdrawFromObjectsValue(source, "amount", amountLeft)
-                    addToMapValue(this.worldStateService.resources.get(), resource, avaliableAmount)
-                    this.worldStateService.resources.forceUpdate()
-                    amountLeft -= avaliableAmount
+                let isSourceDone = false
+                while(!isSourceDone) {
+                    if(t <= 0) {
+                        return
+                    } else {
+                        if(source.canAttempt(skills)) {
+                            t -= 1
+                            const actionResult = source.action(skills)
+                            isSourceDone = actionResult.isFinished
+                            addExistingNumericalValues(this.worldStateService.resources.get(), actionResult.resources)
+                            this.worldStateService.resources.forceUpdate()
+                        }
+                    } 
                 }
             }
-            tile.resourceSources.forceUpdate()
         }
     }
 }

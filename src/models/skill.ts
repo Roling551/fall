@@ -1,4 +1,4 @@
-export type Skill = "construction" | "science" | "survival"
+export type Skill = "construction" | "science" | "survival" | "mining" | "cutting"
 
 export const baseZeroSkills = new Map<Skill, number>([["construction", 0], ["science", 0], ["survival", 0]])
 

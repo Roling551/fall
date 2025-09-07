@@ -5,8 +5,8 @@ import { Unit } from "./unit";
 import { Resource } from "./resource";
 import { Coordinate } from "./coordinate";
 import { Obstacles } from "./obstacles";
+import { ResourceSource } from "./resource-source";
 
-export type ResourceSource = {type: Resource, difficulty: number, amount: number}
 
 export class Tile {
 
