@@ -5,13 +5,11 @@ import { UIModeSettings } from "./ui-state.service";
 
 export function getMainMode(): UIModeSettings {
     return {
-        headerComponent: GameInfoPanelComponent,
         defaultSideComponent: ActionsListComponent
     }
 }
 
 export function getBattleMode(): UIModeSettings {
     return {
-        headerComponent: BattleInfoPanelComponent
     }
 }

@@ -28,7 +28,6 @@ export class TurnService {
         this.charactersCardsService.nextTurn()
         this.worldStateService.nextTurn()
         this.turnActorsService.nextTurn()
-        this.uiStateService.setUIMode_.battle()
         this.turn.update(x=>x+1)
     }
 }

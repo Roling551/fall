@@ -13,14 +13,13 @@ import { CharactersCardsService } from '../../services/characters-cards.service'
 
 @Component({
   selector: 'app-main-layout',
-  imports: [WorldMapComponent, CardsComponent],
+  imports: [WorldMapComponent, CardsComponent, GameInfoPanelComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent implements AfterViewInit {
 
     @ViewChild('sideContainer', { read: ViewContainerRef }) sideContainer!: ViewContainerRef;
-    @ViewChild('headerContainer', { read: ViewContainerRef }) headerContainer!: ViewContainerRef;
 
     actionsCards
     charactersCards
@@ -36,7 +35,6 @@ export class MainLayoutComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.uiStateService.setSideContainerRef(this.sideContainer)
-        this.uiStateService.setHeaderContainerRef(this.headerContainer)
         this.uiStateService.setUIMode_.main({setup:true})
     }
 

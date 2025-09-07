@@ -14,7 +14,6 @@ import { BenefitsService } from "../benefits.service";
 import { TurnActorsService } from "../turn-actors.service";
 
 export type UIModeSettings = {
-  headerComponent: Type<any>;
   defaultSideComponent?: Type<any>;
 }
 
@@ -176,8 +175,6 @@ export class UIStateService {
     if(uiModeSettings.defaultSideComponent){
       this.viewSideContainerRef.createComponent(uiModeSettings.defaultSideComponent);
     }
-    this.viewHeaderContainerRef.clear();
-    this.viewHeaderContainerRef.createComponent(uiModeSettings.headerComponent);
     this.cancel();
   }
 
