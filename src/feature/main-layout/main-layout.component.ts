@@ -35,7 +35,6 @@ export class MainLayoutComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.uiStateService.setSideContainerRef(this.sideContainer)
-        this.uiStateService.setUIMode_.main({setup:true})
     }
 
     onRightClick(event: MouseEvent) {

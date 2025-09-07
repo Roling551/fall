@@ -19,6 +19,5 @@ export class BattleInfoPanelComponent {
   }
 
   onEndBattle() {
-    this.uiStateService.setUIMode_.main()
   }
 }

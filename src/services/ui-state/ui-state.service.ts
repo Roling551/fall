@@ -7,15 +7,11 @@ import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMove
 import { WorldStateService } from "../world-state/world-state.service";
 import { Estate } from "../../models/estate";
 import { BonusesService } from "../bonuses.service";
-import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
 import { BenefitsService } from "../benefits.service";
 import { TurnActorsService } from "../turn-actors.service";
-
-export type UIModeSettings = {
-  defaultSideComponent?: Type<any>;
-}
+import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 
 export type UIData = {
   sideComponent?: Type<any>;
@@ -56,7 +52,6 @@ export class UIStateService {
 
   public _ui?: UIData
   public _uiSettings: UISettings = {...defaultUISettings}
-  private _uiMode?: UIModeSettings
   private _previousUis: UIData[] = []
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
@@ -72,6 +67,8 @@ export class UIStateService {
   public additionalInfo = this._additionalInfo.get
 
   public hoverTile = signal<KeyValuePair<Coordinate, Tile>|undefined>(undefined)
+  
+  private defaultSideComponent = ActionsListComponent
 
   constructor(
     public worldStateService: WorldStateService,
@@ -169,15 +166,6 @@ export class UIStateService {
     }
   }
 
-  setUIMode(uiModeSettings: UIModeSettings) {
-    this._uiMode = uiModeSettings
-    this.viewSideContainerRef.clear();
-    if(uiModeSettings.defaultSideComponent){
-      this.viewSideContainerRef.createComponent(uiModeSettings.defaultSideComponent);
-    }
-    this.cancel();
-  }
-
 
   private getDefaultMapFunction(service: UIStateService) {
     return (tile: KeyValuePair<Coordinate, Tile>) => {
@@ -200,9 +188,7 @@ export class UIStateService {
   }
 
   public defaultCancelButtonAction() {
-    if(this._uiMode && this._uiMode!.defaultSideComponent) {
-      this.setUI({sideComponent:this._uiMode!.defaultSideComponent}, {override:true})
-    }
+    this.setUI({sideComponent:this.defaultSideComponent}, {override:true})
   }
 
   public setUI_ = {
@@ -222,20 +208,6 @@ export class UIStateService {
       this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
     moveUnitsBattle: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
       this.setUI(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
-  }
-
-  public setUIMode_ = {
-    main: (options: {setup: boolean} = {setup:false}) => {
-      if(!options.setup) {
-        this.battleService.endBattle()
-        this.worldStateService.nextTurn()
-      }
-      this.setUIMode(getMainMode())
-    },
-    battle: () => {
-      this.battleService.startBattle()
-      this.setUIMode(getBattleMode())
-    }
   }
 
   public setBaseTileInfo(name: string, tileInfo: TileInfo) {
