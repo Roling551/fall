@@ -3,7 +3,6 @@ import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
-import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state/world-state.service";
 import { Estate } from "../../models/estate";
@@ -12,13 +11,9 @@ import { getBattleMode, getMainMode } from "./common-ui-mode-settings";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
 import { BenefitsService } from "../benefits.service";
-import { skip } from "rxjs";
 import { TurnActorsService } from "../turn-actors.service";
 
-export type UIModeName = "main" | "battle"
-
 export type UIModeSettings = {
-  name: UIModeName
   headerComponent: Type<any>;
   defaultSideComponent?: Type<any>;
 }
@@ -78,8 +73,6 @@ export class UIStateService {
   public additionalInfo = this._additionalInfo.get
 
   public hoverTile = signal<KeyValuePair<Coordinate, Tile>|undefined>(undefined)
-
-  public uiModeName = signal<UIModeName>("main")
 
   constructor(
     public worldStateService: WorldStateService,
@@ -178,15 +171,14 @@ export class UIStateService {
   }
 
   setUIMode(uiModeSettings: UIModeSettings) {
-    this.cancel();
     this._uiMode = uiModeSettings
-    this.uiModeName.set(uiModeSettings.name)
     this.viewSideContainerRef.clear();
     if(uiModeSettings.defaultSideComponent){
       this.viewSideContainerRef.createComponent(uiModeSettings.defaultSideComponent);
     }
     this.viewHeaderContainerRef.clear();
     this.viewHeaderContainerRef.createComponent(uiModeSettings.headerComponent);
+    this.cancel();
   }
 
 

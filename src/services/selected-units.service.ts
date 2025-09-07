@@ -26,11 +26,7 @@ export class SelectedUnitsService {
             if(!initialRun) {
                 if(selectedUnits.size > 0) {
                     untracked(()=> {
-                        if(this.uiStateService.uiModeName()==="main") {
-                            this.uiStateService.setMapAction_.moveUnits(this.selectedUnitsSignal)
-                        } else {
-                            this.uiStateService.setMapAction_.moveUnitsBattle(this.selectedUnitsSignal)
-                        }
+                        this.uiStateService.setMapAction_.moveUnits(this.selectedUnitsSignal)
                     })
                 } else {
                     untracked(()=>this.uiStateService.setUI(this.uiStateService._ui!))

@@ -30,8 +30,6 @@ export class CityPanelComponent{
     this.avaliableEstates = this.benefitsService.avaliableEstates
   }
 
-  isMainMode = computed(()=>{return this.uiStateService.uiModeName()==="main"})
-
   public onAddTileActionClick() {
     this.uiStateService.setMapAction_.addTileToCity()
   }
