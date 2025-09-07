@@ -18,8 +18,6 @@ import { PlayerUnit, Unit } from "../../models/unit"
 import { BattleService } from "../battle.service"
 import { BorderComponent } from "../../shared/border/border.component"
 import { computed } from "@angular/core"
-import { ExtractionInfoComponent } from "../../feature/extraction-info/extraction-info.component"
-import { Extraction } from "../../models/extraction"
 import { BenefitsService } from "../benefits.service"
 import { addOrRemoveTileToCity, createEstate } from "../world-state/functions"
 import { TurnActorsService } from "../turn-actors.service"
@@ -203,22 +201,5 @@ export function getMoveUnitsBattleAction(
             selectedUnitsSignal.get().clear()
             selectedUnitsSignal.forceUpdate()
         }
-    }
-}
-
-export function getAddExtractionAction(
-    cityTile: KeyValuePair<Coordinate, Tile>,
-    extraction: Extraction
-):UIData {
-    return {
-        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{},
-        additionalInfo: {currentAction: "addExtractionAction"},
-        tileInfos: new Map([["extractions",{
-            template: ExtractionInfoComponent,
-            doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
-                return tile.value.mapEntity.get()?.type === "extractionSite"
-            },
-            input: {extraction}
-        }]])
     }
 }

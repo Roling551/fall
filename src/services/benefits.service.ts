@@ -4,7 +4,6 @@ import { Benefit } from "../models/benefit";
 import { BonusesService } from "./bonuses.service";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { Estate } from "../models/estate";
-import { Extraction } from "../models/extraction";
 import { EstateProductionBonus } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
@@ -39,25 +38,6 @@ export class BenefitsService {
         return result
     })
 
-    avaliableExtractions = computed(() => {
-        const result = new Map<string, (()=>Extraction)>();
-        for(const [key, benefit] of this.technologiesService.benefits.get()) {
-            if(benefit.type === "unlock-extraction") {
-                result.set(benefit.extractionName, benefit.getExtraction)
-            }
-        }
-        for(const [key, benefit] of this.initialBenefits.get()) {
-            if(benefit.type === "unlock-extraction") {
-                result.set(benefit.extractionName, benefit.getExtraction)
-            }
-        }
-        for(const [key, benefit] of this.worldStateService.benefits()) {
-            if(benefit.type === "unlock-extraction") {
-                result.set(benefit.extractionName, benefit.getExtraction)
-            }
-        }
-        return result
-    })
     estateBonuses
     estateProductionBonuses
     listenForEstateProductionBonuses

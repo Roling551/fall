@@ -23,12 +23,6 @@
     <button (click)="onRemoveEstateActionClick()" [class.active-button]="isRemoveEstateActionSelected()">Remove estate</button>
 }
 
-<div>Extraction:</div>
-@for(extraction of avaliableExtractions(); track extraction[0]) {
-    <button (click)="onAddExtractionClick(extraction[0], extraction[1])">{{extraction[0]}}</button>
-}
-
-
 <div>Buildings:</div>
 @for(building of city.get().buildings.get().values(); track building) {
     <div>

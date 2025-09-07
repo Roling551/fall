@@ -6,7 +6,6 @@ import { Tile } from "./tile"
 import { MapEntity } from "./map-entity";
 import { Estate } from "./estate";
 import { addExistingNumericalValues } from "../util/map-functions";
-import { Extraction } from "./extraction";
 import { Benefit } from "./benefit";
 import { Population } from "./population";
 import { OneTimeJob } from "./one-time-job";
@@ -19,8 +18,6 @@ export class City extends MapEntity {
     readonly type = "city"
 
     ownedTiles = createForceSignal(new Map<string, KeyValuePair<Coordinate, Tile>>());
-
-    extractions = createForceSignal(new Map<string, Extraction>())
 
     population = new Population(5, this)
 
@@ -76,9 +73,6 @@ export class City extends MapEntity {
                 addExistingNumericalValues(production, estate.produced())
             }
         }
-        for (const [name, extraction] of this.extractions.get()) {
-            addExistingNumericalValues(production, extraction.produced())
-        }
         for (const job of this.jobs.get()) {
             addExistingNumericalValues(production, job.produced())
         }
@@ -87,26 +81,8 @@ export class City extends MapEntity {
         return production
     })
 
-    getExtractionRate = computed(()=>{
-        
-    })
-
-    getOrCreateExtraction(extractionName: string, extractionConstructor: (belongsTo: any)=> Extraction) {
-        if(this.extractions.get().has(extractionName)) {
-            return this.extractions.get().get(extractionName)!
-        } else {
-            const extraction = extractionConstructor(self)
-            this.extractions.get().set(extractionName, extraction)
-            this.extractions.forceUpdate()
-            return extraction
-        }
-    }
-
     benefits = computed<Map<string, Benefit>>(()=>{
         let result = new Map<string, Benefit>();
-        for(const [key, value] of this.extractions.get()) {
-            result = new Map([...result, ...value.benefits()])
-        }
         return result
     })
 

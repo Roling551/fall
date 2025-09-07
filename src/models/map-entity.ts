@@ -4,7 +4,7 @@ import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
 import { addExistingNumericalValues } from "../util/map-functions"
 
-export type mapEntityType = "city" | "estate" | "extractionSite"
+export type mapEntityType = "city" | "estate"
 
 export abstract class MapEntity {
     abstract readonly type: mapEntityType

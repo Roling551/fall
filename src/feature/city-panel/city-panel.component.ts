@@ -10,7 +10,6 @@ import { Building } from '../../models/building';
 import { PlayerUnit, Unit } from '../../models/unit';
 import { WorldStateService } from '../../services/world-state/world-state.service';
 import { BattleService } from '../../services/battle.service';
-import { Extraction } from '../../models/extraction';
 import { BenefitsService } from '../../services/benefits.service';
 import { OneTimeJobPanelComponent } from '../one-time-job-panel/one-time-job-panel.component';
 import { OneTimeJob } from '../../models/one-time-job';
@@ -26,11 +25,9 @@ export class CityPanelComponent{
   @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>
 
   public avaliableEstates
-  public avaliableExtractions
 
   constructor(public uiStateService: UIStateService, public battleService: BattleService, public benefitsService: BenefitsService) {
     this.avaliableEstates = this.benefitsService.avaliableEstates
-    this.avaliableExtractions = this.benefitsService.avaliableExtractions
   }
 
   isMainMode = computed(()=>{return this.uiStateService.uiModeName()==="main"})
@@ -78,11 +75,6 @@ export class CityPanelComponent{
   public onAddUnitClick() {
     const unit = new PlayerUnit("knight", 2, this.tile)
     this.battleService.addUnit(unit, this.tile)
-  }
-
-  public onAddExtractionClick(extractionName: string, extractionConstructor: (belongsTo: any)=> Extraction) {
-    const extraction = this.city.get().getOrCreateExtraction(extractionName, extractionConstructor)
-    this.uiStateService.setMapAction_.addExtraction(extraction);
   }
 
   public onAddJobClick() {
