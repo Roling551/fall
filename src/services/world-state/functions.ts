@@ -3,10 +3,7 @@ import { Coordinate } from "../../models/coordinate"
 import { Estate } from "../../models/estate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
-import { mapContainsMap, substractNumericalValuesFunctional } from "../../util/map-functions"
-import { BenefitsService } from "../benefits.service"
 import { TurnActorsService } from "../turn-actors.service"
-import { WorldStateService } from "./world-state.service"
 
 export function addOrRemoveTileToCity(
     tile: KeyValuePair<Coordinate, Tile>, 
@@ -72,13 +69,4 @@ export function addTileToCityAndCreateEstate(
         return createEstate(tile, cityTile, getEstate, turnActorsService)
     }
     return false
-}
-
-export function canAffordResources(worldStateService: WorldStateService, price: Map<string, number>) {
-    return mapContainsMap(worldStateService.resources.get(), price)
-}
-
-export function spendResources(worldStateService: WorldStateService, price: Map<string, number>) {
-    worldStateService.resources.set(substractNumericalValuesFunctional(worldStateService.resources.get(), price))
-    worldStateService.resources.forceUpdate()
 }

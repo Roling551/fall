@@ -1,8 +1,6 @@
 import { Component, computed, Signal } from '@angular/core';
-import { WorldStateService } from '../../services/world-state/world-state.service';
-import { UIStateService } from '../../services/ui-state/ui-state.service';
-import { BattleInfoPanelComponent } from '../battle-info-panel/battle-info-panel.component';
 import { TurnService } from '../../services/turn-service';
+import { ResourcesService } from '../../services/resources.service';
 
 @Component({
   selector: 'app-game-info-panel',
@@ -14,7 +12,7 @@ export class GameInfoPanelComponent {
 
   canNextTurn: Signal<boolean>
 
-  constructor(private worldStateService: WorldStateService, private turnService: TurnService){
+  constructor(private resourcesService: ResourcesService, private turnService: TurnService){
     this.canNextTurn = this.turnService.canNextTurn
   }
 
@@ -23,7 +21,7 @@ export class GameInfoPanelComponent {
   })
 
   public goldText = computed(()=> {
-    return "Oil: " + this.worldStateService.resources.get().get("oil")
+    return "Oil: " + this.resourcesService.resources.get().get("oil")
   })
 
   onNextTurn() {

@@ -16,7 +16,6 @@ import { WorldStateService } from "../world-state/world-state.service";
 import { BenefitsService } from "../benefits.service";
 import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
-import { canAffordResources, spendResources } from "../world-state/functions";
 import { City } from "../../models/city";
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
 import { TurnActorsService } from "../turn-actors.service";
@@ -24,6 +23,7 @@ import { EstateFactoryService } from "../estate-factory.service";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
 import { Resource } from "../../models/resource";
 import { BorderComponent } from "../../shared/border/border.component";
+import { ResourcesService } from "../resources.service";
 
 interface CardCreationInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -42,6 +42,7 @@ export class ActionsCardsService {
         private uiStateService: UIStateService,
         private charactersCardService: CharactersCardsService,
         private worldStateService: WorldStateService,
+        private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService,
         private estateFactoryService: EstateFactoryService
     ) {
@@ -126,7 +127,7 @@ export class ActionsCardsService {
             if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), card.requiredSkills))) {
                 return false
             }
-            if(price && !canAffordResources(this.worldStateService, price)) {
+            if(price && !this.resourcesService.canAffordResources(this.worldStateService, price)) {
                 return false
             }
             for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
@@ -151,7 +152,7 @@ export class ActionsCardsService {
                     this.isActionHappening.set(false)
                     this.charactersCardService.cardsHand.discardSelectedCards()
                     if(price) {
-                        spendResources(this.worldStateService, price)
+                        this.resourcesService.spendResources(this.worldStateService, price)
                     }
                     this.cardsHand.discardCard(card)
                 },

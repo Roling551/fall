@@ -1,4 +1,4 @@
-import { computed, effect, Injectable, signal, Type, untracked, ViewContainerRef } from "@angular/core";
+import { Injectable, signal, Type, ViewContainerRef } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
@@ -11,6 +11,7 @@ import { BattleService } from "../battle.service";
 import { BenefitsService } from "../benefits.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
+import { ResourcesService } from "../resources.service";
 
 export type UIData = {
   sideComponent?: Type<any>;
@@ -73,6 +74,7 @@ export class UIStateService {
     public benefitsService: BenefitsService,
     public battleService: BattleService,
     public turnActorsService: TurnActorsService,
+    public resourcesService: ResourcesService
   ) {}
 
   setSideContainerRef(vcRef: ViewContainerRef) {
@@ -189,7 +191,7 @@ export class UIStateService {
 
   public setUI_ = {
     tile: (tile: KeyValuePair<Coordinate, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), {override:true}),
-    createCity: () => this.setUI(getCreateCityUI(this.worldStateService), {override:true}),
+    createCity: () => this.setUI(getCreateCityUI(this.resourcesService, this.worldStateService), {override:true}),
     removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService), {override:true}),
   }
 

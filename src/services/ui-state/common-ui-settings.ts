@@ -21,6 +21,7 @@ import { BenefitsService } from "../benefits.service"
 import { addOrRemoveTileToCity, createEstate } from "../world-state/functions"
 import { TurnActorsService } from "../turn-actors.service"
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component"
+import { ResourcesService } from "../resources.service"
 
 
 export function getTileUI(
@@ -86,21 +87,21 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
     }
 }
 
-export function getCreateCityUI(worldStateService: WorldStateService):UIData {
+export function getCreateCityUI(resourcesSservice: ResourcesService, worldStateService: WorldStateService):UIData {
     const cityPrice = 10;
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Create city"},
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            const gold = worldStateService.resources.get().get("oil")!
+            const gold = resourcesSservice.resources.get().get("oil")!
             if(gold < cityPrice) {
                 return
             }
             if(!!tile.value.mapEntity.get() || !!tile.value.belongsTo.get()) {
                 return
             }
-            worldStateService.resources.get().set("oil", gold-cityPrice)
-            worldStateService.resources.forceUpdate()
+            resourcesSservice.resources.get().set("oil", gold-cityPrice)
+            resourcesSservice.resources.forceUpdate()
             const city = new City()
             tile.value.mapEntity.set(city);
             const citySignal = tile.value.mapEntity as unknown as ForceSignal<City>

@@ -4,12 +4,9 @@ import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { createForceSignal, ForceSignal } from '../../util/force-signal';
 import { City } from '../../models/city';
-import { addExistingNumericalValues } from '../../util/map-functions';
-import { Unit } from '../../models/unit';
 import { dijkstra, dijkstraAllNodes } from '../../util/path-finding';
 import { TileDirection } from '../../models/tile-direction';
 import { Benefit } from '../../models/benefit';
-import { Resource } from '../../models/resource';
 import { Obstacles } from '../../models/obstacles';
 import { RegularResourceSource } from '../../models/resource-source';
 
@@ -21,7 +18,6 @@ export class WorldStateService {
     sizeY = 10
 
     tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.getTiles(this.sizeX, this.sizeY)
-    resources = createForceSignal<Map<Resource,number>>(new Map([["oil",25]]))
     cities = createForceSignal(new Map<string, ForceSignal<City>>());
 
     findPath(start: KeyValuePair<Coordinate, Tile>, end: KeyValuePair<Coordinate, Tile>) {
@@ -87,11 +83,7 @@ export class WorldStateService {
 
     public nextTurn() {
         for (const [coordinate, city] of this.cities.get().entries()) {
-        addExistingNumericalValues(this.resources.get(), city.get().produced());
-        this.resources.forceUpdate();
-        }
-        for (const [coordinate, city] of this.cities.get().entries()) {
-        city.get().nextTurn()
+            city.get().nextTurn()
         }
     }
 

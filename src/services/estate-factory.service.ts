@@ -1,12 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Estate } from "../models/estate";
-import { WorldStateService } from "./world-state/world-state.service";
 import { Tile } from "../models/tile";
 import { addExistingNumericalValues, addToMapValue, withdrawFromMapValue } from "../util/map-functions";
-import { Resource } from "../models/resource";
-import { withdrawFromObjectsValue } from "../util/object-numerical-functions";
 import { Coordinate } from "../models/coordinate";
 import { Skill } from "../models/skill";
+import { ResourcesService } from "./resources.service";
 
 export interface CreateEstateInfo {
     skills: Map<Skill, number>
@@ -19,7 +17,7 @@ export interface CreateEstateInfo {
 })
 export class EstateFactoryService {
 
-    constructor(private worldStateService: WorldStateService) {}
+    constructor(private resourcesService: ResourcesService) {}
 
     getCreateEstateInfo() {
         const skills = new Map<Skill, number>([["mining", 3]])
@@ -43,8 +41,8 @@ export class EstateFactoryService {
                             t -= 1
                             const actionResult = source.action(skills)
                             isSourceDone = actionResult.isFinished
-                            addExistingNumericalValues(this.worldStateService.resources.get(), actionResult.resources)
-                            this.worldStateService.resources.forceUpdate()
+                            addExistingNumericalValues(this.resourcesService.resources.get(), actionResult.resources)
+                            this.resourcesService.resources.forceUpdate()
                         }
                     } 
                 }

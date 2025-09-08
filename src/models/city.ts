@@ -63,24 +63,6 @@ export class City extends MapEntity {
         }
     }
 
-    override produced = computed(()=>{
-        const production = new Map(super.baseProduced())
-        addExistingNumericalValues(production, this.population.produced())
-        for (const [key, tile] of this.ownedTiles.get().entries()) {
-            const mapEntity = tile.value.mapEntity.get()
-            if(!!mapEntity && mapEntity.type === "estate") {
-                const estate = mapEntity as Estate
-                addExistingNumericalValues(production, estate.produced())
-            }
-        }
-        for (const job of this.jobs.get()) {
-            addExistingNumericalValues(production, job.produced())
-        }
-        production.set("authority-need", production.get("authority-need")! + this.ownedTilesNumber())
-        production.set("workers", this.population.amount())
-        return production
-    })
-
     benefits = computed<Map<string, Benefit>>(()=>{
         let result = new Map<string, Benefit>();
         return result
