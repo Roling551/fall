@@ -6,7 +6,6 @@ import { Tile } from "../../models/tile";
 import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { WorldStateService } from "../world-state/world-state.service";
 import { Estate } from "../../models/estate";
-import { BonusesService } from "../bonuses.service";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
 import { BenefitsService } from "../benefits.service";
@@ -71,7 +70,6 @@ export class UIStateService {
 
   constructor(
     public worldStateService: WorldStateService,
-    public bonusesService: BonusesService,
     public benefitsService: BenefitsService,
     public battleService: BattleService,
     public turnActorsService: TurnActorsService,
