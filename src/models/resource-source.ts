@@ -1,3 +1,4 @@
+import { signal } from "@angular/core";
 import { Resource } from "./resource";
 import { Skill } from "./skill";
 
@@ -12,17 +13,19 @@ export abstract class ResourceSource {
 }
 
 export class RegularResourceSource extends ResourceSource {
-    constructor(public mainSkill: Skill, public resourceType: Resource, public resourceAmount: number) {
+    resourceAmount = signal(0)
+    constructor(public mainSkill: Skill, public resourceType: Resource, resourceAmount: number) {
         super()
+        this.resourceAmount.set(resourceAmount)
     }
 
     override action(skills: Map<Skill, number>): ResourceSourceActionResult {
         const appliedSkillPoints = skills.get(this.mainSkill) || 0
-        const resourceGained = Math.min(this.resourceAmount, appliedSkillPoints)
-        this.resourceAmount -= resourceGained
+        const resourceGained = Math.min(this.resourceAmount(), appliedSkillPoints)
+        this.resourceAmount.set(this.resourceAmount() - resourceGained)
         return {
             resources: new Map([[this.resourceType, resourceGained]]),
-            isFinished: this.resourceAmount <= 0
+            isFinished: this.resourceAmount() <= 0
         }
     }
 

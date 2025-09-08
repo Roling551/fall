@@ -23,13 +23,13 @@ export class ResourcesInfoComponent {
         this.sizeY = styleVariablesService.sizeY
     }
 
-    resources = computed(()=>{
-        return this.tile?.value.resourceSources.get()
+    resourcesTexts = computed(()=>{
+        return this.tile?.value.resourceSources.get().map(x=>this.getText(x))
     })
 
     getText(resourceSource: ResourceSource){
         if(resourceSource instanceof RegularResourceSource) {
-            return getResourceSymbol(resourceSource.resourceType) + "-" + resourceSource.resourceAmount
+            return getResourceSymbol(resourceSource.resourceType) + "-" + resourceSource.resourceAmount()
         } else {
             return ""
         }
