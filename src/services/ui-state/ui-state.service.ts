@@ -48,7 +48,6 @@ const defaultUISettings: UISettings = {
 export class UIStateService {
 
   private viewSideContainerRef!: ViewContainerRef;
-  private viewHeaderContainerRef!: ViewContainerRef;
 
   public _ui?: UIData
   public _uiSettings: UISettings = {...defaultUISettings}
@@ -80,10 +79,7 @@ export class UIStateService {
 
   setSideContainerRef(vcRef: ViewContainerRef) {
     this.viewSideContainerRef = vcRef;
-  }
-
-  setHeaderContainerRef(vcRef: ViewContainerRef) {
-    this.viewHeaderContainerRef = vcRef;
+    this.cancel()
   }
 
   setUI(ui:UIData, uiSettings: UISettings = {...defaultUISettings}) {
@@ -136,8 +132,10 @@ export class UIStateService {
       compRef.changeDetectorRef.detectChanges();
     }
     else {
-      this.viewSideContainerRef.clear();
-      this.viewSideContainerRef.createComponent(ui.sideComponent!);
+        if(this.viewSideContainerRef) {
+            this.viewSideContainerRef.clear();
+            this.viewSideContainerRef.createComponent(ui.sideComponent!);
+        }
     }
   }
 
