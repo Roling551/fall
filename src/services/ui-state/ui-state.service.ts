@@ -11,7 +11,7 @@ import { BenefitsService } from "../benefits.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { ResourcesService } from "../resources.service";
-import { LevelService } from "../level.service";
+import { CurrentLevelService } from "../current-level.service";
 
 export type UIData = {
   sideComponent?: Type<any>;
@@ -70,7 +70,7 @@ export class UIStateService {
   private defaultSideComponent = ActionsListComponent
 
   constructor(
-    public levelService: LevelService,
+    public levelService: CurrentLevelService,
     public benefitsService: BenefitsService,
     public battleService: BattleService,
     public turnActorsService: TurnActorsService,

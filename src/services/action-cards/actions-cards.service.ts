@@ -23,7 +23,7 @@ import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.compo
 import { Resource } from "../../models/resource";
 import { BorderComponent } from "../../shared/border/border.component";
 import { ResourcesService } from "../resources.service";
-import { LevelService } from "../level.service";
+import { CurrentLevelService } from "../current-level.service";
 
 interface CardCreationInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -41,7 +41,7 @@ export class ActionsCardsService {
     constructor(
         private uiStateService: UIStateService,
         private charactersCardService: CharactersCardsService,
-        private levelService: LevelService,
+        private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService,
         private estateFactoryService: EstateFactoryService

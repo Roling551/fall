@@ -3,14 +3,14 @@ import { UIStateService } from "./ui-state/ui-state.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { CharactersCardsService } from "./characters-cards.service";
 import { TurnActorsService } from "./turn-actors.service";
-import { LevelService } from "./level.service";
+import { CurrentLevelService } from "./current-level.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnService {
     constructor(
-        private levelService: LevelService,
+        private levelService: CurrentLevelService,
         private actionsCardsService: ActionsCardsService,
         private charactersCardsService: CharactersCardsService,
         private uiStateService: UIStateService,

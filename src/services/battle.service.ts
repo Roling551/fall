@@ -7,14 +7,14 @@ import { createForceSignal } from "../util/force-signal";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { Army } from "../models/army";
 import { getFirstOfSet } from "../util/util";
-import { LevelService } from "./level.service";
+import { CurrentLevelService } from "./current-level.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BattleService {
 
-    constructor(private levelService: LevelService) {}
+    constructor(private levelService: CurrentLevelService) {}
 
     unitsPosition = createForceSignal(new Map<Unit, KeyValuePair<Coordinate, Tile>>())
     enemyArmies = createForceSignal(new Map<Army, KeyValuePair<Coordinate, Tile>>)

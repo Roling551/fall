@@ -20,7 +20,7 @@ import { BenefitsService } from "../benefits.service"
 import { TurnActorsService } from "../turn-actors.service"
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component"
 import { ResourcesService } from "../resources.service"
-import { LevelService } from "../level.service"
+import { CurrentLevelService } from "../current-level.service"
 import { addOrRemoveTileToCity, createEstate } from "../../models/level/level.functions"
 
 
@@ -50,7 +50,7 @@ export function getTileUI(
     }
 }
 
-export function getRemoveCityUI(levelService: LevelService):UIData {
+export function getRemoveCityUI(levelService: CurrentLevelService):UIData {
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Remove city"},
@@ -73,7 +73,7 @@ export function getRemoveCityUI(levelService: LevelService):UIData {
     }
 }
 
-export function getCreateCityUI(resourcesSservice: ResourcesService, levelService: LevelService):UIData {
+export function getCreateCityUI(resourcesSservice: ResourcesService, levelService: CurrentLevelService):UIData {
     const cityPrice = 10;
     return {
         sideComponent:SimpleTextComponent, 
@@ -173,7 +173,7 @@ export function getMoveUnitsAction(
 
 export function getMoveUnitsBattleAction(
     uiStateService: UIStateService,
-    levelService: LevelService,
+    levelService: CurrentLevelService,
     battleService: BattleService,
     previousTile: KeyValuePair<Coordinate, Tile>,
     selectedUnitsSignal: ForceSignal<Set<Unit>>

@@ -8,7 +8,7 @@ import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
 import { createForceSignal } from "../util/force-signal";
-import { LevelService } from "./level.service";
+import { CurrentLevelService } from "./current-level.service";
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,7 @@ export class BenefitsService {
     listenForEstateProductionBonuses
     constructor(
         private technologiesService: TechnologiesService,
-        private levelService: LevelService
+        private levelService: CurrentLevelService
     ) 
     {
         this.estateBonuses = computed(()=> {

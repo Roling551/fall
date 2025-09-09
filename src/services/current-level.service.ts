@@ -5,6 +5,6 @@ import { createForceSignal } from "../util/force-signal";
 @Injectable({
   providedIn: 'root'
 })
-export class LevelService {
+export class CurrentLevelService {
     level = createForceSignal<Level|undefined>(new Level())
 }

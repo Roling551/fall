@@ -6,7 +6,7 @@ import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { MapTileComponent } from '../map-tile/map-tile.component';
-import { LevelService } from '../../services/level.service';
+import { CurrentLevelService } from '../../services/current-level.service';
 
 @Component({
   selector: 'app-world-map',
@@ -24,7 +24,7 @@ export class WorldMapComponent {
   public tiles
   public mapAction
 
-  constructor(public levelService: LevelService, public uiStateService: UIStateService){
+  constructor(public levelService: CurrentLevelService, public uiStateService: UIStateService){
     this.mapAction = this.uiStateService.mapAction
     this.tiles = computed(()=>{
         return this.levelService.level.get()?.map.tiles
