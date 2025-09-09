@@ -18,7 +18,6 @@ import { createForceSignal } from '../../util/force-signal';
 export class BorderComponent implements OnChanges {
   @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>;
   @Input({required: true}) input!: any;
-  getDirections?: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>) => Signal<TileDirection[]>
 
   directions? : Signal<TileDirection[]>
 
@@ -30,8 +29,7 @@ export class BorderComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getDirections = this.input["getDirections"]
-    this.directions = this.getDirections!(this.tile!)!
+    this.directions = this.input["getDirections"]!(this.tile!)!
   }
 
   getImgTop() {

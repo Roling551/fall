@@ -98,13 +98,16 @@ export class ActionsCardsService {
                             template: BorderComponent,
                             doRender: doRenderBorder,
                             input: {
-                                getDirections: computed(()=>{
-                                    const level = this.levelService.level.get()
-                                    if(!level) {
-                                        return []
+                                getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=>{
+                                        return computed(() => {
+                                            const level = this.levelService.level.get()
+                                            if(!level) {
+                                                return []
+                                            }
+                                            return level.map.getDirectionsFunction(doRenderBorder)(tileInfoIsAbout)()
+                                        })
                                     }
-                                    return level.map.getDirectionsFunction(doRenderBorder)
-                                })}
+                                }
                         }
                     ]])
                 }
