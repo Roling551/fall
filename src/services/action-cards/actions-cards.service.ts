@@ -12,7 +12,6 @@ import { createMultiStageAction } from "../ui-state/create-multi-stage-action";
 import { mapContainsMap } from "../../util/map-functions";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { ActionCardInfo } from "../../models/action-card-info";
-import { WorldStateService } from "../world-state/world-state.service";
 import { BenefitsService } from "../benefits.service";
 import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
@@ -24,6 +23,7 @@ import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.compo
 import { Resource } from "../../models/resource";
 import { BorderComponent } from "../../shared/border/border.component";
 import { ResourcesService } from "../resources.service";
+import { LevelService } from "../level.service";
 
 interface CardCreationInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -41,14 +41,20 @@ export class ActionsCardsService {
     constructor(
         private uiStateService: UIStateService,
         private charactersCardService: CharactersCardsService,
-        private worldStateService: WorldStateService,
+        private levelService: LevelService,
         private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService,
         private estateFactoryService: EstateFactoryService
     ) {
-        const cards = [] 
-        cards.push(this.exampleCard())
-        cards.push(this.createEstateCard())
+        const cards = []
+        let card = this.exampleCard()
+        if(card) {
+            cards.push(card)
+        }
+        card = this.createEstateCard()
+        if(card) {
+            cards.push(card)
+        }
         this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
@@ -84,14 +90,21 @@ export class ActionsCardsService {
             [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        return getCreateEstateAction(this.worldStateService, this.turnActorsService, createEstateInfo.getEstate)(tile)
+                        return getCreateEstateAction(this.levelService, this.turnActorsService, createEstateInfo.getEstate)(tile)
                     }, 
                     tileInfos: new Map([[
                         "border", 
                         {
                             template: BorderComponent,
                             doRender: doRenderBorder,
-                            input: {getDirections: this.worldStateService.getDirectionsFunction(doRenderBorder)}
+                            input: {
+                                getDirections: computed(()=>{
+                                    const level = this.levelService.level.get()
+                                    if(!level) {
+                                        return []
+                                    }
+                                    return level.map.getDirectionsFunction(doRenderBorder)
+                                })}
                         }
                     ]])
                 }
@@ -105,6 +118,10 @@ export class ActionsCardsService {
         cardCreationInfo: CardCreationInfo[],
         price?: Map<Resource, number>,
     ) {
+        const level = this.levelService.level.get()
+        if(!level) {
+            return
+        }
         const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
         const oldCardActions0 = cardCreationInfo[0].action
         const uis: UIData[] = cardCreationInfo.map(x=>{return {} as UIData})
@@ -117,21 +134,21 @@ export class ActionsCardsService {
             }]])
         }
         cardCreationInfo[0].action = (tile: KeyValuePair<Coordinate, Tile>)=>{
-            if(this.worldStateService.cities.get().size<1) {
+            if(level.cities.get().size<1) {
                 return false
             }
             let city: [string, ForceSignal<City>]
-            for(const city_ of this.worldStateService.cities.get()) {
+            for(const city_ of level.cities.get()) {
                 city = city_
             }
             if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), card.requiredSkills))) {
                 return false
             }
-            if(price && !this.resourcesService.canAffordResources(this.worldStateService, price)) {
+            if(price && !this.resourcesService.canAffordResources(price)) {
                 return false
             }
             for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-                const path = this.worldStateService.findPathByKey(city![0], tile.key.getKey())
+                const path = level.map.findPathByKey(city![0], tile.key.getKey())
                 if(!path || path.distance > characterCard.movement) {
                     return false
                 }
@@ -152,7 +169,7 @@ export class ActionsCardsService {
                     this.isActionHappening.set(false)
                     this.charactersCardService.cardsHand.discardSelectedCards()
                     if(price) {
-                        this.resourcesService.spendResources(this.worldStateService, price)
+                        this.resourcesService.spendResources(price)
                     }
                     this.cardsHand.discardCard(card)
                 },
@@ -163,17 +180,21 @@ export class ActionsCardsService {
     }
 
     reachableTiles = computed(()=>{
+        const level = this.levelService.level.get()
+        if(!level) {
+            return []
+        }
         let city: [string, ForceSignal<City>]
-        if(this.worldStateService.cities.get().size<1) {
+        if(level.cities.get().size<1) {
             return [] as string[]
         }
-        for(const city_ of this.worldStateService.cities.get()) {
+        for(const city_ of level.cities.get()) {
             city = city_
         }
         let firstTile = true
         let tiles:string[] = []
         for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-            const cardsTiles = this.worldStateService.getReacheableTiles(city![0], characterCard.movement, this.getEdgeWidghtFunction(characterCard)).map(x=>x.node)
+            const cardsTiles = level.map.getReacheableTiles(city![0], characterCard.movement, this.getEdgeWidghtFunction(characterCard)).map(x=>x.node)
             if(firstTile) {
                 tiles = cardsTiles
                 firstTile = false
@@ -186,7 +207,11 @@ export class ActionsCardsService {
 
     getEdgeWidghtFunction(characterCard: CharacterCardInfo) {
         return (from: string, to: string)=>{
-            return this.worldStateService.tiles.get(to)!.value.obstacles.get().getDistance(characterCard.movementAdvantege)
+            const level = this.levelService.level.get()
+            if(!level) {
+                return Infinity
+            }
+            return level.map.tiles.get(to)!.value.obstacles.get().getDistance(characterCard.movementAdvantege)
         }
     }
 }

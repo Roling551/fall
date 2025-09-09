@@ -7,8 +7,8 @@ import { EstateProductionBonus } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
-import { WorldStateService } from "./world-state/world-state.service";
 import { createForceSignal } from "../util/force-signal";
+import { LevelService } from "./level.service";
 
 @Injectable({
   providedIn: 'root'
@@ -29,9 +29,12 @@ export class BenefitsService {
                 result.set(benefit.estateName, benefit.getEstate)
             }
         }
-        for(const [key, benefit] of this.worldStateService.benefits()) {
-            if(benefit.type === "unlock-estate") {
-                result.set(benefit.estateName, benefit.getEstate)
+        const level = this.levelService.level.get()
+        if(level) {
+            for(const [key, benefit] of level.benefits()) {
+                if(benefit.type === "unlock-estate") {
+                    result.set(benefit.estateName, benefit.getEstate)
+                }
             }
         }
         return result
@@ -42,7 +45,7 @@ export class BenefitsService {
     listenForEstateProductionBonuses
     constructor(
         private technologiesService: TechnologiesService,
-        private worldStateService: WorldStateService
+        private levelService: LevelService
     ) 
     {
         this.estateBonuses = computed(()=> {
@@ -57,9 +60,12 @@ export class BenefitsService {
                     result.set(key, benefit.bonus)
                 }
             }
-            for(const [key, benefit] of this.worldStateService.benefits()) {
-                if(benefit.type === "estate-production-bonus") {
-                    result.set(key, benefit.bonus)
+            const level = levelService.level.get()
+            if(level) {
+                for(const [key, benefit] of level.benefits()) {
+                    if(benefit.type === "estate-production-bonus") {
+                        result.set(key, benefit.bonus)
+                    }
                 }
             }
             return result

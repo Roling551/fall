@@ -3,18 +3,18 @@ import { EnemyUnit, Unit } from "../models/unit";
 import { Tile } from "../models/tile";
 import { KeyValuePair } from "../models/key-value-pair";
 import { Coordinate } from "../models/coordinate";
-import { WorldStateService } from "./world-state/world-state.service";
 import { createForceSignal } from "../util/force-signal";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { Army } from "../models/army";
 import { getFirstOfSet } from "../util/util";
+import { LevelService } from "./level.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BattleService {
 
-    constructor(private worldStateService: WorldStateService) {}
+    constructor(private levelService: LevelService) {}
 
     unitsPosition = createForceSignal(new Map<Unit, KeyValuePair<Coordinate, Tile>>())
     enemyArmies = createForceSignal(new Map<Army, KeyValuePair<Coordinate, Tile>>)
@@ -41,7 +41,8 @@ export class BattleService {
     }
 
     moveUnits(units: Set<Unit>, previousTile: KeyValuePair<Coordinate, Tile>, path: string[]) {
-        if(path.length==0) {
+        const level = this.levelService.level.get()
+        if(path.length==0 || !level) {
             return previousTile
         }
         
@@ -52,9 +53,9 @@ export class BattleService {
 
         while(path.length > 0 && movesLeft>0) {
             const nextLocation = path[0]
-            const nextTile = this.worldStateService.tiles.get(nextLocation)!
+            const nextTile = level.map.tiles.get(nextLocation)!
             this.encounter(units, nextTile)
-            const weight = this.worldStateService.getEdgeWeight(previousTile.key.getKey(), nextLocation)
+            const weight = level.map.getEdgeWeight(previousTile.key.getKey(), nextLocation)
             for(const unit of units) {
                 previousTile.value.units.get().delete(unit)
                 previousTile.value.units.forceUpdate()
@@ -79,8 +80,12 @@ export class BattleService {
     }
 
     startBattle() {
+        const level = this.levelService.level.get()
+        if(!level) {
+            return
+        }
         const startLocation = "0_0"
-        const startTile = this.worldStateService.tiles.get(startLocation)
+        const startTile = level.map.tiles.get(startLocation)
         if(!startTile) {
             return
         }
@@ -89,11 +94,11 @@ export class BattleService {
         const unit = new EnemyUnit("barbarian", 2)
         army.units.get().add(unit)
         this.addUnit(unit, startTile)
-        if(this.worldStateService.cities.get().size<=0) {
+        if(level.cities.get().size<=0) {
             return
         }
-        for(const [cityLocation, city] of this.worldStateService.cities.get()) {
-            const pathing = this.worldStateService.findPathByKey(startLocation, cityLocation)
+        for(const [cityLocation, city] of level.cities.get()) {
+            const pathing = level.map.findPathByKey(startLocation, cityLocation)
             if(!pathing) {
                 return
             }
@@ -130,12 +135,16 @@ export class BattleService {
 
 
     moveArmiesToDestination() {
+        const level = this.levelService.level.get()
+        if(!level) {
+            return
+        }
         for(let [army, previousTile] of this.enemyArmies.get()) {
             if(!army.path) {
                 return
             }
             if(army.path.length == 0) {
-                this.worldStateService.removeCity(previousTile)
+                level.removeCity(previousTile)
             }
             this.enemyArmies.get().set(army, this.moveUnits(army.units.get(), previousTile, army.path))
 

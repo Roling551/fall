@@ -2,7 +2,6 @@ import { Coordinate } from "../../models/coordinate"
 import { KeyValuePair } from "../../models/key-value-pair"
 import { Tile } from "../../models/tile"
 import { UIData, UIStateService } from "./ui-state.service"
-import { WorldStateService } from "../world-state/world-state.service"
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component"
 import { SimpleTextComponent } from "../../shared/simple-text/simple-text.component"
 import { createForceSignal, ForceSignal } from "../../util/force-signal"
@@ -18,20 +17,19 @@ import { BattleService } from "../battle.service"
 import { BorderComponent } from "../../shared/border/border.component"
 import { computed } from "@angular/core"
 import { BenefitsService } from "../benefits.service"
-import { addOrRemoveTileToCity, createEstate } from "../world-state/functions"
 import { TurnActorsService } from "../turn-actors.service"
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component"
 import { ResourcesService } from "../resources.service"
+import { LevelService } from "../level.service"
+import { addOrRemoveTileToCity, createEstate } from "../../models/level/level.functions"
 
 
 export function getTileUI(
     tile: KeyValuePair<Coordinate, Tile>,
-    worldStateService: WorldStateService,
     selectedUnits?: Set<Unit>
 ):UIData {
 
     let doRenderTileInfoFunction
-    let tileInfoInput
     if(tile.value.mapEntity.get()?.type === "city") {
         doRenderTileInfoFunction = (clickedTile: KeyValuePair<Coordinate, Tile>)=> {
             if(clickedTile.key.getKey() === tile.key.getKey()) {
@@ -42,33 +40,17 @@ export function getTileUI(
             }
             return clickedTile.value.belongsTo.get() === tile.value.mapEntity.get()  
         }
-        // tileInfoInput = {
-        //     getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
-        //         return computed(()=>[...worldStateService.getNeighborTiles(tileInfoIsAbout.key).entries()].
-        //             filter(keyV=>keyV[1].value.belongsTo.get() !== tile.value.mapEntity.get() &&
-        //             keyV[1].key.getKey() !== tile.key.getKey()).
-        //             map(keyV=>keyV[0]))
-        //     }
-        // }
     }
 
     return {
         sideComponent:TilePanelComponent, 
         sideComponentInputs:{tile, selectedUnits},
         additionalInfo: {tile},
-        tileInfos: 
-        new Map([
-            // [
-            //     "border", {
-            //     template: BorderComponent,
-            //     doRender: (doRenderTileInfoFunction || ((tile: KeyValuePair<Coordinate, Tile>)=>{return false})),
-            //     input: tileInfoInput
-            // }]
-        ])
+        tileInfos: new Map([])
     }
 }
 
-export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
+export function getRemoveCityUI(levelService: LevelService):UIData {
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Remove city"},
@@ -76,7 +58,11 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
                 if(tile.value.mapEntity.get()?.type != "city") {
                     return
                 }
-                worldStateService.removeCity(tile)
+                const level = levelService.level.get()
+                if(!level) {
+                    return
+                }
+                level.removeCity(tile)
             },
         tileInfos: new Map([["unavaliable", {
             template: UnavaliableComponent,
@@ -87,7 +73,7 @@ export function getRemoveCityUI(worldStateService: WorldStateService):UIData {
     }
 }
 
-export function getCreateCityUI(resourcesSservice: ResourcesService, worldStateService: WorldStateService):UIData {
+export function getCreateCityUI(resourcesSservice: ResourcesService, levelService: LevelService):UIData {
     const cityPrice = 10;
     return {
         sideComponent:SimpleTextComponent, 
@@ -105,7 +91,11 @@ export function getCreateCityUI(resourcesSservice: ResourcesService, worldStateS
             const city = new City()
             tile.value.mapEntity.set(city);
             const citySignal = tile.value.mapEntity as unknown as ForceSignal<City>
-            worldStateService.addCity(tile.key.getKey(), citySignal)
+            const level = levelService.level.get()
+            if(!level) {
+                return
+            }
+            level.addCity(tile.key.getKey(), citySignal)
         },
         tileInfos: new Map([["unavaliable", {
             template: UnavaliableComponent,
@@ -183,14 +173,19 @@ export function getMoveUnitsAction(
 
 export function getMoveUnitsBattleAction(
     uiStateService: UIStateService,
-    worldStateService: WorldStateService,
+    levelService: LevelService,
     battleService: BattleService,
     previousTile: KeyValuePair<Coordinate, Tile>,
     selectedUnitsSignal: ForceSignal<Set<Unit>>
 ) {
     return {
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            const pathing = worldStateService.findPath(previousTile, tile)
+            const level = levelService.level.get()
+            if(!level) {
+                return
+            }
+            level.removeCity(tile)
+            const pathing = level.map.findPath(previousTile, tile)
             if(pathing) {
                 const lastTile = battleService.moveUnits(selectedUnitsSignal.get(), previousTile, pathing.path)
                 uiStateService.setUI_.tile(lastTile)

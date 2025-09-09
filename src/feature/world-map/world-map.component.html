@@ -1,13 +1,15 @@
-<app-isometric-tiling 
-    [tilesData]="tiles"
-    [sizeX]="sizeX"
-    [sizeY]="sizeY"
-    [tileTemplate]="tileTemplate"
-    [backgroundImage]="backgroundImage"
-    (tileClick)="mapAction()($event)"
-    [additionalGraphics]="tileInfo()"
-    (tileHover)="onHoverChange($event)"
-/>
+@if(tiles()) {
+    <app-isometric-tiling 
+        [tilesData]="tiles()!"
+        [sizeX]="sizeX"
+        [sizeY]="sizeY"
+        [tileTemplate]="tileTemplate"
+        [backgroundImage]="backgroundImage"
+        (tileClick)="mapAction()($event)"
+        [additionalGraphics]="tileInfo()"
+        (tileHover)="onHoverChange($event)"
+    />
+}
 
 <ng-template #tileTemplate let-tile="tile">
     <app-map-tile

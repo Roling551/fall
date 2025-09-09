@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { WorldStateService } from '../../services/world-state/world-state.service';
 import { MapEntity } from '../../models/map-entity';
 import { City } from '../../models/city';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
@@ -19,7 +18,6 @@ import { CurrentWindowService } from '../../services/current-window.service';
 })
 export class ActionsListComponent {
   constructor(
-    public worldStateService: WorldStateService,
     public uiStateService: UIStateService,
     public currentWindowService:CurrentWindowService,
   ) {}

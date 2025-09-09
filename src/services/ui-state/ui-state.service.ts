@@ -4,7 +4,6 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
 import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
-import { WorldStateService } from "../world-state/world-state.service";
 import { Estate } from "../../models/estate";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
@@ -12,6 +11,7 @@ import { BenefitsService } from "../benefits.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { ResourcesService } from "../resources.service";
+import { LevelService } from "../level.service";
 
 export type UIData = {
   sideComponent?: Type<any>;
@@ -70,7 +70,7 @@ export class UIStateService {
   private defaultSideComponent = ActionsListComponent
 
   constructor(
-    public worldStateService: WorldStateService,
+    public levelService: LevelService,
     public benefitsService: BenefitsService,
     public battleService: BattleService,
     public turnActorsService: TurnActorsService,
@@ -190,9 +190,9 @@ export class UIStateService {
   }
 
   public setUI_ = {
-    tile: (tile: KeyValuePair<Coordinate, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, this.worldStateService, selectedUnits), {override:true}),
-    createCity: () => this.setUI(getCreateCityUI(this.resourcesService, this.worldStateService), {override:true}),
-    removeCity: () => this.setUI(getRemoveCityUI(this.worldStateService), {override:true}),
+    tile: (tile: KeyValuePair<Coordinate, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, selectedUnits), {override:true}),
+    createCity: () => this.setUI(getCreateCityUI(this.resourcesService, this.levelService), {override:true}),
+    removeCity: () => this.setUI(getRemoveCityUI(this.levelService), {override:true}),
   }
 
   public setMapAction_ = {
@@ -205,7 +205,7 @@ export class UIStateService {
     moveUnits: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
       this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
     moveUnitsBattle: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
-      this.setUI(getMoveUnitsBattleAction(this, this.worldStateService, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
+      this.setUI(getMoveUnitsBattleAction(this, this.levelService, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
   }
 
   public setBaseTileInfo(name: string, tileInfo: TileInfo) {

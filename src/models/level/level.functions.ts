@@ -1,34 +1,9 @@
-import { City } from "../../models/city"
-import { Coordinate } from "../../models/coordinate"
-import { Estate } from "../../models/estate"
-import { KeyValuePair } from "../../models/key-value-pair"
-import { Tile } from "../../models/tile"
-import { TurnActorsService } from "../turn-actors.service"
-
-export function addOrRemoveTileToCity(
-    tile: KeyValuePair<Coordinate, Tile>, 
-    cityTile: KeyValuePair<Coordinate, Tile>
-) {
-    if(tile.value.mapEntity.get()?.type === "city") {
-        return
-    }
-    const mapEntity = cityTile.value.mapEntity.get()!
-    const city = mapEntity as City
-    if(!tile.value.belongsTo.get()) {
-        tile.value.belongsTo.set(mapEntity)
-        city.addOwnedTile(tile)
-        
-    } else if(tile.value.belongsTo.get()!==mapEntity) {
-        const otherCity = tile.value.belongsTo.get() as City
-        otherCity.removeOwnedTile(tile)
-        tile.value.belongsTo.set(mapEntity)
-        city.addOwnedTile(tile)
-    }
-    else {
-        tile.value.belongsTo.set(undefined)
-        city.removeOwnedTile(tile)
-    }
-}
+import { TurnActorsService } from "../../services/turn-actors.service";
+import { City } from "../city";
+import { Coordinate } from "../coordinate";
+import { Estate } from "../estate";
+import { KeyValuePair } from "../key-value-pair";
+import { Tile } from "../tile";
 
 export function createEstate(
     tile: KeyValuePair<Coordinate, Tile>, 
@@ -70,3 +45,28 @@ export function addTileToCityAndCreateEstate(
     }
     return false
 }
+
+export function addOrRemoveTileToCity(
+    tile: KeyValuePair<Coordinate, Tile>, 
+    cityTile: KeyValuePair<Coordinate, Tile>
+) {
+    if(tile.value.mapEntity.get()?.type === "city") {
+        return
+    }
+    const mapEntity = cityTile.value.mapEntity.get()!
+    const city = mapEntity as City
+    if(!tile.value.belongsTo.get()) {
+        tile.value.belongsTo.set(mapEntity)
+        city.addOwnedTile(tile)
+        
+    } else if(tile.value.belongsTo.get()!==mapEntity) {
+        const otherCity = tile.value.belongsTo.get() as City
+        otherCity.removeOwnedTile(tile)
+        tile.value.belongsTo.set(mapEntity)
+        city.addOwnedTile(tile)
+    }
+    else {
+        tile.value.belongsTo.set(undefined)
+        city.removeOwnedTile(tile)
+    }
+    }

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, effect, Signal } from '@angular/core';
 import { Tile } from '../../models/tile';
 import { IsometricTilingComponent } from '../../shared/isometric-tiling/isometric-tiling.component';
-import { WorldStateService } from '../../services/world-state/world-state.service';
 import { CommonModule } from '@angular/common';
 import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { MapTileComponent } from '../map-tile/map-tile.component';
+import { LevelService } from '../../services/level.service';
 
 @Component({
   selector: 'app-world-map',
@@ -24,9 +24,11 @@ export class WorldMapComponent {
   public tiles
   public mapAction
 
-  constructor(public worldStateService: WorldStateService, public uiStateService: UIStateService){
-    this.tiles = this.worldStateService.tiles
+  constructor(public levelService: LevelService, public uiStateService: UIStateService){
     this.mapAction = this.uiStateService.mapAction
+    this.tiles = computed(()=>{
+        return this.levelService.level.get()?.map.tiles
+    })
   }
 
   getTexture(name: string): string {

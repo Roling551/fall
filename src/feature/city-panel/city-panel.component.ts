@@ -8,7 +8,6 @@ import { Tile } from '../../models/tile';
 import { Estate } from '../../models/estate';
 import { Building } from '../../models/building';
 import { PlayerUnit, Unit } from '../../models/unit';
-import { WorldStateService } from '../../services/world-state/world-state.service';
 import { BattleService } from '../../services/battle.service';
 import { BenefitsService } from '../../services/benefits.service';
 import { OneTimeJobPanelComponent } from '../one-time-job-panel/one-time-job-panel.component';

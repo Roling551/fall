@@ -1,0 +1,78 @@
+import { computed } from "@angular/core"
+import { dijkstra, dijkstraAllNodes } from "../util/path-finding"
+import { Coordinate } from "./coordinate"
+import { KeyValuePair } from "./key-value-pair"
+import { Obstacles } from "./obstacles"
+import { RegularResourceSource } from "./resource-source"
+import { Tile } from "./tile"
+import { TileDirection } from "./tile-direction"
+
+export class LevelMap {
+    sizeX = 10
+    sizeY = 10
+
+    tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.getTiles(this.sizeX, this.sizeY)
+
+    private getTile(coordinate: Coordinate) {
+        return new Tile(
+            coordinate,
+            "ground", 
+            [
+                new RegularResourceSource("mining", "oil", 10)
+            ],
+            new Obstacles(new Map([["mountain",1]]))
+        )
+    }
+
+    private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordinate, Tile>> {
+        let tiles = new Map<string, KeyValuePair<Coordinate, Tile>>()
+        for(let i = 0; i < sizeX; i++) {
+        for(let j = 0; j < sizeY; j++) {
+            const coordinate = new Coordinate(i, j)
+            const tile = {key:coordinate, value: this.getTile(coordinate)}
+            tiles.set(tile.key.getKey(), tile)
+        } 
+        }
+        return tiles
+    }
+
+    findPath(start: KeyValuePair<Coordinate, Tile>, end: KeyValuePair<Coordinate, Tile>) {
+        return this.findPathByKey(start.key.getKey(), end.key.getKey())
+    }
+
+    doesCoordinateExists(coordinate: Coordinate) {
+        return coordinate.x>0 && coordinate.x<this.sizeX-1 && coordinate.y>0 && coordinate.y<this.sizeY-1
+    }
+
+    getNeighborTiles(coordinate: Coordinate): Map<TileDirection, KeyValuePair<Coordinate, Tile>> {
+        const neighbors = new Map<TileDirection, KeyValuePair<Coordinate, Tile>>()
+        return new Map(coordinate.getNeighborsAndDirections(this.sizeX, this.sizeY).map(cd=>[cd.direction, this.tiles.get(cd.coordinate.getKey())!]))
+    }
+
+    getEdgeWeight = (from: string, to: string) => 1
+
+    getNeighbors = (node: string) => {
+        return Coordinate.fromKey(node).getNeighbors(this.sizeX, this.sizeY).map(coordiante=>coordiante.getKey())
+    }
+
+    findPathByKey(start: string, end: string, getEdgeWeight: (from: string, to: string) => number = this.getEdgeWeight) {
+        return dijkstra<string>(this.getNeighbors, getEdgeWeight, start, end)
+    }
+
+    getReacheableTiles(start: string, distance: number, getEdgeWeight: (from: string, to: string) => number = this.getEdgeWeight) {
+        return dijkstraAllNodes(this.getNeighbors, getEdgeWeight, start, distance)
+    }
+
+        getDirectionsFunction(condition: (tile: KeyValuePair<Coordinate, Tile>)=>boolean) { 
+        return (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
+            return computed(
+                ()=> {
+                    const directions = [...this.getNeighborTiles(tileInfoIsAbout.key).entries()].
+                    filter(keyV=>!condition(keyV[1])).
+                    map(keyV=>keyV[0])
+                    return directions
+                }
+            )
+        }
+    }
+}

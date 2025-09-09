@@ -1,5 +1,4 @@
 import { Injectable, Signal } from "@angular/core";
-import { WorldStateService } from "./world-state/world-state.service";
 import { BenefitsService } from "./benefits.service";
 import { createForceSignal } from "../util/force-signal";
 import { Benefit } from "../models/benefit";
@@ -14,7 +13,7 @@ import { KeyValuePair } from "../models/key-value-pair";
 })
 export class InitService {
 
-    constructor(public worldStateService: WorldStateService, public benefitsService: BenefitsService, public uiStateService: UIStateService) {}
+    constructor(public benefitsService: BenefitsService, public uiStateService: UIStateService) {}
 
     init() {
         this.uiStateService.setBaseTileInfo("resourcesInfo", {

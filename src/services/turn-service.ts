@@ -1,16 +1,16 @@
 import { computed, Injectable, signal } from "@angular/core";
-import { WorldStateService } from "./world-state/world-state.service";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { CharactersCardsService } from "./characters-cards.service";
 import { TurnActorsService } from "./turn-actors.service";
+import { LevelService } from "./level.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnService {
     constructor(
-        private worldStateService: WorldStateService,
+        private levelService: LevelService,
         private actionsCardsService: ActionsCardsService,
         private charactersCardsService: CharactersCardsService,
         private uiStateService: UIStateService,
@@ -20,13 +20,21 @@ export class TurnService {
     turn = signal(0)
 
     public canNextTurn = computed(() => {
-        return this.worldStateService.canNextTurn()
+        const level = this.levelService.level.get()
+        if(!level) {
+            return false
+        }
+        return level.canNextTurn()
     })
 
     public nextTurn() {
+        const level = this.levelService.level.get()
+        if(!level) {
+            return
+        }
         this.actionsCardsService.nextTurn()
         this.charactersCardsService.nextTurn()
-        this.worldStateService.nextTurn()
+        level.nextTurn()
         this.turnActorsService.nextTurn()
         this.turn.update(x=>x+1)
     }
