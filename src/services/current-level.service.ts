@@ -6,5 +6,6 @@ import { createForceSignal } from "../util/force-signal";
   providedIn: 'root'
 })
 export class CurrentLevelService {
-    level = createForceSignal<Level|undefined>(new Level())
+    level = createForceSignal<Level|undefined>(undefined)
+    
 }

@@ -9,6 +9,7 @@ import { SimpleTextComponent } from '../../shared/simple-text/simple-text.compon
 import { MapMarkingComponent } from '../../shared/map-marking/map-marking.component';
 import { ForceSignal } from '../../util/force-signal';
 import { CurrentWindowService } from '../../services/current-window.service';
+import { LevelsService } from '../../services/levels.service';
 
 @Component({
   selector: 'app-actions-list',
@@ -20,6 +21,7 @@ export class ActionsListComponent {
   constructor(
     public uiStateService: UIStateService,
     public currentWindowService:CurrentWindowService,
+    public levelsService: LevelsService
   ) {}
 
   onCreateCityClick(): void {
@@ -30,5 +32,8 @@ export class ActionsListComponent {
   }
   onTechTreeClick(): void {
     this.currentWindowService.currentWindow.set("tech-tree")
+  }
+  onNextLevel(): void {
+    this.levelsService.nextLevel()
   }
 }

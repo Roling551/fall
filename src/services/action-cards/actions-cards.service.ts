@@ -118,10 +118,6 @@ export class ActionsCardsService {
         cardCreationInfo: CardCreationInfo[],
         price?: Map<Resource, number>,
     ) {
-        const level = this.levelService.level.get()
-        if(!level) {
-            return
-        }
         const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
         const oldCardActions0 = cardCreationInfo[0].action
         const uis: UIData[] = cardCreationInfo.map(x=>{return {} as UIData})
@@ -134,6 +130,10 @@ export class ActionsCardsService {
             }]])
         }
         cardCreationInfo[0].action = (tile: KeyValuePair<Coordinate, Tile>)=>{
+            const level = this.levelService.level.get()
+            if(!level) {
+                return false
+            }
             if(level.cities.get().size<1) {
                 return false
             }
