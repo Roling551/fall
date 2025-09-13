@@ -33,8 +33,7 @@ export class CardsHand<T extends CardInfo> {
 
     discardSelectedCards() {
         this.hand.set(this.hand.get().filter(c=>!this.selectedCards.get().includes(c)))
-        this.hand.forceUpdate()
-        this.discardDeck.get().concat(this.selectedCards.get())
+        this.discardDeck.get().push(...this.selectedCards.get())
         this.discardDeck.forceUpdate()
         this.selectedCards.set([]);
     }
@@ -77,16 +76,16 @@ export class CardsHand<T extends CardInfo> {
     startTurn() {
         let drawsLeft = this.drawsPerTurn
         while(drawsLeft > 0) {
-        if(this.drawDeck.get().length == 0) {
-            this.shuffleCards()
-        }
-        if(this.drawDeck.get().length > 0) {
-            const card = this.drawDeck.get().pop()!
-            this.hand.get().push(card)
-        } else {
-            break
-        }
-        drawsLeft -= 1
+            if(this.drawDeck.get().length == 0) {
+                this.shuffleCards()
+            }
+            if(this.drawDeck.get().length > 0) {
+                const card = this.drawDeck.get().pop()!
+                this.hand.get().push(card)
+            } else {
+                break
+            }
+            drawsLeft -= 1
         }
         this.drawDeck.forceUpdate()
         this.hand.forceUpdate()
