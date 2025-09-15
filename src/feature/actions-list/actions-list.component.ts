@@ -10,18 +10,19 @@ import { MapMarkingComponent } from '../../shared/map-marking/map-marking.compon
 import { ForceSignal } from '../../util/force-signal';
 import { CurrentWindowService } from '../../services/current-window.service';
 import { LevelsService } from '../../services/levels.service';
+import { EditMapComponent } from '../edit-map/edit-map.component';
 
 @Component({
   selector: 'app-actions-list',
-  imports: [],
+  imports: [EditMapComponent],
   templateUrl: './actions-list.component.html',
   styleUrl: './actions-list.component.scss'
 })
 export class ActionsListComponent {
   constructor(
-    public uiStateService: UIStateService,
-    public currentWindowService:CurrentWindowService,
-    public levelsService: LevelsService
+    private uiStateService: UIStateService,
+    private currentWindowService:CurrentWindowService,
+    private levelsService: LevelsService,
   ) {}
 
   onCreateCityClick(): void {

@@ -22,6 +22,8 @@ import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.compo
 import { ResourcesService } from "../resources.service"
 import { CurrentLevelService } from "../current-level.service"
 import { addOrRemoveTileToCity, createEstate } from "../../models/level/level.functions"
+import { Resource } from "../../models/resource"
+import { RegularResourceSource } from "../../models/resource-source"
 
 
 export function getTileUI(
@@ -195,6 +197,14 @@ export function getMoveUnitsBattleAction(
         cancelButtonAction:() => {
             selectedUnitsSignal.get().clear()
             selectedUnitsSignal.forceUpdate()
+        }
+    }
+}
+
+export function changeResourceAction(resource: Resource, change: number) {
+    return {
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
+            tile.value.resourcesSources.changeFirstOfType(resource, change)
         }
     }
 }

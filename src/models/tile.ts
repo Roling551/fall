@@ -1,4 +1,4 @@
-import { signal } from "@angular/core";
+import { effect, signal, untracked } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../util/force-signal";
 import { MapEntity } from "./map-entity";
 import { Unit } from "./unit";
@@ -6,6 +6,7 @@ import { Resource } from "./resource";
 import { Coordinate } from "./coordinate";
 import { Obstacles } from "./obstacles";
 import { ResourceSource } from "./resource-source";
+import { ResourcesSources } from "./resources-sources";
 
 
 export class Tile {
@@ -15,17 +16,16 @@ export class Tile {
     belongsTo = createForceSignal<MapEntity|undefined>(undefined)
     units = createForceSignal(new Set<Unit>())
 
-    resourceSources = createForceSignal<ResourceSource[]>([])
     obstacles = createForceSignal<Obstacles>(new Obstacles())
+
+    public resourcesSources: ResourcesSources = new ResourcesSources()
 
     constructor(
         public coordinate: Coordinate,
         terrainType: string,
-        resourceSources: ResourceSource[] = [],
         obstacles: Obstacles = new Obstacles()
     ) {
         this.terrainType = signal(terrainType)
-        this.resourceSources.set(resourceSources)
         this.obstacles.set(obstacles)
     }
 }

@@ -3,7 +3,7 @@ import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
-import { getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
+import { changeResourceAction, getAddTileToCityAction, getCreateCityUI, getCreateEstateAction, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveCityUI, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { Estate } from "../../models/estate";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
@@ -12,6 +12,7 @@ import { TurnActorsService } from "../turn-actors.service";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
+import { Resource } from "../../models/resource";
 
 export type UIData = {
   sideComponent?: Type<any>;
@@ -206,6 +207,7 @@ export class UIStateService {
       this.setUI(getMoveUnitsAction(this, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
     moveUnitsBattle: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {
       this.setUI(getMoveUnitsBattleAction(this, this.levelService, this.battleService, this._additionalInfo.get()["tile"], selectedUnitsSignal))},
+    changeResource: (resource: Resource, change: number) => {this.setUI(changeResourceAction(resource, change))},
   }
 
   public setBaseTileInfo(name: string, tileInfo: TileInfo) {

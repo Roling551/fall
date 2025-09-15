@@ -24,7 +24,7 @@ export class ResourcesInfoComponent {
     }
 
     resourcesTexts = computed(()=>{
-        return this.tile?.value.resourceSources.get().map(x=>this.getText(x))
+        return this.tile?.value.resourcesSources.sources.get().map(x=>this.getText(x))
     })
 
     getText(resourceSource: ResourceSource){

@@ -14,14 +14,13 @@ export class LevelMap {
     tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.getTiles(this.sizeX, this.sizeY)
 
     private getTile(coordinate: Coordinate) {
-        return new Tile(
+        const tile = new Tile(
             coordinate,
-            "ground", 
-            [
-                new RegularResourceSource("mining", "oil", 10)
-            ],
+            "ground",
             new Obstacles(new Map([["mountain",1]]))
         )
+        tile.resourcesSources.addResourceSource("mining", "oil", 10)
+        return tile
     }
 
     private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordinate, Tile>> {
