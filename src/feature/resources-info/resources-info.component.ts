@@ -5,6 +5,7 @@ import { KeyValuePair } from '../../models/key-value-pair';
 import { StyleVariablesService } from '../../services/style-variables.service';
 import { getResourceSymbol } from '../../models/resource';
 import { RegularResourceSource, ResourceSource } from '../../models/resource-source';
+import { getSkillSymbol, skillsToString } from '../../models/skill';
 
 @Component({
   selector: 'app-resources-info',
@@ -29,7 +30,9 @@ export class ResourcesInfoComponent {
 
     getText(resourceSource: ResourceSource){
         if(resourceSource instanceof RegularResourceSource) {
-            return getResourceSymbol(resourceSource.resourceType) + "-" + resourceSource.resourceAmount()
+            return getSkillSymbol(resourceSource.mainSkill) + "-" + resourceSource.difficulty() +
+            "=>" +
+            getResourceSymbol(resourceSource.resourceType) + "-" + resourceSource.resourceAmount()
         } else {
             return ""
         }

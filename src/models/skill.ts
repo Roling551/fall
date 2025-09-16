@@ -2,6 +2,21 @@ export type Skill = "construction" | "science" | "survival" | "mining" | "cuttin
 
 export const baseZeroSkills = new Map<Skill, number>([["construction", 0], ["science", 0], ["survival", 0]])
 
+export function getSkillSymbol(skill: Skill) {
+    switch(skill) {
+    case "construction":
+        return "co";
+    case "science":
+        return "sc";
+    case "survival":
+        return "su";
+    case "mining":
+        return "mi";
+    case "cutting":
+        return "cu";
+    }
+}
+
 export function skillsToString(skills: Map<Skill, number>) {
     let result = ""    
     if(skills.get("construction") || skills.get("construction")==0) {

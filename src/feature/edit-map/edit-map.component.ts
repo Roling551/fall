@@ -22,7 +22,7 @@ export class EditMapComponent {
         return this.currentLevelService.level.get()?.map
     })
 
-    skills: Skill[] = ['construction', 'science', 'survival', 'mining', 'cutting'];
+    skills: Skill[] = ['mining', 'construction', 'science', 'survival', 'cutting'];
     resources: Resource[] = ['water', 'oil', 'scrap'];
 
     setAmount(event: Event) {
