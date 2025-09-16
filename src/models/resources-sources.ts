@@ -1,7 +1,14 @@
+import { signal } from "@angular/core";
 import { createForceSignal } from "../util/force-signal";
 import { Resource } from "./resource";
 import { RegularResourceSource, ResourceSource } from "./resource-source";
 import { Skill } from "./skill";
+
+export class EditMapParameters {
+    skill = signal<Skill>("mining")
+    resource = signal<Resource>("water")
+    change = signal(1)
+}
 
 export class ResourcesSources {
     sources = createForceSignal<ResourceSource[]>([])
@@ -20,13 +27,13 @@ export class ResourcesSources {
         this.sources.forceUpdate()
     }
 
-    changeFirstOfType(resource: Resource, change: number) {
+    changeFirstOfType(parameters: EditMapParameters) {
         for(const resourceSource of this.sources.get()) {
-            if(resourceSource instanceof RegularResourceSource && resourceSource.resourceType === resource) {
-                resourceSource.change(resource, change)
+            if(resourceSource instanceof RegularResourceSource && resourceSource.resourceType === parameters.resource()) {
+                resourceSource.change(parameters.resource(), parameters.change())
                 return
             }
         }
-        this.addResourceSource("mining", resource, change)
+        this.addResourceSource("mining", parameters.resource(), parameters.change())
     }
 }

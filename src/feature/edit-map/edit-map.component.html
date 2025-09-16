@@ -1,4 +1,36 @@
 <div>
-    <button (click)="changeResourcesAmount('water', 1)">Add water</button>
-    <button (click)="changeResourcesAmount('water', -1)">Descrease water</button>
+    <div>
+        <span>Change:</span>
+        <div>
+        <input
+            style="width:100px"
+            type="number"
+            [value]="parameters.change()"
+            (input)="setChange($event)"
+        />
+        </div>
+    </div>
+    <div>
+        <span>Skill:</span>
+        <select
+            [value]="parameters.skill()"
+            (change)="setSkill($event)"
+        >
+            @for(s of skills; track s) {
+                <option [value]="s">{{s}}</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <span>Resource:</span>
+        <select
+            [value]="parameters.resource()"
+            (change)="setResource($event)"
+        >
+            @for(r of resources; track r) {
+                <option [value]="r">{{r}}</option>
+            }
+        </select>
+    </div>
 </div>

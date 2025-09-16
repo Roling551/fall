@@ -24,6 +24,8 @@ import { CurrentLevelService } from "../current-level.service"
 import { addOrRemoveTileToCity, createEstate } from "../../models/level/level.functions"
 import { Resource } from "../../models/resource"
 import { RegularResourceSource } from "../../models/resource-source"
+import { EditMapComponent } from "../../feature/edit-map/edit-map.component"
+import { EditMapParameters } from "../../models/resources-sources"
 
 
 export function getTileUI(
@@ -105,6 +107,18 @@ export function getCreateCityUI(resourcesSservice: ResourcesService, levelServic
                 return !!tile.value?.mapEntity.get()
             }
         }]])
+    }
+}
+
+export function getChangeResourceUI() {
+    const editMapParameters = new EditMapParameters()
+    return {
+        sideComponent: EditMapComponent,
+        sideComponentInputs: {},
+        additionalInfo: {editMapParameters},
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
+            tile.value.resourcesSources.changeFirstOfType(editMapParameters)
+        }
     }
 }
 
@@ -197,14 +211,6 @@ export function getMoveUnitsBattleAction(
         cancelButtonAction:() => {
             selectedUnitsSignal.get().clear()
             selectedUnitsSignal.forceUpdate()
-        }
-    }
-}
-
-export function changeResourceAction(resource: Resource, change: number) {
-    return {
-        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            tile.value.resourcesSources.changeFirstOfType(resource, change)
         }
     }
 }

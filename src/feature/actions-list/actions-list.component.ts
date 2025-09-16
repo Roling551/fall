@@ -10,11 +10,10 @@ import { MapMarkingComponent } from '../../shared/map-marking/map-marking.compon
 import { ForceSignal } from '../../util/force-signal';
 import { CurrentWindowService } from '../../services/current-window.service';
 import { LevelsService } from '../../services/levels.service';
-import { EditMapComponent } from '../edit-map/edit-map.component';
 
 @Component({
   selector: 'app-actions-list',
-  imports: [EditMapComponent],
+  imports: [],
   templateUrl: './actions-list.component.html',
   styleUrl: './actions-list.component.scss'
 })
@@ -36,5 +35,8 @@ export class ActionsListComponent {
   }
   onNextLevel(): void {
     this.levelsService.nextLevel()
+  }
+  onEditMapClick(): void{
+    this.uiStateService.setUI_.changeResource()
   }
 }

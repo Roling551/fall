@@ -1,7 +1,9 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CurrentLevelService } from '../../services/current-level.service';
-import { Resource } from '../../models/resource';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
+import { Skill } from '../../models/skill';
+import { EditMapParameters } from '../../models/resources-sources';
+import { Resource } from '../../models/resource';
 
 @Component({
   selector: 'app-edit-map',
@@ -10,13 +12,31 @@ import { UIStateService } from '../../services/ui-state/ui-state.service';
   styleUrl: './edit-map.component.scss'
 })
 export class EditMapComponent {
-    constructor(private currentLevelService: CurrentLevelService, private uiStateService: UIStateService) {}
+    parameters:EditMapParameters
+
+    constructor(private currentLevelService: CurrentLevelService, private uiStateService: UIStateService) {
+        this.parameters = this.uiStateService.additionalInfo()["editMapParameters"]
+    }
 
     map = computed(()=> {
         return this.currentLevelService.level.get()?.map
     })
 
-    public changeResourcesAmount(resource: Resource, change: number) {
-        this.uiStateService.setMapAction_.changeResource(resource, change)
+    skills: Skill[] = ['construction', 'science', 'survival', 'mining', 'cutting'];
+    resources: Resource[] = ['water', 'oil', 'scrap'];
+
+    setChange(event: Event) {
+        const value = +(event.target as HTMLInputElement).value;
+        this.parameters.change.set(value)
+    }
+
+    setSkill(event: Event) {
+        const value = (event.target as HTMLSelectElement).value as Skill;
+        this.parameters.skill.set(value);
+    }
+
+    setResource(event: Event) {
+        const value = (event.target as HTMLSelectElement).value as Resource;
+        this.parameters.resource.set(value);
     }
 }
