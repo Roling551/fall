@@ -43,7 +43,6 @@ export class RegularResourceSource extends ResourceSource {
         return skills.has(this.mainSkill)
     }
     change(skill: Skill, difficulty: number, resource: Resource, amount: number) {
-        console.log(this.resourceType == resource && this.mainSkill == skill)
         if(this.resourceType == resource && this.mainSkill == skill) {
             this.resourceAmount.set(amount)
             this.difficulty.set(difficulty)
