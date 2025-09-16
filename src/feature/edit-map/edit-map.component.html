@@ -1,12 +1,34 @@
 <div>
     <div>
-        <span>Change:</span>
+        <span>Amount:</span>
         <div>
         <input
             style="width:100px"
             type="number"
-            [value]="parameters.change()"
-            (input)="setChange($event)"
+            [value]="parameters.amount()"
+            (input)="setAmount($event)"
+        />
+        </div>
+    </div>
+    <div>
+        <span>Resource:</span>
+        <select
+            [value]="parameters.resource()"
+            (change)="setResource($event)"
+        >
+            @for(r of resources; track r) {
+                <option [value]="r">{{r}}</option>
+            }
+        </select>
+    </div>
+    <div>
+        <span>Difficulty:</span>
+        <div>
+        <input
+            style="width:100px"
+            type="number"
+            [value]="parameters.difficulty()"
+            (input)="setDifficulty($event)"
         />
         </div>
     </div>
@@ -18,18 +40,6 @@
         >
             @for(s of skills; track s) {
                 <option [value]="s">{{s}}</option>
-            }
-        </select>
-    </div>
-
-    <div>
-        <span>Resource:</span>
-        <select
-            [value]="parameters.resource()"
-            (change)="setResource($event)"
-        >
-            @for(r of resources; track r) {
-                <option [value]="r">{{r}}</option>
             }
         </select>
     </div>

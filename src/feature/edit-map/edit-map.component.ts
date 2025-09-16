@@ -25,9 +25,14 @@ export class EditMapComponent {
     skills: Skill[] = ['construction', 'science', 'survival', 'mining', 'cutting'];
     resources: Resource[] = ['water', 'oil', 'scrap'];
 
-    setChange(event: Event) {
+    setAmount(event: Event) {
         const value = +(event.target as HTMLInputElement).value;
-        this.parameters.change.set(value)
+        this.parameters.amount.set(value)
+    }
+
+    setDifficulty(event: Event) {
+        const value = +(event.target as HTMLInputElement).value;
+        this.parameters.difficulty.set(value)
     }
 
     setSkill(event: Event) {

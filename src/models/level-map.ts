@@ -19,7 +19,7 @@ export class LevelMap {
             "ground",
             new Obstacles(new Map([["mountain",1]]))
         )
-        tile.resourcesSources.addResourceSource("mining", "oil", 10)
+        tile.resourcesSources.addResourceSource("mining", 0, "oil", 10)
         return tile
     }
 

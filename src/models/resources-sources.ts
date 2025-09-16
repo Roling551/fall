@@ -7,7 +7,8 @@ import { Skill } from "./skill";
 export class EditMapParameters {
     skill = signal<Skill>("mining")
     resource = signal<Resource>("water")
-    change = signal(1)
+    amount = signal(1)
+    difficulty = signal(0)
 }
 
 export class ResourcesSources {
@@ -19,21 +20,28 @@ export class ResourcesSources {
         this.sources.set(this.sources.get().filter(x=>x!=resourceSource))
     }
 
-    addResourceSource(skill: Skill, resource: Resource, change: number) {
+    addResourceSource(skill: Skill, difficulty: number, resource: Resource, change: number) {
         if(change <= 0) {
             return
         }
-        this.sources.get().push(new RegularResourceSource(this.onDepleted, skill, resource, change))
+        this.sources.get().push(new RegularResourceSource(this.onDepleted, skill, difficulty, resource, change))
         this.sources.forceUpdate()
     }
 
     changeFirstOfType(parameters: EditMapParameters) {
         for(const resourceSource of this.sources.get()) {
-            if(resourceSource instanceof RegularResourceSource && resourceSource.resourceType === parameters.resource()) {
-                resourceSource.change(parameters.resource(), parameters.change())
+            if(
+                resourceSource instanceof RegularResourceSource && 
+                resourceSource.change(parameters.skill(), parameters.difficulty(), parameters.resource(), parameters.amount())
+            ) {
                 return
             }
         }
-        this.addResourceSource("mining", parameters.resource(), parameters.change())
+        this.addResourceSource(
+            parameters.skill(), 
+            parameters.difficulty(),
+            parameters.resource(), 
+            parameters.amount(),
+        )
     }
 }
