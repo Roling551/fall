@@ -44,4 +44,12 @@ export class ResourcesSources {
             parameters.amount(),
         )
     }
+
+    static fromJSON(json: any) {
+        const resourcesSources = new ResourcesSources()
+        resourcesSources.sources.set(json.sources.map((sourceJSON:any)=>
+            RegularResourceSource.fromJSON(sourceJSON, resourcesSources.onDepleted))
+        )
+        return resourcesSources
+    }
 }

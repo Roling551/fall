@@ -53,5 +53,15 @@ export class Level {
             result = new Map([...result, ...value.get().benefits()])
         }
         return result
-    })    
+    })
+
+    toJSON() {
+        return this
+    }
+
+    static fromJSON(json: any) {
+        const level = new Level()
+        level.map = LevelMap.fromJSON(json["map"]) 
+        return level
+    }
 }

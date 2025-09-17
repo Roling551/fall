@@ -8,4 +8,18 @@ import { createForceSignal } from "../util/force-signal";
 export class CurrentLevelService {
     level = createForceSignal<Level|undefined>(undefined)
     
+    save() {
+        const str = JSON.stringify(this.level.get())
+        localStorage.setItem('save_game', str);
+    }
+
+    load() {
+        const str = localStorage.getItem('save_game');
+        
+        if(str) {
+            const json = JSON.parse(str)
+            const obj = Level.fromJSON(json)
+            this.level.set(obj);
+        }
+    }
 }

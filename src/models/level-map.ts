@@ -74,4 +74,21 @@ export class LevelMap {
             )
         }
     }
+
+    toJSON() {
+        return {
+            tiles: [...this.tiles]
+        }
+    }
+
+    static fromJSON(json: any) {
+        const levelMap = new LevelMap();
+        levelMap.tiles = new Map(json.tiles.map((tileJSON_:any)=>{
+            const tileJSON = tileJSON_[1]
+            const coordinate = new Coordinate(tileJSON.key.x, tileJSON.key.y)
+            const tile = [coordinate.getKey(), {key:coordinate, value: Tile.fromJSON(tileJSON.value)}]
+            return tile
+        }))
+        return levelMap
+    }
 }

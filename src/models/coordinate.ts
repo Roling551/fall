@@ -59,4 +59,9 @@ export class Coordinate {
     public addCoordinates(c: Coordinate) {
         return new Coordinate(this.x + c.x, this.y + c.y)
     }
+
+    static fromJSON(json: any) {
+        const coordiante = new Coordinate(json.x, json.y)
+        return coordiante
+    }
 }

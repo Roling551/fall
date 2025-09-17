@@ -28,12 +28,16 @@ export class RegularResourceSource extends ResourceSource {
     }
     override action(skills: Map<Skill, number>): ResourceSourceActionResult {
         const appliedSkillPoints = skills.get(this.mainSkill) || 0
+        console.log(this.resourceAmount())
+        console.log(appliedSkillPoints)
+        console.log(this.difficulty())
         const resourceGained = Math.max(Math.min(this.resourceAmount(), appliedSkillPoints-this.difficulty()),0)
         this.resourceAmount.set(this.resourceAmount() - resourceGained)
         
         if(this.resourceAmount() <= 0) {
             this.onDepleted!(this)
         }
+        console.log(resourceGained)
         return {
             resources: new Map([[this.resourceType, resourceGained]]),
             isFinished: this.resourceAmount() <= 0
@@ -52,5 +56,24 @@ export class RegularResourceSource extends ResourceSource {
             return true
         }
         return false
+    }
+
+    toJSON() {
+        return {
+            ...this,
+            difficulty: this.difficulty(),
+            resourceAmount: this.resourceAmount(),
+        }
+    }
+
+    static fromJSON(json: any, onDepleted: (resourceSource: ResourceSource)=> void) {
+        const resourceSource = new RegularResourceSource(
+            onDepleted,
+            json.mainSkill, 
+            json.difficulty,
+            json.resourceType, 
+            json.resourceAmount,
+        )
+        return resourceSource
     }
 }
