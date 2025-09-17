@@ -41,7 +41,6 @@ export class EstateFactoryService {
                             t -= 1
                             const actionResult = source.action(skills)
                             isSourceDone = actionResult.isFinished
-                            console.log(actionResult.resources)
                             addExistingNumericalValues(this.resourcesService.resources.get(), actionResult.resources)
                             this.resourcesService.resources.forceUpdate()
                         }
