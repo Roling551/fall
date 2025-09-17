@@ -28,7 +28,7 @@ export class EstateFactoryService {
         }
     }
 
-    private getSimpleExtractionAction(skills: Map<Skill, number>, times: number=1) {
+    public getSimpleExtractionAction(skills: Map<Skill, number>, times: number=1) {
         return (tile: Tile)=>{
             let t = times
             for(const source of tile.resourcesSources.sources.get()) {

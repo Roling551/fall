@@ -55,6 +55,10 @@ export class ActionsCardsService {
         if(card) {
             cards.push(card)
         }
+        card = this.createInstantExtractionCard()
+        if(card) {
+            cards.push(card)
+        }
         this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
@@ -74,6 +78,20 @@ export class ActionsCardsService {
                 {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t3"); return tile.key.getKey()=="0_0"}},
             ]
             )
+    }
+
+    createInstantExtractionCard() {
+        return this.createMultiStageActionCard(
+        "Extact",
+            [
+                {
+                    action:(tile: KeyValuePair<Coordinate, Tile>)=> {
+                        this.estateFactoryService.getSimpleExtractionAction(new Map([["mining",1]]))(tile.value)
+                        return true
+                    },
+                }
+            ]
+        )
     }
 
     createEstateCard() {
