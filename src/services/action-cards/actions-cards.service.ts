@@ -98,7 +98,7 @@ export class ActionsCardsService {
         const createEstateInfo = this.estateFactoryService.getCreateEstateInfo()
         const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
             if(this.uiStateService.hoverTile()) {
-                const doRender = createEstateInfo.affectedCoordinate.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
+                const doRender = createEstateInfo.affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
                 return doRender
             }
             return false

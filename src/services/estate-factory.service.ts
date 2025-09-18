@@ -1,10 +1,11 @@
-import { Injectable } from "@angular/core";
+import { computed, Injectable } from "@angular/core";
 import { Estate } from "../models/estate";
 import { Tile } from "../models/tile";
 import { addExistingNumericalValues, addToMapValue, withdrawFromMapValue } from "../util/map-functions";
 import { Coordinate } from "../models/coordinate";
 import { Skill } from "../models/skill";
 import { ResourcesService } from "./resources.service";
+import { CurrentLevelService } from "./current-level.service";
 
 export interface CreateEstateInfo {
     skills: Map<Skill, number>
@@ -17,34 +18,40 @@ export interface CreateEstateInfo {
 })
 export class EstateFactoryService {
 
-    constructor(private resourcesService: ResourcesService) {}
+    map
+    constructor(private resourcesService: ResourcesService, private currentLevelService: CurrentLevelService) {
+        this.map = computed(()=>this.currentLevelService.level.get()?.map)
+    }
 
     getCreateEstateInfo() {
         const skills = new Map<Skill, number>([["mining", 3]])
+        const affectedCoordinates = [new Coordinate(0,0), new Coordinate(1,0)]
         return {
-            getEstate: (tile_: Tile) => new Estate(tile_, "farm", this.getSimpleExtractionAction(skills)),
+            getEstate: (tile_: Tile) => new Estate(tile_, "farm", this.getSimpleExtractionAction(skills, affectedCoordinates)),
             skills,
-            affectedCoordinate: [new Coordinate(0,0)]
+            affectedCoordinates
         }
     }
 
-    public getSimpleExtractionAction(skills: Map<Skill, number>, times: number=1) {
+    public getSimpleExtractionAction(skills: Map<Skill, number>, affectedCoordinates = [new Coordinate(0,0)], times: number=1) {
         return (tile: Tile)=>{
-            let t = times
-            for(const source of tile.resourcesSources.sources.get()) {
-                let isSourceDone = false
-                while(!isSourceDone) {
-                    if(t <= 0) {
-                        return
-                    } else {
+            const map = this.map()
+            if(!map) {
+                return
+            }
+            for(let i = 0; i<times; i++) {
+                const tiles = affectedCoordinates
+                    .map(c=>map.getTile(tile.coordinate.addCoordinates(c)))
+                    .filter(t=>!!t)
+                    .map(t=>t.value)
+                for(const t of tiles) {
+                    for(const source of t.resourcesSources.sources.get()) {
                         if(source.canAttempt(skills)) {
-                            t -= 1
                             const actionResult = source.action(skills)
-                            isSourceDone = actionResult.isFinished
                             addExistingNumericalValues(this.resourcesService.resources.get(), actionResult.resources)
                             this.resourcesService.resources.forceUpdate()
                         }
-                    } 
+                    }
                 }
             }
         }

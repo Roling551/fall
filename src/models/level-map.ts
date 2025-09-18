@@ -11,9 +11,9 @@ export class LevelMap {
     sizeX = 10
     sizeY = 10
 
-    tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.getTiles(this.sizeX, this.sizeY)
+    tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.createTiles(this.sizeX, this.sizeY)
 
-    private getTile(coordinate: Coordinate) {
+    private createTile(coordinate: Coordinate) {
         const tile = new Tile(
             coordinate,
             "ground",
@@ -23,12 +23,12 @@ export class LevelMap {
         return tile
     }
 
-    private getTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordinate, Tile>> {
+    private createTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordinate, Tile>> {
         let tiles = new Map<string, KeyValuePair<Coordinate, Tile>>()
         for(let i = 0; i < sizeX; i++) {
         for(let j = 0; j < sizeY; j++) {
             const coordinate = new Coordinate(i, j)
-            const tile = {key:coordinate, value: this.getTile(coordinate)}
+            const tile = {key:coordinate, value: this.createTile(coordinate)}
             tiles.set(tile.key.getKey(), tile)
         } 
         }
@@ -90,5 +90,9 @@ export class LevelMap {
             return tile
         }))
         return levelMap
+    }
+
+    getTile(coordinate: Coordinate) {
+        return this.tiles.get(coordinate.getKey())
     }
 }
