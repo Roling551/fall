@@ -3,12 +3,14 @@ import { TechnologiesService } from "./technologies/technologies.service";
 import { Benefit } from "../models/benefit";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { Estate } from "../models/estate";
-import { EstateProductionBonus } from "../models/bonus";
+import { EstateProductionBonus, SkillMapActionSkillBonus } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
 import { createForceSignal } from "../util/force-signal";
 import { CurrentLevelService } from "./current-level.service";
+import { Tile } from "../models/tile";
+import { Skill } from "../models/skill";
 
 @Injectable({
   providedIn: 'root'
@@ -40,30 +42,33 @@ export class BenefitsService {
         return result
     })
 
-    estateBonuses
-    estateProductionBonuses
-    listenForEstateProductionBonuses
+    skillMapActionSkillBonusesList
+    skillMapActionSkillBonuses
+    listenForSkillMapActionSkillBonuses
+
+
+
     constructor(
         private technologiesService: TechnologiesService,
         private levelService: CurrentLevelService
     ) 
     {
-        this.estateBonuses = computed(()=> {
-            const result = new Map<string, EstateProductionBonus>();
+        this.skillMapActionSkillBonusesList = computed(()=> {
+            const result = new Map<string, SkillMapActionSkillBonus>();
             for(const [key, benefit] of this.technologiesService.benefits.get()) {
-                if(benefit.type === "estate-production-bonus") {
+                if(benefit.type === "skill-map-action-skill-bonus") {
                     result.set(key, benefit.bonus)
                 }
             }
             for(const [key, benefit] of this.initialBenefits.get()) {
-                if(benefit.type === "estate-production-bonus") {
+                if(benefit.type === "skill-map-action-skill-bonus") {
                     result.set(key, benefit.bonus)
                 }
             }
             const level = levelService.level.get()
             if(level) {
                 for(const [key, benefit] of level.benefits()) {
-                    if(benefit.type === "estate-production-bonus") {
+                    if(benefit.type === "skill-map-action-skill-bonus") {
                         result.set(key, benefit.bonus)
                     }
                 }
@@ -71,16 +76,16 @@ export class BenefitsService {
             return result
         })
 
-        this.estateProductionBonuses = new SignalChangesEmitter<any, EstateProductionBonus>(this.estateBonuses);
-        this.listenForEstateProductionBonuses = (estate: Estate) => {
+        this.skillMapActionSkillBonuses = new SignalChangesEmitter<any, SkillMapActionSkillBonus>(this.skillMapActionSkillBonusesList);
+        this.listenForSkillMapActionSkillBonuses = (tile: Tile) => {
             return new SignalsGroup(
-                this.estateProductionBonuses,
-                (key: string, item: EstateProductionBonus)=>{
-                    return item.qualifier(estate)
+                this.skillMapActionSkillBonuses,
+                (key: string, item: SkillMapActionSkillBonus)=>{
+                    return item.qualifier(tile)
                 },
-                (key: string, item: EstateProductionBonus)=>item.bonus(estate),
+                (key: string, item: SkillMapActionSkillBonus)=>item.bonus(tile),
                 addNumericalValuesFunctional,
-                ()=>new Map<string, number>()
+                ()=>new Map<Skill, number>()
             )
         }
     }

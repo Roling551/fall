@@ -7,6 +7,7 @@ import { ResourcesInfoComponent } from "../feature/resources-info/resources-info
 import { Coordinate } from "../models/coordinate";
 import { Tile } from "../models/tile";
 import { KeyValuePair } from "../models/key-value-pair";
+import { Skill } from "../models/skill";
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,13 @@ export class InitService {
             template: ResourcesInfoComponent,
             doRender: (tile: KeyValuePair<Coordinate, Tile>) => true,
         })
+        // this.benefitsService.initialBenefits.get().set("t1", {
+        //     type: "skill-map-action-skill-bonus",
+        //     bonus: {
+        //         name: "b1",
+        //         qualifier: (tile: Tile)=>true,
+        //         bonus: (tile: Tile)=>new Map<Skill, number>([["mining",1]])
+        //     }
+        // })
     }
 }

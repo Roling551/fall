@@ -12,7 +12,6 @@ import { createMultiStageAction } from "../ui-state/create-multi-stage-action";
 import { mapContainsMap } from "../../util/map-functions";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { ActionCardInfo } from "../../models/action-card-info";
-import { BenefitsService } from "../benefits.service";
 import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
 import { City } from "../../models/city";
@@ -25,6 +24,7 @@ import { BorderComponent } from "../../shared/border/border.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
 import { SkillMapActionFactoryService, CreateSkillMapActionInfo } from "../skill-map-action-factory.service";
+import { BenefitsService } from "../benefits.service";
 
 interface CardCreationInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -47,6 +47,7 @@ export class ActionsCardsService {
         private turnActorsService: TurnActorsService,
         private estateFactoryService: EstateFactoryService,
         private actionFactoryService: SkillMapActionFactoryService,
+        private benefitsService: BenefitsService,
     ) {
         const cards = []
         let card = this.exampleCard()

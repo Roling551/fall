@@ -3,8 +3,9 @@ import { Skill } from "../models/skill";
 import { Coordinate } from "../models/coordinate";
 import { Tile } from "../models/tile";
 import { ResourcesService } from "./resources.service";
-import { addExistingNumericalValues } from "../util/map-functions";
+import { addExistingNumericalValues, addNumericalValuesFunctional } from "../util/map-functions";
 import { CurrentLevelService } from "./current-level.service";
+import { BenefitsService } from "./benefits.service";
 
 export interface CreateSkillMapActionInfo {
     skills: Map<Skill, number>
@@ -18,15 +19,22 @@ export interface CreateSkillMapActionInfo {
 export class SkillMapActionFactoryService {
     
     map
-    constructor(private resourcesService: ResourcesService, private currentLevelService: CurrentLevelService) {
+    constructor(
+        private resourcesService: ResourcesService,
+        private currentLevelService: CurrentLevelService,
+        private benefitsService: BenefitsService,
+    ) {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
     public createExtractionAction(createActionInfo: CreateSkillMapActionInfo) {
         const times = createActionInfo.times || 1
-        const skills = createActionInfo.skills
+        
         const affectedCoordinates = createActionInfo.affectedCoordinates || [new Coordinate(0,0)]
         return (tile: Tile)=>{
+            const skills = addNumericalValuesFunctional(createActionInfo.skills,
+                this.benefitsService.listenForSkillMapActionSkillBonuses(tile).output())
+            
             const map = this.map()
             if(!map) {
                 return

@@ -1,4 +1,4 @@
-import { EstateProductionBonus } from "./bonus";
+import { EstateProductionBonus, SkillMapActionSkillBonus } from "./bonus";
 import { Building } from "./building";
 import { Estate } from "./estate";
 
@@ -18,4 +18,9 @@ export type Benefit =
     {
         type: "estate-production-bonus";
         bonus: EstateProductionBonus
-    };
+    }
+        |
+    {
+        type: "skill-map-action-skill-bonus";
+        bonus: SkillMapActionSkillBonus
+    }
