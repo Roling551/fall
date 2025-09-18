@@ -24,6 +24,7 @@ import { Resource } from "../../models/resource";
 import { BorderComponent } from "../../shared/border/border.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
+import { ActionFactoryService, CreateActionInfo } from "../action-factory.service";
 
 interface CardCreationInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -44,7 +45,8 @@ export class ActionsCardsService {
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService,
-        private estateFactoryService: EstateFactoryService
+        private estateFactoryService: EstateFactoryService,
+        private actionFactoryService: ActionFactoryService,
     ) {
         const cards = []
         let card = this.exampleCard()
@@ -65,6 +67,34 @@ export class ActionsCardsService {
         })
     }
 
+    getBorderInfo(createActionInfo: CreateActionInfo): [string, TileInfo] {
+        const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
+            if(this.uiStateService.hoverTile()) {
+                const doRender = createActionInfo.affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
+                return doRender
+            }
+            return false
+        }
+        return [
+            "border", 
+            {
+                template: BorderComponent,
+                doRender: doRenderBorder,
+                input: {
+                    getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=>{
+                            return computed(() => {
+                                const level = this.levelService.level.get()
+                                if(!level) {
+                                    return []
+                                }
+                                return level.map.getDirectionsFunction(doRenderBorder)(tileInfoIsAbout)()
+                            })
+                        }
+                    }
+            }
+        ]
+    }
+
     nextTurn() {
         this.cardsHand.nextTurn()
     }
@@ -81,14 +111,20 @@ export class ActionsCardsService {
     }
 
     createInstantExtractionCard() {
+        const createActionInfo: CreateActionInfo = {
+            skills: new Map([["mining",1]]),
+            affectedCoordinates: [new Coordinate(0,0)],
+            times: 1
+        } 
         return this.createMultiStageActionCard(
         "Extact",
             [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        this.estateFactoryService.getSimpleExtractionAction(new Map([["mining",1]]))(tile.value)
+                        this.actionFactoryService.createExtractionAction(createActionInfo)(tile.value)
                         return true
                     },
+                    tileInfos: new Map([this.getBorderInfo(createActionInfo)])
                 }
             ]
         )
@@ -96,13 +132,7 @@ export class ActionsCardsService {
 
     createEstateCard() {
         const createEstateInfo = this.estateFactoryService.getCreateEstateInfo()
-        const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
-            if(this.uiStateService.hoverTile()) {
-                const doRender = createEstateInfo.affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
-                return doRender
-            }
-            return false
-        }
+
         return this.createMultiStageActionCard(
             "Create estate",
             [
@@ -110,24 +140,7 @@ export class ActionsCardsService {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
                         return getCreateEstateAction(this.levelService, this.turnActorsService, createEstateInfo.getEstate)(tile)
                     }, 
-                    tileInfos: new Map([[
-                        "border", 
-                        {
-                            template: BorderComponent,
-                            doRender: doRenderBorder,
-                            input: {
-                                getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=>{
-                                        return computed(() => {
-                                            const level = this.levelService.level.get()
-                                            if(!level) {
-                                                return []
-                                            }
-                                            return level.map.getDirectionsFunction(doRenderBorder)(tileInfoIsAbout)()
-                                        })
-                                    }
-                                }
-                        }
-                    ]])
+                    tileInfos: new Map([this.getBorderInfo(createEstateInfo.createActionInfo)])
                 }
             ],
             new Map([["oil", 1]])
