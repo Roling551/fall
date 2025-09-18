@@ -6,7 +6,7 @@ import { ResourcesService } from "./resources.service";
 import { addExistingNumericalValues } from "../util/map-functions";
 import { CurrentLevelService } from "./current-level.service";
 
-export interface CreateActionInfo {
+export interface CreateSkillMapActionInfo {
     skills: Map<Skill, number>
     affectedCoordinates: Coordinate[]
     times: number
@@ -15,14 +15,14 @@ export interface CreateActionInfo {
 @Injectable({
   providedIn: 'root'
 })
-export class ActionFactoryService {
+export class SkillMapActionFactoryService {
     
     map
     constructor(private resourcesService: ResourcesService, private currentLevelService: CurrentLevelService) {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
-    public createExtractionAction(createActionInfo: CreateActionInfo) {
+    public createExtractionAction(createActionInfo: CreateSkillMapActionInfo) {
         const times = createActionInfo.times || 1
         const skills = createActionInfo.skills
         const affectedCoordinates = createActionInfo.affectedCoordinates || [new Coordinate(0,0)]

@@ -4,10 +4,10 @@ import { Tile } from "../models/tile";
 import { Coordinate } from "../models/coordinate";
 import { Skill } from "../models/skill";
 import { CurrentLevelService } from "./current-level.service";
-import { ActionFactoryService, CreateActionInfo } from "./action-factory.service";
+import { SkillMapActionFactoryService, CreateSkillMapActionInfo } from "./skill-map-action-factory.service";
 
 export interface CreateEstateInfo {
-    createActionInfo: CreateActionInfo,
+    createActionInfo: CreateSkillMapActionInfo,
     getEstate: (tile: Tile) => Estate,
 }
 
@@ -17,14 +17,14 @@ export interface CreateEstateInfo {
 export class EstateFactoryService {
 
     map
-    constructor(private actionFactoryService: ActionFactoryService, private currentLevelService: CurrentLevelService) {
+    constructor(private actionFactoryService: SkillMapActionFactoryService, private currentLevelService: CurrentLevelService) {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
     getCreateEstateInfo(): CreateEstateInfo {
         const skills = new Map<Skill, number>([["mining", 3]])
         const affectedCoordinates = [new Coordinate(0,0), new Coordinate(1,0)]
-        const createActionInfo: CreateActionInfo = {
+        const createActionInfo: CreateSkillMapActionInfo = {
             skills, 
             affectedCoordinates,
             times: 1

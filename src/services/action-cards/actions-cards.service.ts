@@ -24,7 +24,7 @@ import { Resource } from "../../models/resource";
 import { BorderComponent } from "../../shared/border/border.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
-import { ActionFactoryService, CreateActionInfo } from "../action-factory.service";
+import { SkillMapActionFactoryService, CreateSkillMapActionInfo } from "../skill-map-action-factory.service";
 
 interface CardCreationInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -46,7 +46,7 @@ export class ActionsCardsService {
         private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService,
         private estateFactoryService: EstateFactoryService,
-        private actionFactoryService: ActionFactoryService,
+        private actionFactoryService: SkillMapActionFactoryService,
     ) {
         const cards = []
         let card = this.exampleCard()
@@ -67,7 +67,7 @@ export class ActionsCardsService {
         })
     }
 
-    getBorderInfo(createActionInfo: CreateActionInfo): [string, TileInfo] {
+    getBorderInfo(createActionInfo: CreateSkillMapActionInfo): [string, TileInfo] {
         const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
             if(this.uiStateService.hoverTile()) {
                 const doRender = createActionInfo.affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
@@ -111,7 +111,7 @@ export class ActionsCardsService {
     }
 
     createInstantExtractionCard() {
-        const createActionInfo: CreateActionInfo = {
+        const createActionInfo: CreateSkillMapActionInfo = {
             skills: new Map([["mining",1]]),
             affectedCoordinates: [new Coordinate(0,0)],
             times: 1
