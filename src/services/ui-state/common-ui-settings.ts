@@ -5,9 +5,7 @@ import { UIData, UIStateService } from "./ui-state.service"
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component"
 import { SimpleTextComponent } from "../../shared/simple-text/simple-text.component"
 import { createForceSignal, ForceSignal } from "../../util/force-signal"
-import { City } from "../../models/city"
 import { MapEntity } from "../../models/map-entity"
-import { CityPanelComponent } from "../../feature/city-panel/city-panel.component"
 import { Estate } from "../../models/estate"
 import { SignalsGroup } from "../../util/signals-group"
 import { EstateProductionBonus } from "../../models/bonus"
@@ -20,31 +18,18 @@ import { TurnActorsService } from "../turn-actors.service"
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component"
 import { ResourcesService } from "../resources.service"
 import { CurrentLevelService } from "../current-level.service"
-import { addOrRemoveTileToCity, createEstate } from "../../models/level/level.functions"
+import { createEstate } from "../../models/level/level.functions"
 import { Resource } from "../../models/resource"
 import { RegularResourceSource } from "../../models/resource-source"
 import { EditMapComponent } from "../../feature/edit-map/edit-map.component"
 import { EditMapParameters } from "../../models/resources-sources"
+import { Station } from "../../models/station"
 
 
 export function getTileUI(
     tile: KeyValuePair<Coordinate, Tile>,
     selectedUnits?: Set<Unit>
 ):UIData {
-
-    let doRenderTileInfoFunction
-    if(tile.value.mapEntity.get()?.type === "city") {
-        doRenderTileInfoFunction = (clickedTile: KeyValuePair<Coordinate, Tile>)=> {
-            if(clickedTile.key.getKey() === tile.key.getKey()) {
-                return true
-            }
-            if(!clickedTile.value.belongsTo.get()) {
-                return false
-            }
-            return clickedTile.value.belongsTo.get() === tile.value.mapEntity.get()  
-        }
-    }
-
     return {
         sideComponent:TilePanelComponent, 
         sideComponentInputs:{tile, selectedUnits},
@@ -53,52 +38,22 @@ export function getTileUI(
     }
 }
 
-export function getRemoveCityUI(levelService: CurrentLevelService):UIData {
-    return {
-        sideComponent:SimpleTextComponent, 
-        sideComponentInputs:{text:"Remove city"},
-        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-                if(tile.value.mapEntity.get()?.type != "city") {
-                    return
-                }
-                const level = levelService.level.get()
-                if(!level) {
-                    return
-                }
-                level.removeCity(tile)
-            },
-        tileInfos: new Map([["unavaliable", {
-            template: UnavaliableComponent,
-            doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
-                return !!tile.value?.mapEntity.get()
-            }
-        }]])
-    }
-}
 
-export function getCreateCityUI(resourcesSservice: ResourcesService, levelService: CurrentLevelService):UIData {
-    const cityPrice = 10;
+export function getCreateStationUI(levelService: CurrentLevelService):UIData {
     return {
         sideComponent:SimpleTextComponent, 
-        sideComponentInputs:{text:"Create city"},
+        sideComponentInputs:{text:"Create station"},
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            const gold = resourcesSservice.resources.get().get("oil")!
-            if(gold < cityPrice) {
+            if(!!tile.value.mapEntity.get()) {
                 return
             }
-            if(!!tile.value.mapEntity.get() || !!tile.value.belongsTo.get()) {
-                return
-            }
-            resourcesSservice.resources.get().set("oil", gold-cityPrice)
-            resourcesSservice.resources.forceUpdate()
-            const city = new City()
-            tile.value.mapEntity.set(city);
-            const citySignal = tile.value.mapEntity as unknown as ForceSignal<City>
             const level = levelService.level.get()
-            if(!level) {
+            if(!level || level.station.get()) {
                 return
             }
-            level.addCity(tile.key.getKey(), citySignal)
+            const station = new Station()
+            tile.value.mapEntity.set(station);
+            level.station.set({key:tile.key.getKey(), value:station});
         },
         tileInfos: new Map([["unavaliable", {
             template: UnavaliableComponent,
@@ -121,25 +76,14 @@ export function getChangeResourceUI() {
     }
 }
 
-export function getAddTileToCityAction(
-        cityTile: KeyValuePair<Coordinate, Tile>):UIData {
-    return {
-        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            addOrRemoveTileToCity(tile, cityTile)
-        },
-        additionalInfo: {currentAction: "addTileToCity"},
-    }
-}
-
 export function getCreateEstateAction(
     turnActorsService: TurnActorsService,
-    cityTile: KeyValuePair<Coordinate, Tile>,
     getEstate: ()=>Estate,
     estateName: string
 ):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            createEstate(tile, cityTile, getEstate, turnActorsService)
+            createEstate(tile, getEstate, turnActorsService)
         },
         additionalInfo: {currentAction: "createEstateAction-" + estateName},
     }
@@ -151,8 +95,7 @@ export function getRemoveEstateAction(
     return {
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
                 if(
-                    tile.value.mapEntity.get()?.type != "estate" ||
-                    tile.value.belongsTo.get() != cityTile.value.mapEntity.get()) {
+                    tile.value.mapEntity.get()?.type != "estate") {
                     return
                 }
                 tile.value.mapEntity.set(undefined);
@@ -199,7 +142,6 @@ export function getMoveUnitsBattleAction(
             if(!level) {
                 return
             }
-            level.removeCity(tile)
             const pathing = level.map.findPath(previousTile, tile)
             if(pathing) {
                 const lastTile = battleService.moveUnits(selectedUnitsSignal.get(), previousTile, pathing.path)

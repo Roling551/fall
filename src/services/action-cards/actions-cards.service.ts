@@ -14,7 +14,6 @@ import { CharacterCardInfo } from "../../models/character-card-info";
 import { ActionCardInfo } from "../../models/action-card-info";
 import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
-import { City } from "../../models/city";
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
 import { TurnActorsService } from "../turn-actors.service";
 import { EstateFactoryService } from "../estate-factory.service";
@@ -169,12 +168,9 @@ export class ActionsCardsService {
             if(!level) {
                 return false
             }
-            if(level.cities.get().size<1) {
+            const station = level.station.get()
+            if(!station) {
                 return false
-            }
-            let city: [string, ForceSignal<City>]
-            for(const city_ of level.cities.get()) {
-                city = city_
             }
             if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), card.requiredSkills))) {
                 return false
@@ -183,7 +179,7 @@ export class ActionsCardsService {
                 return false
             }
             for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-                const path = level.map.findPathByKey(city![0], tile.key.getKey())
+                const path = level.map.findPathByKey(station.key, tile.key.getKey())
                 if(!path || path.distance > characterCard.movement) {
                     return false
                 }
@@ -218,18 +214,16 @@ export class ActionsCardsService {
         const level = this.levelService.level.get()
         if(!level) {
             return []
-        }
-        let city: [string, ForceSignal<City>]
-        if(level.cities.get().size<1) {
+        }     
+
+        const station = level.station.get()
+        if(!station) {
             return [] as string[]
-        }
-        for(const city_ of level.cities.get()) {
-            city = city_
         }
         let firstTile = true
         let tiles:string[] = []
         for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-            const cardsTiles = level.map.getReacheableTiles(city![0], characterCard.movement, this.getEdgeWidghtFunction(characterCard)).map(x=>x.node)
+            const cardsTiles = level.map.getReacheableTiles(station.key, characterCard.movement, this.getEdgeWidghtFunction(characterCard)).map(x=>x.node)
             if(firstTile) {
                 tiles = cardsTiles
                 firstTile = false

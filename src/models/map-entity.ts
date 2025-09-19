@@ -4,10 +4,10 @@ import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
 import { addExistingNumericalValues } from "../util/map-functions"
 
-export type mapEntityType = "city" | "estate"
+export type MapEntityType = "city" | "estate" | "base"
 
 export abstract class MapEntity {
-    abstract readonly type: mapEntityType
+    abstract readonly type: MapEntityType
     public buildings
 
     constructor(public textureName: string, public buildingsSlots: number){

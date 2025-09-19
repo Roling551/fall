@@ -94,17 +94,17 @@ export class BattleService {
         const unit = new EnemyUnit("barbarian", 2)
         army.units.get().add(unit)
         this.addUnit(unit, startTile)
-        if(level.cities.get().size<=0) {
-            return
-        }
-        for(const [cityLocation, city] of level.cities.get()) {
-            const pathing = level.map.findPathByKey(startLocation, cityLocation)
-            if(!pathing) {
-                return
-            }
-            army.path = pathing.path
-            break;
-        }
+        // if(level.cities.get().size<=0) {
+        //     return
+        // }
+        // for(const [cityLocation, city] of level.cities.get()) {
+        //     const pathing = level.map.findPathByKey(startLocation, cityLocation)
+        //     if(!pathing) {
+        //         return
+        //     }
+        //     army.path = pathing.path
+        //     break;
+        // }
         this.startBattleTurn()
     }
 
@@ -144,7 +144,7 @@ export class BattleService {
                 return
             }
             if(army.path.length == 0) {
-                level.removeCity(previousTile)
+                //level.removeCity(previousTile)
             }
             this.enemyArmies.get().set(army, this.moveUnits(army.units.get(), previousTile, army.path))
 

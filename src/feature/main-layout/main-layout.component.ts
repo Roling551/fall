@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef } from '@
 import { WorldMapComponent } from '../world-map/world-map.component';
 import { Tile } from '../../models/tile';
 import { MapEntity } from '../../models/map-entity';
-import { City } from '../../models/city';
 import { ActionsListComponent } from '../actions-list/actions-list.component';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.component';

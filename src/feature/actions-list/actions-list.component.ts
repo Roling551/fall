@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MapEntity } from '../../models/map-entity';
-import { City } from '../../models/city';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
@@ -26,11 +25,8 @@ export class ActionsListComponent {
     private currentLevelService: CurrentLevelService,
   ) {}
 
-  onCreateCityClick(): void {
-    this.uiStateService.setUI_.createCity()
-  }
-  onRemoveCityClick(): void {
-    this.uiStateService.setUI_.removeCity()
+  onCreateStationClick(): void {
+    this.uiStateService.setUI_.createStation()
   }
   onTechTreeClick(): void {
     this.currentWindowService.currentWindow.set("tech-tree")

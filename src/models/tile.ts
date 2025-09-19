@@ -13,7 +13,6 @@ export class Tile {
 
     terrainType
     mapEntity = createForceSignal<MapEntity|undefined>(undefined)
-    belongsTo = createForceSignal<MapEntity|undefined>(undefined)
     units = createForceSignal(new Set<Unit>())
 
     obstacles = createForceSignal<Obstacles>(new Obstacles())
