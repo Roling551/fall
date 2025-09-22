@@ -24,10 +24,19 @@ import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
 import { SkillMapActionFactoryService, CreateSkillMapActionInfo } from "../skill-map-action-factory.service";
 import { BenefitsService } from "../benefits.service";
+import { Skill } from "../../models/skill";
+import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
 
-interface CardCreationInfo {
+export interface CardCreationActionInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
     tileInfos?: Map<string,TileInfo>
+}
+
+export interface CardCreationInfo {
+    name: string, 
+    cardCreationInfo: CardCreationActionInfo[],
+    skillRequired: Map<Skill, number>,
+    price?: Map<Resource, number>,
 }
 
 @Injectable({
@@ -39,32 +48,26 @@ export class ActionsCardsService {
     private isActionHappening = signal(false)
 
     constructor(
+        private infoFactoryService: ActionCardCreationInfoFactoryService,
         private uiStateService: UIStateService,
         private charactersCardService: CharactersCardsService,
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
-        private turnActorsService: TurnActorsService,
-        private estateFactoryService: EstateFactoryService,
-        private actionFactoryService: SkillMapActionFactoryService,
-        private benefitsService: BenefitsService,
     ) {
         const cards = []
-        let card = this.exampleCard()
-        if(card) {
-            cards.push(card)
-        }
-        card = this.createEstateCard("extraction")
-        if(card) {
-            cards.push(card)
-        }
-        card = this.createEstateCard("skillBonus")
-        if(card) {
-            cards.push(card)
-        }
-        card = this.createInstantExtractionCard()
-        if(card) {
-            cards.push(card)
-        }
+        cards.push(this.createMultiStageActionCard(infoFactoryService.instantExtractionCard()))
+        // card = this.createEstateCard("extraction")
+        // if(card) {
+        //     cards.push(card)
+        // }
+        // card = this.createEstateCard("skillBonus")
+        // if(card) {
+        //     cards.push(card)
+        // }
+        // card = this.createInstantExtractionCard()
+        // if(card) {
+        //     cards.push(card)
+        // }
         this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
@@ -103,59 +106,13 @@ export class ActionsCardsService {
         this.cardsHand.nextTurn()
     }
 
-    exampleCard() {
-       return this.createMultiStageActionCard(
-            "c", 
-            [
-                {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t1"); return tile.key.getKey()=="0_0"}},
-                {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t2"); return tile.key.getKey()=="0_0"}},
-                {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t3"); return tile.key.getKey()=="0_0"}},
-            ]
-            )
-    }
-
-    createInstantExtractionCard() {
-        const affectedCoordinates = [new Coordinate(0,0)]
-        const createActionInfo: CreateSkillMapActionInfo = {
-            skills: new Map([["mining",1]]),
-            times: 1
-        } 
-        return this.createMultiStageActionCard(
-        "Extact",
-            [
-                {
-                    action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        this.actionFactoryService.createExtractionAction(createActionInfo, affectedCoordinates)(tile.value)
-                        return true
-                    },
-                    tileInfos: new Map([this.getBorderInfo(affectedCoordinates)])
-                }
-            ]
-        )
-    }
-
-    createEstateCard(estateType: string) {
-        const createEstateInfo = this.estateFactoryService.getCreateEstateInfo(estateType)
-
-        return this.createMultiStageActionCard(
-            estateType,
-            [
-                {
-                    action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        return getCreateEstateAction(this.levelService, this.turnActorsService, createEstateInfo.getEstate)(tile)
-                    }, 
-                    tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
-                }
-            ],
-            new Map([["oil", 1]])
-        )
-    }
-
-    createMultiStageActionCard(
-        name: string, 
-        cardCreationInfo: CardCreationInfo[],
-        price?: Map<Resource, number>,
-    ) {
+    createMultiStageActionCard(info: CardCreationInfo) {
+        const {
+            name,
+            cardCreationInfo,
+            skillRequired,
+            price,
+        } = info
         const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
         const oldCardActions0 = cardCreationInfo[0].action
         const uis: UIData[] = cardCreationInfo.map(x=>{return {} as UIData})
