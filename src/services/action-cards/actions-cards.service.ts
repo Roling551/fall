@@ -26,6 +26,7 @@ import { SkillMapActionFactoryService, CreateSkillMapActionInfo } from "../skill
 import { BenefitsService } from "../benefits.service";
 import { Skill } from "../../models/skill";
 import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
+import { ActionCardInfoList } from "./action-card-info.list";
 
 export interface CardCreationActionInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -48,26 +49,18 @@ export class ActionsCardsService {
     private isActionHappening = signal(false)
 
     constructor(
-        private infoFactoryService: ActionCardCreationInfoFactoryService,
+        private actionCardInfoList: ActionCardInfoList,
         private uiStateService: UIStateService,
         private charactersCardService: CharactersCardsService,
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
     ) {
-        const cards = []
-        cards.push(this.createMultiStageActionCard(infoFactoryService.instantExtractionCard()))
-        // card = this.createEstateCard("extraction")
-        // if(card) {
-        //     cards.push(card)
-        // }
-        // card = this.createEstateCard("skillBonus")
-        // if(card) {
-        //     cards.push(card)
-        // }
-        // card = this.createInstantExtractionCard()
-        // if(card) {
-        //     cards.push(card)
-        // }
+        const cardNames = ["handDrill"]
+        const cards = cardNames
+            .map(x=>this.actionCardInfoList.list.get(x))
+            .filter(x=>!!x)
+            .map(x=>x())
+            .map(x=>this.createMultiStageActionCard(x))
         this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
