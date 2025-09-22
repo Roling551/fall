@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { TurnActor } from "../models/turn-actor";
 import { createForceSignal } from "../util/force-signal";
 import { ResourcesService } from "./resources.service";
-import { mapContainsMap } from "../util/map-functions";
 
 @Injectable({
   providedIn: 'root'

@@ -11,6 +11,7 @@ import { createForceSignal } from "../util/force-signal";
 import { CurrentLevelService } from "./current-level.service";
 import { Tile } from "../models/tile";
 import { Skill } from "../models/skill";
+import { TurnActorsService } from "./turn-actors.service";
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,8 @@ export class BenefitsService {
 
     constructor(
         private technologiesService: TechnologiesService,
-        private levelService: CurrentLevelService
+        private levelService: CurrentLevelService,
+        private turnActorService: TurnActorsService,
     ) 
     {
         this.skillMapActionSkillBonusesList = computed(()=> {
@@ -73,6 +75,12 @@ export class BenefitsService {
                     }
                 }
             }
+            for(const turnActors of turnActorService.actors.get()) {
+                const bonus = turnActors.getSkillMapActionSkillBonus()
+                if(bonus) {
+                    result.set(bonus.name, bonus)
+                }
+            }
             return result
         })
 
@@ -83,7 +91,7 @@ export class BenefitsService {
                 (key: string, item: SkillMapActionSkillBonus)=>{
                     return item.qualifier(tile)
                 },
-                (key: string, item: SkillMapActionSkillBonus)=>item.bonus(tile),
+                (key: string, item: SkillMapActionSkillBonus)=>item.bonus,
                 addNumericalValuesFunctional,
                 ()=>new Map<Skill, number>()
             )

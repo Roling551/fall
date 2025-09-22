@@ -8,7 +8,8 @@ import { SkillMapActionFactoryService, CreateSkillMapActionInfo } from "./skill-
 import { Resource } from "../models/resource";
 
 export interface CreateEstateInfo {
-    createActionInfo: CreateSkillMapActionInfo,
+    createActionInfo?: CreateSkillMapActionInfo,
+    affectedCoordinates: Coordinate[],
     getEstate: (tile: Tile) => Estate,
 }
 
@@ -22,18 +23,27 @@ export class EstateFactoryService {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
-    getCreateEstateInfo(): CreateEstateInfo {
-        const skills = new Map<Skill, number>([["mining", 3]])
-        const requiredResources: Map<Resource, number> = new Map([["oil", 1]])
-        const affectedCoordinates = [new Coordinate(0,0), new Coordinate(1,0)]
-        const createActionInfo: CreateSkillMapActionInfo = {
-            skills, 
-            affectedCoordinates,
-            times: 1
-        }
-        return {
-            getEstate: (tile_: Tile) => new Estate(tile_, "farm", this.actionFactoryService.createExtractionAction(createActionInfo), requiredResources),
-            createActionInfo
+    getCreateEstateInfo(estateType: string): CreateEstateInfo {
+        if(estateType=="extraction") {
+            const skills = new Map<Skill, number>([["mining", 3]])
+            const requiredResources: Map<Resource, number> = new Map([["oil", 1]])
+            const affectedCoordinates = [new Coordinate(0,0), new Coordinate(1,0)]
+            const createActionInfo: CreateSkillMapActionInfo = {
+                skills, 
+                times: 1
+            }
+            return {
+                getEstate: (tile_: Tile) => new Estate(tile_, "farm", requiredResources, affectedCoordinates, this.actionFactoryService.createExtractionAction(createActionInfo, affectedCoordinates)),
+                affectedCoordinates,
+                createActionInfo
+            }
+        } else {
+            const requiredResources: Map<Resource, number> = new Map([["oil", 1]])
+            const affectedCoordinates = [new Coordinate(0,0), new Coordinate(1,0)]
+            return {
+                getEstate: (tile_: Tile) => new Estate(tile_, "mine", requiredResources, affectedCoordinates, undefined, new Map([["mining",1]])),
+                affectedCoordinates
+            }
         }
     }
 

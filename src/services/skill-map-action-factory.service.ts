@@ -9,7 +9,6 @@ import { BenefitsService } from "./benefits.service";
 
 export interface CreateSkillMapActionInfo {
     skills: Map<Skill, number>
-    affectedCoordinates: Coordinate[]
     times: number
 }
 
@@ -27,10 +26,8 @@ export class SkillMapActionFactoryService {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
-    public createExtractionAction(createActionInfo: CreateSkillMapActionInfo) {
+    public createExtractionAction(createActionInfo: CreateSkillMapActionInfo, affectedCoordinates: Coordinate[]) {
         const times = createActionInfo.times || 1
-        
-        const affectedCoordinates = createActionInfo.affectedCoordinates || [new Coordinate(0,0)]
         return (tile: Tile)=>{
             const skills = addNumericalValuesFunctional(createActionInfo.skills,
                 this.benefitsService.listenForSkillMapActionSkillBonuses(tile).output())

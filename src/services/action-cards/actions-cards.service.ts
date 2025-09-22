@@ -53,7 +53,11 @@ export class ActionsCardsService {
         if(card) {
             cards.push(card)
         }
-        card = this.createEstateCard()
+        card = this.createEstateCard("extraction")
+        if(card) {
+            cards.push(card)
+        }
+        card = this.createEstateCard("skillBonus")
         if(card) {
             cards.push(card)
         }
@@ -67,10 +71,10 @@ export class ActionsCardsService {
         })
     }
 
-    getBorderInfo(createActionInfo: CreateSkillMapActionInfo): [string, TileInfo] {
+    getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {
         const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
             if(this.uiStateService.hoverTile()) {
-                const doRender = createActionInfo.affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
+                const doRender = affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
                 return doRender
             }
             return false
@@ -111,9 +115,9 @@ export class ActionsCardsService {
     }
 
     createInstantExtractionCard() {
+        const affectedCoordinates = [new Coordinate(0,0)]
         const createActionInfo: CreateSkillMapActionInfo = {
             skills: new Map([["mining",1]]),
-            affectedCoordinates: [new Coordinate(0,0)],
             times: 1
         } 
         return this.createMultiStageActionCard(
@@ -121,26 +125,26 @@ export class ActionsCardsService {
             [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        this.actionFactoryService.createExtractionAction(createActionInfo)(tile.value)
+                        this.actionFactoryService.createExtractionAction(createActionInfo, affectedCoordinates)(tile.value)
                         return true
                     },
-                    tileInfos: new Map([this.getBorderInfo(createActionInfo)])
+                    tileInfos: new Map([this.getBorderInfo(affectedCoordinates)])
                 }
             ]
         )
     }
 
-    createEstateCard() {
-        const createEstateInfo = this.estateFactoryService.getCreateEstateInfo()
+    createEstateCard(estateType: string) {
+        const createEstateInfo = this.estateFactoryService.getCreateEstateInfo(estateType)
 
         return this.createMultiStageActionCard(
-            "Create estate",
+            estateType,
             [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
                         return getCreateEstateAction(this.levelService, this.turnActorsService, createEstateInfo.getEstate)(tile)
                     }, 
-                    tileInfos: new Map([this.getBorderInfo(createEstateInfo.createActionInfo)])
+                    tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
                 }
             ],
             new Map([["oil", 1]])
