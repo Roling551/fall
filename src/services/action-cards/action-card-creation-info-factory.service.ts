@@ -7,6 +7,32 @@ import { CardCreationInfo } from "./actions-cards.service";
 import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
+import { Skill } from "../../models/skill";
+import { Resource } from "../../models/resource";
+import { getCreateEstateAction } from "./actions-cards-functions";
+import { EstateFactoryService } from "../estate-factory.service";
+import { TurnActorsService } from "../turn-actors.service";
+import { Estate } from "../../models/estate";
+
+export interface InstantExtractionCardInputs {
+    name: string,
+    skillRequired: Map<Skill, number>,
+    skillApplied: Map<Skill, number>,
+    affectedCoordinates: Coordinate[],
+    price?: Map<Resource, number>,
+    times?: number
+}
+
+export interface EstateCardInputs {
+    name: string,
+    skillRequired: Map<Skill, number>,
+    skillApplied: Map<Skill, number>,
+    affectedCoordinates: Coordinate[],
+    estateTexture: string,
+    runCost?: Map<Resource, number>,
+    price?: Map<Resource, number>,
+    times?: number
+}
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +42,9 @@ export class ActionCardCreationInfoFactoryService {
     constructor(
         private uiStateService: UIStateService,
         private levelService: CurrentLevelService,
-        private skillMapActionFactoryService: SkillMapActionFactoryService
+        private skillMapActionFactoryService: SkillMapActionFactoryService,
+        private estateFactoryService: EstateFactoryService,
+        private turnActorsService: TurnActorsService,
     ) {}
 
     getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {
@@ -59,43 +87,64 @@ export class ActionCardCreationInfoFactoryService {
     //     )
     // }
 
-    instantExtractionCard(): CardCreationInfo {
-        const affectedCoordinates = [new Coordinate(0,0)]
+    instantExtractionCard(
+        inputs: InstantExtractionCardInputs
+    ): CardCreationInfo {
         const createActionInfo: CreateSkillMapActionInfo = {
-            skills: new Map([["mining",1]]),
-            times: 1
+            skills: inputs.skillApplied,
+            times: inputs.times!=undefined ? inputs.times : 1
         } 
         return {
-            name: "Extact",
+            name: inputs.name,
             cardCreationInfo: [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        this.skillMapActionFactoryService.createExtractionAction(createActionInfo, affectedCoordinates)(tile.value)
+                        this.skillMapActionFactoryService.createExtractionAction(createActionInfo, inputs.affectedCoordinates)(tile.value)
                         return true
                     },
-                    tileInfos: new Map([this.getBorderInfo(affectedCoordinates)])
+                    tileInfos: new Map([this.getBorderInfo(inputs.affectedCoordinates)])
                 }
             ],
-            skillRequired: new Map([["construction", 2]]),
+            skillRequired: inputs.skillRequired,
+            price: inputs.price,
         }
     }
 
-    // createEstateCard(estateType: string) {
-    //     const createEstateInfo = this.estateFactoryService.getCreateEstateInfo(estateType)
-
-    //     return this.createMultiStageActionCard(
-    //         estateType,
-    //         [
-    //             {
-    //                 action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-    //                     return getCreateEstateAction(this.levelService, this.turnActorsService, createEstateInfo.getEstate)(tile)
-    //                 }, 
-    //                 tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
-    //             }
-    //         ],
-    //         new Map([["construction", 2]]),
-    //         new Map([["oil", 1]])
-    //     )
-    // }
+    estateCard(inputs: EstateCardInputs): CardCreationInfo {
+        const createActionInfo: CreateSkillMapActionInfo = {
+            skills: inputs.skillApplied,
+            times: inputs.times!=undefined ? inputs.times : 1
+        } 
+        const createEstateInfo = {
+            getEstate: (tile_: Tile) => new Estate(
+                tile_, 
+                inputs.estateTexture, 
+                inputs.runCost || (new Map([])), 
+                inputs.affectedCoordinates, 
+                this.skillMapActionFactoryService.createExtractionAction(
+                    createActionInfo, 
+                    inputs.affectedCoordinates)
+                ),
+            affectedCoordinates: inputs.affectedCoordinates,
+            createActionInfo
+        }
+        return {
+            name: inputs.name,
+            cardCreationInfo:
+            [
+                {
+                    action:(tile: KeyValuePair<Coordinate, Tile>)=> {
+                        return getCreateEstateAction(
+                            this.levelService,
+                            this.turnActorsService,
+                            createEstateInfo.getEstate)(tile)
+                    }, 
+                    tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
+                }
+            ],
+            skillRequired: inputs.skillRequired,
+            price: inputs.price,
+        }
+    }
 
 }

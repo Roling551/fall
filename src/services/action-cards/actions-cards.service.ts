@@ -55,7 +55,7 @@ export class ActionsCardsService {
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
     ) {
-        const cardNames = ["handDrill"]
+        const cardNames = ["handDrill", "automaticDrill"]
         const cards = cardNames
             .map(x=>this.actionCardInfoList.list.get(x))
             .filter(x=>!!x)
