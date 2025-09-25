@@ -26,12 +26,13 @@ export interface InstantExtractionCardInputs {
 export interface EstateCardInputs {
     name: string,
     skillRequired: Map<Skill, number>,
-    skillApplied: Map<Skill, number>,
+    skillApplied?: Map<Skill, number>,
     affectedCoordinates: Coordinate[],
     estateTexture: string,
     runCost?: Map<Resource, number>,
     price?: Map<Resource, number>,
-    times?: number
+    times?: number,
+    skillMapActionSkillBonus?: Map<Skill, number>
 }
 
 @Injectable({
@@ -111,22 +112,24 @@ export class ActionCardCreationInfoFactoryService {
     }
 
     estateCard(inputs: EstateCardInputs): CardCreationInfo {
-        const createActionInfo: CreateSkillMapActionInfo = {
+        const createActionInfo: CreateSkillMapActionInfo | undefined = (!!inputs.skillApplied) ? {
             skills: inputs.skillApplied,
             times: inputs.times!=undefined ? inputs.times : 1
-        } 
+        } : undefined
         const createEstateInfo = {
             getEstate: (tile_: Tile) => new Estate(
                 tile_, 
                 inputs.estateTexture, 
                 inputs.runCost || (new Map([])), 
                 inputs.affectedCoordinates, 
-                this.skillMapActionFactoryService.createExtractionAction(
+                (!!createActionInfo) ? this.skillMapActionFactoryService.createExtractionAction(
                     createActionInfo, 
                     inputs.affectedCoordinates)
-                ),
+                : undefined,
+                inputs.skillMapActionSkillBonus
+            ),
             affectedCoordinates: inputs.affectedCoordinates,
-            createActionInfo
+            createActionInfo,
         }
         return {
             name: inputs.name,

@@ -34,6 +34,20 @@ export class ActionCardInfoList {
                     runCost: new Map([["oil", 1]])
                 }
             )
+        ],
+        [
+            "miningTools",
+            ()=>this.factory.estateCard(
+                {
+                    name: "miningTools",
+                    skillRequired: new Map([["construction", 2]]),
+                    skillMapActionSkillBonus: new Map([["mining",1]]),
+                    affectedCoordinates:  [new Coordinate(0,0), new Coordinate(0,1), new Coordinate(0,-1)],
+                    estateTexture: "mine",
+                    price: new Map([["oil", 5]]),
+                    runCost: new Map([["oil", 1]])
+                }
+            )
         ]
     ])
 }
