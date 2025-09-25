@@ -34,6 +34,11 @@ export class ActionsListComponent {
   onNextLevel(): void {
     this.levelsService.nextLevel()
   }
+  canNextLevel(): boolean {
+    return this.levelsService.canNextLevel()
+  }
+
+
   onEditMapClick(): void {
     this.uiStateService.setUI_.changeResource()
   }
