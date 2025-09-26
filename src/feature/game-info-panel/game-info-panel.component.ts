@@ -1,5 +1,5 @@
 import { Component, computed, Signal } from '@angular/core';
-import { TurnService } from '../../services/turn-service';
+import { TurnService } from '../../services/turn.service';
 import { ResourcesService } from '../../services/resources.service';
 
 @Component({
