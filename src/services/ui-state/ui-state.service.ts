@@ -7,7 +7,6 @@ import { getChangeResourceUI, getCreateEstateAction, getCreateStationUI, getMove
 import { Estate } from "../../models/estate";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
-import { BenefitsService } from "../benefits.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { ResourcesService } from "../resources.service";
@@ -71,7 +70,6 @@ export class UIStateService {
 
   constructor(
     public levelService: CurrentLevelService,
-    public benefitsService: BenefitsService,
     public battleService: BattleService,
     public turnActorsService: TurnActorsService,
     public resourcesService: ResourcesService

@@ -22,11 +22,10 @@ import { Resource } from "../../models/resource";
 import { BorderComponent } from "../../shared/border/border.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
-import { SkillMapActionFactoryService, CreateSkillMapActionInfo } from "../skill-map-action-factory.service";
-import { BenefitsService } from "../benefits.service";
 import { Skill } from "../../models/skill";
 import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
 import { ActionCardInfoList } from "./action-card-info.list";
+import { CardOnHandBenefits } from "../../models/card-on-hand-benefit";
 
 export interface CardCreationActionInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -38,6 +37,7 @@ export interface CardCreationInfo {
     cardCreationInfo: CardCreationActionInfo[],
     skillRequired: Map<Skill, number>,
     price?: Map<Resource, number>,
+    cardOnHandBenefits?: CardOnHandBenefits,
 }
 
 @Injectable({
@@ -45,26 +45,23 @@ export interface CardCreationInfo {
 })
 export class ActionsCardsService {
 
-    public cardsHand
+    public cardsHand?: CardsHand<ActionCardInfo>
     private isActionHappening = signal(false)
 
     constructor(
-        private actionCardInfoList: ActionCardInfoList,
         private uiStateService: UIStateService,
         private charactersCardService: CharactersCardsService,
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
     ) {
-        const cardNames = ["handDrill", "automaticDrill", "miningTools"]
-        const cards = cardNames
-            .map(x=>this.actionCardInfoList.list.get(x))
-            .filter(x=>!!x)
-            .map(x=>x())
-            .map(x=>this.createMultiStageActionCard(x))
-        this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
         })
+    }
+
+    setCards(cardCreationInfos: CardCreationInfo[]) {
+        const cards = cardCreationInfos.map(x=>this.createMultiStageActionCard(x))
+        this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
     }
 
     getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {
@@ -96,7 +93,7 @@ export class ActionsCardsService {
     }
 
     nextTurn() {
-        this.cardsHand.nextTurn()
+        this.cardsHand?.nextTurn()
     }
 
     createMultiStageActionCard(info: CardCreationInfo) {
@@ -105,8 +102,9 @@ export class ActionsCardsService {
             cardCreationInfo,
             skillRequired,
             price,
+            cardOnHandBenefits
         } = info
-        const card = new ActionCardInfo(name, new Map([["construction", 2]]), price)
+        const card = new ActionCardInfo(name, new Map(skillRequired), price, cardOnHandBenefits)
         const oldCardActions0 = cardCreationInfo[0].action
         const uis: UIData[] = cardCreationInfo.map(x=>{return {} as UIData})
         uis[0]={
@@ -148,7 +146,7 @@ export class ActionsCardsService {
                 cardCreationInfo.map(x=>x.action),
                 ()=>{
                     this.isActionHappening.set(false)
-                    this.cardsHand.deselectCard(card)
+                    this.cardsHand!.deselectCard(card)
                 },
                 ()=>{
                     this.isActionHappening.set(false)
@@ -156,7 +154,7 @@ export class ActionsCardsService {
                     if(price) {
                         this.resourcesService.spendResources(price)
                     }
-                    this.cardsHand.discardCard(card)
+                    this.cardsHand!.discardCard(card)
                 },
                 uis
             )

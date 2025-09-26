@@ -12,6 +12,7 @@ import { CurrentLevelService } from "./current-level.service";
 import { Tile } from "../models/tile";
 import { Skill } from "../models/skill";
 import { TurnActorsService } from "./turn-actors.service";
+import { ActionsCardsService } from "./action-cards/actions-cards.service";
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,7 @@ export class BenefitsService {
         private technologiesService: TechnologiesService,
         private levelService: CurrentLevelService,
         private turnActorService: TurnActorsService,
+        private actionsCardsService : ActionsCardsService,
     ) 
     {
         this.skillMapActionSkillBonusesList = computed(()=> {
@@ -77,6 +79,13 @@ export class BenefitsService {
             }
             for(const turnActors of turnActorService.actors.get()) {
                 const bonus = turnActors.getSkillMapActionSkillBonus()
+                if(bonus) {
+                    result.set(bonus.name, bonus)
+                }
+            }
+            if(this.actionsCardsService.cardsHand)
+            for(const card of this.actionsCardsService.cardsHand!.hand.get()) {
+                const bonus = card.cardOnHandBenefits.get("skill-map-action-skill-bonus")
                 if(bonus) {
                     result.set(bonus.name, bonus)
                 }

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
 import { CardCreationInfo } from "./actions-cards.service";
 import { Coordinate } from "../../models/coordinate";
+import { simpleCardOnHandBenefits } from "../../models/card-on-hand-benefit";
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,8 @@ export class ActionCardInfoList {
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "farm",
                     price: new Map([["oil", 5]]),
-                    runCost: new Map([["oil", 1]])
+                    runCost: new Map([["oil", 1]]),
+                    cardOnHandBenefits: simpleCardOnHandBenefits("automaticDrill", new Map([["mining",1]]))
                 }
             )
         ],
