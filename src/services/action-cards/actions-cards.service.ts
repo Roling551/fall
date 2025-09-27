@@ -6,7 +6,7 @@ import { TileInfo, UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile";
-import { CardsHand } from "../../models/cards-hand";
+import { CardsHand } from "../../models/card-hands/cards-hand";
 import { CharactersCardsService } from "../characters-cards.service";
 import { createMultiStageAction } from "../ui-state/create-multi-stage-action";
 import { mapContainsMap } from "../../util/map-functions";
@@ -26,6 +26,8 @@ import { Skill } from "../../models/skill";
 import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
 import { ActionCardInfoList } from "./action-card-info.list";
 import { CardOnHandBenefits } from "../../models/card-on-hand-benefit";
+import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
+import { InitialCardsHand } from "../../models/card-hands/initial.cards-hand";
 
 export interface CardCreationActionInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -61,7 +63,7 @@ export class ActionsCardsService {
 
     setCards(cardCreationInfos: CardCreationInfo[]) {
         const cards = cardCreationInfos.map(x=>this.createMultiStageActionCard(x))
-        this.cardsHand = new CardsHand(cards, ()=>{this.uiStateService.cancel()}, false)
+        this.cardsHand = new InitialCardsHand(cards, ()=>{this.uiStateService.cancel()}, false, undefined, 2)
     }
 
     getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {

@@ -2,7 +2,7 @@ import { Component, computed, Input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 import { ActionsCardsService } from '../../services/action-cards/actions-cards.service';
 import { CardInfo } from '../../models/card-info';
-import { CardsHand } from '../../models/cards-hand';
+import { CardsHand } from '../../models/card-hands/cards-hand';
 
 @Component({
   selector: 'app-cards',
@@ -32,5 +32,9 @@ export class CardsComponent<T extends CardInfo> {
 
     isCardSelected(card: T) {
         return this.cardsHand.isCardSelected(card)
+    }
+
+    onDiscardClick() {
+        this.cardsHand.discardSelectedCards()
     }
 }

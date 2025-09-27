@@ -1,19 +1,20 @@
 import { Injectable, signal } from "@angular/core";
-import { CardInfo } from "./card-info";
-import { createForceSignal } from "../util/force-signal";
-import { shuffleArray } from "../util/array-functions";
-import { KeyValuePair } from "./key-value-pair";
-import { Coordinate } from "./coordinate";
-import { Tile } from "./tile";
+import { CardInfo } from "../card-info";
+import { createForceSignal } from "../../util/force-signal";
+import { shuffleArray } from "../../util/array-functions";
+import { KeyValuePair } from "../key-value-pair";
+import { Coordinate } from "../coordinate";
+import { Tile } from "../tile";
+import { CardsHand } from "./cards-hand";
 
-export class CardsHand<T extends CardInfo> {
+export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
     drawDeck = createForceSignal([] as T[])
     hand = createForceSignal([] as T[])
     discardDeck = createForceSignal([] as T[])
 
     selectedCards = createForceSignal([] as T[])
 
-    drawsPerTurn = 5
+    private drawsPerTurn = 5
 
     constructor(cards: T[], private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false)) {
         this.drawDeck.set([...cards])
@@ -73,7 +74,7 @@ export class CardsHand<T extends CardInfo> {
         this.startTurn()
     }
 
-    startTurn() {
+    private startTurn() {
         let drawsLeft = this.drawsPerTurn
         while(drawsLeft > 0) {
             if(this.drawDeck.get().length == 0) {
@@ -91,13 +92,13 @@ export class CardsHand<T extends CardInfo> {
         this.hand.forceUpdate()
     }
 
-    shuffleCards() {
-        this.drawDeck.set(shuffleArray(this.discardDeck.get()))
-        this.discardDeck.set([])
-    }
-
-    endTurn() {
+    private endTurn() {
         this.discardDeck.set([...this.discardDeck.get(), ...this.hand.get()])
         this.hand.set([])
+    }
+
+    private shuffleCards() {
+        this.drawDeck.set(shuffleArray(this.discardDeck.get()))
+        this.discardDeck.set([])
     }
 }

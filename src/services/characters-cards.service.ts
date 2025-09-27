@@ -1,9 +1,10 @@
 import { computed, effect, Injectable, signal } from "@angular/core";
-import { CardsHand } from "../models/cards-hand";
+import { CardsHand } from "../models/card-hands/cards-hand";
 import { CardInfo } from "../models/card-info";
 import { CharacterCardInfo } from "../models/character-card-info";
 import { baseZeroSkills } from "../models/skill";
 import { addExistingNumericalValues } from "../util/map-functions";
+import { TraditionalCardsHand } from "../models/card-hands/traditional-cards-hand";
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class CharactersCardsService {
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
-        this.cardsHand = new CardsHand<CharacterCardInfo>(cards, ()=>{}, true, this.isHandFrozen)
+        this.cardsHand = new TraditionalCardsHand<CharacterCardInfo>(cards, ()=>{}, true, this.isHandFrozen)
     }
 
     exampleCard() {
