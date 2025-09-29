@@ -27,7 +27,7 @@ import { ActionCardCreationInfoFactoryService } from "./action-card-creation-inf
 import { ActionCardInfoList } from "./action-card-info.list";
 import { CardOnHandBenefits } from "../../models/card-on-hand-benefit";
 import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
-import { InitialCardsHand } from "../../models/card-hands/initial.cards-hand";
+import { InitialCardsHand } from "../../models/card-hands/initial-cards-hand";
 
 export interface CardCreationActionInfo {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
