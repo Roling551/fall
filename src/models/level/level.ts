@@ -26,13 +26,13 @@ export class Level {
         return result
     })
 
-    toJSON() {
-        return this
-    }
+    // toJSON() {
+    //     return this
+    // }
 
-    static fromJSON(json: any) {
-        const level = new Level()
-        level.map = LevelMap.fromJSON(json["map"]) 
-        return level
-    }
+    // static fromJSON(json: any) {
+    //     const level = new Level()
+    //     level.map = LevelMap.fromJSON(json["map"]) 
+    //     return level
+    // }
 }

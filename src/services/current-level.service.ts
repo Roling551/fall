@@ -11,17 +11,17 @@ export class CurrentLevelService {
     levelInfo = createForceSignal<LevelInfo|undefined>(undefined)
 
     save() {
-        const str = JSON.stringify(this.level.get())
-        localStorage.setItem('save_game', str);
+        // const str = JSON.stringify(this.level.get())
+        // localStorage.setItem('save_game', str);
     }
 
     load() {
-        const str = localStorage.getItem('save_game');
+        // const str = localStorage.getItem('save_game');
         
-        if(str) {
-            const json = JSON.parse(str)
-            const obj = Level.fromJSON(json)
-            this.level.set(obj);
-        }
+        // if(str) {
+        //     const json = JSON.parse(str)
+        //     const obj = Level.fromJSON(json)
+        //     this.level.set(obj);
+        // }
     }
 }

@@ -28,17 +28,4 @@ export class Tile {
         this.obstacles.set(obstacles)
     }
 
-    toJSON() {
-        return {
-            coordinate: this.coordinate,
-            terrainType: this.terrainType(),
-            resourcesSources: this.resourcesSources
-        }
-    }
-
-    static fromJSON(json: any) {
-        const tile = new Tile(Coordinate.fromJSON(json.coordinate), json.terrainType)
-        tile.resourcesSources = ResourcesSources.fromJSON(json.resourcesSources)
-        return tile
-    }
 }
