@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, Signal } from '@angular/core';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { IsometricTilingComponent } from '../../shared/isometric-tiling/isometric-tiling.component';
 import { CommonModule } from '@angular/common';
 import { Coordinate } from '../../models/coordinate';

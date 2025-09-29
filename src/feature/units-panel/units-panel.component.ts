@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, computed, Input, OnInit } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { Unit } from '../../models/unit';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { createForceSignal } from '../../util/force-signal';

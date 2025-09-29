@@ -3,7 +3,7 @@ import { MapEntity } from '../../models/map-entity';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { SimpleTextComponent } from '../../shared/simple-text/simple-text.component';
 import { MapMarkingComponent } from '../../shared/map-marking/map-marking.component';
 import { ForceSignal } from '../../util/force-signal';

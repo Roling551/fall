@@ -2,7 +2,7 @@ import { Injectable, signal, Type, ViewContainerRef } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
-import { Tile } from "../../models/tile";
+import { Tile } from "../../models/tile/tile";
 import { getChangeResourceUI, getCreateEstateAction, getCreateStationUI, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
 import { Estate } from "../../models/estate";
 import { Unit } from "../../models/unit";

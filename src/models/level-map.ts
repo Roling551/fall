@@ -4,7 +4,7 @@ import { Coordinate } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Obstacles } from "./obstacles"
 import { RegularResourceSource } from "./resource-source"
-import { Tile } from "./tile"
+import { Tile } from "./tile/tile"
 import { TileDirection } from "./tile-direction"
 
 export class LevelMap {

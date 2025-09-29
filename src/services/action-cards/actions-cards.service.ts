@@ -5,7 +5,7 @@ import { shuffleArray } from "../../util/array-functions";
 import { TileInfo, UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
-import { Tile } from "../../models/tile";
+import { Tile } from "../../models/tile/tile";
 import { CardsHand } from "../../models/card-hands/cards-hand";
 import { CharactersCardsService } from "../characters-cards.service";
 import { createMultiStageAction } from "../ui-state/create-multi-stage-action";

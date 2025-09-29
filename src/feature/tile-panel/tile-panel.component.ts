@@ -1,7 +1,7 @@
 import { Component, computed, Input } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { ForceSignal } from '../../util/force-signal';
 import { UnitsPanelComponent } from '../units-panel/units-panel.component';
 import { Unit } from '../../models/unit';

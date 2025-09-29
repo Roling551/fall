@@ -1,12 +1,12 @@
 import { effect, signal, untracked } from "@angular/core";
-import { createForceSignal, ForceSignal } from "../util/force-signal";
-import { MapEntity } from "./map-entity";
-import { Unit } from "./unit";
-import { Resource } from "./resource";
-import { Coordinate } from "./coordinate";
-import { Obstacles } from "./obstacles";
-import { ResourceSource } from "./resource-source";
-import { ResourcesSources } from "./resources-sources";
+import { createForceSignal, ForceSignal } from "../../util/force-signal";
+import { MapEntity } from "../map-entity";
+import { Unit } from "../unit";
+import { Resource } from "../resource";
+import { Coordinate } from "../coordinate";
+import { Obstacles } from "../obstacles";
+import { ResourceSource } from "../resource-source";
+import { ResourcesSources } from "../resources-sources";
 
 
 export class Tile {

@@ -9,7 +9,7 @@ import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
 import { createForceSignal } from "../util/force-signal";
 import { CurrentLevelService } from "./current-level.service";
-import { Tile } from "../models/tile";
+import { Tile } from "../models/tile/tile";
 import { Skill } from "../models/skill";
 import { TurnActorsService } from "./turn-actors.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";

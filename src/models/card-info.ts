@@ -1,6 +1,6 @@
 import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
-import { Tile } from "./tile";
+import { Tile } from "./tile/tile";
 
 export class CardInfo {
     static cardsAmount = 0

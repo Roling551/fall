@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, Input, input, OnChanges, 
 import { StyleVariablesService } from '../../services/style-variables.service';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { TileDirection } from '../../models/tile-direction';
 import { CommonModule } from '@angular/common';
 import { UIStateService } from '../../services/ui-state/ui-state.service';

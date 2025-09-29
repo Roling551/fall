@@ -1,6 +1,6 @@
 import { SkillMapActionSkillBonus } from "./bonus"
 import { Skill } from "./skill"
-import { Tile } from "./tile"
+import { Tile } from "./tile/tile"
 
 export type CardOnHandBenefitType = "skill-map-action-skill-bonus"
 

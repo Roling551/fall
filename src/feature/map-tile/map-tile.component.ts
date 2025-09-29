@@ -1,7 +1,7 @@
 import { Component, computed, Injector, input, Input, Signal } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { CommonModule } from '@angular/common';
 import { ForceSignal } from '../../util/force-signal';

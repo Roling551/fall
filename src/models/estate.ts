@@ -4,7 +4,7 @@ import { SignalsGroup } from "../util/signals-group";
 import { EstateProductionBonus, SkillMapActionSkillBonus } from "./bonus";
 import { MapEntity } from "./map-entity";
 import { TurnActor } from "./turn-actor";
-import { Tile } from "./tile";
+import { Tile } from "./tile/tile";
 import { Resource } from "./resource";
 import { Skill } from "./skill";
 import { createForceSignal } from "../util/force-signal";

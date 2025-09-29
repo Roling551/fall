@@ -1,7 +1,7 @@
 import { computed, Injectable } from "@angular/core";
 import { Coordinate } from "../../models/coordinate";
 import { KeyValuePair } from "../../models/key-value-pair";
-import { Tile } from "../../models/tile";
+import { Tile } from "../../models/tile/tile";
 import { CreateSkillMapActionInfo, SkillMapActionFactoryService } from "../skill-map-action-factory.service";
 import { CardCreationInfo } from "./actions-cards.service";
 import { BorderComponent } from "../../shared/border/border.component";

@@ -4,7 +4,7 @@ import { LevelMap } from "../level-map";
 import { KeyValuePair } from "../key-value-pair";
 import { Benefit } from "../benefit";
 import { Coordinate } from "../coordinate";
-import { Tile } from "../tile";
+import { Tile } from "../tile/tile";
 import { Estate } from "../estate";
 import { TurnActorsService } from "../../services/turn-actors.service";
 import { Station } from "../station";

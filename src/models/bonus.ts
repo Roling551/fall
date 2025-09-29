@@ -1,6 +1,6 @@
 import { Estate } from "./estate";
 import { Skill } from "./skill";
-import { Tile } from "./tile";
+import { Tile } from "./tile/tile";
 
 export interface EstateProductionBonus {
     type: "estate-production",

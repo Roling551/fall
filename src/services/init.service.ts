@@ -5,7 +5,7 @@ import { Benefit } from "../models/benefit";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { ResourcesInfoComponent } from "../feature/resources-info/resources-info.component";
 import { Coordinate } from "../models/coordinate";
-import { Tile } from "../models/tile";
+import { Tile } from "../models/tile/tile";
 import { KeyValuePair } from "../models/key-value-pair";
 import { Skill } from "../models/skill";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";

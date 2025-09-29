@@ -1,6 +1,6 @@
 import { computed, Injectable } from "@angular/core";
 import { Estate } from "../models/estate";
-import { Tile } from "../models/tile";
+import { Tile } from "../models/tile/tile";
 import { Coordinate } from "../models/coordinate";
 import { Skill } from "../models/skill";
 import { CurrentLevelService } from "./current-level.service";

@@ -1,7 +1,7 @@
 import { computed, Injectable } from "@angular/core";
 import { Skill } from "../models/skill";
 import { Coordinate } from "../models/coordinate";
-import { Tile } from "../models/tile";
+import { Tile } from "../models/tile/tile";
 import { ResourcesService } from "./resources.service";
 import { addExistingNumericalValues, addNumericalValuesFunctional } from "../util/map-functions";
 import { CurrentLevelService } from "./current-level.service";

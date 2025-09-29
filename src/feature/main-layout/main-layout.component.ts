@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { WorldMapComponent } from '../world-map/world-map.component';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { MapEntity } from '../../models/map-entity';
 import { ActionsListComponent } from '../actions-list/actions-list.component';
 import { UIStateService } from '../../services/ui-state/ui-state.service';

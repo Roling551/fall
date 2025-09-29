@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { EnemyUnit, Unit } from "../models/unit";
-import { Tile } from "../models/tile";
+import { Tile } from "../models/tile/tile";
 import { KeyValuePair } from "../models/key-value-pair";
 import { Coordinate } from "../models/coordinate";
 import { createForceSignal } from "../util/force-signal";

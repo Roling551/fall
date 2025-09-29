@@ -1,5 +1,5 @@
 import { Component, computed, Input } from '@angular/core';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { StyleVariablesService } from '../../services/style-variables.service';

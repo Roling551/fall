@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
-import { Tile } from '../../models/tile';
+import { Tile } from '../../models/tile/tile';
 import { StyleVariablesService } from '../../services/style-variables.service';
 
 @Component({

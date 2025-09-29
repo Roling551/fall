@@ -2,7 +2,7 @@ import { TurnActorsService } from "../../services/turn-actors.service";
 import { Coordinate } from "../coordinate";
 import { Estate } from "../estate";
 import { KeyValuePair } from "../key-value-pair";
-import { Tile } from "../tile";
+import { Tile } from "../tile/tile";
 
 export function createEstate(
     tile: KeyValuePair<Coordinate, Tile>,

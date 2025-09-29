@@ -4,7 +4,7 @@ import { createForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
 import { KeyValuePair } from "../key-value-pair";
 import { Coordinate } from "../coordinate";
-import { Tile } from "../tile";
+import { Tile } from "../tile/tile";
 import { CardsHand } from "./cards-hand";
 
 export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {

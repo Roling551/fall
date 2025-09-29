@@ -1,6 +1,6 @@
 import { Coordinate } from "../../models/coordinate";
 import { KeyValuePair } from "../../models/key-value-pair";
-import { Tile } from "../../models/tile";
+import { Tile } from "../../models/tile/tile";
 import { UIData, UIStateService } from "./ui-state.service";
 
 export function createMultiStageAction(
