@@ -9,11 +9,10 @@ export function createEstate(
     getEstate: (tile: Tile)=>Estate,
     turnActorsService: TurnActorsService,
 ) {
-    if(!!tile.value.mapEntity.get()) {
+    if(!tile.value.canAddEntity()) {
         return false
     }
     const estate = getEstate(tile.value);
-    tile.value.mapEntity.set(estate)
     turnActorsService.addActor(estate)
-    return true
+    return tile.value.addMapEntity(estate)
 }

@@ -42,12 +42,10 @@ export class SkillMapActionFactoryService {
                     .filter(t=>!!t)
                     .map(t=>t.value)
                 for(const t of tiles) {
-                    for(const source of t.resourcesSources.sources.get()) {
-                        if(source.canAttempt(skills)) {
-                            const actionResult = source.action(skills)
-                            addExistingNumericalValues(this.resourcesService.resources.get(), actionResult.resources)
-                            this.resourcesService.resources.forceUpdate()
-                        }
+                    if(t.canAttemptSkillAction(skills)) {
+                        const actionResult = t.skillAction(skills)
+                        addExistingNumericalValues(this.resourcesService.resources.get(), actionResult.resources)
+                        this.resourcesService.resources.forceUpdate()
                     }
                 }
             }

@@ -5,27 +5,21 @@ import { Unit } from "../unit";
 import { Resource } from "../resource";
 import { Coordinate } from "../coordinate";
 import { Obstacles } from "../obstacles";
-import { ResourceSource } from "../resource-source";
+import { ResourceSource, ResourceSourceActionResult } from "../resource-source";
 import { ResourcesSources } from "../resources-sources";
+import { Skill } from "../skill";
 
 
-export class Tile {
+export abstract class Tile {
+    constructor(public coordinate: Coordinate) {}
 
-    terrainType
-    mapEntity = createForceSignal<MapEntity|undefined>(undefined)
+    abstract skillAction(skills: Map<Skill,number>): ResourceSourceActionResult
+    abstract canAttemptSkillAction(skills: Map<Skill,number>): boolean
+    abstract addMapEntity(mapEntity: MapEntity): boolean
+    abstract canAddEntity(): boolean
+    abstract removeMapEntity(): boolean
+
     units = createForceSignal(new Set<Unit>())
 
     obstacles = createForceSignal<Obstacles>(new Obstacles())
-
-    public resourcesSources: ResourcesSources = new ResourcesSources()
-
-    constructor(
-        public coordinate: Coordinate,
-        terrainType: string,
-        obstacles: Obstacles = new Obstacles()
-    ) {
-        this.terrainType = signal(terrainType)
-        this.obstacles.set(obstacles)
-    }
-
 }

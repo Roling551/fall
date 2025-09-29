@@ -6,6 +6,7 @@ import { StyleVariablesService } from '../../services/style-variables.service';
 import { getResourceSymbol } from '../../models/resource';
 import { RegularResourceSource, ResourceSource } from '../../models/resource-source';
 import { getSkillSymbol, skillsToString } from '../../models/skill';
+import { BasicTile } from '../../models/tile/basic-tile';
 
 @Component({
   selector: 'app-resources-info',
@@ -25,7 +26,11 @@ export class ResourcesInfoComponent {
     }
 
     resourcesTexts = computed(()=>{
-        return this.tile?.value.resourcesSources.sources.get().map(x=>this.getText(x))
+        const tile = this.tile?.value
+        if(tile instanceof BasicTile) {
+            return tile.resourcesSources.sources.get().map(x=>this.getText(x))
+        }
+        return [""]
     })
 
     getText(resourceSource: ResourceSource){

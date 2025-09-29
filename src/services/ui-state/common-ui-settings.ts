@@ -44,7 +44,7 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Create station"},
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            if(!!tile.value.mapEntity.get()) {
+            if(!tile.value.canAddEntity()) {
                 return
             }
             const level = levelService.level.get()
@@ -52,13 +52,13 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
                 return
             }
             const station = new Station()
-            tile.value.mapEntity.set(station);
+            tile.value.addMapEntity(station)
             level.station.set({key:tile.key.getKey(), value:station});
         },
         tileInfos: new Map([["unavaliable", {
             template: UnavaliableComponent,
             doRender: (tile)=> {
-                return !!tile.value?.mapEntity.get()
+                return !tile.value?.canAddEntity()
             }
         }]])
     }
@@ -67,12 +67,12 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
 export function getChangeResourceUI() {
     const editMapParameters = new EditMapParameters()
     return {
-        sideComponent: EditMapComponent,
-        sideComponentInputs: {},
-        additionalInfo: {editMapParameters},
-        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            tile.value.resourcesSources.changeFirstOfType(editMapParameters)
-        }
+        // sideComponent: EditMapComponent,
+        // sideComponentInputs: {},
+        // additionalInfo: {editMapParameters},
+        // mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
+        //     tile.value.resourcesSources.changeFirstOfType(editMapParameters)
+        // }
     }
 }
 
@@ -94,11 +94,7 @@ export function getRemoveEstateAction(
 ):UIData {
     return {
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-                if(
-                    tile.value.mapEntity.get()?.type != "estate") {
-                    return
-                }
-                tile.value.mapEntity.set(undefined);
+                tile.value.removeMapEntity();
         },
         additionalInfo: {currentAction: "removeEstateAction"},
 
