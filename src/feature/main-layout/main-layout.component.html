@@ -9,9 +9,11 @@
         <app-world-map/>
     </div>
     <div class="footer">
-        <div>
-            <app-cards [cardsHand]="actionsCards"></app-cards>
-        </div>
+        @if(actionsCards) {
+            <div>
+                <app-cards [cardsHand]="actionsCards"></app-cards>
+            </div>
+        }
         <div>
             <app-cards [cardsHand]="charactersCards"></app-cards>
         </div>
