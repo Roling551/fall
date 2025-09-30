@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ForceSignal } from '../../util/force-signal';
 import { MapEntity } from '../../models/map-entity';
 import { BasicTile } from '../../models/tile/basic-tile';
+import { StyleVariablesService } from '../../services/style-variables.service';
 
 @Component({
   selector: 'app-map-tile',
@@ -16,12 +17,15 @@ import { BasicTile } from '../../models/tile/basic-tile';
 })
 export class MapTileComponent {
   @Input({required: true}) tile!: KeyValuePair<Coordinate, Tile>
-  @Input({required: true}) sizeX!:number;
-  @Input({required: true}) sizeY!:number;
+  @Input({required: true}) input!: any;
+  sizeX:number;
+  sizeY:number;
 
   public lightBorder = '/assets/pictures/light-border.png'
 
-  constructor(public uiStateService: UIStateService, private injector: Injector){
+  constructor(public uiStateService: UIStateService, private styleVariablesService: StyleVariablesService){
+    this.sizeX = styleVariablesService.sizeX
+    this.sizeY = styleVariablesService.sizeY
   }
 
   getTexture(name: string): string {

@@ -3,18 +3,9 @@
         [tilesData]="tiles()!"
         [sizeX]="sizeX"
         [sizeY]="sizeY"
-        [tileTemplate]="tileTemplate"
         [backgroundImage]="backgroundImage"
         (tileClick)="mapAction()($event)"
-        [additionalGraphics]="tileInfo()"
+        [graphics]="tileInfo()"
         (tileHover)="onHoverChange($event)"
     />
 }
-
-<ng-template #tileTemplate let-tile="tile">
-    <app-map-tile
-        [tile]="tile"
-        [sizeX]="sizeX"
-        [sizeY]="sizeY"
-    />
-</ng-template>

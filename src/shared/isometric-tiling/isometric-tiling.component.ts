@@ -22,13 +22,11 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   @Input({required: true}) sizeX!:number;
   @Input({required: true}) sizeY!:number;
 
-  @Input({required: true}) tileTemplate!:TemplateRef<any>;
-
   @Input() distanceToUpdate = 20;
 
   @Input() allowedPixelsMovedForClick = 10;
 
-  additionalGraphics = input<Map<string, {doRender:((tile: T) => boolean), template:undefined|Type<any>, input?:any}>>(new Map());
+  graphics = input<Map<string, {doRender:((tile: T) => boolean), template:undefined|Type<any>, input?:any}>>(new Map());
 
   tileClick = output<T>();
   tileHover = output<T|undefined>();
@@ -162,7 +160,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   additionalGraphicsAndTilesToRender = computed(()=>{
     const graphicsAndTiles = []
-    for(const additionalGraphic of this.additionalGraphics()) {
+    for(const additionalGraphic of this.graphics()) {
         for(const tile of this.tilesData.entries()) {
             if(additionalGraphic[1].doRender(tile[1])) {
                 graphicsAndTiles.push({tile, additionalGraphic})

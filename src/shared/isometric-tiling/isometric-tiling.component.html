@@ -16,16 +16,7 @@
             <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()-1}"></ng-container>
         }
     }-->
-    @for(tile of tilesData.entries(); track tile[0]) {
-        <div
-            class="item"
-            [style.left.px]="getTransformX(tile[0])"
-            [style.top.px]="getTransformY(tile[0])"
-            (click)="onTileClick(tile[1])"
-        >
-            <ng-container *ngTemplateOutlet="tileTemplate; context:{tile:tile[1]}"></ng-container>
-        </div>
-    }
+
 
     @for(additional of additionalGraphicsAndTilesToRender(); track additional.tile[0] + "_" + additional.additionalGraphic[0]) {
         <div

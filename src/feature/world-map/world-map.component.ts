@@ -10,7 +10,7 @@ import { CurrentLevelService } from '../../services/current-level.service';
 
 @Component({
   selector: 'app-world-map',
-  imports: [IsometricTilingComponent, CommonModule, MapTileComponent],
+  imports: [IsometricTilingComponent, CommonModule],
   templateUrl: './world-map.component.html',
   styleUrl: './world-map.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,7 +36,10 @@ export class WorldMapComponent {
   }
 
   tileInfo = computed(() => {
-    return this.uiStateService.tileInfos()
+    return new Map([
+        ["base", {doRender:((tile: KeyValuePair<Coordinate, Tile>) => true), template:MapTileComponent}],
+        ...this.uiStateService.tileInfos()
+    ])
   })
 
   onHoverChange(tile: KeyValuePair<Coordinate, Tile>|undefined) {
