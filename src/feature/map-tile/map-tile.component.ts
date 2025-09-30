@@ -6,7 +6,7 @@ import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { CommonModule } from '@angular/common';
 import { ForceSignal } from '../../util/force-signal';
 import { MapEntity } from '../../models/map-entity';
-import { BasicTile } from '../../models/tile/basic-tile';
+import { BaseTile } from '../../models/tile/base-tile';
 import { StyleVariablesService } from '../../services/style-variables.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class MapTileComponent {
 
   getMapEntity = computed<MapEntity | undefined> (() => {
     const tile = this.tile.value
-    if(tile instanceof BasicTile) {
+    if(tile instanceof BaseTile) {
         return tile.mapEntity.get()
     }
     return undefined
@@ -42,7 +42,7 @@ export class MapTileComponent {
 
   getTerrainType = computed<string | undefined>(() =>  {
     const tile = this.tile.value
-    if(tile instanceof BasicTile) {
+    if(tile instanceof BaseTile) {
         return tile.terrainType()
     }
     return undefined

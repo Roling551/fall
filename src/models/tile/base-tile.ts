@@ -8,7 +8,7 @@ import { Tile } from "./tile"
 import { Coordinate } from "../coordinate"
 import { Obstacles } from "../obstacles"
 
-export class BasicTile extends Tile {
+export class BaseTile extends Tile {
     terrainType
     mapEntity = createForceSignal<MapEntity|undefined>(undefined)
     public resourcesSources: ResourcesSources = new ResourcesSources()

@@ -6,7 +6,7 @@ import { Obstacles } from "./obstacles"
 import { RegularResourceSource } from "./resource-source"
 import { Tile } from "./tile/tile"
 import { TileDirection } from "./tile-direction"
-import { BasicTile } from "./tile/basic-tile"
+import { BaseTile } from "./tile/base-tile"
 
 export class LevelMap {
     sizeX = 10
@@ -15,7 +15,7 @@ export class LevelMap {
     tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.createTiles(this.sizeX, this.sizeY)
 
     private createTile(coordinate: Coordinate) {
-        const tile = new BasicTile(
+        const tile = new BaseTile(
             coordinate,
             "ground",
             new Obstacles(new Map([["mountain",1]]))
