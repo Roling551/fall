@@ -5,6 +5,8 @@ import { Tile } from '../../models/tile/tile';
 import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { CommonModule } from '@angular/common';
 import { ForceSignal } from '../../util/force-signal';
+import { MapEntity } from '../../models/map-entity';
+import { BasicTile } from '../../models/tile/basic-tile';
 
 @Component({
   selector: 'app-map-tile',
@@ -25,6 +27,22 @@ export class MapTileComponent {
   getTexture(name: string): string {
     return `assets/pictures/${name}.png`
   }
+
+  getMapEntity = computed<MapEntity | undefined> (() => {
+    const tile = this.tile.value
+    if(tile instanceof BasicTile) {
+        return tile.mapEntity.get()
+    }
+    return undefined
+  })
+
+  getTerrainType = computed<string | undefined>(() =>  {
+    const tile = this.tile.value
+    if(tile instanceof BasicTile) {
+        return tile.terrainType()
+    }
+    return undefined
+  })
 
   getBuildingPositionX(index: number): number {
     switch(index) {
