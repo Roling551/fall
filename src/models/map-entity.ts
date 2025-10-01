@@ -3,14 +3,21 @@ import { createForceSignal, ForceSignal } from "../util/force-signal"
 import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
 import { addExistingNumericalValues } from "../util/map-functions"
+import { Skill } from "./skill"
+import { ResourceSourceActionResult } from "./resource-source"
+import { Resource } from "./resource"
 
-export type MapEntityType = "city" | "estate" | "base"
+export type MapEntityType = "estate" | "station" | "environment"
+
+export interface SkillActionResult {
+    resourcesGained?: Map<Resource, number>
+}
 
 export abstract class MapEntity {
     abstract readonly type: MapEntityType
     public buildings
 
-    constructor(public textureName: string, public buildingsSlots: number){
+    constructor(public textureName: string, public buildingsSlots: number = 0){
         this.buildings = createForceSignal(
             new LimitedSet<ForceSignal<Building>>(
                 this.buildingsSlots,
@@ -27,13 +34,6 @@ export abstract class MapEntity {
         this.buildings.forceUpdate()
     }
 
-    public baseProduced (){
-        const production = new Map([["food",0], ["food-need",0], ["authority",0], ["authority-need",0], ["gold",0], ["workers", 0], ["workers-need", 0]])
-        for (const building of this.buildings.get().values()) {
-            addExistingNumericalValues(production, building.get().produced)
-        }
-        return production
-    }
-
-    public produced = computed(()=>{return this.baseProduced()})
+    abstract skillAction(skills: Map<Skill,number>): SkillActionResult
+    abstract canAttemptSkillAction(skills: Map<Skill, number>): boolean
 }

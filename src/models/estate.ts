@@ -11,7 +11,6 @@ import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
 
 export class Estate extends MapEntity implements TurnActor{
-
     readonly type = "estate"
     private forcefullyDisabled = signal(false)
     public skillMapActionSkillBonus
@@ -59,4 +58,12 @@ export class Estate extends MapEntity implements TurnActor{
             return undefined
         }
     })
+
+    override skillAction(skills: Map<Skill,number>) {
+        return {}
+    }
+
+    override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
+        return false
+    }
 }

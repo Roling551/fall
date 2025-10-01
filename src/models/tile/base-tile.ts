@@ -1,6 +1,6 @@
-import { signal } from "@angular/core"
+import { Signal, signal } from "@angular/core"
 import { createForceSignal } from "../../util/force-signal"
-import { MapEntity } from "../map-entity"
+import { MapEntity, SkillActionResult } from "../map-entity"
 import { ResourceSourceActionResult } from "../resource-source"
 import { ResourcesSources } from "../resources-sources"
 import { Skill } from "../skill"
@@ -8,40 +8,25 @@ import { Tile } from "./tile"
 import { Coordinate } from "../coordinate"
 import { Obstacles } from "../obstacles"
 
-export class BaseTile extends Tile {
+export abstract class BaseTile extends Tile {
     terrainType
-    mapEntity = createForceSignal<MapEntity|undefined>(undefined)
-    public resourcesSources: ResourcesSources = new ResourcesSources()
+    abstract mapEntities: Signal<MapEntity[]>
 
-    override skillAction(skills: Map<Skill, number>): ResourceSourceActionResult {
-        for(const source of this.resourcesSources.sources.get()) {
-            if(source.canAttempt(skills)) {
-                return source.action(skills) 
+    override skillAction(skills: Map<Skill, number>): SkillActionResult {
+        for(const mapEntity of this.mapEntities()) {
+            if(mapEntity.canAttemptSkillAction(skills)) {
+                return mapEntity.skillAction(skills) 
             }
         }
         throw Error("Skill action can not be attempted")
     }
     override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
-        for(const source of this.resourcesSources.sources.get()) {
-            if(source.canAttempt(skills)) {
+        for(const mapEntity of this.mapEntities()) {
+            if(mapEntity.canAttemptSkillAction(skills)) {
                 return true
             }
         }
         return false
-    }
-    override addMapEntity(mapEntity: MapEntity): boolean {
-        if(!!this.mapEntity.get()) {
-            return false
-        }
-        this.mapEntity.set(mapEntity)
-        return true
-    }
-    override removeMapEntity(): boolean {
-        this.mapEntity.set(undefined)
-        return true
-    }
-    override canAddEntity(): boolean {
-        return !this.mapEntity.get()
     }
 
     constructor(

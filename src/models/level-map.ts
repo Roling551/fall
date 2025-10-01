@@ -7,6 +7,8 @@ import { RegularResourceSource } from "./resource-source"
 import { Tile } from "./tile/tile"
 import { TileDirection } from "./tile-direction"
 import { BaseTile } from "./tile/base-tile"
+import { SimpleTile } from "./tile/simple-tile"
+import { EnvironmentMapEntity } from "./environment-map-entity"
 
 export class LevelMap {
     sizeX = 10
@@ -15,12 +17,14 @@ export class LevelMap {
     tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.createTiles(this.sizeX, this.sizeY)
 
     private createTile(coordinate: Coordinate) {
-        const tile = new BaseTile(
+        const tile = new SimpleTile(
             coordinate,
             "ground",
             new Obstacles(new Map([["mountain",1]]))
         )
-        tile.resourcesSources.addResourceSource("mining", 0, "oil", 10)
+        const environmentMapEntity = new EnvironmentMapEntity("")
+        environmentMapEntity.resourcesSources.addResourceSource("mining", 0, "oil", 10)
+        tile.addMapEntity(environmentMapEntity);
         return tile
     }
 

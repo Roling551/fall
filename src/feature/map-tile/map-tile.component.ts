@@ -8,6 +8,7 @@ import { ForceSignal } from '../../util/force-signal';
 import { MapEntity } from '../../models/map-entity';
 import { BaseTile } from '../../models/tile/base-tile';
 import { StyleVariablesService } from '../../services/style-variables.service';
+import { SimpleTile } from '../../models/tile/simple-tile';
 
 @Component({
   selector: 'app-map-tile',
@@ -34,8 +35,8 @@ export class MapTileComponent {
 
   getMapEntity = computed<MapEntity | undefined> (() => {
     const tile = this.tile.value
-    if(tile instanceof BaseTile) {
-        return tile.mapEntity.get()
+    if(tile instanceof SimpleTile) {
+        return tile.playersMapEntity.get()
     }
     return undefined
   })

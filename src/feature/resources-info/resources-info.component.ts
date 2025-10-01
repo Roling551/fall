@@ -7,6 +7,8 @@ import { getResourceSymbol } from '../../models/resource';
 import { RegularResourceSource, ResourceSource } from '../../models/resource-source';
 import { getSkillSymbol, skillsToString } from '../../models/skill';
 import { BaseTile } from '../../models/tile/base-tile';
+import { SimpleTile } from '../../models/tile/simple-tile';
+import { EnvironmentMapEntity } from '../../models/environment-map-entity';
 
 @Component({
   selector: 'app-resources-info',
@@ -27,8 +29,11 @@ export class ResourcesInfoComponent {
 
     resourcesTexts = computed(()=>{
         const tile = this.tile?.value
-        if(tile instanceof BaseTile) {
-            return tile.resourcesSources.sources.get().map(x=>this.getText(x))
+        if(tile instanceof SimpleTile) {
+            return tile.environmentMapEntities.get()
+                .filter(x=>x instanceof EnvironmentMapEntity)
+                .map(x=>x. resourcesSources.sources.get()
+                .map(x=>this.getText(x)))
         }
         return [""]
     })
