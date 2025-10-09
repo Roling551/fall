@@ -20,9 +20,6 @@ import { ResourcesService } from "../resources.service"
 import { CurrentLevelService } from "../current-level.service"
 import { createEstate } from "../../models/level/level.functions"
 import { Resource } from "../../models/resource"
-import { RegularResourceSource } from "../../models/resource-source"
-import { EditMapComponent } from "../../feature/edit-map/edit-map.component"
-import { EditMapParameters } from "../../models/resources-sources"
 import { Station } from "../../models/station"
 
 
@@ -65,7 +62,7 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
 }
 
 export function getChangeResourceUI() {
-    const editMapParameters = new EditMapParameters()
+    //const editMapParameters = new EditMapParameters()
     return {
         // sideComponent: EditMapComponent,
         // sideComponentInputs: {},

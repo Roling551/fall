@@ -10,3 +10,7 @@ export function getResourceSymbol(resource: Resource) {
             return "s";
     }
 }
+
+export function resourcesToString(resources: Map<Resource, number>) {
+    return [...resources.entries()].map(x=>getResourceSymbol(x[0])+"-"+x[1]).join(', ')
+}

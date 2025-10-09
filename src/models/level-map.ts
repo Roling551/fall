@@ -3,7 +3,6 @@ import { dijkstra, dijkstraAllNodes } from "../util/path-finding"
 import { Coordinate } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Obstacles } from "./obstacles"
-import { RegularResourceSource } from "./resource-source"
 import { Tile } from "./tile/tile"
 import { TileDirection } from "./tile-direction"
 import { BaseTile } from "./tile/base-tile"
@@ -22,8 +21,7 @@ export class LevelMap {
             "ground",
             new Obstacles(new Map([["mountain",1]]))
         )
-        const environmentMapEntity = new EnvironmentMapEntity("")
-        environmentMapEntity.resourcesSources.addResourceSource("mining", 0, "oil", 10)
+        const environmentMapEntity = new EnvironmentMapEntity(10, new Map([["oil", 1]]))
         tile.addMapEntity(environmentMapEntity);
         return tile
     }

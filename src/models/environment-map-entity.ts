@@ -1,35 +1,29 @@
 import { ForceSignal } from "../util/force-signal";
 import { LimitedSet } from "../util/limited-set";
+import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../util/map-functions";
 import { Building } from "./building";
 import { MapEntity, MapEntityType, SkillActionResult } from "./map-entity";
-import { ResourcesSources } from "./resources-sources";
+import { Resource } from "./resource";
+import { SimpleActee } from "./simple-actee";
 import { Skill } from "./skill";
 
 export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
+    actee
 
-    public resourcesSources: ResourcesSources = new ResourcesSources()
+    constructor(maxProgress: number, public resourcesGain: Map<Resource, number>) {
+        super("forest");
+        this.actee = new SimpleActee("mining", maxProgress, 0)
+    }
 
-
-    override skillAction(skills: Map<Skill,number>) {
-        for(const source of this.resourcesSources.sources.get()) {
-            if(source.canAttempt(skills)) {
-                const resourceSourceActionResult = source.action(skills)
-                return {
-                    resourcesGained: resourceSourceActionResult.resources
-                }
-            }
+    override skillAction(skills: Map<Skill,number>): SkillActionResult {
+        const actionResult = this.actee.skillAction(skills)
+        return {
+            resourcesGained: multiplyNumericalValuesFunctional(this.resourcesGain, actionResult.progressDone)
         }
-        throw Error("Skill action can not be attempted")
     }
 
     override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
-     for(const source of this.resourcesSources.sources.get()) {
-        if(source.canAttempt(skills)) {
-                return true
-            }
-        }
-        return false
-    }
-    
+        return this.actee.canAttemptSkillAction(skills)
+    }   
 }

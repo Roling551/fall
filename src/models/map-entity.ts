@@ -4,7 +4,6 @@ import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
 import { addExistingNumericalValues } from "../util/map-functions"
 import { Skill } from "./skill"
-import { ResourceSourceActionResult } from "./resource-source"
 import { Resource } from "./resource"
 
 export type MapEntityType = "estate" | "station" | "environment"
