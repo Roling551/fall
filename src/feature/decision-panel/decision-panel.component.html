@@ -1,0 +1,6 @@
+<div>
+    <button (click)="onGoBackClick()">Go back</button>
+</div>
+@for(option of decisionOptions(); track $index) {
+    <div (click)="onOptionChosen(option)">test</div>
+}

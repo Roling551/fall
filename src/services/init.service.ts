@@ -10,6 +10,8 @@ import { KeyValuePair } from "../models/key-value-pair";
 import { Skill } from "../models/skill";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { ActionCardInfoList } from "./action-cards/action-card-info.list";
+import { DecisionFactoryService } from "./decision-factory.service";
+import { DecisionsService } from "./decisions.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,10 @@ export class InitService {
         private benefitsService: BenefitsService,
         private uiStateService: UIStateService,
         private actionsCardsService: ActionsCardsService,
-        private actionCardInfoList: ActionCardInfoList) {}
+        private actionCardInfoList: ActionCardInfoList,
+        private decisionFactoryService: DecisionFactoryService,
+        private decisionsService: DecisionsService,
+    ) {}
 
     init() {
         this.uiStateService.setBaseTileInfo("resourcesInfo", {
@@ -38,6 +43,13 @@ export class InitService {
         const initialCardNames = ["handDrill", "automaticDrill", "miningTools"]
         const initialCards = initialCardNames.map(x=>this.actionCardInfoList.list.get(x)).filter(x=>!!x).map(x=>x())
         this.actionsCardsService.setCards(initialCards)
+
+        this.decisionsService.addDecision(
+            this.decisionFactoryService.createDecision([
+                {type: "Card", cardName: "handDrill"},
+                {type: "Card", cardName: "automaticDrill"},
+            ])
+        )
             
     }
 }

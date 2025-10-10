@@ -66,6 +66,12 @@ export class ActionsCardsService {
         this.cardsHand = new InitialCardsHand(cards, ()=>{this.uiStateService.cancel()}, false, undefined, 2)
     }
 
+    addNewCardToDiscard(cardCreationInfo: CardCreationInfo) {
+        const card = this.createMultiStageActionCard(cardCreationInfo)
+        this.cardsHand?.discardDeck.get().push(card)
+        this.cardsHand?.discardDeck.forceUpdate()
+    }
+
     getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {
         const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
             if(this.uiStateService.hoverTile()) {

@@ -31,6 +31,9 @@ export class ActionsListComponent {
   onTechTreeClick(): void {
     this.currentWindowService.currentWindow.set("tech-tree")
   }
+  onDecisionClick(): void {
+    this.currentWindowService.currentWindow.set("decision")
+  }
   onNextLevel(): void {
     this.levelsService.nextLevel()
   }
