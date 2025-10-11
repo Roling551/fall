@@ -25,7 +25,6 @@ import { CurrentLevelService } from "../current-level.service";
 import { Skill } from "../../models/skill";
 import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
 import { ActionCardInfoList } from "./action-card-info.list";
-import { CardOnHandBenefits } from "../../models/card-on-hand-benefit";
 import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
 import { InitialCardsHand } from "../../models/card-hands/initial-cards-hand";
 

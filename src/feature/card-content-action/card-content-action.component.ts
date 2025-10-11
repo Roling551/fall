@@ -2,6 +2,7 @@ import { Component, computed, Input } from '@angular/core';
 import { ActionCardInfo } from '../../models/action-card-info';
 import { skillsToString } from '../../models/skill';
 import { resourcesToString } from '../../models/resource';
+import { cardOnHandBenefitsToString } from '../../models/card-on-hand-benefit';
 
 @Component({
   selector: 'app-card-content-action',
@@ -22,5 +23,12 @@ export class CardContentActionComponent {
             return undefined
         }
         return resourcesToString(price) 
+    })
+
+    cardOnHandBenefits = computed(()=>{
+        if(!this.card.cardOnHandBenefits) {
+            return ""
+        }
+        return cardOnHandBenefitsToString(this.card.cardOnHandBenefits)
     })
 }

@@ -1,7 +1,7 @@
 import { TileInfo } from "../services/ui-state/ui-state.service";
 import { SkillMapActionSkillBonus } from "./bonus";
 import { CardInfo } from "./card-info";
-import { CardOnHandBenefits } from "./card-on-hand-benefit";
+import { CardOnHandBenefit } from "./card-on-hand-benefit";
 import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
 import { Resource } from "./resource";
@@ -19,7 +19,7 @@ export class ActionCardInfo extends CardInfo {
         public requiredSkills: Map<Skill, number>,
         public cardCreationSteps: CardCreationStep[],
         public price?: Map<Resource, number>,
-        public cardOnHandBenefits?: CardOnHandBenefits,
+        public cardOnHandBenefits?: CardOnHandBenefit[],
     ) {
         super(name)
     }

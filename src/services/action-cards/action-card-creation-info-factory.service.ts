@@ -12,7 +12,7 @@ import { getCreateEstateAction } from "./actions-cards-functions";
 import { EstateFactoryService } from "../estate-factory.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
-import { CardOnHandBenefit, CardOnHandBenefits } from "../../models/card-on-hand-benefit";
+import { CardOnHandBenefit } from "../../models/card-on-hand-benefit";
 import { ActionCardInfo } from "../../models/action-card-info";
 
 export interface InstantExtractionCardInputs {
@@ -22,7 +22,7 @@ export interface InstantExtractionCardInputs {
     affectedCoordinates: Coordinate[],
     price?: Map<Resource, number>,
     times?: number,
-    cardOnHandBenefits?: CardOnHandBenefits,
+    cardOnHandBenefits?: CardOnHandBenefit[],
 }
 
 export interface EstateCardInputs {
@@ -35,7 +35,7 @@ export interface EstateCardInputs {
     price?: Map<Resource, number>,
     times?: number,
     skillMapActionSkillBonus?: Map<Skill, number>,
-    cardOnHandBenefits?: CardOnHandBenefits,
+    cardOnHandBenefits?: CardOnHandBenefit[],
 }
 
 @Injectable({
