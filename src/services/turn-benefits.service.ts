@@ -17,7 +17,7 @@ export class TurnBenefitsService {
         const skillMapActionSkillBonuses = new Map<string, SkillMapActionSkillBonus>();
         if(this.actionsCardsService.cardsHand)
         for(const card of this.actionsCardsService.cardsHand!.hand.get()) {
-            const bonus = card.cardOnHandBenefits.get("skill-map-action-skill-bonus")
+            const bonus = card.cardOnHandBenefits?.get("skill-map-action-skill-bonus")
             if(bonus) {
                 skillMapActionSkillBonuses.set(bonus.name, bonus)
             }

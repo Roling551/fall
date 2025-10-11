@@ -29,19 +29,6 @@ import { CardOnHandBenefits } from "../../models/card-on-hand-benefit";
 import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
 import { InitialCardsHand } from "../../models/card-hands/initial-cards-hand";
 
-export interface CardCreationActionInfo {
-    action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
-    tileInfos?: Map<string,TileInfo>
-}
-
-export interface CardCreationInfo {
-    name: string, 
-    cardCreationInfo: CardCreationActionInfo[],
-    skillRequired: Map<Skill, number>,
-    price?: Map<Resource, number>,
-    cardOnHandBenefits?: CardOnHandBenefits,
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -61,13 +48,13 @@ export class ActionsCardsService {
         })
     }
 
-    setCards(cardCreationInfos: CardCreationInfo[]) {
-        const cards = cardCreationInfos.map(x=>this.createMultiStageActionCard(x))
+    setCards(actionCardInfos: ActionCardInfo[]) {
+        const cards = actionCardInfos.map(x=>this.createMultiStageActionCard(x))
         this.cardsHand = new InitialCardsHand(cards, ()=>{this.uiStateService.cancel()}, false, undefined, 2)
     }
 
-    addNewCardToDiscard(cardCreationInfo: CardCreationInfo) {
-        const card = this.createMultiStageActionCard(cardCreationInfo)
+    addNewCardToDiscard(actionCardInfo: ActionCardInfo) {
+        const card = this.createMultiStageActionCard(actionCardInfo)
         this.cardsHand?.discardDeck.get().push(card)
         this.cardsHand?.discardDeck.forceUpdate()
     }
@@ -104,26 +91,18 @@ export class ActionsCardsService {
         this.cardsHand?.nextTurn()
     }
 
-    createMultiStageActionCard(info: CardCreationInfo) {
-        const {
-            name,
-            cardCreationInfo,
-            skillRequired,
-            price,
-            cardOnHandBenefits
-        } = info
-        const card = new ActionCardInfo(name, new Map(skillRequired), price, cardOnHandBenefits)
-        const oldCardActions0 = cardCreationInfo[0].action
-        const uis: UIData[] = cardCreationInfo.map(x=>{return {} as UIData})
+    createMultiStageActionCard(actionCardInfo: ActionCardInfo) {
+        const oldCardActions0 = actionCardInfo.cardCreationSteps[0].action
+        const uis: UIData[] = actionCardInfo.cardCreationSteps.map(x=>{return {} as UIData})
         uis[0]={
-            tileInfos: new Map([...(cardCreationInfo[0].tileInfos||[]),["unavaliable", {
+            tileInfos: new Map([...(actionCardInfo.cardCreationSteps[0].tileInfos||[]),["unavaliable", {
                 template: UnavaliableComponent,
                 doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
                     return !this.reachableTiles().includes(tile.key.getKey())
                 }
             }]])
         }
-        cardCreationInfo[0].action = (tile: KeyValuePair<Coordinate, Tile>)=>{
+        actionCardInfo.cardCreationSteps[0].action = (tile: KeyValuePair<Coordinate, Tile>)=>{
             const level = this.levelService.level.get()
             if(!level) {
                 return false
@@ -132,10 +111,10 @@ export class ActionsCardsService {
             if(!station) {
                 return false
             }
-            if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), card.requiredSkills))) {
+            if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), actionCardInfo.requiredSkills))) {
                 return false
             }
-            if(price && !this.resourcesService.canAffordResources(price)) {
+            if(actionCardInfo.price && !this.resourcesService.canAffordResources(actionCardInfo.price)) {
                 return false
             }
             for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
@@ -148,26 +127,26 @@ export class ActionsCardsService {
             this.isActionHappening.set(true)
             return isSuccesfull
         }
-        card.onSelect = ()=>{
+        actionCardInfo.onSelect = ()=>{
             return createMultiStageAction(
                 this.uiStateService,
-                cardCreationInfo.map(x=>x.action),
+                actionCardInfo.cardCreationSteps.map(x=>x.action),
                 ()=>{
                     this.isActionHappening.set(false)
-                    this.cardsHand!.deselectCard(card)
+                    this.cardsHand!.deselectCard(actionCardInfo)
                 },
                 ()=>{
                     this.isActionHappening.set(false)
                     this.charactersCardService.cardsHand.discardSelectedCards()
-                    if(price) {
-                        this.resourcesService.spendResources(price)
+                    if(actionCardInfo.price) {
+                        this.resourcesService.spendResources(actionCardInfo.price)
                     }
-                    this.cardsHand!.discardCard(card)
+                    this.cardsHand!.discardCard(actionCardInfo)
                 },
                 uis
             )
         }
-        return card
+        return actionCardInfo
     }
 
     reachableTiles = computed(()=>{

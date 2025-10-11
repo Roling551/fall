@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
-import { CardCreationInfo } from "./actions-cards.service";
 import { Coordinate } from "../../models/coordinate";
 import { simpleCardOnHandBenefits } from "../../models/card-on-hand-benefit";
+import { ActionCardInfo } from "../../models/action-card-info";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { simpleCardOnHandBenefits } from "../../models/card-on-hand-benefit";
 export class ActionCardInfoList {
     constructor(private factory: ActionCardCreationInfoFactoryService) {}
 
-    list = new Map<string, ()=>CardCreationInfo>([
+    list = new Map<string, ()=>ActionCardInfo>([
         [
             "handDrill",
             ()=>this.factory.instantExtractionCard(

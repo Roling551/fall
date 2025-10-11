@@ -3,7 +3,6 @@ import { Coordinate } from "../../models/coordinate";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Tile } from "../../models/tile/tile";
 import { CreateSkillMapActionInfo, SkillMapActionFactoryService } from "../skill-map-action-factory.service";
-import { CardCreationInfo } from "./actions-cards.service";
 import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
@@ -14,6 +13,7 @@ import { EstateFactoryService } from "../estate-factory.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
 import { CardOnHandBenefit, CardOnHandBenefits } from "../../models/card-on-hand-benefit";
+import { ActionCardInfo } from "../../models/action-card-info";
 
 export interface InstantExtractionCardInputs {
     name: string,
@@ -93,14 +93,15 @@ export class ActionCardCreationInfoFactoryService {
 
     instantExtractionCard(
         inputs: InstantExtractionCardInputs
-    ): CardCreationInfo {
+    ): ActionCardInfo {
         const createActionInfo: CreateSkillMapActionInfo = {
             skills: inputs.skillApplied,
             times: inputs.times!=undefined ? inputs.times : 1
         } 
-        return {
-            name: inputs.name,
-            cardCreationInfo: [
+        return new ActionCardInfo(
+            inputs.name,
+            inputs.skillRequired,
+            [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
                         this.skillMapActionFactoryService.createExtractionAction(createActionInfo, inputs.affectedCoordinates)(tile.value)
@@ -109,13 +110,12 @@ export class ActionCardCreationInfoFactoryService {
                     tileInfos: new Map([this.getBorderInfo(inputs.affectedCoordinates)])
                 }
             ],
-            skillRequired: inputs.skillRequired,
-            price: inputs.price,
-            cardOnHandBenefits: inputs.cardOnHandBenefits,
-        }
+            inputs.price,
+            inputs.cardOnHandBenefits,
+        )
     }
 
-    estateCard(inputs: EstateCardInputs): CardCreationInfo {
+    estateCard(inputs: EstateCardInputs): ActionCardInfo {
         const createActionInfo: CreateSkillMapActionInfo | undefined = (!!inputs.skillApplied) ? {
             skills: inputs.skillApplied,
             times: inputs.times!=undefined ? inputs.times : 1
@@ -135,9 +135,9 @@ export class ActionCardCreationInfoFactoryService {
             affectedCoordinates: inputs.affectedCoordinates,
             createActionInfo,
         }
-        return {
-            name: inputs.name,
-            cardCreationInfo:
+        return new ActionCardInfo(
+            inputs.name,
+            inputs.skillRequired,
             [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
@@ -145,14 +145,12 @@ export class ActionCardCreationInfoFactoryService {
                             this.levelService,
                             this.turnActorsService,
                             createEstateInfo.getEstate)(tile)
-                    }, 
+                    },
                     tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
                 }
             ],
-            skillRequired: inputs.skillRequired,
-            price: inputs.price,
-            cardOnHandBenefits: inputs.cardOnHandBenefits,
-        }
+            inputs.price,
+            inputs.cardOnHandBenefits,
+        )
     }
-
 }
