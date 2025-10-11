@@ -1,6 +1,7 @@
 import { Component, computed, Input } from '@angular/core';
 import { ActionCardInfo } from '../../models/action-card-info';
 import { skillsToString } from '../../models/skill';
+import { resourcesToString } from '../../models/resource';
 
 @Component({
   selector: 'app-card-content-action',
@@ -13,5 +14,13 @@ export class CardContentActionComponent {
 
     requiredSkills = computed(()=>{
         return skillsToString(this.card.requiredSkills)
+    })
+
+    price = computed(()=>{
+        const price = this.card.price
+        if(!price) {
+            return undefined
+        }
+        return resourcesToString(price) 
     })
 }

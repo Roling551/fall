@@ -4,6 +4,7 @@ import { CardInfo } from "./card-info";
 import { CardOnHandBenefits } from "./card-on-hand-benefit";
 import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
+import { Resource } from "./resource";
 import { Skill } from "./skill";
 import { Tile } from "./tile/tile";
 
@@ -17,7 +18,7 @@ export class ActionCardInfo extends CardInfo {
         name: string,
         public requiredSkills: Map<Skill, number>,
         public cardCreationSteps: CardCreationStep[],
-        public price?: Map<string, number>,
+        public price?: Map<Resource, number>,
         public cardOnHandBenefits?: CardOnHandBenefits,
     ) {
         super(name)
