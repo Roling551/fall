@@ -25,9 +25,6 @@ export function getCardOnHandBenefitTypeSymbol(type: CardOnHandBenefitType) {
 export function cardOnHandBenefitsToString(benefits: CardOnHandBenefit[]) {
     let str = ""
     for(const benefit of benefits) {
-        console.log(benefit)
-        console.log(skillsToString(benefit.benefit.bonus))
-        console.log(benefit.benefit.bonus)
         if(benefit.type === "skill-map-action-skill-bonus") {
             str += getCardOnHandBenefitTypeSymbol(benefit.type) + ":" + skillsToString(benefit.benefit.bonus)
         }
