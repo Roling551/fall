@@ -15,7 +15,19 @@ import { Estate } from "../../models/estate";
 import { CardOnHandBenefit } from "../../models/card-on-hand-benefit";
 import { ActionCardInfo } from "../../models/action-card-info";
 
+export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
+
+export function getFactoryCardInputsReadable(type: "InstantExtractionCardInputs" | "EstateCardInputs") {
+    switch(type) {
+        case "InstantExtractionCardInputs":
+            return "Instant"
+        case "EstateCardInputs":
+            return "Estate"
+    }
+}
+
 export interface InstantExtractionCardInputs {
+    type: "InstantExtractionCardInputs",
     name: string,
     skillRequired: Map<Skill, number>,
     skillApplied: Map<Skill, number>,
@@ -26,6 +38,7 @@ export interface InstantExtractionCardInputs {
 }
 
 export interface EstateCardInputs {
+    type: "EstateCardInputs",
     name: string,
     skillRequired: Map<Skill, number>,
     skillApplied?: Map<Skill, number>,
@@ -110,6 +123,7 @@ export class ActionCardCreationInfoFactoryService {
                     tileInfos: new Map([this.getBorderInfo(inputs.affectedCoordinates)])
                 }
             ],
+            inputs,
             inputs.price,
             inputs.cardOnHandBenefits,
         )
@@ -149,6 +163,7 @@ export class ActionCardCreationInfoFactoryService {
                     tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
                 }
             ],
+            inputs,
             inputs.price,
             inputs.cardOnHandBenefits,
         )

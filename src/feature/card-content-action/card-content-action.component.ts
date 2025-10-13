@@ -3,6 +3,7 @@ import { ActionCardInfo } from '../../models/action-card-info';
 import { skillsToString } from '../../models/skill';
 import { resourcesToString } from '../../models/resource';
 import { cardOnHandBenefitsToString } from '../../models/card-on-hand-benefit';
+import { getFactoryCardInputsReadable } from '../../services/action-cards/action-card-creation-info-factory.service';
 
 @Component({
   selector: 'app-card-content-action',
@@ -30,5 +31,31 @@ export class CardContentActionComponent {
             return ""
         }
         return cardOnHandBenefitsToString(this.card.cardOnHandBenefits)
+    })
+
+    cardActionType = computed(()=>{
+        return getFactoryCardInputsReadable(this.card.additionalInfo.type)
+    })
+
+    cardActionEffect = computed(()=>{
+        const effects = []
+        const info = this.card.additionalInfo
+        if(info.type === "EstateCardInputs") {
+            if(info.skillApplied) {
+                effects.push("apply:" + skillsToString(info.skillApplied))
+            }
+            if(info.skillMapActionSkillBonus) {
+                effects.push("bonus: " + skillsToString(info.skillMapActionSkillBonus))
+            }
+            let str = effects.join(",")
+            if(info.runCost) {
+                str += "/" + resourcesToString(info.runCost)
+            }
+            return str
+        } else if(info.type === "InstantExtractionCardInputs") {
+            effects.push(skillsToString(info.skillApplied))
+            return effects.join(",")
+        }
+        return ""
     })
 }

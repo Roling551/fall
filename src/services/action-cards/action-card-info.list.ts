@@ -14,7 +14,8 @@ export class ActionCardInfoList {
         [
             "handDrill",
             ()=>this.factory.instantExtractionCard(
-                {    
+                {
+                    type: "InstantExtractionCardInputs",
                     name: "handDrill",
                     skillRequired: new Map([["construction", 2]]),
                     skillApplied: new Map([["mining",1]]),
@@ -26,6 +27,7 @@ export class ActionCardInfoList {
             "automaticDrill",
             ()=>this.factory.estateCard(
                 {
+                    type: "EstateCardInputs",
                     name: "automaticDrill",
                     skillRequired: new Map([["construction", 2]]),
                     skillApplied: new Map([["mining",3]]),
@@ -41,6 +43,7 @@ export class ActionCardInfoList {
             "miningTools",
             ()=>this.factory.estateCard(
                 {
+                    type: "EstateCardInputs",
                     name: "miningTools",
                     skillRequired: new Map([["construction", 2]]),
                     skillMapActionSkillBonus: new Map([["mining",1]]),

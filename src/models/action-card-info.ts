@@ -1,3 +1,4 @@
+import { FactoryCardInputs } from "../services/action-cards/action-card-creation-info-factory.service";
 import { TileInfo } from "../services/ui-state/ui-state.service";
 import { SkillMapActionSkillBonus } from "./bonus";
 import { CardInfo } from "./card-info";
@@ -18,6 +19,7 @@ export class ActionCardInfo extends CardInfo {
         name: string,
         public requiredSkills: Map<Skill, number>,
         public cardCreationSteps: CardCreationStep[],
+        public additionalInfo: FactoryCardInputs,
         public price?: Map<Resource, number>,
         public cardOnHandBenefits?: CardOnHandBenefit[],
     ) {
