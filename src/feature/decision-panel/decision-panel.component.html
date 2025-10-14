@@ -4,12 +4,20 @@
 Choose one:
 <div class="decisions">
 @for(option of decisionOptions(); track $index) {
-    <div class="tile">
+    <div class="tile"  (click)="onOptionChosen(option)" >
     @if(getCardInfo(option); as card) {
         <div>
             Receive card:
         </div>
-        <app-card (click)="onOptionChosen(option)" [card]="card"/>
+        <app-card [card]="card"/>
+    }
+    @if(getResourcesString(option); as resourcesString) {
+        <div>
+            Receive resources:
+        </div>
+        <div>
+            {{resourcesString}}
+        </div>
     }
     </div>
 }

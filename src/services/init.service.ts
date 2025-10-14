@@ -48,6 +48,7 @@ export class InitService {
             this.decisionFactoryService.createDecision([
                 {type: "Card", cardName: "handDrill"},
                 {type: "Card", cardName: "automaticDrill"},
+                {type: "Resources", resources: new Map([["oil", 10]])}
             ])
         )
             
