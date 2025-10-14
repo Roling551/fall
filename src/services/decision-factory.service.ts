@@ -19,7 +19,7 @@ export class DecisionFactoryService {
                 case "Card":
                     const card = this.actionCardInfoList.list.get(x.cardName)!()
                     return new CardDecisionOption(
-                        this.actionsCardsService.createMultiStageActionCard(card), 
+                        card,
                         ()=>{this.actionsCardsService.addNewCardToDiscard(card)}
                     ) 
             }

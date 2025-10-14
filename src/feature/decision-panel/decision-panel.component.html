@@ -1,6 +1,10 @@
 <div>
     <button (click)="onGoBackClick()">Go back</button>
 </div>
+<div class="decisions">
 @for(option of decisionOptions(); track $index) {
-    <div (click)="onOptionChosen(option)">test</div>
+    @if(getCardInfo(option); as card) {
+        <app-card (click)="onOptionChosen(option)" [card]="card"/>
+    }
 }
+</div>

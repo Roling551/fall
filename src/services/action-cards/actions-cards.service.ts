@@ -48,12 +48,12 @@ export class ActionsCardsService {
     }
 
     setCards(actionCardInfos: ActionCardInfo[]) {
-        const cards = actionCardInfos.map(x=>this.createMultiStageActionCard(x))
+        const cards = actionCardInfos.map(x=>this.setMultiStageAction(x))
         this.cardsHand = new InitialCardsHand(cards, ()=>{this.uiStateService.cancel()}, false, undefined, 2)
     }
 
     addNewCardToDiscard(actionCardInfo: ActionCardInfo) {
-        const card = this.createMultiStageActionCard(actionCardInfo)
+        const card = this.setMultiStageAction(actionCardInfo)
         this.cardsHand?.discardDeck.get().push(card)
         this.cardsHand?.discardDeck.forceUpdate()
     }
@@ -90,7 +90,7 @@ export class ActionsCardsService {
         this.cardsHand?.nextTurn()
     }
 
-    createMultiStageActionCard(actionCardInfo: ActionCardInfo) {
+    setMultiStageAction(actionCardInfo: ActionCardInfo) {
         const oldCardActions0 = actionCardInfo.cardCreationSteps[0].action
         const uis: UIData[] = actionCardInfo.cardCreationSteps.map(x=>{return {} as UIData})
         uis[0]={
