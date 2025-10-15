@@ -1,22 +1,25 @@
-import { computed } from "@angular/core"
+import { computed, Signal } from "@angular/core"
 import { dijkstra, dijkstraAllNodes } from "../util/path-finding"
 import { Coordinate } from "./coordinate"
 import { KeyValuePair } from "./key-value-pair"
 import { Obstacles } from "./obstacles"
 import { Tile } from "./tile/tile"
 import { TileDirection } from "./tile-direction"
-import { BaseTile } from "./tile/base-tile"
 import { SimpleTile } from "./tile/simple-tile"
 import { EnvironmentMapEntity } from "./environment-map-entity"
-import { BenefitsService } from "../services/benefits.service"
+import { SignalsGroup } from "../util/signals-group"
+import { MovementBonus } from "./bonus"
 
 export class LevelMap {
     sizeX = 10
     sizeY = 10
 
     tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.createTiles(this.sizeX, this.sizeY)
+    bonuses:Map<string, Signal<number>>
 
-    constructor() {}
+    constructor(movementBonuses: (tile: Tile) => SignalsGroup<string, MovementBonus, number>) {
+        this.bonuses = new Map(Array.from(this.tiles.entries()).map(([key, value]) => [key, movementBonuses(value.value).output]))
+    }
 
     private createTile(coordinate: Coordinate) {
         const tile = new SimpleTile(
@@ -55,7 +58,12 @@ export class LevelMap {
     }
 
     getEdgeWeight = (from: string, to: string) => {
-        return 1
+        const tile = this.tiles.get(to)?.value
+        if(!tile) {
+            return Infinity
+        }
+        const bonus = this.bonuses.get(to)?.() || 0
+        return 1 / (bonus + 1)
     }
 
     getNeighbors = (node: string) => {
@@ -70,7 +78,7 @@ export class LevelMap {
         return dijkstraAllNodes(this.getNeighbors, getEdgeWeight, start, distance)
     }
 
-        getDirectionsFunction(condition: (tile: KeyValuePair<Coordinate, Tile>)=>boolean) { 
+    getDirectionsFunction(condition: (tile: KeyValuePair<Coordinate, Tile>)=>boolean) { 
         return (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
             return computed(
                 ()=> {

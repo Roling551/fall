@@ -161,7 +161,7 @@ export class ActionsCardsService {
         let firstTile = true
         let tiles:string[] = []
         for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-            const cardsTiles = level.map.getReacheableTiles(station.key, characterCard.movement, this.getEdgeWidghtFunction(characterCard)).map(x=>x.node)
+            const cardsTiles = level.map.getReacheableTiles(station.key, characterCard.movement/*, this.getEdgeWidghtFunction(characterCard)*/).map(x=>x.node)
             if(firstTile) {
                 tiles = cardsTiles
                 firstTile = false
@@ -172,13 +172,13 @@ export class ActionsCardsService {
         return tiles
     })
 
-    getEdgeWidghtFunction(characterCard: CharacterCardInfo) {
-        return (from: string, to: string)=>{
-            const level = this.levelService.level.get()
-            if(!level) {
-                return Infinity
-            }
-            return level.map.tiles.get(to)!.value.obstacles.get().getDistance(characterCard.movementAdvantege)
-        }
-    }
+    // getEdgeWidghtFunction(characterCard: CharacterCardInfo) {
+    //     return (from: string, to: string)=>{
+    //         const level = this.levelService.level.get()
+    //         if(!level) {
+    //             return Infinity
+    //         }
+    //         return level.map.tiles.get(to)!.value.obstacles.get().getDistance(characterCard.movementAdvantege)
+    //     }
+    // }
 }
