@@ -1,7 +1,7 @@
-import { computed, signal } from "@angular/core";
+import { computed, Signal, signal } from "@angular/core";
 import { addExistingNumericalValues } from "../util/map-functions";
 import { SignalsGroup } from "../util/signals-group";
-import { EstateProductionBonus, SkillMapActionSkillBonus } from "./bonus";
+import { EstateProductionBonus, MovementBonus, SkillMapActionSkillBonus } from "./bonus";
 import { MapEntity } from "./map-entity";
 import { TurnActor } from "./turn-actor";
 import { Tile } from "./tile/tile";
@@ -14,6 +14,7 @@ export class Estate extends MapEntity implements TurnActor{
     readonly type = "estate"
     private forcefullyDisabled = signal(false)
     public skillMapActionSkillBonus
+    public movementBonus
     affectedCoordinates
 
     constructor(
@@ -22,12 +23,15 @@ export class Estate extends MapEntity implements TurnActor{
         public requiredResources: Map<Resource, number>,
         affectedCoordinates: Coordinate[], 
         public action?: (tile: Tile)=>void,
-        skillMapActionSkillBonus?: Map<Skill, number>
+        skillMapActionSkillBonus?: Map<Skill, number>,
+        movementBonus?: number,
     ) {
         super(name, 0)
         this.skillMapActionSkillBonus = createForceSignal(skillMapActionSkillBonus)
+        this.movementBonus = createForceSignal(movementBonus)
         this.affectedCoordinates = affectedCoordinates.map(x=>x.addCoordinates(tile.coordinate).getKey())
     }
+   
 
     public turnAction() {
         if(this.forcefullyDisabled()) {
@@ -50,6 +54,21 @@ export class Estate extends MapEntity implements TurnActor{
             return {
                 name: this.tile.coordinate.getKey(),
                 bonus: new Map(this.skillMapActionSkillBonus.get()),
+                qualifier: (tile: Tile)=> {
+                    return this.affectedCoordinates.includes(tile.coordinate.getKey())
+                }
+            } 
+        } else {
+            return undefined
+        }
+    })
+
+    getMovementBonus = computed<MovementBonus|undefined>(()=>{
+        const movementBonus = this.movementBonus.get()
+        if (movementBonus) {
+            return {
+                name: this.tile.coordinate.getKey(),
+                bonus: movementBonus,
                 qualifier: (tile: Tile)=> {
                     return this.affectedCoordinates.includes(tile.coordinate.getKey())
                 }

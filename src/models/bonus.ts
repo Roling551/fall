@@ -14,3 +14,9 @@ export interface SkillMapActionSkillBonus {
     qualifier: (tile: Tile)=>boolean,
     bonus: Map<Skill, number>
 }
+
+export interface MovementBonus {
+    name: string,
+    qualifier: (tile: Tile)=>boolean,
+    bonus: number
+}

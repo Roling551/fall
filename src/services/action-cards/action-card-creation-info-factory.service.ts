@@ -48,6 +48,7 @@ export interface EstateCardInputs {
     price?: Map<Resource, number>,
     times?: number,
     skillMapActionSkillBonus?: Map<Skill, number>,
+    movementBonus?: number
     cardOnHandBenefits?: CardOnHandBenefit[],
 }
 
@@ -144,7 +145,8 @@ export class ActionCardCreationInfoFactoryService {
                     createActionInfo, 
                     inputs.affectedCoordinates)
                 : undefined,
-                inputs.skillMapActionSkillBonus
+                inputs.skillMapActionSkillBonus,
+                inputs.movementBonus
             ),
             affectedCoordinates: inputs.affectedCoordinates,
             createActionInfo,

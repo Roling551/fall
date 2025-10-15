@@ -1,5 +1,5 @@
 import { Signal } from "@angular/core"
-import { SkillMapActionSkillBonus } from "./bonus"
+import { MovementBonus, SkillMapActionSkillBonus } from "./bonus"
 import { Resource } from "./resource"
 import { Skill } from "./skill"
 
@@ -9,4 +9,5 @@ export interface TurnActor {
     disable: ()=>void
     enable: ()=>void
     getSkillMapActionSkillBonus: Signal<SkillMapActionSkillBonus|undefined>
+    getMovementBonus: Signal<MovementBonus|undefined>
 }

@@ -8,12 +8,15 @@ import { TileDirection } from "./tile-direction"
 import { BaseTile } from "./tile/base-tile"
 import { SimpleTile } from "./tile/simple-tile"
 import { EnvironmentMapEntity } from "./environment-map-entity"
+import { BenefitsService } from "../services/benefits.service"
 
 export class LevelMap {
     sizeX = 10
     sizeY = 10
 
     tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.createTiles(this.sizeX, this.sizeY)
+
+    constructor() {}
 
     private createTile(coordinate: Coordinate) {
         const tile = new SimpleTile(
@@ -51,7 +54,9 @@ export class LevelMap {
         return new Map(coordinate.getNeighborsAndDirections(this.sizeX, this.sizeY).map(cd=>[cd.direction, this.tiles.get(cd.coordinate.getKey())!]))
     }
 
-    getEdgeWeight = (from: string, to: string) => 1
+    getEdgeWeight = (from: string, to: string) => {
+        return 1
+    }
 
     getNeighbors = (node: string) => {
         return Coordinate.fromKey(node).getNeighbors(this.sizeX, this.sizeY).map(coordiante=>coordiante.getKey())

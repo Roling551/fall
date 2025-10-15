@@ -23,10 +23,6 @@ export class CharactersCardsService {
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
         this.cardsHand = new TraditionalCardsHand<CharacterCardInfo>(cards, ()=>{}, true, this.isHandFrozen)
     }
 

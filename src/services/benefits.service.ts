@@ -3,7 +3,7 @@ import { TechnologiesService } from "./technologies/technologies.service";
 import { Benefit } from "../models/benefit";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { Estate } from "../models/estate";
-import { EstateProductionBonus, SkillMapActionSkillBonus } from "../models/bonus";
+import { EstateProductionBonus, MovementBonus, SkillMapActionSkillBonus } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
@@ -49,7 +49,9 @@ export class BenefitsService {
     skillMapActionSkillBonuses
     listenForSkillMapActionSkillBonuses
 
-
+    movementBonusesList
+    movementBonuses
+    listenForMovementBonuses
 
     constructor(
         private technologiesService: TechnologiesService,
@@ -98,6 +100,29 @@ export class BenefitsService {
                 (key: string, item: SkillMapActionSkillBonus)=>item.bonus,
                 addNumericalValuesFunctional,
                 ()=>new Map<Skill, number>()
+            )
+        }
+
+        this.movementBonusesList = computed(()=> {
+            let result = new Map<string, MovementBonus>();
+            for(const turnActors of turnActorService.actors.get()) {
+                const bonus = turnActors.getMovementBonus()
+                if(bonus) {
+                    result.set(bonus.name, bonus)
+                }
+            }
+            return result
+        })
+        this.movementBonuses = new SignalChangesEmitter<any, MovementBonus>(this.movementBonusesList);
+        this.listenForMovementBonuses = (tile: Tile) => {
+            return new SignalsGroup<string, MovementBonus, number>(
+                this.movementBonuses,
+                (key: string, item: MovementBonus)=>{
+                    return item.qualifier(tile)
+                },
+                (key: string, item: MovementBonus)=>item.bonus,
+                (x,y)=>x+y,
+                ()=>0
             )
         }
     }
