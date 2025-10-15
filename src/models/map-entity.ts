@@ -6,7 +6,7 @@ import { addExistingNumericalValues } from "../util/map-functions"
 import { Skill } from "./skill"
 import { Resource } from "./resource"
 
-export type MapEntityType = "estate" | "station" | "environment"
+export type MapEntityType = "estate" | "upgrade" | "station" | "environment"
 
 export interface SkillActionResult {
     resourcesGained?: Map<Resource, number>

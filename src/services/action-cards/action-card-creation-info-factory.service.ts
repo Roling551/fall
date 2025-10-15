@@ -50,6 +50,7 @@ export interface EstateCardInputs {
     skillMapActionSkillBonus?: Map<Skill, number>,
     movementBonus?: number
     cardOnHandBenefits?: CardOnHandBenefit[],
+    isUpgrade?: boolean
 }
 
 @Injectable({
@@ -146,7 +147,8 @@ export class ActionCardCreationInfoFactoryService {
                     inputs.affectedCoordinates)
                 : undefined,
                 inputs.skillMapActionSkillBonus,
-                inputs.movementBonus
+                inputs.movementBonus,
+                inputs.isUpgrade ? "upgrade" : "estate"
             ),
             affectedCoordinates: inputs.affectedCoordinates,
             createActionInfo,

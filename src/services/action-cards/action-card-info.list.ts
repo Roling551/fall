@@ -51,6 +51,7 @@ export class ActionCardInfoList {
                     estateTexture: "road",
                     price: new Map([["oil", 5]]),
                     runCost: new Map([["oil", 1]]),
+                    isUpgrade: true
                 }
             )
         ],

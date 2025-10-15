@@ -7,6 +7,7 @@ import { BaseTile } from "./base-tile";
 
 export class SimpleTile extends BaseTile {
     playersMapEntity = createForceSignal<MapEntity|undefined>(undefined)
+    upgrade = createForceSignal<MapEntity|undefined>(undefined)
     environmentMapEntities = createForceSignal<MapEntity[]>([])
 
     constructor(
@@ -18,11 +19,16 @@ export class SimpleTile extends BaseTile {
     }
 
     override addMapEntity(mapEntity: MapEntity): boolean {
-        if(!!this.playersMapEntity.get()) {
-            return false
-        }
         if(mapEntity.type == "estate" || mapEntity.type == "station") {
+            if(!!this.playersMapEntity.get()) {
+                return false
+            }
             this.playersMapEntity.set(mapEntity)
+        } else if(mapEntity.type == "upgrade") {
+            if(!!this.upgrade.get()) {
+                return false
+            }
+            this.upgrade.set(mapEntity)
         } else {
             this.environmentMapEntities.get().push(mapEntity)
             this.environmentMapEntities.forceUpdate()

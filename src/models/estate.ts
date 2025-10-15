@@ -11,11 +11,11 @@ import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
 
 export class Estate extends MapEntity implements TurnActor{
-    readonly type = "estate"
     private forcefullyDisabled = signal(false)
     public skillMapActionSkillBonus
     public movementBonus
     affectedCoordinates
+    readonly type
 
     constructor(
         public tile: Tile, 
@@ -25,11 +25,13 @@ export class Estate extends MapEntity implements TurnActor{
         public action?: (tile: Tile)=>void,
         skillMapActionSkillBonus?: Map<Skill, number>,
         movementBonus?: number,
+        type?: "estate" | "upgrade"
     ) {
         super(name, 0)
         this.skillMapActionSkillBonus = createForceSignal(skillMapActionSkillBonus)
         this.movementBonus = createForceSignal(movementBonus)
         this.affectedCoordinates = affectedCoordinates.map(x=>x.addCoordinates(tile.coordinate).getKey())
+        this.type = type || "estate"
     }
    
 
