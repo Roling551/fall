@@ -38,23 +38,15 @@ export class CardContentActionComponent {
     })
 
     cardActionEffect = computed(()=>{
-        const effects = []
         const info = this.card.additionalInfo
         if(info.type === "EstateCardInputs") {
-            if(info.skillApplied) {
-                effects.push("apply:" + skillsToString(info.skillApplied))
-            }
-            if(info.skillMapActionSkillBonus) {
-                effects.push("bonus: " + skillsToString(info.skillMapActionSkillBonus))
-            }
-            let str = effects.join(",")
+            let str = this.card.effectsDescriptions.join(",")
             if(info.runCost) {
                 str += "/" + resourcesToString(info.runCost)
             }
             return str
         } else if(info.type === "InstantExtractionCardInputs") {
-            effects.push(skillsToString(info.skillApplied))
-            return effects.join(",")
+            return this.card.effectsDescriptions.join(",")
         }
         return ""
     })

@@ -6,7 +6,7 @@ import { CreateSkillMapActionInfo, SkillMapActionFactoryService } from "../skill
 import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
-import { Skill } from "../../models/skill";
+import { Skill, skillsToString } from "../../models/skill";
 import { Resource } from "../../models/resource";
 import { getCreateEstateAction } from "./actions-cards-functions";
 import { EstateFactoryService } from "../estate-factory.service";
@@ -112,7 +112,11 @@ export class ActionCardCreationInfoFactoryService {
         const createActionInfo: CreateSkillMapActionInfo = {
             skills: inputs.skillApplied,
             times: inputs.times!=undefined ? inputs.times : 1
-        } 
+        }
+        const effectsDescriptions: string[] = []
+        if(inputs.skillApplied) {
+            effectsDescriptions.push("apply:" + skillsToString(inputs.skillApplied))
+        }
         return new ActionCardInfo(
             inputs.name,
             inputs.skillRequired,
@@ -126,6 +130,7 @@ export class ActionCardCreationInfoFactoryService {
                 }
             ],
             inputs,
+            effectsDescriptions,
             inputs.price,
             inputs.cardOnHandBenefits,
         )
@@ -136,12 +141,25 @@ export class ActionCardCreationInfoFactoryService {
             skills: inputs.skillApplied,
             times: inputs.times!=undefined ? inputs.times : 1
         } : undefined
+
+        const effectsDescriptions: string[] = []
+        if(inputs.skillApplied) {
+            effectsDescriptions.push("apply:" + skillsToString(inputs.skillApplied))
+        }
+        if(inputs.skillMapActionSkillBonus) {
+            effectsDescriptions.push("bonus:" + skillsToString(inputs.skillMapActionSkillBonus))
+        }
+        if(inputs.movementBonus) {
+            effectsDescriptions.push("move:+" + inputs.movementBonus)
+        }
+
         const createEstateInfo = {
             getEstate: (tile_: Tile) => new Estate(
                 tile_, 
                 inputs.estateTexture, 
                 inputs.runCost || (new Map([])), 
-                inputs.affectedCoordinates, 
+                inputs.affectedCoordinates,
+                effectsDescriptions,
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createExtractionAction(
                     createActionInfo, 
                     inputs.affectedCoordinates)
@@ -168,6 +186,7 @@ export class ActionCardCreationInfoFactoryService {
                 }
             ],
             inputs,
+            effectsDescriptions,
             inputs.price,
             inputs.cardOnHandBenefits,
         )

@@ -20,6 +20,7 @@ export class ActionCardInfo extends CardInfo {
         public requiredSkills: Map<Skill, number>,
         public cardCreationSteps: CardCreationStep[],
         public additionalInfo: FactoryCardInputs,
+        public effectsDescriptions: string[],
         public price?: Map<Resource, number>,
         public cardOnHandBenefits?: CardOnHandBenefit[],
     ) {

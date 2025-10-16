@@ -33,7 +33,7 @@ export class EstateFactoryService {
                 times: 1
             }
             return {
-                getEstate: (tile_: Tile) => new Estate(tile_, "farm", requiredResources, affectedCoordinates, this.actionFactoryService.createExtractionAction(createActionInfo, affectedCoordinates)),
+                getEstate: (tile_: Tile) => new Estate(tile_, "farm", requiredResources, affectedCoordinates, [], this.actionFactoryService.createExtractionAction(createActionInfo, affectedCoordinates)),
                 affectedCoordinates,
                 createActionInfo
             }
@@ -41,7 +41,7 @@ export class EstateFactoryService {
             const requiredResources: Map<Resource, number> = new Map([["oil", 1]])
             const affectedCoordinates = [new Coordinate(0,0), new Coordinate(1,0)]
             return {
-                getEstate: (tile_: Tile) => new Estate(tile_, "mine", requiredResources, affectedCoordinates, undefined, new Map([["mining",1]])),
+                getEstate: (tile_: Tile) => new Estate(tile_, "mine", requiredResources, affectedCoordinates, [], undefined, new Map([["mining",1]])),
                 affectedCoordinates
             }
         }
