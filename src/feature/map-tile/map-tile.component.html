@@ -7,6 +7,9 @@
         <img [src]="getTexture(terrainType)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }
     <!--<img [src]="lightBorder"  [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">-->
+    @if(getUpgrade(); as upgrade) {
+        <img [src]="getTexture(upgrade.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
+    }
     @if(getMapEntity(); as mapEntity) {
         <img [src]="getTexture(mapEntity.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }

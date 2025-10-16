@@ -32,7 +32,7 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["construction", 2]]),
                     skillApplied: new Map([["mining",3]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
-                    estateTexture: "farm",
+                    estateTexture: "drill",
                     price: new Map([["oil", 5]]),
                     runCost: new Map([["oil", 1]]),
                     cardOnHandBenefits: simpleCardOnHandBenefits("automaticDrill", new Map([["mining",1]]))
@@ -64,7 +64,7 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["construction", 2]]),
                     skillMapActionSkillBonus: new Map([["mining",1]]),
                     affectedCoordinates:  [new Coordinate(0,0), new Coordinate(0,1), new Coordinate(0,-1)],
-                    estateTexture: "mine",
+                    estateTexture: "workshop",
                     price: new Map([["oil", 5]]),
                     runCost: new Map([["oil", 1]])
                 }
