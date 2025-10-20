@@ -33,7 +33,17 @@ export class MapTileComponent {
         return `assets/pictures/${name}.png`
     }
 
-    getMapEntity = computed<MapEntity | undefined> (() => {
+    getEnvironmentMapEntity = computed<MapEntity | undefined>(()=>{
+    const tile = this.tile.value
+        if(tile instanceof SimpleTile) {
+            if(tile.environmentMapEntities.get().length > 0) {
+                return tile.environmentMapEntities.get()[0]
+            }
+        }
+        return undefined
+    })
+
+    getPlayersMapEntity = computed<MapEntity | undefined> (() => {
         const tile = this.tile.value
         if(tile instanceof SimpleTile) {
             return tile.playersMapEntity.get()

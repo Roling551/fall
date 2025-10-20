@@ -7,11 +7,14 @@
         <img [src]="getTexture(terrainType)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }
     <!--<img [src]="lightBorder"  [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">-->
+    @if(getEnvironmentMapEntity(); as environmentMapEntity) {
+        <img [src]="getTexture(environmentMapEntity.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
+    }
     @if(getUpgrade(); as upgrade) {
         <img [src]="getTexture(upgrade.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }
-    @if(getMapEntity(); as mapEntity) {
-        <img [src]="getTexture(mapEntity.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
+    @if(getPlayersMapEntity(); as playersMapEntity) {
+        <img [src]="getTexture(playersMapEntity.textureName)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
     }
     @if(getUnit(); as unit) {
         <img [src]="getTexture(unit.name)" [style.width.px]="sizeX" [style.height.px]="sizeX" [style.top.px]="getImgTop()">
