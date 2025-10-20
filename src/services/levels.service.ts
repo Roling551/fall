@@ -8,6 +8,7 @@ import { LevelGoalsService } from "./level-goals.service";
 import { LevelInfo } from "../models/level-info";
 import { LevelMap } from "../models/level-map";
 import { BenefitsService } from "./benefits.service";
+import { LevelMapFactoryService } from "./level-map-factory.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,22 @@ export class LevelsService {
         private turnActorService: TurnActorsService,
         private resourcesService: ResourcesService,
         private levelGoalsService: LevelGoalsService,
-        private benefitsService: BenefitsService
+        private benefitsService: BenefitsService,
+        private levelMapFactoryService: LevelMapFactoryService,
     ) {}
     
     nextLevel() {
-        this.currentLevelService.level.set(new Level(new LevelMap(this.benefitsService.listenForMovementBonuses)))
+        const xSize = 16
+        const ySize = 16
+
+        const tiles = this.levelMapFactoryService.createTiles(xSize, ySize)
+
+        const levelMap = new LevelMap(
+            xSize, ySize,
+            tiles,
+            this.benefitsService.listenForMovementBonuses)
+        const level = new Level(levelMap)
+        this.currentLevelService.level.set(level)
         this.currentLevelService.levelInfo.set(
             new LevelInfo(
                 [

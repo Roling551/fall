@@ -11,8 +11,8 @@ export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
     actee
 
-    constructor(maxProgress: number, public resourcesGain: Map<Resource, number>) {
-        super("forest");
+    constructor(name: string, maxProgress: number, public resourcesGain: Map<Resource, number>) {
+        super(name);
         this.actee = new SimpleActee("mining", maxProgress, 0)
     }
 

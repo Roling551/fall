@@ -11,37 +11,13 @@ import { SignalsGroup } from "../util/signals-group"
 import { MovementBonus } from "./bonus"
 
 export class LevelMap {
-    sizeX = 10
-    sizeY = 10
-
-    tiles:Map<string, KeyValuePair<Coordinate, Tile>> = this.createTiles(this.sizeX, this.sizeY)
     bonuses:Map<string, Signal<number>>
 
-    constructor(movementBonuses: (tile: Tile) => SignalsGroup<string, MovementBonus, number>) {
+    constructor(
+        public sizeX: number, public sizeY: number, 
+        public tiles:Map<string, KeyValuePair<Coordinate, Tile>>, movementBonuses: (tile: Tile) => SignalsGroup<string, MovementBonus, number>
+    ) {
         this.bonuses = new Map(Array.from(this.tiles.entries()).map(([key, value]) => [key, movementBonuses(value.value).output]))
-    }
-
-    private createTile(coordinate: Coordinate) {
-        const tile = new SimpleTile(
-            coordinate,
-            "ground",
-            new Obstacles(new Map([["mountain",1]]))
-        )
-        const environmentMapEntity = new EnvironmentMapEntity(10, new Map([["oil", 1]]))
-        tile.addMapEntity(environmentMapEntity);
-        return tile
-    }
-
-    private createTiles(sizeX: number, sizeY: number): Map<string, KeyValuePair<Coordinate, Tile>> {
-        let tiles = new Map<string, KeyValuePair<Coordinate, Tile>>()
-        for(let i = 0; i < sizeX; i++) {
-        for(let j = 0; j < sizeY; j++) {
-            const coordinate = new Coordinate(i, j)
-            const tile = {key:coordinate, value: this.createTile(coordinate)}
-            tiles.set(tile.key.getKey(), tile)
-        } 
-        }
-        return tiles
     }
 
     findPath(start: KeyValuePair<Coordinate, Tile>, end: KeyValuePair<Coordinate, Tile>) {

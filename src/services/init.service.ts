@@ -52,8 +52,5 @@ export class InitService {
                 {type: "Resources", resources: new Map([["oil", 10]])}
             ])
         )
-
-        console.log(getRandomVoronoi(10,10, 7))
-            
     }
 }
