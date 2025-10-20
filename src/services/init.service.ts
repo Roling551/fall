@@ -12,6 +12,7 @@ import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { ActionCardInfoList } from "./action-cards/action-card-info.list";
 import { DecisionFactoryService } from "./decision-factory.service";
 import { DecisionsService } from "./decisions.service";
+import { getRandomVoronoi } from "../util/voronoi";
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,8 @@ export class InitService {
                 {type: "Resources", resources: new Map([["oil", 10]])}
             ])
         )
+
+        console.log(getRandomVoronoi(10,10, 7))
             
     }
 }
