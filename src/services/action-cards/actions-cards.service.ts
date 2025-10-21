@@ -58,34 +58,6 @@ export class ActionsCardsService {
         this.cardsHand?.discardDeck.forceUpdate()
     }
 
-    getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {
-        const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
-            if(this.uiStateService.hoverTile()) {
-                const doRender = affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
-                return doRender
-            }
-            return false
-        }
-        return [
-            "border", 
-            {
-                template: BorderComponent,
-                doRender: doRenderBorder,
-                input: {
-                    getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=>{
-                            return computed(() => {
-                                const level = this.levelService.level.get()
-                                if(!level) {
-                                    return []
-                                }
-                                return level.map.getDirectionsFunction(doRenderBorder)(tileInfoIsAbout)()
-                            })
-                        }
-                    }
-            }
-        ]
-    }
-
     nextTurn() {
         this.cardsHand?.nextTurn()
     }
