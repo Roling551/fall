@@ -11,10 +11,24 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
 
     selectedCards = createForceSignal([] as T[])
 
-    constructor(cards: T[], private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false), private drawLimitAtTurnStart = 5) {
+    cardLimit
+    manualDrawsPerTurn
+    manualDrawsLeft
+
+    constructor(cards: T[], cardLimit: number, manualDrawsPerTurn: number, private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false)) {
+        this.cardLimit = signal(cardLimit)
+        this.manualDrawsPerTurn = signal(manualDrawsPerTurn)
+        this.manualDrawsLeft = signal(manualDrawsPerTurn)
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
+    }
+
+    manualDraw() {
+        if(this.manualDrawsLeft() > 0 && this.cardLimit() > this.hand.get().length) {
+            this.drawCards()
+            this.manualDrawsLeft.update(x=>x-1)
+        }
     }
 
     discardCard(card: T) {
@@ -69,7 +83,12 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
     }
 
     private startTurn() {
-        let drawsLeft = this.drawLimitAtTurnStart - this.hand.get().length
+        this.drawCards(this.cardLimit() - this.hand.get().length)
+        this.manualDrawsLeft.set(this.manualDrawsPerTurn())
+    }
+
+    drawCards(cardsNumber = 1) {
+        let drawsLeft = cardsNumber
         while(drawsLeft > 0) {
             if(this.drawDeck.get().length == 0) {
                 this.shuffleCards()

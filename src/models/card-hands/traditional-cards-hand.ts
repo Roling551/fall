@@ -1,4 +1,4 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, Signal, signal } from "@angular/core";
 import { CardInfo } from "../card-info";
 import { createForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
@@ -8,19 +8,20 @@ import { Tile } from "../tile/tile";
 import { CardsHand } from "./cards-hand";
 
 export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
+    manualDrawsLeft = signal(0)
+
     drawDeck = createForceSignal([] as T[])
     hand = createForceSignal([] as T[])
     discardDeck = createForceSignal([] as T[])
 
     selectedCards = createForceSignal([] as T[])
 
-    private drawsPerTurn = 5
-
-    constructor(cards: T[], private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false)) {
+    constructor(cards: T[], public drawsPerTurn: number, private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false)) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
     }
+
 
     discardCard(card: T) {
         this.hand.set(this.hand.get().filter(c=>c!=card))
@@ -100,5 +101,8 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
     private shuffleCards() {
         this.drawDeck.set(shuffleArray(this.discardDeck.get()))
         this.discardDeck.set([])
+    }
+
+    manualDraw(): void {
     }
 }

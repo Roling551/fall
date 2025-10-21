@@ -1,5 +1,8 @@
 <div class="container">
-    <div class="left">{{drawSize()}}</div>
+    <div class="left" (click)="drawCard()">
+        <div>Cards: {{drawSize()}}</div>
+        <div>Draws: {{manualDrawsLeft()}}</div>
+    </div>
     <div class="middle">
         <div class="hand">
             @for(card of hand(); track card.id) {

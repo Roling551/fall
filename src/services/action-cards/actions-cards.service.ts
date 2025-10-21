@@ -49,7 +49,7 @@ export class ActionsCardsService {
 
     setCards(actionCardInfos: ActionCardInfo[]) {
         const cards = actionCardInfos.map(x=>this.setMultiStageAction(x))
-        this.cardsHand = new InitialCardsHand(cards, ()=>{this.uiStateService.cancel()}, false, undefined, 2)
+        this.cardsHand = new InitialCardsHand(cards, 2, 1, ()=>{this.uiStateService.cancel()}, false, undefined)
     }
 
     addNewCardToDiscard(actionCardInfo: ActionCardInfo) {

@@ -25,6 +25,9 @@ export class CardsComponent<T extends CardInfo> {
     discardSize = computed(()=>{
         return this.cardsHand.discardDeck.get().length
     })
+    manualDrawsLeft = computed(()=>{
+        return this.cardsHand.manualDrawsLeft()
+    })
 
     onCardClick(card: T) {
         this.cardsHand.selectCard(card)
@@ -36,5 +39,9 @@ export class CardsComponent<T extends CardInfo> {
 
     onDiscardClick() {
         this.cardsHand.discardSelectedCards()
+    }
+
+    drawCard() {
+        this.cardsHand.manualDraw()
     }
 }
