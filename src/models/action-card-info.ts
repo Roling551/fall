@@ -17,6 +17,7 @@ export interface CardCreationStep {
 export class ActionCardInfo extends CardInfo {
     constructor(
         name: string,
+        public removeOnUse: boolean,
         public requiredSkills: Map<Skill, number>,
         public cardCreationSteps: CardCreationStep[],
         public additionalInfo: FactoryCardInputs,

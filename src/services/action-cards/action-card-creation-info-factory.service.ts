@@ -119,6 +119,7 @@ export class ActionCardCreationInfoFactoryService {
         }
         return new ActionCardInfo(
             inputs.name,
+            false,
             inputs.skillRequired,
             [
                 {
@@ -173,6 +174,7 @@ export class ActionCardCreationInfoFactoryService {
         }
         return new ActionCardInfo(
             inputs.name,
+            true,
             inputs.skillRequired,
             [
                 {

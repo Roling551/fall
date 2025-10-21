@@ -112,12 +112,24 @@ export class ActionsCardsService {
                     if(actionCardInfo.price) {
                         this.resourcesService.spendResources(actionCardInfo.price)
                     }
-                    this.cardsHand!.discardCard(actionCardInfo)
+                    if(actionCardInfo.removeOnUse) {
+                        this.removeCardFromHand(actionCardInfo)
+                    } else {
+                        this.cardsHand!.discardCard(actionCardInfo)
+                    }
+                    
                 },
                 uis
             )
         }
         return actionCardInfo
+    }
+
+    removeCardFromHand(actionCardInfo: ActionCardInfo) {
+        if(!this.cardsHand) {
+            return
+        }
+        this.cardsHand.hand.set(this.cardsHand.hand.get().filter(c=>c!=actionCardInfo))
     }
 
     reachableTiles = computed(()=>{
