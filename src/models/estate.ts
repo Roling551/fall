@@ -9,6 +9,7 @@ import { Resource } from "./resource";
 import { Skill } from "./skill";
 import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
+import { ActionCardInfo } from "./action-card-info";
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
@@ -26,6 +27,7 @@ export class Estate extends MapEntity implements TurnActor{
         public action?: (tile: Tile)=>void,
         skillMapActionSkillBonus?: Map<Skill, number>,
         movementBonus?: number,
+        public actionCardGetAfterDestroy?: ActionCardInfo,
         type?: "estate" | "upgrade"
     ) {
         super(name, 0)

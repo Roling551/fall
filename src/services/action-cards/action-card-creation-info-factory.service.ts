@@ -154,6 +154,7 @@ export class ActionCardCreationInfoFactoryService {
             effectsDescriptions.push("move:+" + inputs.movementBonus)
         }
 
+        let actionCardInfo: ActionCardInfo 
         const createEstateInfo = {
             getEstate: (tile_: Tile) => new Estate(
                 tile_, 
@@ -167,12 +168,13 @@ export class ActionCardCreationInfoFactoryService {
                 : undefined,
                 inputs.skillMapActionSkillBonus,
                 inputs.movementBonus,
+                actionCardInfo,
                 inputs.isUpgrade ? "upgrade" : "estate"
             ),
             affectedCoordinates: inputs.affectedCoordinates,
             createActionInfo,
         }
-        return new ActionCardInfo(
+        actionCardInfo = new ActionCardInfo(
             inputs.name,
             true,
             inputs.skillRequired,
@@ -192,5 +194,6 @@ export class ActionCardCreationInfoFactoryService {
             inputs.price,
             inputs.cardOnHandBenefits,
         )
+        return actionCardInfo
     }
 }

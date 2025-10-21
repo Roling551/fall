@@ -21,6 +21,8 @@ import { CurrentLevelService } from "../current-level.service"
 import { createEstate } from "../../models/level/level.functions"
 import { Resource } from "../../models/resource"
 import { Station } from "../../models/station"
+import { SimpleTile } from "../../models/tile/simple-tile"
+import { ActionsCardsService } from "../action-cards/actions-cards.service"
 
 
 export function getTileUI(
@@ -58,6 +60,23 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
                 return !tile.value?.canAddEntity()
             }
         }]])
+    }
+}
+
+export function getRemoveEstateUI(actionsCardsService: ActionsCardsService):UIData {
+    return {
+        sideComponent:SimpleTextComponent, 
+        sideComponentInputs:{text:"Remove estate"},
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
+            const t = tile.value
+            if(t instanceof SimpleTile) {
+                const actionCard = t.removePlayersMapEntity()
+                if(actionCard) {
+                    actionsCardsService.addNewCardToDiscard(actionCard)
+                }
+            }
+        },
+        tileInfos: new Map([])
     }
 }
 

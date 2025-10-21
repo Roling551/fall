@@ -1,9 +1,9 @@
-import { Injectable, signal, Type, ViewContainerRef } from "@angular/core";
+import { Injectable, Injector, signal, Type, ViewContainerRef } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile/tile";
-import { getChangeResourceUI, getCreateEstateAction, getCreateStationUI, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveEstateAction, getTileUI } from "./common-ui-settings";
+import { getChangeResourceUI, getCreateEstateAction, getCreateStationUI, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveEstateAction, getRemoveEstateUI, getTileUI } from "./common-ui-settings";
 import { Estate } from "../../models/estate";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
@@ -11,6 +11,7 @@ import { TurnActorsService } from "../turn-actors.service";
 import { ActionsListComponent } from "../../feature/actions-list/actions-list.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
+import { ActionsCardsService } from "../action-cards/actions-cards.service";
 
 export type UIData = {
   sideComponent?: Type<any>;
@@ -68,12 +69,25 @@ export class UIStateService {
   
   private defaultSideComponent = ActionsListComponent
 
+  actionsCardsService?: ActionsCardsService
   constructor(
     public levelService: CurrentLevelService,
     public battleService: BattleService,
     public turnActorsService: TurnActorsService,
-    public resourcesService: ResourcesService
-  ) {}
+    public resourcesService: ResourcesService,
+    private injector: Injector,
+  ) {
+    
+  }
+
+  getActionsCardsService() {
+    if(this.actionsCardsService) {
+        return this.actionsCardsService
+    } else {
+        this.actionsCardsService = this.injector.get(ActionsCardsService)
+        return this.actionsCardsService
+    }
+  }
 
   setSideContainerRef(vcRef: ViewContainerRef) {
     this.viewSideContainerRef = vcRef;
@@ -190,6 +204,7 @@ export class UIStateService {
   public setUI_ = {
     tile: (tile: KeyValuePair<Coordinate, Tile>, selectedUnits?: Set<Unit>) => this.setUI(getTileUI(tile, selectedUnits), {override:true}),
     createStation: () => this.setUI(getCreateStationUI(this.levelService), {override:true}),
+    removeEstate: () => this.setUI(getRemoveEstateUI(this.getActionsCardsService())),
     changeResource: () => {this.setUI(getChangeResourceUI()), {override:true}},
   }
 

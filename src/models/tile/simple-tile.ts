@@ -4,6 +4,7 @@ import { Coordinate } from "../coordinate";
 import { MapEntity } from "../map-entity";
 import { Obstacles } from "../obstacles";
 import { BaseTile } from "./base-tile";
+import { Estate } from "../estate";
 
 export class SimpleTile extends BaseTile {
     playersMapEntity = createForceSignal<MapEntity|undefined>(undefined)
@@ -50,4 +51,18 @@ export class SimpleTile extends BaseTile {
             ...this.environmentMapEntities.get()
         ]
     });
+
+    removePlayersMapEntity() {
+        const entity = this.playersMapEntity.get()
+        if(!entity) {
+            return undefined
+        } else {
+            this.playersMapEntity.set(undefined)
+            if(entity instanceof Estate) {
+                return entity.actionCardGetAfterDestroy
+            } else {
+                return undefined
+            }
+        }
+    }
 }
