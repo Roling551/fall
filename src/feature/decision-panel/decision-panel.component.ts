@@ -1,9 +1,10 @@
 import { Component, computed, Input } from '@angular/core';
-import { CardDecisionOption, Decision, DecisionOption, ResourcesDecisionOption } from '../../models/decision';
 import { CurrentWindowService } from '../../services/current-window.service';
 import { DecisionsService } from '../../services/decisions.service';
 import { CardComponent } from '../card/card.component';
 import { resourcesToString } from '../../models/resource';
+import { CardReward, ResourcesReward, Reward } from '../../models/reward';
+import { Decision } from '../../models/decision';
 
 @Component({
   selector: 'app-decision-panel',
@@ -22,28 +23,28 @@ export class DecisionPanelComponent {
         this.currentWindowService.currentWindow.set("world-map")
     }
 
-    decisionOptions(): DecisionOption[] {       
+    decisionOptions(): Reward[] {       
         return this.decision?.decisionOptions || []
     }
 
-    onOptionChosen(option: DecisionOption) {
-        option.choose()
+    onOptionChosen(reward: Reward) {
+        reward.claim()
         this.decisionsService.removeFirstDecision()
         this.decision = this.decisionsService.getFirstDecision()
     }
 
-    getCardInfo(option: DecisionOption) {
-        if(option.decisionOptionType == "Card") {
-            const o = option as CardDecisionOption
-            return o.cardToAdd
+    getCardInfo(reward: Reward) {
+        if(reward.rewardType == "Card") {
+            const r = reward as CardReward
+            return r.cardToAdd
         }
         return undefined
     }
 
-    getResourcesString(option: DecisionOption) {
-        if(option.decisionOptionType == "Resources") {
-            const o = option as ResourcesDecisionOption
-            return resourcesToString(o.resources)
+    getResourcesString(reward: Reward) {
+        if(reward.rewardType == "Resources") {
+            const r = reward as ResourcesReward
+            return resourcesToString(r.resources)
         }
         return undefined
     }
