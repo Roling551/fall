@@ -2,7 +2,6 @@ import { Component, computed, Input } from '@angular/core';
 import { ActionCardInfo } from '../../models/action-card-info';
 import { skillsToString } from '../../models/skill';
 import { resourcesToString } from '../../models/resource';
-import { cardOnHandBenefitsToString } from '../../models/card-on-hand-benefit';
 import { getFactoryCardInputsReadable } from '../../services/action-cards/action-card-creation-info-factory.service';
 
 @Component({
@@ -26,11 +25,12 @@ export class CardContentActionComponent {
         return resourcesToString(price) 
     })
 
-    cardOnHandBenefits = computed(()=>{
-        if(!this.card.cardOnHandBenefits) {
-            return ""
-        }
-        return cardOnHandBenefitsToString(this.card.cardOnHandBenefits)
+    cardOnHandRewards = computed(()=>{
+        // if(!this.card.cardOnHandRewards) {
+        //     return ""
+        // }
+        // return cardOnHandBenefitsToString(this.card.cardOnHandRewards)
+        return ""
     })
 
     cardActionType = computed(()=>{

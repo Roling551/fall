@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
 import { Coordinate } from "../../models/coordinate";
-import { simpleCardOnHandBenefits } from "../../models/card-on-hand-benefit";
 import { ActionCardInfo } from "../../models/action-card-info";
 
 @Injectable({
@@ -35,7 +34,10 @@ export class ActionCardInfoList {
                     estateTexture: "drill",
                     price: new Map([["oil", 5]]),
                     runCost: new Map([["oil", 1]]),
-                    cardOnHandBenefits: simpleCardOnHandBenefits("automaticDrill", new Map([["mining",1]]))
+                    cardOnHandRewards: [{
+                        type: "SkillMapActionSkillBonus",
+                        skillBonus: {bonus:new Map([["mining",1]])}
+                    }]
                 }
             )
         ],

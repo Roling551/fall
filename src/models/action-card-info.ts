@@ -2,10 +2,10 @@ import { FactoryCardInputs } from "../services/action-cards/action-card-creation
 import { TileInfo } from "../services/ui-state/ui-state.service";
 import { SkillMapActionSkillBonus } from "./bonus";
 import { CardInfo } from "./card-info";
-import { CardOnHandBenefit } from "./card-on-hand-benefit";
 import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
 import { Resource } from "./resource";
+import { Reward } from "./reward";
 import { Skill } from "./skill";
 import { Tile } from "./tile/tile";
 
@@ -23,7 +23,7 @@ export class ActionCardInfo extends CardInfo {
         public additionalInfo: FactoryCardInputs,
         public effectsDescriptions: string[],
         public price?: Map<Resource, number>,
-        public cardOnHandBenefits?: CardOnHandBenefit[],
+        public cardOnHandRewards?: Reward[],
     ) {
         super(name)
     }

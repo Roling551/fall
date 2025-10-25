@@ -1,3 +1,4 @@
+import { SkillMapActionSkillBonus } from "./bonus"
 import { CardInfo } from "./card-info"
 import { Resource } from "./resource"
 
@@ -7,9 +8,12 @@ export type RewardOption = {
 } | {
     type: "Resources",
     resources: Map<Resource, number>
+} | {
+    type: "SkillMapActionSkillBonus",
+    skillBonus: SkillMapActionSkillBonus
 }
 
-export type RewardType = "Card" | "Resources"
+export type RewardType = "Card" | "Resources" | "SkillMapActionSkillBonus"
 
 export interface Reward {
     rewardType: RewardType
@@ -27,6 +31,14 @@ export class CardReward implements Reward {
 export class ResourcesReward implements Reward {
     rewardType: RewardType = "Resources";
     constructor(public resources: Map<Resource, number>, private claimFunction: ()=>void) {}
+    claim() {
+        this.claimFunction()
+    }
+}
+
+export class SkillMapActionSkillBonusReward implements Reward {
+    rewardType: RewardType = "SkillMapActionSkillBonus";
+    constructor(public skillBonus: SkillMapActionSkillBonus, private claimFunction: ()=>void) {}
     claim() {
         this.claimFunction()
     }

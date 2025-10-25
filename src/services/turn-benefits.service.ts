@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { SkillMapActionSkillBonus } from "../models/bonus";
 import { createForceSignal } from "../util/force-signal";
 
@@ -7,21 +6,20 @@ import { createForceSignal } from "../util/force-signal";
   providedIn: 'root'
 })
 export class TurnBenefitsService {
-    constructor(
-        private actionsCardsService: ActionsCardsService,
-    ) {}
+
+    counter = 0
+
+    constructor() {}
 
     skillMapActionSkillBonuses = createForceSignal(new Map<string, SkillMapActionSkillBonus>())
 
     nextTurn() {
-        const skillMapActionSkillBonuses = new Map<string, SkillMapActionSkillBonus>();
-        if(this.actionsCardsService.cardsHand)
-        for(const card of this.actionsCardsService.cardsHand!.hand.get()) {
-            const bonuses = card.cardOnHandBenefits?.filter(x=>x.type==="skill-map-action-skill-bonus").map(x=>x.benefit) || []
-            for(const bonus of bonuses) {
-                skillMapActionSkillBonuses.set(bonus.name, bonus)
-            }
-        }
-        this.skillMapActionSkillBonuses.set(skillMapActionSkillBonuses)
+        this.skillMapActionSkillBonuses.set(new Map())
+    }
+
+    addBonus(name: string, bonus: SkillMapActionSkillBonus) {
+        this.skillMapActionSkillBonuses.get().set("turnBenefit_" + name + "_" + this.counter, bonus)
+        this.skillMapActionSkillBonuses.forceUpdate()
+        this.counter += 1
     }
 }

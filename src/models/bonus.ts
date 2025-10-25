@@ -10,8 +10,8 @@ export interface EstateProductionBonus {
 }
 
 export interface SkillMapActionSkillBonus {
-    name: string,
-    qualifier: (tile: Tile)=>boolean,
+    name?: string,
+    qualifier?: (tile: Tile)=>boolean,
     bonus: Map<Skill, number>
 }
 

@@ -12,8 +12,9 @@ import { getCreateEstateAction } from "./actions-cards-functions";
 import { EstateFactoryService } from "../estate-factory.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
-import { CardOnHandBenefit } from "../../models/card-on-hand-benefit";
 import { ActionCardInfo } from "../../models/action-card-info";
+import { Reward, RewardOption } from "../../models/reward";
+import { RewardFactoryService } from "../reward-factory.service";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -34,7 +35,7 @@ export interface InstantExtractionCardInputs {
     affectedCoordinates: Coordinate[],
     price?: Map<Resource, number>,
     times?: number,
-    cardOnHandBenefits?: CardOnHandBenefit[],
+    cardOnHandRewards?: RewardOption[],
 }
 
 export interface EstateCardInputs {
@@ -49,7 +50,7 @@ export interface EstateCardInputs {
     times?: number,
     skillMapActionSkillBonus?: Map<Skill, number>,
     movementBonus?: number
-    cardOnHandBenefits?: CardOnHandBenefit[],
+    cardOnHandRewards?: RewardOption[],
     isUpgrade?: boolean
 }
 
@@ -64,6 +65,7 @@ export class ActionCardCreationInfoFactoryService {
         private skillMapActionFactoryService: SkillMapActionFactoryService,
         private estateFactoryService: EstateFactoryService,
         private turnActorsService: TurnActorsService,
+        private rewardFactoryService: RewardFactoryService,
     ) {}
 
     getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {
@@ -133,7 +135,7 @@ export class ActionCardCreationInfoFactoryService {
             inputs,
             effectsDescriptions,
             inputs.price,
-            inputs.cardOnHandBenefits,
+            this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
         )
     }
 
@@ -192,7 +194,7 @@ export class ActionCardCreationInfoFactoryService {
             inputs,
             effectsDescriptions,
             inputs.price,
-            inputs.cardOnHandBenefits,
+            this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
         )
         return actionCardInfo
     }

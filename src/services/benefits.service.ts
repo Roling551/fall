@@ -83,7 +83,7 @@ export class BenefitsService {
             for(const turnActors of turnActorService.actors.get()) {
                 const bonus = turnActors.getSkillMapActionSkillBonus()
                 if(bonus) {
-                    result.set(bonus.name, bonus)
+                    result.set(bonus.name || "", bonus)
                 }
             }
             result = new Map([...result, ...this.turnBenefitsService.skillMapActionSkillBonuses.get()])
@@ -95,7 +95,7 @@ export class BenefitsService {
             return new SignalsGroup(
                 this.skillMapActionSkillBonuses,
                 (key: string, item: SkillMapActionSkillBonus)=>{
-                    return item.qualifier(tile)
+                    return (!item.qualifier) || item.qualifier(tile)
                 },
                 (key: string, item: SkillMapActionSkillBonus)=>item.bonus,
                 addNumericalValuesFunctional,

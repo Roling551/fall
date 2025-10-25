@@ -5,6 +5,7 @@ import { CharactersCardsService } from "./characters-cards.service";
 import { TurnActorsService } from "./turn-actors.service";
 import { CurrentLevelService } from "./current-level.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
+import { CardOnHandRewardService } from "./card-on-hand-reward.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class TurnService {
         private uiStateService: UIStateService,
         private turnActorsService: TurnActorsService,
         private turnBenefitsService: TurnBenefitsService,
+        private cardOnHandRewardService: CardOnHandRewardService,
     ) {}
 
     turn = signal(0)
@@ -39,6 +41,7 @@ export class TurnService {
         level.nextTurn()
         this.turnActorsService.nextTurn()
         this.turnBenefitsService.nextTurn()
+        this.cardOnHandRewardService.nextTurn()
         this.turn.update(x=>x+1)
     }
 }
