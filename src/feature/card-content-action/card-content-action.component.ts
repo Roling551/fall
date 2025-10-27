@@ -26,11 +26,10 @@ export class CardContentActionComponent {
     })
 
     cardOnHandRewards = computed(()=>{
-        // if(!this.card.cardOnHandRewards) {
-        //     return ""
-        // }
-        // return cardOnHandBenefitsToString(this.card.cardOnHandRewards)
-        return ""
+        if(!this.card.cardOnHandRewards) {
+            return undefined
+        }
+        return this.card.cardOnHandRewards.map(x=>x.getText()).join(", ")
     })
 
     cardActionType = computed(()=>{
