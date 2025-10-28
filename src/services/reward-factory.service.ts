@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { CardReward, ResourcesReward, Reward, RewardOption, SkillMapActionSkillBonusReward } from "../models/reward";
+import { CardReward, DecisionReward, ResourcesReward, Reward, RewardOption, SkillMapActionSkillBonusReward } from "../models/reward";
 import { InjectorService } from "./injector.service";
 import { ResourcesService } from "./resources.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
@@ -27,13 +27,20 @@ export class RewardFactoryService {
             case "Resources":
                 return new ResourcesReward(
                     rewardOption.resources,
-                    ()=>{this.resourcesService.addResources(rewardOption.resources)}
+                    ()=>{
+                        this.resourcesService.addResources(rewardOption.resources)
+                    }
                 )
             case "SkillMapActionSkillBonus":
                 return new SkillMapActionSkillBonusReward(
                     rewardOption.skillBonus,
                     ()=>{this.turnBenefitsService.addBonus("skillMapActionSkillBonus", rewardOption.skillBonus)}
                 )
+            case "Decision":
+                return new DecisionReward(()=>{
+                    const decision = this.injectorService.getDecisionFactoryService().getDecision()
+                    this.injectorService.getDecisionsService().addDecision(decision)
+                })
         }
     }
 }

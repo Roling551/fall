@@ -12,9 +12,11 @@ export type RewardOption = {
 } | {
     type: "SkillMapActionSkillBonus",
     skillBonus: SkillMapActionSkillBonus
+} | {
+    type: "Decision"
 }
 
-export type RewardType = "Card" | "Resources" | "SkillMapActionSkillBonus"
+export type RewardType = "Card" | "Resources" | "SkillMapActionSkillBonus" | "Decision"
 
 export interface Reward {
     rewardType: RewardType
@@ -53,4 +55,16 @@ export class SkillMapActionSkillBonusReward implements Reward {
     claim() {
         this.claimFunction()
     }
+}
+
+export class DecisionReward implements Reward {
+    rewardType: RewardType = "Decision"
+    constructor(private claimFunction: ()=>void) {}
+    getText(): string {
+        return "decision"
+    }
+    claim(): void {
+        this.claimFunction()
+    }
+    
 }

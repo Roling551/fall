@@ -42,8 +42,9 @@ export class InitService {
         this.decisionsService.addDecisionFromRewards(
             [
                 {type: "Card", cardName: "handDrill"},
-                {type: "Card", cardName: "automaticDrill"},
-                {type: "Resources", resources: new Map([["oil", 10]])}
+                //{type: "Card", cardName: "automaticDrill"},
+                {type: "Resources", resources: new Map([["oil", 10]])},
+                {type: "Decision"},
             ]
         )
     }
