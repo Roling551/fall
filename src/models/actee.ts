@@ -5,7 +5,8 @@ import { Skill } from "./skill"
 export interface SkillResult {
     progressDone: number,
     currentProgress: number,
-    isDone: boolean
+    isDone: boolean,
+    justFinished: boolean,
 }
 
 export interface Actee {

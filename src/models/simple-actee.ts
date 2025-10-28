@@ -15,10 +15,12 @@ export class SimpleActee implements Actee {
         }
         const previousProgress = this.currentProgress()
         this.currentProgress.update(x=>Math.min(this.maxProgress, x+Math.max(0, relevantsSkill)))
+        const isDone = this.currentProgress() >= this.maxProgress
         return {
             progressDone: this.currentProgress() - previousProgress,
             currentProgress: this.currentProgress(),
-            isDone: this.currentProgress() <= 0
+            isDone,
+            justFinished: isDone && previousProgress < this.maxProgress 
         }
     }
 

@@ -6,17 +6,20 @@ import { Obstacles } from "../models/obstacles";
 import { SimpleTile } from "../models/tile/simple-tile";
 import { Tile } from "../models/tile/tile";
 import { getRandomVoronoi } from "../util/voronoi";
+import { RewardFactoryService } from "./reward-factory.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LevelMapFactoryService {
 
+    constructor(private rewardFactoryService: RewardFactoryService) {}
+
     repeat = 20
     terrains = [
         ()=>new EnvironmentMapEntity("forest", 10, new Map([["water", 1]])),
         ()=>new EnvironmentMapEntity("oil", 10, new Map([["oil", 1]])),
-        ()=>new EnvironmentMapEntity("scrap", 10, new Map([["scrap", 1]])),
+        ()=>new EnvironmentMapEntity("scrap", 5, new Map([]), [this.rewardFactoryService.createReward({type:"Decision"})]),
     ]
 
     private createTile(terrainNumber: number, coordinate: Coordinate) {
