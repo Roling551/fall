@@ -26,6 +26,8 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   @Input() allowedPixelsMovedForClick = 10;
 
+  @Input() shape: "diamond" | "hexagon" = "hexagon"
+
   graphics = input<Map<string, {doRender:((tile: T) => boolean), template:undefined|Type<any>, input?:any}>>(new Map());
 
   tileClick = output<T>();
@@ -111,7 +113,8 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
 
   public getTransformX(coordinate: string) {
     const [x, y] = coordinate.split("_").map(n=>Number(n))
-    return (this.sizeX * (x - y)) / 2
+    const angle = this.shape == "diamond" ? (1/2) : (3/4)
+    return (this.sizeX * (x - y)) * angle
   }
   public getTransformY(coordinate: string) {
     const [x, y] = coordinate.split("_").map(n=>Number(n))

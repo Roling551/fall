@@ -10,14 +10,6 @@
         </div>   
     }
 
-    <!--@for(x of getRange(tileOnScreenX+3); track x) {
-        @for(y of getRange(tileOnScreenY+3); track y) {
-            <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()}"></ng-container>
-            <ng-container *ngTemplateOutlet="fullTileTemplate; context: {x:y+x+positionX()-2, y:y-x+positionY()-1}"></ng-container>
-        }
-    }-->
-
-
     @for(additional of additionalGraphicsAndTilesToRender(); track additional.tile[0] + "_" + additional.additionalGraphic[0]) {
         <div
             class="item"
@@ -38,11 +30,9 @@
             (mouseenter)="onTileHover(tile[1])"
             (mouseleave)="onTileHoverExit(tile[1])"
         >
-            <div
-                class="diamond"
+            <div [ngClass]="shape"
                 [style.width.px]="sizeX"
-                [style.height.px]="sizeY"
-                >
+                [style.height.px]="sizeY">
             </div>
         </div>
     }
