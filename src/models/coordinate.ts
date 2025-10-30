@@ -59,6 +59,12 @@ export class Coordinate {
         if(this.y<sizeY-1) {
             neighbors.push({direction: "yPlus" ,coordinate:new Coordinate(this.x, this.y+1)})
         }
+        if(this.x>0 && this.y>0) {
+            neighbors.push({direction: "up" ,coordinate:new Coordinate(this.x-1, this.y-1)})
+        }
+        if(this.x<sizeX-1 && this.y<sizeY-1) {
+            neighbors.push({direction: "down" ,coordinate:new Coordinate(this.x+1, this.y+1)})
+        }
         return neighbors
     }
 

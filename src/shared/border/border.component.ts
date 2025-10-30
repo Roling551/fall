@@ -42,6 +42,8 @@ export class BorderComponent implements OnChanges {
       case 'yMinus': return this.getTexture_('top-right-border')
       case 'xPlus': return this.getTexture_('bottom-right-border')
       case 'xMinus': return this.getTexture_('top-left-border')
+      case 'up': return this.getTexture_('top-border')
+      case 'down': return this.getTexture_('bottom-border')
     }
   }
 
