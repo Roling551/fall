@@ -45,12 +45,7 @@ export class BenefitsService {
         return result
     })
 
-    skillMapActionSkillBonusesList
-    skillMapActionSkillBonuses
     listenForSkillMapActionSkillBonuses
-
-    movementBonusesList
-    movementBonuses
     listenForMovementBonuses
 
     constructor(
@@ -60,7 +55,7 @@ export class BenefitsService {
         private actionsCardsService: ActionsCardsService,
         private turnBenefitsService: TurnBenefitsService,
     ) {
-        this.skillMapActionSkillBonusesList = computed(()=> {
+        const skillMapActionSkillBonusesList = computed(()=> {
             let result = new Map<string, SkillMapActionSkillBonus>();
             for(const [key, benefit] of this.technologiesService.benefits.get()) {
                 if(benefit.type === "skill-map-action-skill-bonus") {
@@ -90,10 +85,10 @@ export class BenefitsService {
             return result
         })
 
-        this.skillMapActionSkillBonuses = new SignalChangesEmitter<any, SkillMapActionSkillBonus>(this.skillMapActionSkillBonusesList);
+        const skillMapActionSkillBonuses = new SignalChangesEmitter<any, SkillMapActionSkillBonus>(skillMapActionSkillBonusesList);
         this.listenForSkillMapActionSkillBonuses = (tile: Tile) => {
             return new SignalsGroup(
-                this.skillMapActionSkillBonuses,
+                skillMapActionSkillBonuses,
                 (key: string, item: SkillMapActionSkillBonus)=>{
                     return (!item.qualifier) || item.qualifier(tile)
                 },
@@ -103,7 +98,7 @@ export class BenefitsService {
             )
         }
 
-        this.movementBonusesList = computed(()=> {
+        const movementBonusesList = computed(()=> {
             let result = new Map<string, MovementBonus>();
             for(const turnActors of turnActorService.actors.get()) {
                 const bonus = turnActors.getMovementBonus()
@@ -113,10 +108,10 @@ export class BenefitsService {
             }
             return result
         })
-        this.movementBonuses = new SignalChangesEmitter<any, MovementBonus>(this.movementBonusesList);
+        const movementBonuses = new SignalChangesEmitter<any, MovementBonus>(movementBonusesList);
         this.listenForMovementBonuses = (tile: Tile) => {
             return new SignalsGroup<string, MovementBonus, number>(
-                this.movementBonuses,
+                movementBonuses,
                 (key: string, item: MovementBonus)=>{
                     return item.qualifier(tile)
                 },
