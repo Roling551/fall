@@ -10,6 +10,7 @@ import { Skill } from "./skill";
 import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
 import { ActionCardInfo } from "./action-card-info";
+import { Benefit } from "./benefit";
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
@@ -36,7 +37,34 @@ export class Estate extends MapEntity implements TurnActor{
         this.affectedCoordinates = affectedCoordinates.map(x=>x.addCoordinates(tile.coordinate).getKey())
         this.type = type || "estate"
     }
-   
+    benefits = computed<Benefit[]>(() => {
+        const benefits:Benefit[] = []
+        if (this.skillMapActionSkillBonus) {
+            benefits.push({
+                type: "skill-map-action-skill-bonus",
+                bonus: {
+                    name: this.tile.coordinate.getKey(),
+                    bonus: new Map(this.skillMapActionSkillBonus.get()),
+                    qualifier: (tile: Tile)=> {
+                        return this.affectedCoordinates.includes(tile.coordinate.getKey())
+                    }
+                }
+            })
+        }
+        if(this.movementBonus.get()) {
+            benefits.push({
+                type: "movement-bonus",
+                bonus: {
+                    name: this.tile.coordinate.getKey(),
+                    bonus: this.movementBonus.get()!,
+                    qualifier: (tile: Tile)=> {
+                        return this.affectedCoordinates.includes(tile.coordinate.getKey())
+                    }
+                }
+            })
+        }
+        return benefits
+    })  
 
     public turnAction() {
         if(this.forcefullyDisabled()) {
@@ -54,34 +82,6 @@ export class Estate extends MapEntity implements TurnActor{
     enable() {
         this.forcefullyDisabled.set(false)
     }
-    getSkillMapActionSkillBonus = computed<SkillMapActionSkillBonus|undefined>(() => {
-        if (this.skillMapActionSkillBonus) {
-            return {
-                name: this.tile.coordinate.getKey(),
-                bonus: new Map(this.skillMapActionSkillBonus.get()),
-                qualifier: (tile: Tile)=> {
-                    return this.affectedCoordinates.includes(tile.coordinate.getKey())
-                }
-            } 
-        } else {
-            return undefined
-        }
-    })
-
-    getMovementBonus = computed<MovementBonus|undefined>(()=>{
-        const movementBonus = this.movementBonus.get()
-        if (movementBonus) {
-            return {
-                name: this.tile.coordinate.getKey(),
-                bonus: movementBonus,
-                qualifier: (tile: Tile)=> {
-                    return this.affectedCoordinates.includes(tile.coordinate.getKey())
-                }
-            } 
-        } else {
-            return undefined
-        }
-    })
 
     override skillAction(skills: Map<Skill,number>) {
         return {}

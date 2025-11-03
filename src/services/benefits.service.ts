@@ -76,9 +76,10 @@ export class BenefitsService {
                 }
             }
             for(const turnActors of turnActorService.actors.get()) {
-                const bonus = turnActors.getSkillMapActionSkillBonus()
-                if(bonus) {
-                    result.set(bonus.name || "", bonus)
+                for(const bonus of turnActors.benefits()) {
+                    if(bonus.type === "skill-map-action-skill-bonus") {
+                        result.set(bonus.bonus.name || "", bonus.bonus)
+                    }
                 }
             }
             result = new Map([...result, ...this.turnBenefitsService.skillMapActionSkillBonuses.get()])
@@ -101,9 +102,9 @@ export class BenefitsService {
         const movementBonusesList = computed(()=> {
             let result = new Map<string, MovementBonus>();
             for(const turnActors of turnActorService.actors.get()) {
-                const bonus = turnActors.getMovementBonus()
-                if(bonus) {
-                    result.set(bonus.name, bonus)
+                for(const bonus of turnActors.benefits()) {
+                    if(bonus.type == "movement-bonus")
+                    result.set(bonus.bonus.name, bonus.bonus)
                 }
             }
             return result
