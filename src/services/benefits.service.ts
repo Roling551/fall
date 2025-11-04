@@ -1,4 +1,4 @@
-import { computed, Injectable } from "@angular/core";
+import { computed, Injectable, Signal } from "@angular/core";
 import { TechnologiesService } from "./technologies/technologies.service";
 import { Benefit } from "../models/benefit";
 import { SignalChangesEmitter } from "../util/set-changes";
@@ -15,6 +15,8 @@ import { TurnActorsService } from "./turn-actors.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
 
+type BenefitOfType<T extends Benefit["type"]> = Extract<Benefit, { type: T }>;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,25 +24,45 @@ export class BenefitsService {
 
     initialBenefits = createForceSignal(new Map<string, Benefit>)
 
-    avaliableEstates = computed(() => {
-        const result = new Map<string, (()=>Estate)>();
-        for(const [key, benefit] of this.technologiesService.benefits.get()) {
-            if(benefit.type === "unlock-estate") {
-                result.set(benefit.estateName, benefit.getEstate)
-            }
-        }
-        for(const [key, benefit] of this.initialBenefits.get()) {
-            if(benefit.type === "unlock-estate") {
-                result.set(benefit.estateName, benefit.getEstate)
-            }
-        }
-        const level = this.levelService.level.get()
-        if(level) {
-            for(const [key, benefit] of level.benefits()) {
-                if(benefit.type === "unlock-estate") {
-                    result.set(benefit.estateName, benefit.getEstate)
+    getBenefitsOfType<T extends Benefit["type"]>(
+        type: T
+    ): Signal<BenefitOfType<T>[]> {
+        return computed(()=>{
+            const result:BenefitOfType<T>[] = [];
+            const level = this.levelService.level.get()
+            if(level) {
+                for(const [key, benefit] of level.benefits()) {
+                    if(benefit.type === type) {
+                        result.push(benefit as BenefitOfType<T>)
+                    }
                 }
             }
+            for(const [key, benefit] of this.technologiesService.benefits.get()) {
+                if(benefit.type === type) {
+                    result.push(benefit as BenefitOfType<T>)
+                }
+            }
+            for(const [key, benefit] of this.initialBenefits.get()) {
+                if(benefit.type === type) {
+                    result.push(benefit as BenefitOfType<T>)
+                }
+            }
+            for(const turnActors of this.turnActorService.actors.get()) {
+                for(const benefit of turnActors.benefits()) {
+                    if(benefit.type === type) {
+                        result.push(benefit as BenefitOfType<T>)
+                    }
+                }
+            }
+            return result
+        })
+    }
+
+    private avaliableEstatesBenefits = this.getBenefitsOfType("unlock-estate")
+    avaliableEstates = computed(() => {
+        const result = new Map<string, (()=>Estate)>();
+        for(const benefit of this.avaliableEstatesBenefits()) {
+            result.set(benefit.estateName, benefit.getEstate)
         }
         return result
     })
@@ -55,33 +77,14 @@ export class BenefitsService {
         private actionsCardsService: ActionsCardsService,
         private turnBenefitsService: TurnBenefitsService,
     ) {
+        const skillMapActionSkillBonusesBenefits = this.getBenefitsOfType("skill-map-action-skill-bonus")
         const skillMapActionSkillBonusesList = computed(()=> {
             let result = new Map<string, SkillMapActionSkillBonus>();
-            for(const [key, benefit] of this.technologiesService.benefits.get()) {
-                if(benefit.type === "skill-map-action-skill-bonus") {
-                    result.set(key, benefit.bonus)
-                }
+            
+            for(const benefit of skillMapActionSkillBonusesBenefits()) {
+                result.set(benefit.bonus.name || "", benefit.bonus)
             }
-            for(const [key, benefit] of this.initialBenefits.get()) {
-                if(benefit.type === "skill-map-action-skill-bonus") {
-                    result.set(key, benefit.bonus)
-                }
-            }
-            const level = levelService.level.get()
-            if(level) {
-                for(const [key, benefit] of level.benefits()) {
-                    if(benefit.type === "skill-map-action-skill-bonus") {
-                        result.set(key, benefit.bonus)
-                    }
-                }
-            }
-            for(const turnActors of turnActorService.actors.get()) {
-                for(const bonus of turnActors.benefits()) {
-                    if(bonus.type === "skill-map-action-skill-bonus") {
-                        result.set(bonus.bonus.name || "", bonus.bonus)
-                    }
-                }
-            }
+            
             result = new Map([...result, ...this.turnBenefitsService.skillMapActionSkillBonuses.get()])
             return result
         })
@@ -99,12 +102,12 @@ export class BenefitsService {
             )
         }
 
+        const movementBonusesBenefits = this.getBenefitsOfType("movement-bonus")
         const movementBonusesList = computed(()=> {
             let result = new Map<string, MovementBonus>();
             for(const turnActors of turnActorService.actors.get()) {
-                for(const bonus of turnActors.benefits()) {
-                    if(bonus.type == "movement-bonus")
-                    result.set(bonus.bonus.name, bonus.bonus)
+                for(const benefit of movementBonusesBenefits()) {
+                    result.set(benefit.bonus.name, benefit.bonus)
                 }
             }
             return result
