@@ -1,1 +1,3 @@
-<app-units-panel [tile]="tile"/>
+@for(mapEntity of tile.value.getMapEntities()(); track $index) {
+    <app-map-entity-description [mapEntity]="mapEntity"></app-map-entity-description>
+}

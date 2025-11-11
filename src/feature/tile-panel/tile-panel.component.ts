@@ -3,12 +3,11 @@ import { KeyValuePair } from '../../models/key-value-pair';
 import { Coordinate } from '../../models/coordinate';
 import { Tile } from '../../models/tile/tile';
 import { ForceSignal } from '../../util/force-signal';
-import { UnitsPanelComponent } from '../units-panel/units-panel.component';
-import { Unit } from '../../models/unit';
+import { MapEntityDescriptionComponent } from '../map-entity-description/map-entity-description.component';
 
 @Component({
   selector: 'app-tile-panel',
-  imports: [UnitsPanelComponent],
+  imports: [MapEntityDescriptionComponent],
   templateUrl: './tile-panel.component.html',
   styleUrl: './tile-panel.component.scss'
 })

@@ -1,4 +1,4 @@
-import { effect, signal, untracked } from "@angular/core";
+import { effect, Signal, signal, untracked } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { MapEntity, SkillActionResult } from "../map-entity";
 import { Unit } from "../unit";
@@ -16,6 +16,7 @@ export abstract class Tile {
     abstract addMapEntity(mapEntity: MapEntity): boolean
     abstract canAddEntity(): boolean
     abstract removeMapEntity(): boolean
+    abstract getMapEntities(): Signal<MapEntity[]>
 
     units = createForceSignal(new Set<Unit>())
 

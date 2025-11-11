@@ -19,6 +19,24 @@ export class SimpleTile extends BaseTile {
         super(coordinate, terrainType, obstacles)
     }
 
+    override getMapEntities(): Signal<MapEntity[]> {
+        return computed(()=>{
+            const entities = []
+            const e1 = this.playersMapEntity.get()
+            if(e1) {
+                entities.push(e1)
+            }
+            const e2 = this.upgrade.get()
+            if(e2) {
+                entities.push(e2)
+            }
+            for(const e3 of this.environmentMapEntities.get()) {
+                entities.push(e3)
+            }
+            return entities
+        })
+    }
+
     override addMapEntity(mapEntity: MapEntity): boolean {
         if(mapEntity.type == "estate" || mapEntity.type == "station") {
             if(!!this.playersMapEntity.get()) {
