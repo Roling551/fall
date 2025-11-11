@@ -1,12 +1,13 @@
+import { computed } from "@angular/core";
 import { ForceSignal } from "../util/force-signal";
 import { LimitedSet } from "../util/limited-set";
 import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../util/map-functions";
 import { Building } from "./building";
 import { MapEntity, MapEntityType, SkillActionResult } from "./map-entity";
-import { Resource } from "./resource";
+import { Resource, resourcesToString } from "./resource";
 import { Reward } from "./reward";
 import { SimpleActee } from "./simple-actee";
-import { Skill } from "./skill";
+import { getSkillSymbol, Skill } from "./skill";
 
 export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
@@ -29,5 +30,18 @@ export class EnvironmentMapEntity extends MapEntity {
 
     override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
         return this.actee.canAttemptSkillAction(skills)
-    }   
+    }
+
+    getDescription = computed(() => {
+        let text =  "" +    
+            getSkillSymbol(this.actee.mainSkill) +
+            "[" + this.actee.difficulty + "]" +
+            "->"
+        if(this.resourcesGain.size > 0) {
+            text += resourcesToString(multiplyNumericalValuesFunctional(this.resourcesGain, this.actee.progressLeft()))
+        } else {
+            text += this.actee.progressLeft() + "/" + this.actee.maxProgress
+        }
+        return text
+    })
 }

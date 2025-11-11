@@ -32,21 +32,8 @@ export class ResourcesInfoComponent {
         if(tile instanceof SimpleTile) {
             return tile.environmentMapEntities.get()
                 .filter(x=>x instanceof EnvironmentMapEntity)
-                .map(x=>this.getText(x))
+                .map(x=>x.getDescription())
         }
         return [""]
     })
-
-    getText(entity: EnvironmentMapEntity){
-        let text =  "" +    
-            getSkillSymbol(entity.actee.mainSkill) +
-            "[" + entity.actee.difficulty + "]" +
-            "->"
-        if(entity.resourcesGain.size > 0) {
-            text += resourcesToString(multiplyNumericalValuesFunctional(entity.resourcesGain, entity.actee.progressLeft()))
-        } else {
-            text += entity.actee.progressLeft() + "/" + entity.actee.maxProgress
-        }
-        return text
-    }
 }
