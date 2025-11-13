@@ -155,6 +155,7 @@ export class ActionCardCreationInfoFactoryService {
         }
 
         let actionCardInfo: ActionCardInfo 
+        const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
         const createEstateInfo = {
             getEstate: (tile_: Tile) => new Estate(
                 tile_, 
@@ -169,7 +170,7 @@ export class ActionCardCreationInfoFactoryService {
                 inputs.skillMapActionSkillBonus,
                 inputs.movementBonus,
                 actionCardInfo,
-                inputs.isUpgrade ? "upgrade" : "estate"
+                mapEntityType
             ),
             affectedCoordinates: inputs.affectedCoordinates,
             createActionInfo,
@@ -184,7 +185,8 @@ export class ActionCardCreationInfoFactoryService {
                         return getCreateEstateAction(
                             this.levelService,
                             this.turnActorsService,
-                            createEstateInfo.getEstate)(tile)
+                            createEstateInfo.getEstate,
+                            mapEntityType)(tile)
                     },
                     tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
                 }

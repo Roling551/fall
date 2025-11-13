@@ -3,7 +3,7 @@ import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile/tile";
-import { getChangeResourceUI, getCreateEstateAction, getCreateStationUI, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveEstateAction, getRemoveEstateUI, getTileUI } from "./common-ui-settings";
+import { getChangeResourceUI, getCreateStationUI, getMoveUnitsAction, getMoveUnitsBattleAction, getRemoveEstateAction, getRemoveEstateUI, getTileUI } from "./common-ui-settings";
 import { Estate } from "../../models/estate";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
@@ -209,8 +209,6 @@ export class UIStateService {
   }
 
   public setMapAction_ = {
-    createEstate: (getBuilding: ()=>Estate, buildingName: string) => {
-      this.setUI(getCreateEstateAction(this.turnActorsService, getBuilding, buildingName))},
     removeEstate: () => {
       this.setUI(getRemoveEstateAction(this._additionalInfo.get()["tile"]))},
     moveUnits: (selectedUnitsSignal: ForceSignal<Set<Unit>>) => {

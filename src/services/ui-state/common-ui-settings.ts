@@ -43,7 +43,7 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Create station"},
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            if(!tile.value.canAddEntity()) {
+            if(!tile.value.canAddEntity("station")) {
                 return
             }
             const level = levelService.level.get()
@@ -57,7 +57,7 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
         tileInfos: new Map([["unavaliable", {
             template: UnavaliableComponent,
             doRender: (tile)=> {
-                return !tile.value?.canAddEntity()
+                return !tile.value?.canAddEntity("station")
             }
         }]])
     }
@@ -89,19 +89,6 @@ export function getChangeResourceUI() {
         // mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
         //     tile.value.resourcesSources.changeFirstOfType(editMapParameters)
         // }
-    }
-}
-
-export function getCreateEstateAction(
-    turnActorsService: TurnActorsService,
-    getEstate: ()=>Estate,
-    estateName: string
-):UIData {
-    return {
-        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-            createEstate(tile, getEstate, turnActorsService)
-        },
-        additionalInfo: {currentAction: "createEstateAction-" + estateName},
     }
 }
 

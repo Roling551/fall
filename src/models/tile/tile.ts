@@ -1,6 +1,6 @@
 import { effect, Signal, signal, untracked } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
-import { MapEntity, SkillActionResult } from "../map-entity";
+import { MapEntity, MapEntityType, SkillActionResult } from "../map-entity";
 import { Unit } from "../unit";
 import { Resource } from "../resource";
 import { Coordinate } from "../coordinate";
@@ -14,7 +14,7 @@ export abstract class Tile {
     abstract skillAction(skills: Map<Skill,number>): SkillActionResult
     abstract canAttemptSkillAction(skills: Map<Skill,number>): boolean
     abstract addMapEntity(mapEntity: MapEntity): boolean
-    abstract canAddEntity(): boolean
+    abstract canAddEntity(type: MapEntityType): boolean
     abstract removeMapEntity(): boolean
     abstract getMapEntities(): Signal<MapEntity[]>
 

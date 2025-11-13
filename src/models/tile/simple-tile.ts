@@ -1,7 +1,7 @@
 import { computed, Signal } from "@angular/core";
 import { createForceSignal } from "../../util/force-signal";
 import { Coordinate } from "../coordinate";
-import { MapEntity } from "../map-entity";
+import { MapEntity, MapEntityType } from "../map-entity";
 import { Obstacles } from "../obstacles";
 import { BaseTile } from "./base-tile";
 import { Estate } from "../estate";
@@ -58,8 +58,17 @@ export class SimpleTile extends BaseTile {
         this.playersMapEntity.set(undefined)
         return true
     }
-    override canAddEntity(): boolean {
-        return !this.playersMapEntity.get()
+    override canAddEntity(type: MapEntityType): boolean {
+        if(type == "estate" || type == "station") {
+            if(!!this.playersMapEntity.get()) {
+                return false
+            }
+        } else if(type == "upgrade") {
+            if(!!this.upgrade.get()) {
+                return false
+            }
+        }
+        return true
     }
 
     override mapEntities = computed(()=>{
