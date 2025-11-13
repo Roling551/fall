@@ -9,7 +9,6 @@ import { CurrentLevelService } from "../current-level.service";
 import { Skill, skillsToString } from "../../models/skill";
 import { Resource } from "../../models/resource";
 import { getCreateEstateAction } from "./actions-cards-functions";
-import { EstateFactoryService } from "../estate-factory.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
 import { ActionCardInfo } from "../../models/action-card-info";
@@ -63,7 +62,6 @@ export class ActionCardCreationInfoFactoryService {
         private uiStateService: UIStateService,
         private levelService: CurrentLevelService,
         private skillMapActionFactoryService: SkillMapActionFactoryService,
-        private estateFactoryService: EstateFactoryService,
         private turnActorsService: TurnActorsService,
         private rewardFactoryService: RewardFactoryService,
     ) {}
@@ -163,7 +161,7 @@ export class ActionCardCreationInfoFactoryService {
                 inputs.estateTexture, 
                 inputs.runCost || (new Map([])), 
                 inputs.affectedCoordinates,
-                effectsDescriptions,
+                inputs,
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createExtractionAction(
                     createActionInfo, 
                     inputs.affectedCoordinates)

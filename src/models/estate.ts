@@ -6,11 +6,12 @@ import { MapEntity } from "./map-entity";
 import { TurnActor } from "./turn-actor";
 import { Tile } from "./tile/tile";
 import { Resource } from "./resource";
-import { Skill } from "./skill";
+import { Skill, skillsToString } from "./skill";
 import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
 import { ActionCardInfo } from "./action-card-info";
 import { Benefit } from "./benefit";
+import { EstateCardInputs } from "../services/action-cards/action-card-creation-info-factory.service";
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
@@ -24,12 +25,12 @@ export class Estate extends MapEntity implements TurnActor{
         public name: string, 
         public requiredResources: Map<Resource, number>,
         affectedCoordinates: Coordinate[],
-        public effectsDescriptions: string[],
+        private additionalInfo: EstateCardInputs,
         public action?: (tile: Tile)=>void,
         skillMapActionSkillBonus?: Map<Skill, number>,
         movementBonus?: number,
         public actionCardGetAfterDestroy?: ActionCardInfo,
-        type?: "estate" | "upgrade"
+        type?: "estate" | "upgrade",
     ) {
         super(name, 0)
         this.skillMapActionSkillBonus = createForceSignal(skillMapActionSkillBonus)
@@ -90,4 +91,19 @@ export class Estate extends MapEntity implements TurnActor{
     override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
         return false
     }
+
+    effectsDescriptions = computed(()=>{
+        const descriptions: string[] = []
+        if(this.additionalInfo.skillApplied) {
+            descriptions.push("apply:" + skillsToString(this.additionalInfo.skillApplied))
+        }
+        if(this.additionalInfo.skillMapActionSkillBonus) {
+            descriptions.push("bonus:" + skillsToString(this.additionalInfo.skillMapActionSkillBonus))
+        }
+        if(this.additionalInfo.movementBonus) {
+            descriptions.push("move:+" + this.additionalInfo.movementBonus)
+        }
+        console.log(descriptions)
+        return descriptions
+    })
 }

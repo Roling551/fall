@@ -16,7 +16,6 @@ import { Estate } from "../../models/estate";
 import { getCreateEstateAction } from "./actions-cards-functions";
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
 import { TurnActorsService } from "../turn-actors.service";
-import { EstateFactoryService } from "../estate-factory.service";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
 import { Resource } from "../../models/resource";
 import { BorderComponent } from "../../shared/border/border.component";
