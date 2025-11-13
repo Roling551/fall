@@ -26,8 +26,8 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
 
     manualDraw() {
         if(this.manualDrawsLeft() > 0 && this.cardLimit() > this.hand.get().length) {
-            this.drawCards()
-            this.manualDrawsLeft.update(x=>x-1)
+            const drawedCards = this.drawCards()
+            this.manualDrawsLeft.update(x=>x-drawedCards)
         }
     }
 
@@ -89,6 +89,7 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
 
     drawCards(cardsNumber = 1) {
         let drawsLeft = cardsNumber
+        let drawsHappend = 0
         while(drawsLeft > 0) {
             if(this.drawDeck.get().length == 0) {
                 this.shuffleCards()
@@ -96,13 +97,15 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
             if(this.drawDeck.get().length > 0) {
                 const card = this.drawDeck.get().pop()!
                 this.hand.get().push(card)
+                drawsLeft -= 1
+                drawsHappend += 1
             } else {
                 break
             }
-            drawsLeft -= 1
         }
         this.drawDeck.forceUpdate()
         this.hand.forceUpdate()
+        return drawsHappend
     }
 
     private shuffleCards() {
