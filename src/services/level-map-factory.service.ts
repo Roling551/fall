@@ -19,7 +19,7 @@ export class LevelMapFactoryService {
     terrains = [
         ()=>new EnvironmentMapEntity("forest", 10, new Map([["water", 1]])),
         ()=>new EnvironmentMapEntity("oil", 10, new Map([["oil", 1]])),
-        ()=>new EnvironmentMapEntity("scrap", 5, new Map([]), [this.rewardFactoryService.createReward(
+        ()=>new EnvironmentMapEntity("scrap", 5, new Map([]), ()=>[this.rewardFactoryService.createReward(
             {
                 type:"Decision",
                 decisionFactoryOptions: [{metaOptionType: "RandomCard", level: 0, rarity: 0}, {metaOptionType: "RandomCard", level: 0, rarity: 0}]

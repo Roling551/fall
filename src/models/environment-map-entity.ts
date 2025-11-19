@@ -13,15 +13,15 @@ export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
     actee
 
-    constructor(name: string, maxProgress: number, public resourcesGain: Map<Resource, number>,private onDepletedRewards?: Reward[]) {
+    constructor(name: string, maxProgress: number, public resourcesGain: Map<Resource, number>,private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
         this.actee = new SimpleActee("mining", maxProgress, 0)
     }
 
     override skillAction(skills: Map<Skill,number>): SkillActionResult {
         const actionResult = this.actee.skillAction(skills)
-        if(this.onDepletedRewards && actionResult.justFinished) {
-            this.onDepletedRewards.forEach(x=>x.claim())
+        if(this.onDepletedRewardsGetter && actionResult.justFinished) {
+            this.onDepletedRewardsGetter().forEach(x=>x.claim())
         }
         return {
             resourcesGained: multiplyNumericalValuesFunctional(this.resourcesGain, actionResult.progressDone)
