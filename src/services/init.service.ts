@@ -44,7 +44,6 @@ export class InitService {
                 {type: "Card", cardName: "handDrill"},
                 //{type: "Card", cardName: "automaticDrill"},
                 {type: "Resources", resources: new Map([["oil", 10]])},
-                {type: "Decision"},
             ]
         )
     }

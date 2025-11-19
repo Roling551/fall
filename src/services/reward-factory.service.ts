@@ -38,7 +38,7 @@ export class RewardFactoryService {
                 )
             case "Decision":
                 return new DecisionReward(()=>{
-                    const decision = this.injectorService.getDecisionFactoryService().getDecision()
+                    const decision = this.injectorService.getDecisionFactoryService().getDecision(rewardOption.decisionFactoryOptions)
                     this.injectorService.getDecisionsService().addDecision(decision)
                 })
         }

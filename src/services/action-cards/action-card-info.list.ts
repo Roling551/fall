@@ -11,7 +11,7 @@ export class ActionCardInfoList {
 
     getRandomByLevelAndRarity(level: number, rarity: 0 | 1 | 2, randomNumber: number) {
         let cards:string[] = []
-        while(cards.length > 0) {
+        while(cards.length <= 0) {
             cards = this.listByLevelAndRarity[level][rarity]
             if(rarity > 0) {
                 rarity -= 1
@@ -19,10 +19,10 @@ export class ActionCardInfoList {
                 rarity = 2
                 level -= 1
             } else {
-                return undefined
+                throw new Error("Picking random card failed")
             }
         }
-        return this.list.get(cards[Math.floor(randomNumber * (cards.length + 1))]);
+        return cards[Math.floor(randomNumber * cards.length)];
     }
 
     listByLevelAndRarity: [string[], string[], string[]][] = [

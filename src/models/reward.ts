@@ -1,3 +1,4 @@
+import { DecisionFactoryOption } from "../services/decision-factory.service"
 import { SkillMapActionSkillBonus } from "./bonus"
 import { CardInfo } from "./card-info"
 import { Resource, resourcesToString } from "./resource"
@@ -13,7 +14,8 @@ export type RewardOption = {
     type: "SkillMapActionSkillBonus",
     skillBonus: SkillMapActionSkillBonus
 } | {
-    type: "Decision"
+    type: "Decision",
+    decisionFactoryOptions: DecisionFactoryOption[]
 }
 
 export type RewardType = "Card" | "Resources" | "SkillMapActionSkillBonus" | "Decision"
