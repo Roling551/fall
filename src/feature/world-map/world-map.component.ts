@@ -31,6 +31,10 @@ export class WorldMapComponent {
     })
   }
 
+  getTilesId(tile: KeyValuePair<Coordinate, Tile>) {
+    return String(tile.value.id)
+  }
+
   getTexture(name: string): string {
     return `assets/pictures/${name}.png`
   }

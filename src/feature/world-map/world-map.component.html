@@ -1,6 +1,7 @@
 @if(tiles()) {
     <app-isometric-tiling 
         [tilesData]="tiles()!"
+        [getId]="getTilesId"
         [sizeX]="sizeX"
         [sizeY]="sizeY"
         [backgroundImage]="backgroundImage"

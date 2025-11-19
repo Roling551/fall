@@ -10,7 +10,7 @@
         </div>   
     }
 
-    @for(additional of additionalGraphicsAndTilesToRender(); track additional.tile[0] + "_" + additional.additionalGraphic[0]) {
+    @for(additional of additionalGraphicsAndTilesToRender(); track additional.tile[0] + "_" + additional.additionalGraphic[0] + "_" + getId(additional.tile[1])) {
         <div
             class="item"
             [style.left.px]="getTransformX(additional.tile[0])"
@@ -21,7 +21,7 @@
         </div>
     }
 
-    @for(tile of tilesData.entries(); track tile[0]) {
+    @for(tile of tilesData().entries(); track (tile[0]+getId(tile[1]))) {
         <div
             class="item"
             [style.left.px]="getTransformX(tile[0])"

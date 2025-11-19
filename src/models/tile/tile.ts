@@ -9,7 +9,13 @@ import { Skill } from "../skill";
 
 
 export abstract class Tile {
-    constructor(public coordinate: Coordinate) {}
+    static count = 0;
+    public readonly id: number
+
+    constructor(public coordinate: Coordinate) {
+        this.id = Tile.count
+        Tile.count += 1
+    }
 
     abstract skillAction(skills: Map<Skill,number>): SkillActionResult
     abstract canAttemptSkillAction(skills: Map<Skill,number>): boolean

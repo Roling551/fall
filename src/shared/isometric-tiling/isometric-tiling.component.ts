@@ -13,7 +13,8 @@ import { Coordinate } from '../../models/coordinate';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
-  @Input({required: true}) tilesData! : Map<string, T>;
+  tilesData = input.required<Map<string, T>>();
+  @Input({required: true}) getId!: (t:T)=>string
   @Input() minZoom = 0.1;
   @Input() maxZoom = 10;
 
@@ -164,7 +165,7 @@ export class IsometricTilingComponent<T> implements OnInit, AfterViewInit {
   additionalGraphicsAndTilesToRender = computed(()=>{
     const graphicsAndTiles = []
     for(const additionalGraphic of this.graphics()) {
-        for(const tile of this.tilesData.entries()) {
+        for(const tile of this.tilesData().entries()) {
             if(additionalGraphic[1].doRender(tile[1])) {
                 graphicsAndTiles.push({tile, additionalGraphic})
             }
