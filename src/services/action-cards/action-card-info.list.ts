@@ -9,7 +9,10 @@ import { ActionCardInfo } from "../../models/action-card-info";
 export class ActionCardInfoList {
     constructor(private factory: ActionCardCreationInfoFactoryService) {}
 
-    getRandomByLevelAndRarity(level: number, rarity: 0 | 1 | 2, randomNumber: number) {
+    getRandomByLevelAndRarity(level: number, rarity: 0 | 1 | 2, randomNumber?: number) {
+        if(randomNumber == undefined) {
+            randomNumber = Math.random()
+        } 
         let cards:string[] = []
         while(cards.length <= 0) {
             cards = this.listByLevelAndRarity[level][rarity]
@@ -27,11 +30,11 @@ export class ActionCardInfoList {
 
     listByLevelAndRarity: [string[], string[], string[]][] = [
         [
-            ["handDrill", "automaticDrill", "road", "miningTools"],
-            [],
+            ["handDrill"],
+            ["automaticDrill", "road"],
             []
         ], [
-            ["handDrill", "automaticDrill", "road", "miningTools"],
+            ["miningTools"],
             [],
             []
         ]
