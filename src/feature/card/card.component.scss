@@ -1,9 +1,11 @@
+@use 'variables' as vars;
+
 :host {
     display: block;
-    min-width: 120px;
-    width: 120px;
-    min-height: 160px;
-    height: 160px;
+    min-width: vars.$card-width;
+    width: vars.$card-width;
+    min-height: vars.$card-height;
+    height: vars.$card-height;
     background-color: bisque;
     border: 1px solid black;
 }

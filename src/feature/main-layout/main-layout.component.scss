@@ -1,6 +1,8 @@
+@use 'variables' as vars;
+
 .container {
     display: grid;
-    grid-template-rows: 80px auto 200px;
+    grid-template-rows: 80px auto (vars.$card-height + 20px);
     grid-template-columns: 120px auto;
     height: 100%;
 }
