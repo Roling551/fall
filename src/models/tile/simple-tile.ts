@@ -54,8 +54,17 @@ export class SimpleTile extends BaseTile {
         }
         return true
     }
-    override removeMapEntity(): boolean {
-        this.playersMapEntity.set(undefined)
+
+    override removeMapEntity(mapEntity: MapEntity): boolean {
+        if(this.playersMapEntity.get()===mapEntity) {
+            this.playersMapEntity.set(undefined)
+        } else if(this.upgrade.get()===mapEntity) {
+            this.upgrade.set(undefined)
+        } else {
+            this.environmentMapEntities.set(
+                this.environmentMapEntities.get().filter(x=>x!=mapEntity)
+            )
+        }
         return true
     }
     override canAddEntity(type: MapEntityType): boolean {
@@ -86,7 +95,7 @@ export class SimpleTile extends BaseTile {
         } else {
             this.playersMapEntity.set(undefined)
             if(entity instanceof Estate) {
-                return entity.actionCardGetAfterDestroy
+                return entity
             } else {
                 return undefined
             }

@@ -63,17 +63,21 @@ export function getCreateStationUI(levelService: CurrentLevelService):UIData {
     }
 }
 
-export function getRemoveEstateUI(actionsCardsService: ActionsCardsService):UIData {
+export function getRemoveEstateUI(actionsCardsService: ActionsCardsService, turnActorsService: TurnActorsService):UIData {
     return {
         sideComponent:SimpleTextComponent, 
         sideComponentInputs:{text:"Remove estate"},
         mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
             const t = tile.value
             if(t instanceof SimpleTile) {
-                const actionCard = t.removePlayersMapEntity()
-                if(actionCard) {
-                    actionsCardsService.addNewCardToDiscard(actionCard)
+                const entity = t.removePlayersMapEntity()
+                if(!entity) {
+                    return
                 }
+                if(entity.actionCardGetAfterDestroy) {
+                    actionsCardsService.addNewCardToDiscard(entity.actionCardGetAfterDestroy)
+                }
+                turnActorsService.removeActor(entity)
             }
         },
         tileInfos: new Map([])
@@ -92,17 +96,6 @@ export function getChangeResourceUI() {
     }
 }
 
-export function getRemoveEstateAction(
-    cityTile: KeyValuePair<Coordinate, Tile>
-):UIData {
-    return {
-        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-                tile.value.removeMapEntity();
-        },
-        additionalInfo: {currentAction: "removeEstateAction"},
-
-    }
-}
 
 export function getMoveUnitsAction(
     uiStateService: UIStateService,

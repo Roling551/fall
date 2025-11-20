@@ -21,7 +21,7 @@ export abstract class Tile {
     abstract canAttemptSkillAction(skills: Map<Skill,number>): boolean
     abstract addMapEntity(mapEntity: MapEntity): boolean
     abstract canAddEntity(type: MapEntityType): boolean
-    abstract removeMapEntity(): boolean
+    abstract removeMapEntity(mapEntity: MapEntity): boolean
     abstract getMapEntities(): Signal<MapEntity[]>
 
     units = createForceSignal(new Set<Unit>())

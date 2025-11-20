@@ -15,6 +15,10 @@ export class TurnActorsService {
         this.actors.forceUpdate()
     }
 
+    removeActor(actor: TurnActor) {
+        this.actors.set(this.actors.get().filter(x=>x!=actor))
+    }
+
     nextTurn() {
         for(const actor of this.actors.get()) {
             if(this.resourcesService.canAffordResources(actor.getRequiredResources())) {
