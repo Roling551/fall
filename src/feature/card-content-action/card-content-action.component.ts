@@ -49,4 +49,8 @@ export class CardContentActionComponent {
         }
         return ""
     })
+    
+    getTexture(card: ActionCardInfo) {
+        return `assets/pictures/${(card.cardPicture||card.name)}.png`
+    }
 }

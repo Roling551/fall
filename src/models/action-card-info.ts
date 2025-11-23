@@ -22,6 +22,7 @@ export class ActionCardInfo extends CardInfo {
         public cardCreationSteps: CardCreationStep[],
         public additionalInfo: FactoryCardInputs,
         public effectsDescriptions: string[],
+        public cardPicture?: string,
         public price?: Map<Resource, number>,
         public cardOnHandRewards?: Reward[],
     ) {

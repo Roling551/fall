@@ -59,6 +59,7 @@ export class ActionCardInfoList {
                 {
                     type: "EstateCardInputs",
                     name: "automaticDrill",
+                    cardPicture: "pin-drill",
                     skillRequired: new Map([["construction", 2]]),
                     skillApplied: new Map([["mining",3]]),
                     affectedCoordinates:  [new Coordinate(0,0)],

@@ -32,6 +32,7 @@ export interface InstantExtractionCardInputs {
     skillRequired: Map<Skill, number>,
     skillApplied: Map<Skill, number>,
     affectedCoordinates: Coordinate[],
+    cardPicture?: string,
     price?: Map<Resource, number>,
     times?: number,
     cardOnHandRewards?: RewardOption[],
@@ -45,6 +46,7 @@ export interface EstateCardInputs {
     affectedCoordinates: Coordinate[],
     estateTexture: string,
     runCost?: Map<Resource, number>,
+    cardPicture?: string,
     price?: Map<Resource, number>,
     times?: number,
     skillMapActionSkillBonus?: Map<Skill, number>,
@@ -132,6 +134,7 @@ export class ActionCardCreationInfoFactoryService {
             ],
             inputs,
             effectsDescriptions,
+            inputs.cardPicture,
             inputs.price,
             this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
         )
@@ -193,6 +196,7 @@ export class ActionCardCreationInfoFactoryService {
             ],
             inputs,
             effectsDescriptions,
+            inputs.cardPicture,
             inputs.price,
             this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
         )
