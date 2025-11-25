@@ -35,16 +35,8 @@ export class InitService {
         //         bonus: (tile: Tile)=>new Map<Skill, number>([["mining",1]])
         //     }
         // })
-        const initialCardNames = ["handDrill", "automaticDrill", "miningTools", "road"]
+        const initialCardNames = ["handDrill", "automaticDrill", "miningTools", "road", "road"]
         const initialCards = initialCardNames.map(x=>this.actionCardInfoList.list.get(x)).filter(x=>!!x).map(x=>x())
         this.actionsCardsService.setCards(initialCards)
-
-        this.decisionsService.addDecisionFromRewards(
-            [
-                {type: "Card", cardName: "handDrill"},
-                //{type: "Card", cardName: "automaticDrill"},
-                {type: "Resources", resources: new Map([["oil", 10]])},
-            ]
-        )
     }
 }

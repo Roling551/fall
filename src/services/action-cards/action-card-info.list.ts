@@ -79,12 +79,9 @@ export class ActionCardInfoList {
                 {
                     type: "EstateCardInputs",
                     name: "road",
-                    skillRequired: new Map([["construction", 2]]),
+                    skillRequired: new Map([["construction", 1]]),
                     movementBonus: 1,
-                    affectedCoordinates:  [new Coordinate(0,0), new Coordinate(1,0), new Coordinate(0,1), new Coordinate(-1,0), new Coordinate(0,-1)],
                     estateTexture: "road",
-                    price: new Map([["oil", 5]]),
-                    runCost: new Map([["oil", 1]]),
                     isUpgrade: true
                 }
             )

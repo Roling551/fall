@@ -43,7 +43,7 @@ export interface EstateCardInputs {
     name: string,
     skillRequired: Map<Skill, number>,
     skillApplied?: Map<Skill, number>,
-    affectedCoordinates: Coordinate[],
+    affectedCoordinates?: Coordinate[],
     estateTexture: string,
     runCost?: Map<Resource, number>,
     cardPicture?: string,
@@ -159,16 +159,17 @@ export class ActionCardCreationInfoFactoryService {
 
         let actionCardInfo: ActionCardInfo 
         const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
+        const affectedCoordinates = inputs.affectedCoordinates || [new Coordinate(0,0)]
         const createEstateInfo = {
             getEstate: (tile_: Tile) => new Estate(
                 tile_, 
                 inputs.estateTexture, 
                 inputs.runCost || (new Map([])), 
-                inputs.affectedCoordinates,
+                affectedCoordinates,
                 inputs,
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createExtractionAction(
                     createActionInfo, 
-                    inputs.affectedCoordinates)
+                    affectedCoordinates)
                 : undefined,
                 inputs.skillMapActionSkillBonus,
                 inputs.movementBonus,
@@ -191,7 +192,7 @@ export class ActionCardCreationInfoFactoryService {
                             createEstateInfo.getEstate,
                             mapEntityType)(tile)
                     },
-                    tileInfos: new Map([this.getBorderInfo(createEstateInfo.affectedCoordinates)])
+                    tileInfos: new Map([this.getBorderInfo(affectedCoordinates)])
                 }
             ],
             inputs,
