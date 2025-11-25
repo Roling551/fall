@@ -7,6 +7,7 @@ import { SimpleTile } from "../models/tile/simple-tile";
 import { Tile } from "../models/tile/tile";
 import { getRandomVoronoi } from "../util/voronoi";
 import { RewardFactoryService } from "./reward-factory.service";
+import { chooseRandom } from "../util/random-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +16,45 @@ export class LevelMapFactoryService {
 
     constructor(private rewardFactoryService: RewardFactoryService) {}
 
+    tilePresets = new Map<string, () => EnvironmentMapEntity[]>([
+        ["nothing", () => []],
+        ["forest", () => [new EnvironmentMapEntity("forest", 10, new Map([["water", 1]]))]],
+        ["oilSource", () => [new EnvironmentMapEntity("oil", 20, new Map([["oil", 1]]))]],
+        ["scrapPile", () => [
+            new EnvironmentMapEntity(
+                "scrap",
+                5,
+                new Map([]),
+                () => [
+                    this.rewardFactoryService.createReward({
+                        type: "Decision",
+                        decisionFactoryOptions: [
+                            { metaOptionType: "RandomCard", level: [[0.5, 0], [0.5, 1]], rarity: [[0.4, 0], [0.3, 1], [0.3, 2]] },
+                            { metaOptionType: "RandomCard", level: 0, rarity: 0 }
+                        ]
+                    })
+                ]
+            )
+        ]]
+    ]);
+
     repeat = 20
     terrains = [
-        ()=>new EnvironmentMapEntity("forest", 10, new Map([["water", 1]])),
-        ()=>new EnvironmentMapEntity("oil", 10, new Map([["oil", 1]])),
-        ()=>new EnvironmentMapEntity("scrap", 5, new Map([]), ()=>[this.rewardFactoryService.createReward(
-            {
-                type:"Decision",
-                decisionFactoryOptions: [
-                    {metaOptionType: "RandomCard", level: [[0.5,0],[0.5,1]], rarity: [[0.4,0],[0.3,1],[0.3,2]]},
-                    {metaOptionType: "RandomCard", level: 0, rarity: 0}
-                ]
-            }
-        )]),
+        ()=>{
+            return chooseRandom(
+                [[0.7, "forest"],[0.3, "empty"]]
+            )
+        },
+        ()=>{
+            return chooseRandom(
+                [[0.7, "oilSource"],[0.3, "empty"]]
+            )
+        },
+        ()=>{
+            return chooseRandom(
+                [[0.3, "scrapPile"],[0.7, "empty"]]
+            )
+        }
     ]
 
     private createTile(terrainNumber: number, coordinate: Coordinate) {
@@ -36,8 +63,12 @@ export class LevelMapFactoryService {
             "ground",
             new Obstacles(new Map([]))
         )
-        const environmentMapEntity = this.terrains[terrainNumber]()
-        tile.addMapEntity(environmentMapEntity);
+        const environmentMapEntities = this.tilePresets.get(this.terrains[terrainNumber]())?.()
+        if(environmentMapEntities) {
+            for(const entity of environmentMapEntities) {
+                tile.addMapEntity(entity)
+            }
+        }
         return tile
     }
 
