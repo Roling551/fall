@@ -8,7 +8,7 @@ import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
 import { Skill, skillsToString } from "../../models/skill";
 import { Resource } from "../../models/resource";
-import { getCreateEstateAction } from "./actions-cards-functions";
+import { getBorderInfo, getCreateEstateActionAndTileInfo, getCreateMultipleEstatesActionAndTileInfo } from "./actions-cards-functions";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
 import { ActionCardInfo } from "../../models/action-card-info";
@@ -52,7 +52,8 @@ export interface EstateCardInputs {
     skillMapActionSkillBonus?: Map<Skill, number>,
     movementBonus?: number
     cardOnHandRewards?: RewardOption[],
-    isUpgrade?: boolean
+    isUpgrade?: boolean,
+    instancesNumber?: number,
 }
 
 @Injectable({
@@ -67,46 +68,6 @@ export class ActionCardCreationInfoFactoryService {
         private turnActorsService: TurnActorsService,
         private rewardFactoryService: RewardFactoryService,
     ) {}
-
-    getBorderInfo(affectedCoordinates: Coordinate[]): [string, TileInfo] {
-        const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>{
-            if(this.uiStateService.hoverTile()) {
-                const doRender = affectedCoordinates.map(x=>x.addCoordinates(this.uiStateService.hoverTile()!.key)).map(x=>x.getKey()).includes(tile.key.getKey())
-                return doRender
-            }
-            return false
-        }
-        return [
-            "border", 
-            {
-                template: BorderComponent,
-                doRender: doRenderBorder,
-                input: {
-                    getDirections: (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=>{
-                            return computed(() => {
-                                const level = this.levelService.level.get()
-                                if(!level) {
-                                    return []
-                                }
-                                return level.map.getDirectionsFunction(doRenderBorder)(tileInfoIsAbout)()
-                            })
-                        }
-                    }
-            }
-        ]
-    }
-
-    // exampleCard() {
-    //    return this.createMultiStageActionCard(
-    //         "c", 
-    //         [
-    //             {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t1"); return tile.key.getKey()=="0_0"}},
-    //             {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t2"); return tile.key.getKey()=="0_0"}},
-    //             {action:(tile: KeyValuePair<Coordinate, Tile>)=>{console.log("t3"); return tile.key.getKey()=="0_0"}},
-    //         ],
-    //         new Map([["construction", 2]]),
-    //     )
-    // }
 
     instantExtractionCard(
         inputs: InstantExtractionCardInputs
@@ -129,7 +90,7 @@ export class ActionCardCreationInfoFactoryService {
                         this.skillMapActionFactoryService.createExtractionAction(createActionInfo, inputs.affectedCoordinates)(tile.value)
                         return true
                     },
-                    tileInfos: new Map([this.getBorderInfo(inputs.affectedCoordinates)])
+                    tileInfos: new Map([getBorderInfo(this.uiStateService, this.levelService, inputs.affectedCoordinates)])
                 }
             ],
             inputs,
@@ -179,21 +140,29 @@ export class ActionCardCreationInfoFactoryService {
             affectedCoordinates: inputs.affectedCoordinates,
             createActionInfo,
         }
+        const estatesActionAndTileInfo = inputs.instancesNumber===undefined ?
+            getCreateEstateActionAndTileInfo(
+                this.uiStateService,
+                this.levelService,
+                this.turnActorsService,
+                createEstateInfo.getEstate,
+                mapEntityType,
+                affectedCoordinates
+            ) : getCreateMultipleEstatesActionAndTileInfo(
+                this.uiStateService,
+                this.levelService,
+                this.turnActorsService,
+                createEstateInfo.getEstate,
+                mapEntityType,
+                affectedCoordinates,
+                inputs.instancesNumber
+            )
         actionCardInfo = new ActionCardInfo(
             inputs.name,
-            true,
+            inputs.instancesNumber===undefined,
             inputs.skillRequired,
             [
-                {
-                    action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        return getCreateEstateAction(
-                            this.levelService,
-                            this.turnActorsService,
-                            createEstateInfo.getEstate,
-                            mapEntityType)(tile)
-                    },
-                    tileInfos: new Map([this.getBorderInfo(affectedCoordinates)])
-                }
+                estatesActionAndTileInfo
             ],
             inputs,
             effectsDescriptions,

@@ -82,7 +82,8 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["construction", 1]]),
                     movementBonus: 1,
                     estateTexture: "road",
-                    isUpgrade: true
+                    isUpgrade: true,
+                    instancesNumber: 2
                 }
             )
         ],

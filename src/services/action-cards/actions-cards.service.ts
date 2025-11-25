@@ -13,7 +13,6 @@ import { mapContainsMap } from "../../util/map-functions";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { ActionCardInfo } from "../../models/action-card-info";
 import { Estate } from "../../models/estate";
-import { getCreateEstateAction } from "./actions-cards-functions";
 import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
 import { TurnActorsService } from "../turn-actors.service";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
