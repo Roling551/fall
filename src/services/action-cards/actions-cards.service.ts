@@ -117,7 +117,8 @@ export class ActionsCardsService {
                     }
                     
                 },
-                uis
+                uis,
+                actionCardInfo.cardCreationSteps.map(x=>x.onStepStart),
             )
         }
         return actionCardInfo

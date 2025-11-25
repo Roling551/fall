@@ -8,8 +8,13 @@ export function createMultiStageAction(
     stateActions: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean)[],
     cancelButtonAction: ()=>void,
     afterFinishAction: ()=> void,
-    uis?: UIData[])
+    uis?: UIData[],
+    onStepStart?: ((() => void)|undefined)[],
+)
 {
+    if(!onStepStart) {
+        onStepStart = stateActions.map(x=>undefined)
+    }
     const actions: ((tile: KeyValuePair<Coordinate, Tile>) => void)[] = new Array(stateActions.length)
     const newUIs: UIData[] = new Array(stateActions.length)
     
@@ -27,10 +32,12 @@ export function createMultiStageAction(
         }
         actions[i] = (tile: KeyValuePair<Coordinate, Tile>) => {
             if(stateActions[i](tile)) {
+                onStepStart[i]?.()
                 uiStateService.setUI(newUIs[i], {skipBack: true, cantIterrupt: true, cantInterruptException: [newUIs[i+1]]})
             }
         }
     }
+    onStepStart[0]?.()
     const uiChanged = uiStateService.setUI(
         {
             ...(uis?.[0] || {}),

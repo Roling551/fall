@@ -42,6 +42,7 @@ export function getCreateMultipleEstatesActionAndTileInfo(
 ) {
     let chosenCoordinates: Map<string, KeyValuePair<Coordinate, Tile>> = new Map()
     return {
+        onStepStart: ()=>{chosenCoordinates = new Map()},
         action:
             (tile: KeyValuePair<Coordinate, Tile>)=>{
                 const level = levelService.level.get()

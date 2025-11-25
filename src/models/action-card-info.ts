@@ -11,7 +11,8 @@ import { Tile } from "./tile/tile";
 
 export interface CardCreationStep {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
-    tileInfos?: Map<string,TileInfo>
+    tileInfos?: Map<string,TileInfo>;
+    onStepStart?: ()=>void;
 }
 
 export class ActionCardInfo extends CardInfo {
