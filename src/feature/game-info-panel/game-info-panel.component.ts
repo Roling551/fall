@@ -20,8 +20,8 @@ export class GameInfoPanelComponent {
     return "Turn: " + this.turnService.turn()
   })
 
-  public goldText = computed(()=> {
-    return "Oil: " + this.resourcesService.resources.get().get("oil")
+  public resourcesText = computed(()=> {
+    return this.resourcesService.text()
   })
 
   onNextTurn() {

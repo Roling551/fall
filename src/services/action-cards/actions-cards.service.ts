@@ -1,7 +1,6 @@
 import { computed, effect, Injectable, signal } from "@angular/core";
 import { CardInfo } from "../../models/card-info";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
-import { shuffleArray } from "../../util/array-functions";
 import { TileInfo, UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
@@ -25,6 +24,7 @@ import { ActionCardCreationInfoFactoryService } from "./action-card-creation-inf
 import { ActionCardInfoList } from "./action-card-info.list";
 import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
 import { InitialCardsHand } from "../../models/card-hands/initial-cards-hand";
+import { shuffleArray } from "../../util/array-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +46,7 @@ export class ActionsCardsService {
     }
 
     setCards(actionCardInfos: ActionCardInfo[]) {
+        actionCardInfos = shuffleArray(actionCardInfos)
         const cards = actionCardInfos.map(x=>this.setMultiStageAction(x))
         this.cardsHand = new InitialCardsHand(cards, 2, 1, ()=>{this.uiStateService.cancel()}, false, undefined)
     }

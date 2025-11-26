@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { computed, Injectable } from "@angular/core";
 import { createForceSignal } from "../util/force-signal";
 import { Resource } from "../models/resource";
 import { addNumericalValuesFunctional, mapContainsMap, substractNumericalValuesFunctional } from "../util/map-functions";
@@ -7,7 +7,7 @@ import { addNumericalValuesFunctional, mapContainsMap, substractNumericalValuesF
     providedIn: 'root'
 })
 export class ResourcesService {
-    resources = createForceSignal<Map<Resource,number>>(new Map([["oil",25]]))
+    resources = createForceSignal<Map<Resource,number>>(new Map([["oil",25], ["scrap",25], ["water",25]]))
 
     canAffordResources(price: Map<string, number>) {
     return mapContainsMap(this.resources.get(), price)
@@ -22,4 +22,10 @@ export class ResourcesService {
         this.resources.set(addNumericalValuesFunctional(this.resources.get(), resources))
         this.resources.forceUpdate()
     }
+
+    text = computed(()=>{
+        return "Oil:" + this.resources.get().get("oil") + 
+        " Scrap: " + this.resources.get().get("scrap") + 
+        " Water: " + this.resources.get().get("water")
+    })
 }

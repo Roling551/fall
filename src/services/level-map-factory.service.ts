@@ -30,7 +30,8 @@ export class LevelMapFactoryService {
                         type: "Decision",
                         decisionFactoryOptions: [
                             { metaOptionType: "RandomCard", level: [[0.5, 0], [0.5, 1]], rarity: [[0.4, 0], [0.3, 1], [0.3, 2]] },
-                            { metaOptionType: "RandomCard", level: 0, rarity: 0 }
+                            { metaOptionType: "RandomCard", level: 0, rarity: 0 },
+                            { type: "Resources", resources: new Map([["scrap", 5]])}
                         ]
                     })
                 ]
