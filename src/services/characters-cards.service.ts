@@ -1,10 +1,14 @@
-import { computed, effect, Injectable, signal } from "@angular/core";
+import { computed, effect, Injectable, Signal, signal } from "@angular/core";
 import { CardsHand } from "../models/card-hands/cards-hand";
 import { CardInfo } from "../models/card-info";
 import { CharacterCardInfo } from "../models/character-card-info";
 import { baseZeroSkills } from "../models/skill";
 import { addExistingNumericalValues } from "../util/map-functions";
 import { TraditionalCardsHand } from "../models/card-hands/traditional-cards-hand";
+import { InjectorService } from "./injector.service";
+import { UIStateService } from "./ui-state/ui-state.service";
+
+export type CharactersCardsServiceMode = 'action' | 'skill' | 'none'
 
 @Injectable({
   providedIn: 'root'
@@ -17,22 +21,44 @@ export class CharactersCardsService {
         this.cardsHand.nextTurn()
     }
 
-    constructor() {
+    isActionChosen:Signal<boolean> = computed(()=>{
+        return (this.cardsHand?.selectedCardsNumber() || 0) > 0 && !this.injectorService.actionsCardsService?.isActionChosen()
+    })
+
+    constructor(
+        private injectorService: InjectorService,
+        private uiStateService: UIStateService
+    ) {
         const cards: CharacterCardInfo[] = []
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
         cards.push(this.exampleCard())
-        this.cardsHand = new TraditionalCardsHand<CharacterCardInfo>(cards, Infinity, ()=>{}, true, this.isHandFrozen)
+        this.cardsHand = new TraditionalCardsHand<CharacterCardInfo>(
+            cards, 
+            Infinity, 
+            ()=>{}, 
+            true, 
+            this.isHandFrozen,
+            computed(()=>{return !this.isActionChosen()||this.injectorService.getActionsCardsService().isActionChosen()}),
+            {canSetAction: ()=>{return !this.injectorService.getActionsCardsService().isActionChosen()}}
+        )
     }
 
     exampleCard() {
-        return new CharacterCardInfo(
+        const card = new CharacterCardInfo(
             "c",
             new Map([["construction", 1]],),
             3,
             new Map([["mountain",1]])
         )
+        card.onSelect = (selectCardInfo?:any)=>{
+            if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
+                this.uiStateService.setUI_.removeEstate()
+            }
+            return true
+        }
+        return card
     }
 
     sumOfSkills = computed(() => {
@@ -43,4 +69,7 @@ export class CharactersCardsService {
         return sum
     })
 
+    onRightClick() {
+       this.cardsHand.deselectAllCards(false) 
+    }
 }

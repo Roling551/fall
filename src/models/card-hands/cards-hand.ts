@@ -9,12 +9,14 @@ export interface CardsHand<T extends CardInfo> {
     discardDeck: ForceSignal<T[]>
     selectedCards: ForceSignal<T[]>
     manualDrawsLeft: Signal<number>
+    selectedCardsNumber: Signal<number>
 
     discardCard(card: T): void
     discardSelectedCards(): void
     isCardSelected(card: T): boolean
     selectCard(card: T): void
     deselectCard(card: T): void
+    deselectAllCards(force?:boolean): void
     nextTurn(): void
     manualDraw(): void
 }

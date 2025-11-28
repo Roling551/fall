@@ -23,9 +23,9 @@ export class MainLayoutComponent implements AfterViewInit {
     charactersCards
 
     constructor(
-        public uiStateService: UIStateService,
-        public actionsCardsService: ActionsCardsService,
-        public charactersCardsService: CharactersCardsService
+        private uiStateService: UIStateService,
+        private actionsCardsService: ActionsCardsService,
+        private charactersCardsService: CharactersCardsService
     ) {
         this.actionsCards = this.actionsCardsService.cardsHand
         this.charactersCards = this.charactersCardsService.cardsHand
@@ -38,6 +38,7 @@ export class MainLayoutComponent implements AfterViewInit {
     onRightClick(event: MouseEvent) {
         event.preventDefault();
         this.uiStateService.cancel();
+        this.charactersCardsService.onRightClick()
     }
 
 

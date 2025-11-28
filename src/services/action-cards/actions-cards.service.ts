@@ -1,7 +1,5 @@
 import { computed, effect, Injectable, signal } from "@angular/core";
-import { CardInfo } from "../../models/card-info";
-import { createForceSignal, ForceSignal } from "../../util/force-signal";
-import { TileInfo, UIData, UIStateService } from "../ui-state/ui-state.service";
+import { UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile/tile";
@@ -9,22 +7,13 @@ import { CardsHand } from "../../models/card-hands/cards-hand";
 import { CharactersCardsService } from "../characters-cards.service";
 import { createMultiStageAction } from "../ui-state/create-multi-stage-action";
 import { mapContainsMap } from "../../util/map-functions";
-import { CharacterCardInfo } from "../../models/character-card-info";
 import { ActionCardInfo } from "../../models/action-card-info";
-import { Estate } from "../../models/estate";
-import { MapMarkingComponent } from "../../shared/map-marking/map-marking.component";
-import { TurnActorsService } from "../turn-actors.service";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
-import { Resource } from "../../models/resource";
-import { BorderComponent } from "../../shared/border/border.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
-import { Skill } from "../../models/skill";
-import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
-import { ActionCardInfoList } from "./action-card-info.list";
-import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
 import { InitialCardsHand } from "../../models/card-hands/initial-cards-hand";
 import { shuffleArray } from "../../util/array-functions";
+import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
 
 @Injectable({
   providedIn: 'root'
@@ -45,10 +34,21 @@ export class ActionsCardsService {
         })
     }
 
+    isActionChosen = computed(()=>{
+        return (this.cardsHand?.selectedCardsNumber() || 0) > 0
+    })
+
     setCards(actionCardInfos: ActionCardInfo[]) {
         actionCardInfos = shuffleArray(actionCardInfos)
         const cards = actionCardInfos.map(x=>this.setMultiStageAction(x))
-        this.cardsHand = new InitialCardsHand(cards, 2, 1, ()=>{this.uiStateService.cancel()}, false, undefined)
+        this.cardsHand = new TraditionalCardsHand(
+            cards, 
+            Infinity, 
+            ()=>{this.uiStateService.cancel()}, 
+            false, 
+            undefined, 
+            computed(()=>{return !this.charactersCardService.isActionChosen()})
+        )
     }
 
     addNewCardToDiscard(actionCardInfo: ActionCardInfo) {

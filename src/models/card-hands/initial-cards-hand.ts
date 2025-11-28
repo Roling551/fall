@@ -1,4 +1,4 @@
-import { signal } from "@angular/core";
+import { computed, signal } from "@angular/core";
 import { CardInfo } from "../card-info";
 import { createForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
@@ -111,5 +111,16 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
     private shuffleCards() {
         this.drawDeck.set(shuffleArray(this.discardDeck.get()))
         this.discardDeck.set([])
+    }
+
+    selectedCardsNumber = computed(()=>{
+        return this.selectedCards.get().length
+    })
+
+    deselectAllCards(force?: boolean) {
+        if(this.frozen() && !(force==true)) {
+            return
+        }
+        this.selectedCards.set([])
     }
 }

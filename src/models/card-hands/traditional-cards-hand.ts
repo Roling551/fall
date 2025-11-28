@@ -1,4 +1,4 @@
-import { Injectable, Signal, signal } from "@angular/core";
+import { computed, Injectable, Signal, signal } from "@angular/core";
 import { CardInfo } from "../card-info";
 import { createForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
@@ -16,7 +16,15 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
 
     selectedCards = createForceSignal([] as T[])
 
-    constructor(cards: T[], public drawsPerTurn: number, private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false)) {
+    constructor(
+        cards: T[], 
+        public drawsPerTurn: number, 
+        private onManualDeselect:()=>void, 
+        private canSelectMultiple = true, 
+        private frozen = signal(false), 
+        private canSelectCard:Signal<boolean> = signal(true),
+        private selectCardInfo?: object
+    ) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
@@ -56,10 +64,12 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         if(!this.canSelectMultiple && this.selectedCards.get().length > 0) {
             return
         }
-        const canSelect = card.onSelect?.() || true
-        if(canSelect) {
-            this.selectedCards.get().push(card)
-            this.selectedCards.forceUpdate()
+        if(this.canSelectCard()) {
+            const canSelect = (card.onSelect==undefined) || card.onSelect?.(this.selectCardInfo)
+            if(canSelect) {
+                this.selectedCards.get().push(card)
+                this.selectedCards.forceUpdate()
+            }
         }
     }
 
@@ -104,5 +114,16 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
     }
 
     manualDraw(): void {
+    }
+
+    selectedCardsNumber = computed(()=>{
+        return this.selectedCards.get().length
+    })
+
+    deselectAllCards(force?: boolean) {
+        if(this.frozen() && !(force==true)) {
+            return
+        }
+        this.selectedCards.set([])
     }
 }
