@@ -1,4 +1,4 @@
-import { signal, Signal, WritableSignal } from '@angular/core';
+import { computed, signal, Signal, WritableSignal } from '@angular/core';
 
 export type ForceSignal<T> = {
     get: () => T;
@@ -12,10 +12,10 @@ export function createForceSignal<T>(initialValue: T) {
   const forceTrigger = signal(true);
 
   const exposed = {
-    get: (): T => {
+    get: computed(()=>{
       forceTrigger();
       return base();
-    },
+    }),
     set: (value: T) => base.set(value),
     update: (fn: (current: T) => T) => base.update(fn),
     forceUpdate: () => forceTrigger.update(x => !x),
