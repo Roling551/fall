@@ -7,6 +7,8 @@ import { addExistingNumericalValues } from "../util/map-functions";
 import { TraditionalCardsHand } from "../models/card-hands/traditional-cards-hand";
 import { InjectorService } from "./injector.service";
 import { UIStateService } from "./ui-state/ui-state.service";
+import { createRepeatAction } from "./ui-state/create-repeat-action";
+import { CurrentLevelService } from "./current-level.service";
 
 export type CharactersCardsServiceMode = 'action' | 'skill' | 'none'
 
@@ -27,7 +29,8 @@ export class CharactersCardsService {
 
     constructor(
         private injectorService: InjectorService,
-        private uiStateService: UIStateService
+        private uiStateService: UIStateService,
+        private currentLevelService: CurrentLevelService
     ) {
         const cards: CharacterCardInfo[] = []
         cards.push(this.exampleCard())
@@ -37,7 +40,11 @@ export class CharactersCardsService {
         this.cardsHand = new TraditionalCardsHand<CharacterCardInfo>(
             cards, 
             Infinity, 
-            ()=>{}, 
+            ()=>{
+                if(!this.injectorService.actionsCardsService?.isActionChosen()) {
+                    this.uiStateService.cancel()   
+                }
+            }, 
             true, 
             this.isHandFrozen,
             computed(()=>{return !this.isActionChosen()||this.injectorService.getActionsCardsService().isActionChosen()}),
@@ -54,7 +61,19 @@ export class CharactersCardsService {
         )
         card.onSelect = (selectCardInfo?:any)=>{
             if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
-                this.uiStateService.setUI_.removeEstate()
+                createRepeatAction(
+                    this.uiStateService,
+                    this.currentLevelService,
+                    ()=>true,
+                    (selectedTiles)=>{
+                        console.log(selectedTiles.size)
+                        this.cardsHand.discardCard(card)
+                    },
+                    ()=>{
+                        this.cardsHand.deselectAllCards()
+                    },
+                    2
+                )
             }
             return true
         }
