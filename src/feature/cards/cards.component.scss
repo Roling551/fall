@@ -30,3 +30,9 @@
   top: -7px;
   box-shadow: 0 0 15px rgba(0, 255, 0, 1);
 }
+
+.override-selected {
+  position: relative;
+  top: -7px;
+  box-shadow: 0 0 15px rgb(0, 0, 255);
+}

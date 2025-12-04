@@ -7,8 +7,9 @@ import { addExistingNumericalValues } from "../util/map-functions";
 import { TraditionalCardsHand } from "../models/card-hands/traditional-cards-hand";
 import { InjectorService } from "./injector.service";
 import { UIStateService } from "./ui-state/ui-state.service";
-import { createRepeatAction } from "./ui-state/create-repeat-action";
+import { createRepeatCardAction, createRepeatMapAction } from "./ui-state/create-repeat-action";
 import { CurrentLevelService } from "./current-level.service";
+import { createForceSignal } from "../util/force-signal";
 
 export type CharactersCardsServiceMode = 'action' | 'skill' | 'none'
 
@@ -48,6 +49,10 @@ export class CharactersCardsService {
             true, 
             this.isHandFrozen,
             computed(()=>{return !this.isActionChosen()||this.injectorService.getActionsCardsService().isActionChosen()}),
+            this.uiStateService.cardAction,
+            computed(()=>{
+                return this.uiStateService.additionalInfo()?.["selectedOverrideCards"]?.get()
+            }),
             {canSetAction: ()=>{return !this.injectorService.getActionsCardsService().isActionChosen()}}
         )
     }
@@ -61,12 +66,23 @@ export class CharactersCardsService {
         )
         card.onSelect = (selectCardInfo?:any)=>{
             if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
-                createRepeatAction(
+                // createRepeatMapAction(
+                //     this.uiStateService,
+                //     this.currentLevelService,
+                //     ()=>true,
+                //     (selectedTiles)=>{
+                //         console.log(selectedTiles.size)
+                //         this.cardsHand.discardCard(card)
+                //     },
+                //     ()=>{
+                //         this.cardsHand.deselectAllCards()
+                //     },
+                //     2
+                // )
+                createRepeatCardAction(
                     this.uiStateService,
-                    this.currentLevelService,
-                    ()=>true,
-                    (selectedTiles)=>{
-                        console.log(selectedTiles.size)
+                    (selectedCards:Map<number, CardInfo>)=>{
+                        console.log(selectedCards.size)
                         this.cardsHand.discardCard(card)
                     },
                     ()=>{

@@ -7,8 +7,9 @@ import { UIData, UIStateService } from "./ui-state.service"
 import { createForceSignal } from "../../util/force-signal";
 import { BorderComponent } from "../../shared/border/border.component";
 import { CurrentLevelService } from "../current-level.service";
+import { CardInfo } from "../../models/card-info";
 
-export function createRepeatAction<T>(
+export function createRepeatMapAction<T>(
     uiStateService: UIStateService,
     levelService: CurrentLevelService,
     canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>boolean,
@@ -27,7 +28,7 @@ export function createRepeatAction<T>(
                     uiStateService.cancel()
                 },
                 repeatsNumber,
-                selectedTiles
+                selectedItems: selectedTiles
             },
             tileInfos: new Map([
                 [
@@ -60,7 +61,42 @@ export function createRepeatAction<T>(
                     selectedTiles.forceUpdate()
                 }
             },
-            cancelButtonAction
+            cancelButtonAction,
+        }
+    )
+}
+
+export function createRepeatCardAction<T>(
+    uiStateService: UIStateService,
+    afterFinishAction: (selectedCards: Map<number, CardInfo>)=> void,
+    cancelButtonAction: ()=>void,
+    repeatsNumber: number,
+) {
+    const selectedCards = createForceSignal(new Map<number, CardInfo>())
+    uiStateService.setUI(
+        {
+            sideComponent: RepeatActionComponent,
+            sideComponentInputs: {
+                acceptAction: ()=>{
+                    afterFinishAction(selectedCards.get())
+                    uiStateService.cancel()
+                },
+                repeatsNumber,
+                selectedItems: selectedCards
+            },
+            cancelButtonAction,
+            cardAction: (card: CardInfo) => {
+                if(selectedCards.get().has(card.id)) {
+                    selectedCards.get().delete(card.id)
+                    selectedCards.forceUpdate()
+                } else {
+                    selectedCards.get().set(card.id, card)
+                    selectedCards.forceUpdate()
+                }
+            },
+            additionalInfo: {
+                selectedOverrideCards: selectedCards
+            }
         }
     )
 }

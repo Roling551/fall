@@ -10,10 +10,12 @@ export interface CardsHand<T extends CardInfo> {
     selectedCards: ForceSignal<T[]>
     manualDrawsLeft: Signal<number>
     selectedCardsNumber: Signal<number>
+    overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>
 
     discardCard(card: T): void
     discardSelectedCards(): void
     isCardSelected(card: T): boolean
+    isCardOverrideSelected(card: T): boolean
     selectCard(card: T): void
     deselectCard(card: T): void
     deselectAllCards(force?:boolean): void

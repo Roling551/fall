@@ -12,10 +12,10 @@ export function createForceSignal<T>(initialValue: T) {
   const forceTrigger = signal(true);
 
   const exposed = {
-    get: computed(()=>{
+    get: ()=>{
       forceTrigger();
       return base();
-    }),
+    },
     set: (value: T) => base.set(value),
     update: (fn: (current: T) => T) => base.update(fn),
     forceUpdate: () => forceTrigger.update(x => !x),

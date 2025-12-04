@@ -37,6 +37,10 @@ export class CardsComponent<T extends CardInfo> {
         return this.cardsHand.isCardSelected(card)
     }
 
+    isCardOverrideSelected(card: T) {
+        return this.cardsHand.isCardOverrideSelected(card)
+    }
+
     onDiscardClick() {
         this.cardsHand.discardSelectedCards()
     }

@@ -12,12 +12,14 @@ import { ActionsListComponent } from "../../feature/actions-list/actions-list.co
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
 import { ActionsCardsService } from "../action-cards/actions-cards.service";
+import { CardInfo } from "../../models/card-info";
 
 export type UIData = {
   sideComponent?: Type<any>;
   sideComponentInputs?: any;
   additionalInfo?: any;
   mapAction?: (tile: KeyValuePair<Coordinate, Tile>)=>void;
+  cardAction?: (card: CardInfo)=>void;
   cancelButtonAction?: any;
   tileInfos?: Map<string, TileInfo>;
 }
@@ -54,6 +56,7 @@ export class UIStateService {
   private _previousUis: UIData[] = []
 
   private _mapAction = createForceSignal(this.getDefaultMapFunction(this))
+  private _cardAction = createForceSignal<((card: CardInfo)=>void)|undefined>(undefined)
   private _cancelButtonAction = createForceSignal(()=>{})
   private _tileInfos = createForceSignal<Map<string, TileInfo>>(new Map());
   private _additionalInfo = createForceSignal<any>(null);
@@ -61,6 +64,7 @@ export class UIStateService {
   private _baseTileInfo = createForceSignal<Map<string, TileInfo>>(new Map());
 
   public mapAction = this._mapAction.get;
+  public cardAction = this._cardAction.get;
   public cancelButtonAction = this._cancelButtonAction.get
   public tileInfos = this._tileInfos.get
   public additionalInfo = this._additionalInfo.get
@@ -132,6 +136,9 @@ export class UIStateService {
     this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
     this._mapAction.forceUpdate()
 
+    this._cardAction.set(ui.cardAction)
+    this._cardAction.forceUpdate()
+
     this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
     this._cancelButtonAction.forceUpdate()
 
@@ -162,6 +169,9 @@ export class UIStateService {
 
     this._mapAction.set(ui.mapAction || this.getDefaultMapFunction(this))
     this._mapAction.forceUpdate()
+
+    this._cardAction.set(ui.cardAction)
+    this._cardAction.forceUpdate()
 
     this._cancelButtonAction.set(ui.cancelButtonAction || (()=>{}))
     this._cancelButtonAction.forceUpdate()

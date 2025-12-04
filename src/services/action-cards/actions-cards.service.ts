@@ -14,6 +14,9 @@ import { CurrentLevelService } from "../current-level.service";
 import { InitialCardsHand } from "../../models/card-hands/initial-cards-hand";
 import { shuffleArray } from "../../util/array-functions";
 import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
+import { createForceSignal } from "../../util/force-signal";
+import { CharacterCardInfo } from "../../models/character-card-info";
+import { CardInfo } from "../../models/card-info";
 
 @Injectable({
   providedIn: 'root'
@@ -41,13 +44,17 @@ export class ActionsCardsService {
     setCards(actionCardInfos: ActionCardInfo[]) {
         actionCardInfos = shuffleArray(actionCardInfos)
         const cards = actionCardInfos.map(x=>this.setMultiStageAction(x))
-        this.cardsHand = new TraditionalCardsHand(
+        this.cardsHand = new TraditionalCardsHand<ActionCardInfo>(
             cards, 
             Infinity, 
             ()=>{this.uiStateService.cancel()}, 
             false, 
-            undefined, 
-            computed(()=>{return !this.charactersCardService.isActionChosen()})
+            undefined,
+            computed(()=>{return !this.charactersCardService.isActionChosen()}),
+            this.uiStateService.cardAction,
+            computed(()=>{
+                return this.uiStateService.additionalInfo()?.["selectedOverrideCards"]?.get()
+            }),
         )
     }
 

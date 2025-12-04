@@ -1,6 +1,6 @@
 import { computed, Injectable, Signal, signal } from "@angular/core";
 import { CardInfo } from "../card-info";
-import { createForceSignal } from "../../util/force-signal";
+import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
 import { KeyValuePair } from "../key-value-pair";
 import { Coordinate } from "../coordinate";
@@ -16,6 +16,8 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
 
     selectedCards = createForceSignal([] as T[])
 
+    overrideSelectedCards
+
     constructor(
         cards: T[], 
         public drawsPerTurn: number, 
@@ -23,11 +25,14 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         private canSelectMultiple = true, 
         private frozen = signal(false), 
         private canSelectCard:Signal<boolean> = signal(true),
-        private selectCardInfo?: object
+        private overrideClick:() => ((card: CardInfo) => void) | undefined,
+        overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>,
+        private selectCardInfo?: object,
     ) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
+        this.overrideSelectedCards = overrideSelectedCards
     }
 
 
@@ -52,7 +57,20 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         return this.selectedCards.get().includes(card)
     }
 
+    isCardOverrideSelected(card: T) {
+        const overrideSelectedCards = this.overrideSelectedCards()
+        if(!overrideSelectedCards) {
+            return false
+        }
+        return overrideSelectedCards.has(card.id)
+    }
+
     selectCard(card: T) {
+        const overrideClick = this.overrideClick()
+        if(overrideClick) {
+            overrideClick(card)
+            return
+        }
         if(this.frozen()) {
             return
         }

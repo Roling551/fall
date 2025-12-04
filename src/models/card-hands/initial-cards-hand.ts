@@ -1,6 +1,6 @@
-import { computed, signal } from "@angular/core";
+import { computed, Signal, signal } from "@angular/core";
 import { CardInfo } from "../card-info";
-import { createForceSignal } from "../../util/force-signal";
+import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { shuffleArray } from "../../util/array-functions";
 import { CardsHand } from "./cards-hand";
 
@@ -14,14 +14,16 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
     cardLimit
     manualDrawsPerTurn
     manualDrawsLeft
+    overrideSelectedCards
 
-    constructor(cards: T[], cardLimit: number, manualDrawsPerTurn: number, private onManualDeselect:()=>void, private canSelectMultiple = true, private frozen = signal(false)) {
+    constructor(cards: T[], cardLimit: number, manualDrawsPerTurn: number, private onManualDeselect:()=>void, overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>, private canSelectMultiple = true,  private frozen = signal(false)) {
         this.cardLimit = signal(cardLimit)
         this.manualDrawsPerTurn = signal(manualDrawsPerTurn)
         this.manualDrawsLeft = signal(manualDrawsPerTurn)
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
         this.startTurn()
+        this.overrideSelectedCards = overrideSelectedCards
     }
 
     manualDraw() {
@@ -50,6 +52,14 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
 
     isCardSelected(card: T) {
         return this.selectedCards.get().includes(card)
+    }
+
+    isCardOverrideSelected(card: T) {
+        const overrideSelectedCards = this.overrideSelectedCards()
+        if(!overrideSelectedCards) {
+            return false
+        }
+        return overrideSelectedCards.has(card.id)
     }
 
     selectCard(card: T) {
