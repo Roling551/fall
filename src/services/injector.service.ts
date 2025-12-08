@@ -19,6 +19,7 @@ export class InjectorService {
     decisionFactoryService?: DecisionFactoryService
     decisionsService?: DecisionsService
     charactersCardsService?: CharactersCardsService
+    resourcesService?: ResourcesService
 
     public getActionsCardsService() {
         if(!this.actionsCardsService) {
@@ -62,4 +63,10 @@ export class InjectorService {
         return this.charactersCardsService
     }
 
+    public getResourcesService() {
+        if(!this.resourcesService) {
+            this.resourcesService = this.injector.get(ResourcesService)
+        }
+        return this.resourcesService
+    }
 }

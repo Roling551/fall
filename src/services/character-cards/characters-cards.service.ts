@@ -110,45 +110,6 @@ export class CharactersCardsService {
 
     }
 
-    // exampleCard() {
-    //     const card = new CharacterCardInfo(
-    //         "c",
-    //         new Map([["construction", 1]],),
-    //         3,
-    //         new Map([])
-    //     )
-    //     card.onSelect = (selectCardInfo?:any)=>{
-    //         if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
-    //             createRepeatMapAction(
-    //                 this.uiStateService,
-    //                 this.currentLevelService,
-    //                 ()=>true,
-    //                 (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
-    //                     console.log(selectedTiles.size)
-    //                     this.cardsHand.discardCard(card)
-    //                 },
-    //                 ()=>{
-    //                     this.cardsHand.deselectAllCards()
-    //                 },
-    //                 2
-    //             )
-    //             createRepeatCardAction(
-    //                 this.uiStateService,
-    //                 (selectedCards:Map<number, CardInfo>)=>{
-    //                     console.log(selectedCards.size)
-    //                     this.cardsHand.discardCard(card)
-    //                 },
-    //                 ()=>{
-    //                     this.cardsHand.deselectAllCards()
-    //                 },
-    //                 2
-    //             )
-    //         }
-    //         return true
-    //     }
-    //     return card
-    // }
-
     sumOfSkills = computed(() => {
         const sum = new Map(baseZeroSkills)
         if(this.cardsHand) {

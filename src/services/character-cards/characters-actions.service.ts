@@ -8,6 +8,7 @@ import { CharacterActionInfo } from "../../models/character-card-info";
 
 export type CharacterActionInput = {
     name: "recycleActionCard",
+    resourcesPerRecycled: number,
     repeatNumber?: number,
 } | {
     name: "removeEstate",
@@ -26,15 +27,25 @@ export class CharactersActionsService {
             case "recycleActionCard":
                 return {
                     type: "Card",
-                    finishAction: (selectedCards:Map<number, CardInfo>) => {},
+                    finishAction: (selectedCards:Map<number, CardInfo>) => {
+                        console.log(this.recycleCards(selectedCards, input.resourcesPerRecycled))
+                    },
                     repeatNumber
                 }
             case "removeEstate":
                 return {
                     type: "Tile",
-                    finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {},
+                    finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
+                        console.log(selectedTiles.size)
+                    },
                     repeatNumber
                 }
         }
+    }
+
+    private recycleCards(selectedCards:Map<number, CardInfo>, resourcesPerRecycled: number) {
+        let removedNumber = this.injectorService.getActionsCardsService()
+            .removeCardsFromHandAndCount([...selectedCards.values()])
+        this.injectorService.getResourcesService().addResources(new Map([["scrap", resourcesPerRecycled * removedNumber]]))
     }
 }

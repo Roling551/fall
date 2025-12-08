@@ -20,7 +20,9 @@ export class CharacterCardInfoList {
                 skills: new Map([["construction", 1]],),
                 movement: 3,
                 characterAction: {
-                    name: "recycleActionCard"
+                    name: "recycleActionCard",
+                    repeatNumber: 2,
+                    resourcesPerRecycled: 10,
                 }
             })
         ],
@@ -31,7 +33,8 @@ export class CharacterCardInfoList {
                 skills: new Map([["construction", 1]],),
                 movement: 3,
                 characterAction: {
-                    name: "removeEstate"
+                    name: "removeEstate",
+                    repeatNumber: 2
                 }
             })
         ]

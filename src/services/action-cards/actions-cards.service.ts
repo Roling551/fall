@@ -132,11 +132,26 @@ export class ActionsCardsService {
         return actionCardInfo
     }
 
-    removeCardFromHand(actionCardInfo: ActionCardInfo) {
+    removeCardFromHand(actionCardInfo: CardInfo) {
         if(!this.cardsHand) {
             return
         }
         this.cardsHand.hand.set(this.cardsHand.hand.get().filter(c=>c!=actionCardInfo))
+    }
+
+    removeCardsFromHandAndCount(cards: CardInfo[]) {
+        if(!this.cardsHand) {
+            return 0
+        }
+        let i = 0
+        this.cardsHand.hand.set(this.cardsHand.hand.get().filter(c=>{
+            if(!cards.includes(c)) {
+                return true
+            }
+            i += 1
+            return false
+        }))
+        return i
     }
 
     reachableTiles = computed(()=>{
