@@ -1,15 +1,15 @@
 import { computed, effect, Injectable, Signal, signal } from "@angular/core";
-import { CardsHand } from "../models/card-hands/cards-hand";
-import { CardInfo } from "../models/card-info";
-import { CharacterCardInfo } from "../models/character-card-info";
-import { baseZeroSkills } from "../models/skill";
-import { addExistingNumericalValues } from "../util/map-functions";
-import { TraditionalCardsHand } from "../models/card-hands/traditional-cards-hand";
-import { InjectorService } from "./injector.service";
-import { UIStateService } from "./ui-state/ui-state.service";
-import { createRepeatCardAction, createRepeatMapAction } from "./ui-state/create-repeat-action";
-import { CurrentLevelService } from "./current-level.service";
-import { createForceSignal } from "../util/force-signal";
+import { CardsHand } from "../../models/card-hands/cards-hand";
+import { CardInfo } from "../../models/card-info";
+import { CharacterCardInfo } from "../../models/character-card-info";
+import { baseZeroSkills } from "../../models/skill";
+import { addExistingNumericalValues } from "../../util/map-functions";
+import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
+import { InjectorService } from "../injector.service";
+import { UIStateService } from "../ui-state/ui-state.service";
+import { createRepeatCardAction, createRepeatMapAction } from "../ui-state/create-repeat-action";
+import { CurrentLevelService } from "../current-level.service";
+import { createForceSignal } from "../../util/force-signal";
 
 export type CharactersCardsServiceMode = 'action' | 'skill' | 'none'
 

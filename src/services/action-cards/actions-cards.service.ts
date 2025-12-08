@@ -4,7 +4,7 @@ import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile/tile";
 import { CardsHand } from "../../models/card-hands/cards-hand";
-import { CharactersCardsService } from "../characters-cards.service";
+import { CharactersCardsService } from "../character-cards/characters-cards.service";
 import { createMultiStageAction } from "../ui-state/create-multi-stage-action";
 import { mapContainsMap } from "../../util/map-functions";
 import { ActionCardInfo } from "../../models/action-card-info";

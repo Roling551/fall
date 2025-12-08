@@ -7,7 +7,7 @@ import { UIStateService } from '../../services/ui-state/ui-state.service';
 import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.component';
 import { CardsComponent } from '../cards/cards.component';
 import { ActionsCardsService } from '../../services/action-cards/actions-cards.service';
-import { CharactersCardsService } from '../../services/characters-cards.service';
+import { CharactersCardsService } from '../../services/character-cards/characters-cards.service';
 
 @Component({
   selector: 'app-main-layout',

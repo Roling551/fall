@@ -5,7 +5,7 @@ import { ResourcesService } from "./resources.service";
 import { RewardFactoryService } from "./reward-factory.service";
 import { DecisionFactoryService } from "./decision-factory.service";
 import { DecisionsService } from "./decisions.service";
-import { CharactersCardsService } from "./characters-cards.service";
+import { CharactersCardsService } from "./character-cards/characters-cards.service";
 
 @Injectable({
   providedIn: 'root'

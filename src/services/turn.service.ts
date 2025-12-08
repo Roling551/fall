@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from "@angular/core";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
-import { CharactersCardsService } from "./characters-cards.service";
+import { CharactersCardsService } from "./character-cards/characters-cards.service";
 import { TurnActorsService } from "./turn-actors.service";
 import { CurrentLevelService } from "./current-level.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
