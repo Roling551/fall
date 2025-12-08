@@ -10,6 +10,11 @@ import { UIStateService } from "../ui-state/ui-state.service";
 import { createRepeatCardAction, createRepeatMapAction } from "../ui-state/create-repeat-action";
 import { CurrentLevelService } from "../current-level.service";
 import { createForceSignal } from "../../util/force-signal";
+import { KeyValuePair } from "../../models/key-value-pair";
+import { Coordinate } from "../../models/coordinate";
+import { Tile } from "../../models/tile/tile";
+import { CharacterCardInfoList } from "./character-card.list";
+import { shuffleArray } from "../../util/array-functions";
 
 export type CharactersCardsServiceMode = 'action' | 'skill' | 'none'
 
@@ -21,7 +26,7 @@ export class CharactersCardsService {
     public isHandFrozen = signal(false)
 
     nextTurn() {
-        this.cardsHand.nextTurn()
+        this.cardsHand?.nextTurn()
     }
 
     isActionChosen:Signal<boolean> = computed(()=>{
@@ -31,14 +36,20 @@ export class CharactersCardsService {
     constructor(
         private injectorService: InjectorService,
         private uiStateService: UIStateService,
-        private currentLevelService: CurrentLevelService
+        private currentLevelService: CurrentLevelService,
     ) {
         const cards: CharacterCardInfo[] = []
-        cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
-        cards.push(this.exampleCard())
-        this.cardsHand = new TraditionalCardsHand<CharacterCardInfo>(
+        this.cardsHand = this.createCardsHand(cards)
+    }
+
+    public setCards(cards: CharacterCardInfo[]) {
+        cards = shuffleArray(cards)
+        cards.map(x=>this.setCardsAction(x))
+        this.cardsHand = this.createCardsHand(cards)
+    }
+
+    private createCardsHand(cards: CharacterCardInfo[]) {
+        return new TraditionalCardsHand<CharacterCardInfo>(
             cards, 
             Infinity, 
             ()=>{
@@ -57,54 +68,98 @@ export class CharactersCardsService {
         )
     }
 
-    exampleCard() {
-        const card = new CharacterCardInfo(
-            "c",
-            new Map([["construction", 1]],),
-            3,
-            new Map([["mountain",1]])
-        )
-        card.onSelect = (selectCardInfo?:any)=>{
-            if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
-                // createRepeatMapAction(
-                //     this.uiStateService,
-                //     this.currentLevelService,
-                //     ()=>true,
-                //     (selectedTiles)=>{
-                //         console.log(selectedTiles.size)
-                //         this.cardsHand.discardCard(card)
-                //     },
-                //     ()=>{
-                //         this.cardsHand.deselectAllCards()
-                //     },
-                //     2
-                // )
-                createRepeatCardAction(
-                    this.uiStateService,
-                    (selectedCards:Map<number, CardInfo>)=>{
-                        console.log(selectedCards.size)
-                        this.cardsHand.discardCard(card)
-                    },
-                    ()=>{
-                        this.cardsHand.deselectAllCards()
-                    },
-                    2
-                )
+    private setCardsAction(card: CharacterCardInfo) {
+        const actionInfo = card.actionInfo
+        if(actionInfo.type === "Card") {
+            card.onSelect = (selectCardInfo?:any)=>{
+                if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
+                    createRepeatCardAction(
+                        this.uiStateService,
+                        (selectedCards:Map<number, CardInfo>)=>{
+                            actionInfo.finishAction(selectedCards)
+                            this.cardsHand?.discardCard(card)
+                        },
+                        ()=>{
+                            this.cardsHand?.deselectAllCards()
+                        },
+                        actionInfo.repeatNumber
+                    )
+                }
+                return true
             }
-            return true
+        } else if(actionInfo.type === "Tile") {
+            card.onSelect = (selectCardInfo?:any)=>{
+                if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
+                    createRepeatMapAction(
+                        this.uiStateService,
+                        this.currentLevelService,
+                        ()=>true,
+                        (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
+                            actionInfo.finishAction(selectedTiles)
+                            this.cardsHand?.discardCard(card)
+                        },
+                        ()=>{
+                            this.cardsHand?.deselectAllCards()
+                        },
+                        actionInfo.repeatNumber
+                    )
+                }
+                return true
+            }
         }
-        return card
+
     }
+
+    // exampleCard() {
+    //     const card = new CharacterCardInfo(
+    //         "c",
+    //         new Map([["construction", 1]],),
+    //         3,
+    //         new Map([])
+    //     )
+    //     card.onSelect = (selectCardInfo?:any)=>{
+    //         if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
+    //             createRepeatMapAction(
+    //                 this.uiStateService,
+    //                 this.currentLevelService,
+    //                 ()=>true,
+    //                 (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
+    //                     console.log(selectedTiles.size)
+    //                     this.cardsHand.discardCard(card)
+    //                 },
+    //                 ()=>{
+    //                     this.cardsHand.deselectAllCards()
+    //                 },
+    //                 2
+    //             )
+    //             createRepeatCardAction(
+    //                 this.uiStateService,
+    //                 (selectedCards:Map<number, CardInfo>)=>{
+    //                     console.log(selectedCards.size)
+    //                     this.cardsHand.discardCard(card)
+    //                 },
+    //                 ()=>{
+    //                     this.cardsHand.deselectAllCards()
+    //                 },
+    //                 2
+    //             )
+    //         }
+    //         return true
+    //     }
+    //     return card
+    // }
 
     sumOfSkills = computed(() => {
         const sum = new Map(baseZeroSkills)
-        for(const card of this.cardsHand.selectedCards.get()) {
-            addExistingNumericalValues(sum, card.skills)
+        if(this.cardsHand) {
+            for(const card of this.cardsHand.selectedCards.get()) {
+                addExistingNumericalValues(sum, card.skills)
+            }
         }
         return sum
     })
 
     onRightClick() {
-       this.cardsHand.deselectAllCards(false) 
+       this.cardsHand?.deselectAllCards(false) 
     }
 }
