@@ -2,7 +2,7 @@ import { Component, computed, Input } from '@angular/core';
 import { ActionCardInfo } from '../../models/action-card-info';
 import { skillsToString } from '../../models/skill';
 import { resourcesToString } from '../../models/resource';
-import { getFactoryCardInputsReadable } from '../../services/action-cards/action-card-creation-info-factory.service';
+import { getFactoryCardInputsReadable } from '../../services/action-cards/action-card-info-factory.service';
 
 @Component({
   selector: 'app-card-content-action',

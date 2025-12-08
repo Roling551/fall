@@ -36,7 +36,6 @@ export class InitService {
         //     }
         // })
         const initialCardNames = ["handDrill", "automaticDrill", "automaticDrill", "miningTools", "road"]
-        const initialCards = initialCardNames.map(x=>this.actionCardInfoList.list.get(x)).filter(x=>!!x).map(x=>x())
-        this.actionsCardsService.setCards(initialCards)
+        this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByNames(initialCardNames))
     }
 }

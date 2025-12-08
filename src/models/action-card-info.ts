@@ -1,4 +1,4 @@
-import { FactoryCardInputs } from "../services/action-cards/action-card-creation-info-factory.service";
+import { FactoryCardInputs } from "../services/action-cards/action-card-info-factory.service";
 import { TileInfo } from "../services/ui-state/ui-state.service";
 import { SkillMapActionSkillBonus } from "./bonus";
 import { CardInfo } from "./card-info";

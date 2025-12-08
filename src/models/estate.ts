@@ -11,7 +11,7 @@ import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
 import { ActionCardInfo } from "./action-card-info";
 import { Benefit } from "./benefit";
-import { EstateCardInputs } from "../services/action-cards/action-card-creation-info-factory.service";
+import { EstateCardInputs } from "../services/action-cards/action-card-info-factory.service";
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)

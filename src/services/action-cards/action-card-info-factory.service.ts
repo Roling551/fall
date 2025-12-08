@@ -59,7 +59,7 @@ export interface EstateCardInputs {
 @Injectable({
   providedIn: 'root'
 })
-export class ActionCardCreationInfoFactoryService {
+export class ActionCardInfoFactoryService {
 
     constructor(
         private uiStateService: UIStateService,

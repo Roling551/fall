@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActionCardCreationInfoFactoryService } from "./action-card-creation-info-factory.service";
+import { ActionCardInfoFactoryService } from "./action-card-info-factory.service";
 import { Coordinate } from "../../models/coordinate";
 import { ActionCardInfo } from "../../models/action-card-info";
 
@@ -7,7 +7,11 @@ import { ActionCardInfo } from "../../models/action-card-info";
   providedIn: 'root'
 })
 export class ActionCardInfoList {
-    constructor(private factory: ActionCardCreationInfoFactoryService) {}
+    constructor(private factory: ActionCardInfoFactoryService) {}
+
+    getCardsByNames(names: string[]) {
+        return names.map(x=>this.list.get(x)).filter(x=>!!x).map(x=>x())
+    }
 
     getRandomByLevelAndRarity(level: number, rarity: 0 | 1 | 2, randomNumber?: number) {
         if(randomNumber == undefined) {
