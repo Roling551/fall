@@ -7,10 +7,12 @@ import { Tile } from "./tile/tile";
 
 export type CharacterActionInfo = {
     type: "Card",
+    canSelectCard: (card: CardInfo)=>boolean,
     finishAction: (selectedCards:Map<number, CardInfo>) => void,
     repeatNumber: number,
 } | {
     type: "Tile",
+    canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>boolean,
     finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => void,
     repeatNumber: number,
 }
@@ -24,6 +26,6 @@ export class CharacterCardInfo extends CardInfo{
         public actionInfo: CharacterActionInfo,
         public movementAdvantege?: Map<ObstacleType, number>,
     ) {
-        super(name)
+        super(name, "CharacterCard")
     }
 }

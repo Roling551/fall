@@ -75,6 +75,7 @@ export class CharactersCardsService {
                 if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
                     createRepeatCardAction(
                         this.uiStateService,
+                        actionInfo.canSelectCard,
                         (selectedCards:Map<number, CardInfo>)=>{
                             actionInfo.finishAction(selectedCards)
                             this.cardsHand?.discardCard(card)
@@ -93,7 +94,7 @@ export class CharactersCardsService {
                     createRepeatMapAction(
                         this.uiStateService,
                         this.currentLevelService,
-                        ()=>true,
+                        actionInfo.canSelectTile,
                         (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
                             actionInfo.finishAction(selectedTiles)
                             this.cardsHand?.discardCard(card)

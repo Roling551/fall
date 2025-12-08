@@ -68,6 +68,7 @@ export function createRepeatMapAction<T>(
 
 export function createRepeatCardAction<T>(
     uiStateService: UIStateService,
+    canSelectCard: (card: CardInfo)=>boolean,
     afterFinishAction: (selectedCards: Map<number, CardInfo>)=> void,
     cancelButtonAction: ()=>void,
     repeatsNumber: number,
@@ -90,8 +91,10 @@ export function createRepeatCardAction<T>(
                     selectedCards.get().delete(card.id)
                     selectedCards.forceUpdate()
                 } else {
-                    selectedCards.get().set(card.id, card)
-                    selectedCards.forceUpdate()
+                    if(canSelectCard(card)) {
+                        selectedCards.get().set(card.id, card)
+                        selectedCards.forceUpdate()
+                    }
                 }
             },
             additionalInfo: {

@@ -27,14 +27,18 @@ export class CharactersActionsService {
             case "recycleActionCard":
                 return {
                     type: "Card",
+                    canSelectCard: (card: CardInfo) => card.type == "ActionCard",
                     finishAction: (selectedCards:Map<number, CardInfo>) => {
-                        console.log(this.recycleCards(selectedCards, input.resourcesPerRecycled))
+                        this.recycleCards(selectedCards, input.resourcesPerRecycled)
                     },
                     repeatNumber
                 }
             case "removeEstate":
                 return {
                     type: "Tile",
+                    canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>{
+                        return true
+                    },
                     finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
                         console.log(selectedTiles.size)
                     },

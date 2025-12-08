@@ -27,6 +27,6 @@ export class ActionCardInfo extends CardInfo {
         public price?: Map<Resource, number>,
         public cardOnHandRewards?: Reward[],
     ) {
-        super(name)
+        super(name, "ActionCard")
     }
 }
