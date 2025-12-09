@@ -41,7 +41,7 @@ export class InitService {
         // })
         const initialCardNames = ["handDrill", "automaticDrill", "automaticDrill", "miningTools", "road"]
         this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByNames(initialCardNames))
-        const initialCharacterCardNames = ["recycler", "remover"]
+        const initialCharacterCardNames = ["recycler", "demolisher"]
         this.charactersCardsService.setCards(this.characterCardInfoList.getCardsByNames(initialCharacterCardNames))
     }
 }

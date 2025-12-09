@@ -88,6 +88,10 @@ export class SimpleTile extends BaseTile {
         ]
     });
 
+    containsPlayersMapEntity() {
+        return !!this.playersMapEntity.get()
+    }
+
     removePlayersMapEntity() {
         const entity = this.playersMapEntity.get()
         if(!entity) {

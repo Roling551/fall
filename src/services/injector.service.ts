@@ -6,6 +6,7 @@ import { RewardFactoryService } from "./reward-factory.service";
 import { DecisionFactoryService } from "./decision-factory.service";
 import { DecisionsService } from "./decisions.service";
 import { CharactersCardsService } from "./character-cards/characters-cards.service";
+import { TurnActorsService } from "./turn-actors.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class InjectorService {
     decisionsService?: DecisionsService
     charactersCardsService?: CharactersCardsService
     resourcesService?: ResourcesService
+    turnActorsService?: TurnActorsService
 
     public getActionsCardsService() {
         if(!this.actionsCardsService) {
@@ -68,5 +70,12 @@ export class InjectorService {
             this.resourcesService = this.injector.get(ResourcesService)
         }
         return this.resourcesService
+    }
+
+    public getTurnActorsService() {
+        if(!this.turnActorsService) {
+            this.turnActorsService = this.injector.get(TurnActorsService)
+        }
+        return this.turnActorsService
     }
 }

@@ -27,13 +27,13 @@ export class CharacterCardInfoList {
             })
         ],
         [
-            "remover",
+            "demolisher",
             ()=>this.characterCardFactory.createCharacterCard({
-                name: "remover",
+                name: "demolisher",
                 skills: new Map([["construction", 1]],),
                 movement: 3,
                 characterAction: {
-                    name: "removeEstate",
+                    name: "demolishEstate",
                     repeatNumber: 2
                 }
             })
