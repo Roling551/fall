@@ -1,6 +1,7 @@
-import { Component, computed, Signal } from '@angular/core';
+import { Component, computed, resource, Signal } from '@angular/core';
 import { TurnService } from '../../services/turn.service';
 import { ResourcesService } from '../../services/resources.service';
+import { TurnActorsService } from '../../services/turn-actors.service';
 
 @Component({
   selector: 'app-game-info-panel',
@@ -12,7 +13,7 @@ export class GameInfoPanelComponent {
 
   canNextTurn: Signal<boolean>
 
-  constructor(private resourcesService: ResourcesService, private turnService: TurnService){
+  constructor(private resourcesService: ResourcesService, private turnService: TurnService, private turnActorsService: TurnActorsService){
     this.canNextTurn = this.turnService.canNextTurn
   }
 
@@ -20,8 +21,13 @@ export class GameInfoPanelComponent {
     return "Turn: " + this.turnService.turn()
   })
 
-  public resourcesText = computed(()=> {
-    return this.resourcesService.text()
+  public resourcesText = computed(() => {
+    const requiredResources = this.turnActorsService.requiredResources()
+    let s = "Resources: "
+    for(const resource of this.resourcesService.resources.get()) {
+        s += `${resource[0]} - ${resource[1]}(${requiredResources.get(resource[0])||0}) `
+    }
+    return s
   })
 
   onNextTurn() {

@@ -22,10 +22,4 @@ export class ResourcesService {
         this.resources.set(addNumericalValuesFunctional(this.resources.get(), resources))
         this.resources.forceUpdate()
     }
-
-    text = computed(()=>{
-        return "Oil:" + this.resources.get().get("oil") + 
-        " Scrap: " + this.resources.get().get("scrap") + 
-        " Water: " + this.resources.get().get("water")
-    })
 }

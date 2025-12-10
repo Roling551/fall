@@ -6,6 +6,7 @@ import { TurnActorsService } from "./turn-actors.service";
 import { CurrentLevelService } from "./current-level.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
 import { CardOnHandRewardService } from "./card-on-hand-reward.service";
+import { ResourcesService } from "./resources.service";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class TurnService {
         private turnActorsService: TurnActorsService,
         private turnBenefitsService: TurnBenefitsService,
         private cardOnHandRewardService: CardOnHandRewardService,
+        private resourcesService: ResourcesService,
     ) {}
 
     turn = signal(0)
@@ -28,7 +30,8 @@ export class TurnService {
         if(!level) {
             return false
         }
-        return level.canNextTurn()
+        const sufficientResources = this.resourcesService.canAffordResources(this.turnActorsService.requiredResources())
+        return level.canNextTurn() && sufficientResources
     })
 
     public nextTurn() {

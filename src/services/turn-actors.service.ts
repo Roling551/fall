@@ -1,7 +1,9 @@
-import { Injectable } from "@angular/core";
+import { computed, Injectable } from "@angular/core";
 import { TurnActor } from "../models/turn-actor";
 import { createForceSignal } from "../util/force-signal";
 import { ResourcesService } from "./resources.service";
+import { Resource } from "../models/resource";
+import { addNumericalValues } from "../util/map-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,14 @@ export class TurnActorsService {
     removeActor(actor: TurnActor) {
         this.actors.set(this.actors.get().filter(x=>x!=actor))
     }
+
+    requiredResources = computed(() => {
+        const requiredResources = new Map<Resource, number>() 
+        for(const actor of this.actors.get()) {
+            addNumericalValues(requiredResources, actor.getRequiredResources())
+        }
+        return requiredResources
+    })
 
     nextTurn() {
         for(const actor of this.actors.get()) {
