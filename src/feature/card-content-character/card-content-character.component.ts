@@ -14,4 +14,9 @@ export class CardContentCharacterComponent {
     skills = computed(()=>{
         return skillsToString(this.card.skills)
     })
+
+    getTexture(card: CharacterCardInfo) {
+        console.log(card.cardPicture)
+        return `assets/pictures/${(card.cardPicture||card.name)}.png`
+    }
 }

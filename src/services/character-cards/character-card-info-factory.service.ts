@@ -9,7 +9,8 @@ export type CharacterCardInput = {
     skills: Map<Skill, number>, 
     movement: number, 
     characterAction: CharacterActionInput,
-    movementAdvantege?: Map<ObstacleType, number>
+    movementAdvantege?: Map<ObstacleType, number>,
+    cardPicture?: string,
 }
 
 @Injectable({
@@ -24,7 +25,8 @@ export class CharacterCardInfoFactoryService {
             input.skills,
             input.movement,
             this.charactersActionsService.getCharacterActionInfo(input.characterAction),
-            input.movementAdvantege
+            input.movementAdvantege,
+            input.cardPicture
         )
         return card
     }

@@ -25,6 +25,7 @@ export class CharacterCardInfo extends CardInfo{
         public movement: number, 
         public actionInfo: CharacterActionInfo,
         public movementAdvantege?: Map<ObstacleType, number>,
+        public cardPicture?: string,
     ) {
         super(name, "CharacterCard")
     }

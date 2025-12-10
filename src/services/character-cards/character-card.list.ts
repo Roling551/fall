@@ -23,7 +23,8 @@ export class CharacterCardInfoList {
                     name: "recycleActionCard",
                     repeatNumber: 2,
                     resourcesPerRecycled: 10,
-                }
+                },
+                cardPicture: "dwarf2",
             })
         ],
         [
@@ -36,7 +37,8 @@ export class CharacterCardInfoList {
                     name: "demolishEstate",
                     refundFraction: 0.5,
                     repeatNumber: 2,
-                }
+                },
+                cardPicture: "dwarf1",
             })
         ]
     ])
