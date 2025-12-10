@@ -23,7 +23,7 @@ export class Estate extends MapEntity implements TurnActor{
     constructor(
         public tile: Tile, 
         public name: string, 
-        public requiredResources: Map<Resource, number>,
+        public runCost: Map<Resource, number>,
         affectedCoordinates: Coordinate[],
         private additionalInfo: EstateCardInputs,
         public action?: (tile: Tile)=>void,
@@ -75,7 +75,7 @@ export class Estate extends MapEntity implements TurnActor{
     }
 
     getRequiredResources(): Map<Resource, number> {
-        return new Map(this.requiredResources)
+        return new Map(this.runCost)
     }
     disable() {
         this.forcefullyDisabled.set(true)
