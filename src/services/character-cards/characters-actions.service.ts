@@ -25,28 +25,34 @@ export type CharacterActionInput = {
 export class CharactersActionsService {
     constructor(private injectorService: InjectorService) {}
 
-    getCharacterActionInfo(input: CharacterActionInput): CharacterActionInfo {
+    getCharacterActionInfoAndDescription(input: CharacterActionInput): {actionInfo:CharacterActionInfo, actionDescription:string} {
         const repeatNumber = input.repeatNumber || 1
         switch(input.name) {
             case "recycleActionCard":
                 return {
-                    type: "Card",
-                    canSelectCard: (card: CardInfo) => card.type == "ActionCard",
-                    finishAction: (selectedCards:Map<number, CardInfo>) => {
-                        this.recycleCards(selectedCards, input.resourcesPerRecycled)
+                    actionInfo: {
+                        type: "Card",
+                        canSelectCard: (card: CardInfo) => card.type == "ActionCard",
+                        finishAction: (selectedCards:Map<number, CardInfo>) => {
+                            this.recycleCards(selectedCards, input.resourcesPerRecycled)
+                        },
+                        repeatNumber
                     },
-                    repeatNumber
+                    actionDescription: `Recycle card, get ${input.resourcesPerRecycled.toString()} scrap`
                 }
             case "demolishEstate":
                 return {
-                    type: "Tile",
-                    canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>{
-                        return this.canDemolishEstate(selectedTile)
+                    actionInfo: {
+                        type: "Tile",
+                        canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>{
+                            return this.canDemolishEstate(selectedTile)
+                        },
+                        finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
+                            this.demolishEstates(selectedTiles, input.refundFraction)
+                        },
+                        repeatNumber
                     },
-                    finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
-                        this.demolishEstates(selectedTiles, input.refundFraction)
-                    },
-                    repeatNumber
+                    actionDescription: `Demolish estate, get ${input.refundFraction} of resources back`
                 }
         }
     }

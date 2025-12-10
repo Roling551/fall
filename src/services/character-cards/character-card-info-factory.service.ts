@@ -20,11 +20,13 @@ export class CharacterCardInfoFactoryService {
     constructor(private charactersActionsService: CharactersActionsService) {}
 
     createCharacterCard(input: CharacterCardInput) {
+        const {actionInfo, actionDescription} = this.charactersActionsService.getCharacterActionInfoAndDescription(input.characterAction)
         const card = new CharacterCardInfo(
             input.name,
             input.skills,
             input.movement,
-            this.charactersActionsService.getCharacterActionInfo(input.characterAction),
+            actionInfo,
+            actionDescription,
             input.movementAdvantege,
             input.cardPicture
         )

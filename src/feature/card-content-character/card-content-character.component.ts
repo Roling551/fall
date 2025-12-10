@@ -16,7 +16,6 @@ export class CardContentCharacterComponent {
     })
 
     getTexture(card: CharacterCardInfo) {
-        console.log(card.cardPicture)
         return `assets/pictures/${(card.cardPicture||card.name)}.png`
     }
 }

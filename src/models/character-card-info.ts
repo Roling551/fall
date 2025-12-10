@@ -24,6 +24,7 @@ export class CharacterCardInfo extends CardInfo{
         public skills: Map<Skill, number>, 
         public movement: number, 
         public actionInfo: CharacterActionInfo,
+        public actionDescription: string,
         public movementAdvantege?: Map<ObstacleType, number>,
         public cardPicture?: string,
     ) {
