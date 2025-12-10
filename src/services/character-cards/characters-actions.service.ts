@@ -7,6 +7,7 @@ import { Tile } from "../../models/tile/tile";
 import { CharacterActionInfo } from "../../models/character-card-info";
 import { SimpleTile } from "../../models/tile/simple-tile";
 import { Resource } from "../../models/resource";
+import { addNumericalValues, multiplyNumericalValuesFunctional, roundDownFunctional } from "../../util/map-functions";
 
 export type CharacterActionInput = {
     name: "recycleActionCard",
@@ -14,6 +15,7 @@ export type CharacterActionInput = {
     repeatNumber?: number,
 } | {
     name: "demolishEstate",
+    refundFraction: number,
     repeatNumber?: number,
 }
 
@@ -42,7 +44,7 @@ export class CharactersActionsService {
                         return this.canDemolishEstate(selectedTile)
                     },
                     finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
-                        this.demolishEstates(selectedTiles)
+                        this.demolishEstates(selectedTiles, input.refundFraction)
                     },
                     repeatNumber
                 }
@@ -63,7 +65,7 @@ export class CharactersActionsService {
         return false
     }
 
-    private demolishEstates(selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) {
+    private demolishEstates(selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>, refundFraction: number) {
         let price = new Map<Resource, number>([])
         for(const tile of selectedTiles) {
             const t = tile[1].value
@@ -72,12 +74,13 @@ export class CharactersActionsService {
                 if(!entity) {
                     return
                 }
+                addNumericalValues(price, entity.costPaid)
                 if(entity.actionCardGetAfterDestroy) {
                     this.injectorService.getActionsCardsService().addNewCardToDiscard(entity.actionCardGetAfterDestroy)
                 }
                 this.injectorService.getTurnActorsService().removeActor(entity)
             }   
         }
-        this.injectorService.getResourcesService().addResources(price)
+        this.injectorService.getResourcesService().addResources(roundDownFunctional(multiplyNumericalValuesFunctional(price, refundFraction)))
     }
 }

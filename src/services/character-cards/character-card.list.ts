@@ -34,7 +34,8 @@ export class CharacterCardInfoList {
                 movement: 3,
                 characterAction: {
                     name: "demolishEstate",
-                    repeatNumber: 2
+                    refundFraction: 0.5,
+                    repeatNumber: 2,
                 }
             })
         ]

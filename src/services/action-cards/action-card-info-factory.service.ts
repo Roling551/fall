@@ -128,6 +128,7 @@ export class ActionCardInfoFactoryService {
                 inputs.runCost || (new Map([])), 
                 affectedCoordinates,
                 inputs,
+                inputs.price || new Map(),
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createExtractionAction(
                     createActionInfo, 
                     affectedCoordinates)

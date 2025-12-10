@@ -26,6 +26,7 @@ export class Estate extends MapEntity implements TurnActor{
         public runCost: Map<Resource, number>,
         affectedCoordinates: Coordinate[],
         private additionalInfo: EstateCardInputs,
+        public costPaid: Map<Resource, number>,
         public action?: (tile: Tile)=>void,
         skillMapActionSkillBonus?: Map<Skill, number>,
         movementBonus?: number,

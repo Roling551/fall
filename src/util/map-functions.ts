@@ -48,6 +48,20 @@ export function multiplyNumericalValuesFunctional(map: Map<any, number>, multipl
     return newMap
 }
 
+export function roundDown(map: Map<any, number>) {
+    for (const [key, num] of map.entries()) {
+        map.set(key, Math.floor(num))
+    }
+}
+
+export function roundDownFunctional(map: Map<any, number>) {
+    const newMap = new Map<any, number>()
+    for (const [key, num] of map.entries()) {
+        newMap.set(key, Math.floor(num))
+    }
+    return newMap
+}
+
 export function mapContainsMap(map1: Map<any, number>, map2: Map<any, number>) {
     for (const [key, num] of map1.entries()) {
         if(num < (map2.get(key) || 0)) {
