@@ -97,7 +97,7 @@ export class MapTileComponent {
         return undefined
     })
 
-    getImgTop() {
+    getImgTop = computed(() => {
         return (this.sizeY - this.sizeX) / 2
-}
+    })
 }

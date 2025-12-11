@@ -10,6 +10,9 @@ import { ActionCardInfoList } from "./action-cards/action-card-info.list";
 import { DecisionsService } from "./decisions.service";
 import { CharacterCardInfoList } from "./character-cards/character-card.list";
 import { CharactersCardsService, CharactersCardsServiceMode } from "./character-cards/characters-cards.service";
+import { MapImageComponent } from "../shared/map-image/map-image.component";
+import { Estate } from "../models/estate";
+import { SimpleTile } from "../models/tile/simple-tile";
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +34,13 @@ export class InitService {
             template: ResourcesInfoComponent,
             doRender: (tile: KeyValuePair<Coordinate, Tile>) => true,
         })
+        this.uiStateService.setBaseTileInfo("disabled", {
+            template: MapImageComponent,
+            input: {
+                texture: "forbidden"
+            },
+            doRender: (tile: KeyValuePair<Coordinate, Tile>) => this.isEntityDisabled(tile),
+        })
         // this.benefitsService.initialBenefits.get().set("t1", {
         //     type: "skill-map-action-skill-bonus",
         //     bonus: {
@@ -43,5 +53,16 @@ export class InitService {
         this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByNames(initialCardNames))
         const initialCharacterCardNames = ["recycler", "demolisher"]
         this.charactersCardsService.setCards(this.characterCardInfoList.getCardsByNames(initialCharacterCardNames))
+    }
+
+    private isEntityDisabled(tile: KeyValuePair<Coordinate, Tile>) {
+        if(!(tile.value instanceof SimpleTile)) {
+            return false
+        }
+        const entity = tile.value.playersMapEntity.get()
+        if(!entity || !(entity instanceof Estate)) {
+            return false
+        }
+        return entity.disabled()
     }
 }
