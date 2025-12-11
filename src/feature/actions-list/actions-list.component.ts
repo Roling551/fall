@@ -28,8 +28,8 @@ export class ActionsListComponent {
   onCreateStationClick(): void {
     this.uiStateService.setUI_.createStation()
   }
-  onRemoveEstateClick(): void {
-    this.uiStateService.setUI_.removeEstate()
+  onSwitchEnabledEstate(): void {
+    this.uiStateService.setUI_.switchEnabledEstate()
   }
   onTechTreeClick(): void {
     this.currentWindowService.currentWindow.set("tech-tree")

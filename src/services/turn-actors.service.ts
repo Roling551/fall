@@ -24,7 +24,9 @@ export class TurnActorsService {
     requiredResources = computed(() => {
         const requiredResources = new Map<Resource, number>() 
         for(const actor of this.actors.get()) {
-            addNumericalValues(requiredResources, actor.getRequiredResources())
+            if(!actor.disabled()) {
+                addNumericalValues(requiredResources, actor.getRequiredResources())
+            }
         }
         return requiredResources
     })

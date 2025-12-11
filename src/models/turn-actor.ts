@@ -10,4 +10,5 @@ export interface TurnActor {
     disable: ()=>void
     enable: ()=>void
     benefits: Signal<Benefit[]>
+    disabled: Signal<boolean>
 }

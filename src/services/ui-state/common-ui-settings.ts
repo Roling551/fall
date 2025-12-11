@@ -37,6 +37,22 @@ export function getTileUI(
     }
 }
 
+export function getSwitchEnabledEstateUI():UIData {
+    return {
+        sideComponent:SimpleTextComponent, 
+        sideComponentInputs:{text:"Disable/enable"},
+        mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
+            if(!(tile.value instanceof SimpleTile)) {
+                return
+            }
+            const entity = tile.value.playersMapEntity.get()
+            if(!entity || !(entity instanceof Estate)) {
+                return
+            }
+            entity.manuallySwitchEnabled()
+        }
+    }
+}
 
 export function getCreateStationUI(levelService: CurrentLevelService):UIData {
     return {

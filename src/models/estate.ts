@@ -15,6 +15,7 @@ import { EstateCardInputs } from "../services/action-cards/action-card-info-fact
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
+    private manuallyDisabled = signal(false)
     public skillMapActionSkillBonus
     public movementBonus
     affectedCoordinates
@@ -69,11 +70,15 @@ export class Estate extends MapEntity implements TurnActor{
     })  
 
     public turnAction() {
-        if(this.forcefullyDisabled()) {
+        if(this.disabled()) {
             return
         }
         this.action?.(this.tile)
     }
+
+    disabled = computed(()=>{
+        return this.forcefullyDisabled() || this.manuallyDisabled()
+    })
 
     getRequiredResources(): Map<Resource, number> {
         return new Map(this.runCost)
@@ -83,6 +88,9 @@ export class Estate extends MapEntity implements TurnActor{
     }
     enable() {
         this.forcefullyDisabled.set(false)
+    }
+    manuallySwitchEnabled() {
+        this.manuallyDisabled.update(x=>!x)
     }
 
     override skillAction(skills: Map<Skill,number>) {

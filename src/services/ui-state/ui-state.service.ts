@@ -3,7 +3,7 @@ import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile/tile";
-import { getChangeResourceUI, getCreateStationUI, getRemoveEstateUI, getTileUI } from "./common-ui-settings";
+import { getChangeResourceUI, getCreateStationUI, getRemoveEstateUI, getSwitchEnabledEstateUI, getTileUI } from "./common-ui-settings";
 import { Estate } from "../../models/estate";
 import { Unit } from "../../models/unit";
 import { BattleService } from "../battle.service";
@@ -216,6 +216,7 @@ export class UIStateService {
     createStation: () => this.setUI(getCreateStationUI(this.levelService), {override:true}),
     removeEstate: () => this.setUI(getRemoveEstateUI(this.getActionsCardsService(), this.turnActorsService)),
     changeResource: () => {this.setUI(getChangeResourceUI()), {override:true}},
+    switchEnabledEstate: () => {this.setUI(getSwitchEnabledEstateUI()), {override:true}},
   }
 
   public setBaseTileInfo(name: string, tileInfo: TileInfo) {
