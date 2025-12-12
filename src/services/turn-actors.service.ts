@@ -3,7 +3,7 @@ import { TurnActor } from "../models/turn-actor";
 import { createForceSignal } from "../util/force-signal";
 import { ResourcesService } from "./resources.service";
 import { Resource } from "../models/resource";
-import { addNumericalValues } from "../util/map-functions";
+import { addNumericalValues, substractNumericalValues } from "../util/map-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -21,20 +21,30 @@ export class TurnActorsService {
         this.actors.set(this.actors.get().filter(x=>x!=actor))
     }
 
-    requiredResources = computed(() => {
-        const requiredResources = new Map<Resource, number>() 
+    resourcesChange = computed(() => {
+        const change = new Map<Resource, number>() 
         for(const actor of this.actors.get()) {
             if(!actor.disabled()) {
-                addNumericalValues(requiredResources, actor.getRequiredResources())
+                const produced = actor.getProducedResources()
+                if(produced) {
+                    addNumericalValues(change, produced)
+                }
+                console.log(actor.getRequiredResources())
+                substractNumericalValues(change, actor.getRequiredResources())
             }
         }
-        return requiredResources
+        console.log(change)
+        return change
     })
 
     nextTurn() {
         for(const actor of this.actors.get()) {
             if(this.resourcesService.canAffordResources(actor.getRequiredResources())) {
                 this.resourcesService.spendResources(actor.getRequiredResources())
+                const produced = actor.getProducedResources()
+                if(produced) {
+                    this.resourcesService.addResources(produced)
+                }
                 actor.enable()
             } else {
                 actor.disable()

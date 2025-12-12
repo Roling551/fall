@@ -23,6 +23,12 @@ export function addNumericalValuesFunctional(map1: Map<any, number>, map2: Map<a
     return newMap
 }
 
+export function substractNumericalValues(map1: Map<any, number>, map2: Map<any, number>) {
+    for (const [key, num] of map2.entries()) {
+        map1.set(key, (map1.get(key) || 0) - num)
+    }
+}
+
 export function substractNumericalValuesFunctional(map1: Map<any, number>, map2: Map<any, number>) {
     const newMap = new Map<any, number>()
     for (const [key, num] of map1.entries()) {

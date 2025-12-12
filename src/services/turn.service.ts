@@ -7,6 +7,7 @@ import { CurrentLevelService } from "./current-level.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
 import { CardOnHandRewardService } from "./card-on-hand-reward.service";
 import { ResourcesService } from "./resources.service";
+import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../util/map-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class TurnService {
         if(!level) {
             return false
         }
-        const sufficientResources = this.resourcesService.canAffordResources(this.turnActorsService.requiredResources())
+        const sufficientResources = this.resourcesService.canAffordResources(multiplyNumericalValuesFunctional(this.turnActorsService.resourcesChange(),-1))
         return level.canNextTurn() && sufficientResources
     })
 

@@ -7,6 +7,7 @@ import { Benefit } from "./benefit"
 export interface TurnActor {
     turnAction(): void
     getRequiredResources(): Map<Resource, number>
+    getProducedResources(): Map<Resource, number> | undefined
     disable: ()=>void
     enable: ()=>void
     benefits: Signal<Benefit[]>

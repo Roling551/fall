@@ -68,7 +68,7 @@ export class ActionCardInfoList {
                     skillApplied: new Map([["mining",3]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "drill",
-                    price: new Map([["oil", 5]]),
+                    price: new Map([["scrap", 5]]),
                     runCost: new Map([["oil", 1]]),
                     cardOnHandRewards: [{
                         type: "SkillMapActionSkillBonus",
@@ -101,10 +101,25 @@ export class ActionCardInfoList {
                     skillMapActionSkillBonus: new Map([["mining",1]]),
                     affectedCoordinates:  [new Coordinate(0,0), new Coordinate(0,1), new Coordinate(0,-1)],
                     estateTexture: "workshop",
-                    price: new Map([["oil", 5]]),
+                    price: new Map([["scrap", 5]]),
                     runCost: new Map([["oil", 1]])
                 }
             )
+        ],[
+            "plasticFactory",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "plasticFactory",
+                    skillRequired: new Map([["construction", 2]]),
+                    affectedCoordinates:  [new Coordinate(0,0)],
+                    estateTexture: "plastic-factory",
+                    price: new Map([["scrap", 5]]),
+                    runCost: new Map([["oil", 1]]),
+                    producedResources: new Map([["scrap", 1]]),
+                }
+            )
+            
         ]
     ])
 }

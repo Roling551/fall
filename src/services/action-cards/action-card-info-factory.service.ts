@@ -7,7 +7,7 @@ import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
 import { Skill, skillsToString } from "../../models/skill";
-import { Resource } from "../../models/resource";
+import { Resource, resourcesToString } from "../../models/resource";
 import { getBorderInfo, getCreateEstateActionAndTileInfo, getCreateMultipleEstatesActionAndTileInfo } from "./actions-cards-functions";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
@@ -52,6 +52,7 @@ export interface EstateCardInputs {
     skillMapActionSkillBonus?: Map<Skill, number>,
     movementBonus?: number
     cardOnHandRewards?: RewardOption[],
+    producedResources?: Map<Resource, number>,
     isUpgrade?: boolean,
     instancesNumber?: number,
 }
@@ -114,6 +115,9 @@ export class ActionCardInfoFactoryService {
         if(inputs.skillMapActionSkillBonus) {
             effectsDescriptions.push("bonus:" + skillsToString(inputs.skillMapActionSkillBonus))
         }
+        if(inputs.producedResources) {
+            effectsDescriptions.push("produces:" + resourcesToString(inputs.producedResources))
+        }
         if(inputs.movementBonus) {
             effectsDescriptions.push("move:+" + inputs.movementBonus)
         }
@@ -133,6 +137,7 @@ export class ActionCardInfoFactoryService {
                     createActionInfo, 
                     affectedCoordinates)
                 : undefined,
+                inputs.producedResources,
                 inputs.skillMapActionSkillBonus,
                 inputs.movementBonus,
                 actionCardInfo,

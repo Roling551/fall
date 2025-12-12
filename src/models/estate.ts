@@ -29,6 +29,7 @@ export class Estate extends MapEntity implements TurnActor{
         private additionalInfo: EstateCardInputs,
         public costPaid: Map<Resource, number>,
         public action?: (tile: Tile)=>void,
+        public producedResources?: Map<Resource, number>,
         skillMapActionSkillBonus?: Map<Skill, number>,
         movementBonus?: number,
         public actionCardGetAfterDestroy?: ActionCardInfo,
@@ -40,6 +41,11 @@ export class Estate extends MapEntity implements TurnActor{
         this.affectedCoordinates = affectedCoordinates.map(x=>x.addCoordinates(tile.coordinate).getKey())
         this.type = type || "estate"
     }
+
+    getProducedResources(): Map<Resource, number> | undefined {
+        return this.producedResources
+    }
+
     benefits = computed<Benefit[]>(() => {
         const benefits:Benefit[] = []
         if (this.skillMapActionSkillBonus) {
