@@ -115,11 +115,10 @@ export class ActionCardInfoList {
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "plastic-factory",
                     price: new Map([["scrap", 5]]),
-                    runCost: new Map([["oil", 1]]),
+                    runCost: new Map([["oil", 1], ["electricity", 1]]),
                     producedResources: new Map([["scrap", 1]]),
                 }
             )
-            
         ]
     ])
 }

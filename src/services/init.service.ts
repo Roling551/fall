@@ -13,6 +13,7 @@ import { CharactersCardsService, CharactersCardsServiceMode } from "./character-
 import { MapImageComponent } from "../shared/map-image/map-image.component";
 import { Estate } from "../models/estate";
 import { SimpleTile } from "../models/tile/simple-tile";
+import { ResourcesService } from "./resources.service";
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +28,11 @@ export class InitService {
         private characterCardInfoList: CharacterCardInfoList,
         private charactersCardsService: CharactersCardsService,
         private decisionsService: DecisionsService,
+        private resourcesService: ResourcesService
     ) {}
 
     init() {
+        this.resourcesService.addResources(new Map([["oil",25], ["scrap",25], ["water",25], ["electricity",25]]))
         this.uiStateService.setBaseTileInfo("resourcesInfo", {
             template: ResourcesInfoComponent,
             doRender: (tile: KeyValuePair<Coordinate, Tile>) => true,

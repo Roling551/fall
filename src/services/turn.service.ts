@@ -26,16 +26,20 @@ export class TurnService {
 
     turn = signal(0)
 
+    private isResourcesSufficient = computed(() => {
+        return this.resourcesService.canAffordResourcesExcludeNonPermanent(multiplyNumericalValuesFunctional(this.turnActorsService.resourcesChange(),-1))
+    })
+
     public canNextTurn = computed(() => {
         const level = this.levelService.level.get()
         if(!level) {
             return false
         }
-        const sufficientResources = this.resourcesService.canAffordResources(multiplyNumericalValuesFunctional(this.turnActorsService.resourcesChange(),-1))
-        return level.canNextTurn() && sufficientResources
+        return level.canNextTurn() && this.isResourcesSufficient()
     })
 
     public nextTurn() {
+        this.resourcesService.removeNonPermanentResources()
         const level = this.levelService.level.get()
         if(!level) {
             return

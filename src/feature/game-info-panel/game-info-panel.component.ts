@@ -22,10 +22,11 @@ export class GameInfoPanelComponent {
   })
 
   public resourcesText = computed(() => {
-    const requiredResources = this.turnActorsService.resourcesChange()
+    const resourcesChange = this.turnActorsService.resourcesChange()
     let s = "Resources: "
-    for(const resource of this.resourcesService.resources.get()) {
-        s += `${resource[0]} - ${resource[1]}(${requiredResources.get(resource[0])||0}) `
+    for(const [resource, currentAmount] of this.resourcesService.resources.get()) {
+        const change = resourcesChange.get(resource)
+            s += `${resource} - ${currentAmount || 0}(${change || 0}) `
     }
     return s
   })

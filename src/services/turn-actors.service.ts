@@ -29,11 +29,9 @@ export class TurnActorsService {
                 if(produced) {
                     addNumericalValues(change, produced)
                 }
-                console.log(actor.getRequiredResources())
                 substractNumericalValues(change, actor.getRequiredResources())
             }
         }
-        console.log(change)
         return change
     })
 
