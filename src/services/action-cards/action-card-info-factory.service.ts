@@ -141,6 +141,7 @@ export class ActionCardInfoFactoryService {
                 inputs.skillMapActionSkillBonus,
                 inputs.movementBonus,
                 actionCardInfo,
+                inputs.cardPicture,
                 mapEntityType
             ),
             affectedCoordinates: inputs.affectedCoordinates,

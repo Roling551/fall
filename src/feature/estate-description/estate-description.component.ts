@@ -9,4 +9,7 @@ import { Estate } from '../../models/estate';
 })
 export class EstateDescriptionComponent {
     @Input({required:true}) estate!: Estate
+    getTexture() {
+        return `assets/pictures/${(this.estate.picture||this.estate.name)}.png`
+    }
 }

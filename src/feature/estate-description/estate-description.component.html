@@ -1,6 +1,12 @@
 <div>
     Estate:
 </div>
+<div>{{estate.name}}</div>
+<div class="cardPicture">
+        <img [src]="getTexture()" onerror="this.onerror=null; this.src='assets/pictures/default-action-card.png';" width="120" height="120">
+    </div>
+<div>
 @for(description of estate.effectsDescriptions(); track $index) {
     {{description}}
 }
+</div>
