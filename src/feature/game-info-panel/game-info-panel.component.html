@@ -2,5 +2,5 @@
     <p>Game</p>
     <button (click)="onNextTurn()" [disabled]="!canNextTurn()">Next turn</button>
     <p>{{turnText()}}</p>
-    <p>{{resourcesText()}}</p>
+    <p><app-transform-text [textParts]="resourcesText()"/></p>
 </div>

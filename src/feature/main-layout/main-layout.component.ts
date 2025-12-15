@@ -40,6 +40,4 @@ export class MainLayoutComponent implements AfterViewInit {
         this.uiStateService.cancel();
         this.charactersCardsService.onRightClick()
     }
-
-
 }

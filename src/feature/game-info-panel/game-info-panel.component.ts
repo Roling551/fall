@@ -2,10 +2,12 @@ import { Component, computed, resource, Signal } from '@angular/core';
 import { TurnService } from '../../services/turn.service';
 import { ResourcesService } from '../../services/resources.service';
 import { TurnActorsService } from '../../services/turn-actors.service';
+import { TextPart } from '../../models/text-part';
+import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
 
 @Component({
   selector: 'app-game-info-panel',
-  imports: [],
+  imports: [TransformTextComponent],
   templateUrl: './game-info-panel.component.html',
   styleUrl: './game-info-panel.component.scss'
 })
@@ -21,12 +23,16 @@ export class GameInfoPanelComponent {
     return "Turn: " + this.turnService.turn()
   })
 
-  public resourcesText = computed(() => {
+  public resourcesText = computed<TextPart[]>(() => {
     const resourcesChange = this.turnActorsService.resourcesChange()
-    let s = "Resources: "
+    let s:TextPart[] = ["Resources: "]
     for(const [resource, currentAmount] of this.resourcesService.resources.get()) {
         const change = resourcesChange.get(resource)
-            s += `${resource} - ${currentAmount || 0}(${change || 0}) `
+            s.push({
+                type: "emoticon",
+                emoticon:resource
+            }) 
+            s.push(`- ${currentAmount || 0}(${change || 0}) `)
     }
     return s
   })

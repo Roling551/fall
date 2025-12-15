@@ -1,0 +1,7 @@
+@for(part of textParts; track $index) {
+    @if(typeof part === 'string') {
+        {{part}}
+    } @else if(getTextPartType(part)==="emoticon") {
+        <img [src]="getEmoticonPicture(part)" class="emoticon">
+    }
+}
