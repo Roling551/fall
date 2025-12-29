@@ -15,6 +15,7 @@ export interface SkillActionResult {
 export abstract class MapEntity {
     abstract readonly type: MapEntityType
     public buildings
+    public onSelfDestroy?: ()=>void
 
     constructor(public textureName: string, public buildingsSlots: number = 0){
         this.buildings = createForceSignal(

@@ -5,6 +5,7 @@ import { MapEntity, MapEntityType } from "../map-entity";
 import { Obstacles } from "../obstacles";
 import { BaseTile } from "./base-tile";
 import { Estate } from "../estate";
+import { map } from "rxjs";
 
 export class SimpleTile extends BaseTile {
     playersMapEntity = createForceSignal<MapEntity|undefined>(undefined)
@@ -38,6 +39,9 @@ export class SimpleTile extends BaseTile {
     }
 
     override addMapEntity(mapEntity: MapEntity): boolean {
+        mapEntity.onSelfDestroy = ()=>{
+            this.removeMapEntity(mapEntity)
+        }
         if(mapEntity.type == "estate" || mapEntity.type == "station") {
             if(!!this.playersMapEntity.get()) {
                 return false
