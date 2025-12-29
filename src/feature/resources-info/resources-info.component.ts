@@ -3,16 +3,14 @@ import { Tile } from '../../models/tile/tile';
 import { Coordinate } from '../../models/coordinate';
 import { KeyValuePair } from '../../models/key-value-pair';
 import { StyleVariablesService } from '../../services/style-variables.service';
-import { getResourceSymbol, resourcesToString } from '../../models/resource';
-import { getSkillSymbol, skillsToString } from '../../models/skill';
-import { BaseTile } from '../../models/tile/base-tile';
 import { SimpleTile } from '../../models/tile/simple-tile';
 import { EnvironmentMapEntity } from '../../models/environment-map-entity';
-import { multiplyNumericalValuesFunctional } from '../../util/map-functions';
+import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
+import { TextPart } from '../../models/text-part';
 
 @Component({
   selector: 'app-resources-info',
-  imports: [],
+  imports: [TransformTextComponent],
   templateUrl: './resources-info.component.html',
   styleUrl: './resources-info.component.scss'
 })
@@ -27,13 +25,13 @@ export class ResourcesInfoComponent {
         this.sizeY = styleVariablesService.sizeY
     }
 
-    resourcesTexts = computed(()=>{
+    resourcesTexts = computed<TextPart[][]>(()=>{
         const tile = this.tile?.value
         if(tile instanceof SimpleTile) {
             return tile.environmentMapEntities.get()
                 .filter(x=>x instanceof EnvironmentMapEntity)
                 .map(x=>x.getDescription())
         }
-        return [""]
+        return [[""]]
     })
 }

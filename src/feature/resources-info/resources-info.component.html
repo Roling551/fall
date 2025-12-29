@@ -1,7 +1,7 @@
 <div [style.width.px]="sizeX" [style.height.px]="sizeY">
     <div class="inner-container" [style.margin-top.px]="sizeY/4">
         @for(resourceText of resourcesTexts(); track $index) {
-            <p class="resource" [style.font-size.px]="sizeX/16">{{resourceText}}</p>
+            <p class="resource" [style.font-size.px]="sizeX/16"><app-transform-text [textParts]=resourceText/></p>
         }
     </div>
 </div>

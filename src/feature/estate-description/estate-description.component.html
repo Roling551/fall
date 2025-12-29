@@ -7,6 +7,6 @@
     </div>
 <div>
 @for(description of estate.effectsDescriptions(); track $index) {
-    {{description}}
+    <app-transform-text [textParts]="description"/>
 }
 </div>

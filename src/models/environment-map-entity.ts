@@ -4,10 +4,11 @@ import { LimitedSet } from "../util/limited-set";
 import { multiplyNumericalValues, multiplyNumericalValuesFunctional } from "../util/map-functions";
 import { Building } from "./building";
 import { MapEntity, MapEntityType, SkillActionResult } from "./map-entity";
-import { Resource, resourcesToString } from "./resource";
+import { Resource, resourcesToTextParts } from "./resource";
 import { Reward } from "./reward";
 import { SimpleActee } from "./simple-actee";
 import { getSkillSymbol, Skill } from "./skill";
+import { TextPart } from "./text-part";
 
 export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
@@ -32,16 +33,19 @@ export class EnvironmentMapEntity extends MapEntity {
         return this.actee.canAttemptSkillAction(skills)
     }
 
-    getDescription = computed(() => {
-        let text =  "" +    
+    getDescription = computed<TextPart[]>(() => {
+        let textParts:TextPart[] =  [    
             getSkillSymbol(this.actee.mainSkill) +
             "[" + this.actee.difficulty + "]" +
             "->"
+        ]
         if(this.resourcesGain.size > 0) {
-            text += resourcesToString(multiplyNumericalValuesFunctional(this.resourcesGain, this.actee.progressLeft()))
+            textParts = textParts.concat(
+                resourcesToTextParts(multiplyNumericalValuesFunctional(this.resourcesGain, this.actee.progressLeft()))
+            )
         } else {
-            text += this.actee.progressLeft() + "/" + this.actee.maxProgress
+            textParts = textParts.concat(this.actee.progressLeft() + "/" + this.actee.maxProgress)
         }
-        return text
+        return textParts
     })
 }

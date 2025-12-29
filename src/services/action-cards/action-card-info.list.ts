@@ -70,10 +70,6 @@ export class ActionCardInfoList {
                     estateTexture: "drill",
                     price: new Map([["scrap", 5]]),
                     runCost: new Map([["oil", 1]]),
-                    cardOnHandRewards: [{
-                        type: "SkillMapActionSkillBonus",
-                        skillBonus: {bonus:new Map([["mining",1]])}
-                    }]
                 }
             )
         ],

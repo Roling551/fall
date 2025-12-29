@@ -12,6 +12,7 @@ import { Coordinate } from "./coordinate";
 import { ActionCardInfo } from "./action-card-info";
 import { Benefit } from "./benefit";
 import { EstateCardInputs } from "../services/action-cards/action-card-info-factory.service";
+import { TextPart } from "./text-part";
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
@@ -109,15 +110,15 @@ export class Estate extends MapEntity implements TurnActor{
     }
 
     effectsDescriptions = computed(()=>{
-        const descriptions: string[] = []
+        const descriptions: TextPart[][] = []
         if(this.additionalInfo.skillApplied) {
-            descriptions.push("apply:" + skillsToString(this.additionalInfo.skillApplied))
+            descriptions.push(["apply:" + skillsToString(this.additionalInfo.skillApplied)])
         }
         if(this.additionalInfo.skillMapActionSkillBonus) {
-            descriptions.push("bonus:" + skillsToString(this.additionalInfo.skillMapActionSkillBonus))
+            descriptions.push(["bonus:" + skillsToString(this.additionalInfo.skillMapActionSkillBonus)])
         }
         if(this.additionalInfo.movementBonus) {
-            descriptions.push("move:+" + this.additionalInfo.movementBonus)
+            descriptions.push(["move:+" + this.additionalInfo.movementBonus])
         }
         return descriptions
     })

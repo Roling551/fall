@@ -2,7 +2,7 @@ import { Component, computed, Input } from '@angular/core';
 import { CurrentWindowService } from '../../services/current-window.service';
 import { DecisionsService } from '../../services/decisions.service';
 import { CardComponent } from '../card/card.component';
-import { resourcesToString } from '../../models/resource';
+import { resourcesToTextParts } from '../../models/resource';
 import { CardReward, ResourcesReward, Reward } from '../../models/reward';
 import { Decision } from '../../models/decision';
 
@@ -44,7 +44,7 @@ export class DecisionPanelComponent {
     getResourcesString(reward: Reward) {
         if(reward.rewardType == "Resources") {
             const r = reward as ResourcesReward
-            return resourcesToString(r.resources)
+            return resourcesToTextParts(r.resources)
         }
         return undefined
     }

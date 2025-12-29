@@ -2,12 +2,12 @@
     <div style="display: flex; justify-content: space-between;">
         <span>{{requiredSkills()}}</span>
         <span>{{cardActionType()}}</span>
-        <span>{{price()}}</span>
+        <span><app-transform-text [textParts]="price()"/></span>
     </div>
     <div>{{card.name}}</div>
     <div class="cardPicture">
         <img [src]="getTexture(card)" onerror="this.onerror=null; this.src='assets/pictures/default-action-card.png';" width="120" height="120">
     </div>
-    <div>{{cardActionEffect()}}</div>
+    <div><app-transform-text [textParts]="cardActionEffect()"/></div>
     <div>{{cardOnHandRewards()}}</div>
 </div>

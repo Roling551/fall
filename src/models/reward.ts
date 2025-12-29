@@ -1,8 +1,9 @@
 import { DecisionFactoryOption } from "../services/decision-factory.service"
 import { SkillMapActionSkillBonus } from "./bonus"
 import { CardInfo } from "./card-info"
-import { Resource, resourcesToString } from "./resource"
+import { Resource, resourcesToTextParts } from "./resource"
 import { skillsToString } from "./skill"
+import { TextPart } from "./text-part"
 
 export type RewardOption = {
     type: "Card",
@@ -22,15 +23,15 @@ export type RewardType = "Card" | "Resources" | "SkillMapActionSkillBonus" | "De
 
 export interface Reward {
     rewardType: RewardType
-    getText(): string
+    getTextParts(): TextPart[]
     claim(): void
 }
 
 export class CardReward implements Reward {
     rewardType: RewardType = "Card";
     constructor(public cardToAdd: CardInfo, private claimFunction: ()=>void) {}
-    getText() {
-        return "receive card: " + this.cardToAdd.name
+    getTextParts() {
+        return ["receive card: " + this.cardToAdd.name]
     }
     claim() {
         this.claimFunction()
@@ -40,8 +41,8 @@ export class CardReward implements Reward {
 export class ResourcesReward implements Reward {
     rewardType: RewardType = "Resources";
     constructor(public resources: Map<Resource, number>, private claimFunction: ()=>void) {}
-    getText() {
-        return "receive resources: " + resourcesToString(this.resources)
+    getTextParts() {
+        return ["receive resources: ", ...resourcesToTextParts(this.resources)]
     }
     claim() {
         this.claimFunction()
@@ -51,8 +52,8 @@ export class ResourcesReward implements Reward {
 export class SkillMapActionSkillBonusReward implements Reward {
     rewardType: RewardType = "SkillMapActionSkillBonus";
     constructor(public skillBonus: SkillMapActionSkillBonus, private claimFunction: ()=>void) {}
-    getText() {
-        return "skill bonus: " + skillsToString(this.skillBonus.bonus)
+    getTextParts() {
+        return ["skill bonus: " + skillsToString(this.skillBonus.bonus)]
     }
     claim() {
         this.claimFunction()
@@ -62,8 +63,8 @@ export class SkillMapActionSkillBonusReward implements Reward {
 export class DecisionReward implements Reward {
     rewardType: RewardType = "Decision"
     constructor(private claimFunction: ()=>void) {}
-    getText(): string {
-        return "decision"
+    getTextParts() {
+        return ["decision"]
     }
     claim(): void {
         this.claimFunction()

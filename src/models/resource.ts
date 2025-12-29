@@ -1,3 +1,5 @@
+import { TextPart } from "./text-part";
+
 export const ResourceKeys = [
   "water",
   "oil",
@@ -23,8 +25,8 @@ export function getResourceSymbol(resource: Resource) {
     }
 }
 
-export function resourcesToString(resources: Map<Resource, number>) {
-    return [...resources.entries()].map(x=>getResourceSymbol(x[0])+"-"+x[1]).join(', ')
+export function resourcesToTextParts(resources: Map<Resource, number>): TextPart[] {
+    return [...resources.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0]}," "])
 }
 
 export function isResourcePermanent(resource: Resource) {

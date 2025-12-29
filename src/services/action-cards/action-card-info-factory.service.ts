@@ -7,13 +7,14 @@ import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
 import { Skill, skillsToString } from "../../models/skill";
-import { Resource, resourcesToString } from "../../models/resource";
+import { Resource, resourcesToTextParts } from "../../models/resource";
 import { getBorderInfo, getCreateEstateActionAndTileInfo, getCreateMultipleEstatesActionAndTileInfo } from "./actions-cards-functions";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
 import { ActionCardInfo } from "../../models/action-card-info";
 import { Reward, RewardOption } from "../../models/reward";
 import { RewardFactoryService } from "../reward-factory.service";
+import { TextPart } from "../../models/text-part";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -77,9 +78,9 @@ export class ActionCardInfoFactoryService {
             skills: inputs.skillApplied,
             times: inputs.times!=undefined ? inputs.times : 1
         }
-        const effectsDescriptions: string[] = []
+        const effectsDescriptions: TextPart[][] = []
         if(inputs.skillApplied) {
-            effectsDescriptions.push("apply:" + skillsToString(inputs.skillApplied))
+            effectsDescriptions.push(["apply:" + skillsToString(inputs.skillApplied)])
         }
         return new ActionCardInfo(
             inputs.name,
@@ -108,18 +109,18 @@ export class ActionCardInfoFactoryService {
             times: inputs.times!=undefined ? inputs.times : 1
         } : undefined
 
-        const effectsDescriptions: string[] = []
+        let effectsDescriptions: TextPart[][] = []
         if(inputs.skillApplied) {
-            effectsDescriptions.push("apply:" + skillsToString(inputs.skillApplied))
+            effectsDescriptions.push(["apply:" + skillsToString(inputs.skillApplied)])
         }
         if(inputs.skillMapActionSkillBonus) {
-            effectsDescriptions.push("bonus:" + skillsToString(inputs.skillMapActionSkillBonus))
+            effectsDescriptions.push(["bonus:" + skillsToString(inputs.skillMapActionSkillBonus)])
         }
         if(inputs.producedResources) {
-            effectsDescriptions.push("produces:" + resourcesToString(inputs.producedResources))
+            effectsDescriptions.push((["produces:", ...resourcesToTextParts(inputs.producedResources)]))
         }
         if(inputs.movementBonus) {
-            effectsDescriptions.push("move:+" + inputs.movementBonus)
+            effectsDescriptions.push(["move:+" + inputs.movementBonus])
         }
 
         let actionCardInfo: ActionCardInfo 

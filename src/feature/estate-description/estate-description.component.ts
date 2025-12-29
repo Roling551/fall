@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { Estate } from '../../models/estate';
+import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
 
 @Component({
   selector: 'app-estate-description',
-  imports: [],
+  imports: [TransformTextComponent],
   templateUrl: './estate-description.component.html',
   styleUrl: './estate-description.component.scss'
 })
