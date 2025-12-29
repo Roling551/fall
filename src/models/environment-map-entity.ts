@@ -14,7 +14,7 @@ export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
     actee
 
-    constructor(name: string, maxProgress: number, public resourcesGain: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
+    constructor(name: string, maxProgress: number, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
         this.actee = new SimpleActee("mining", maxProgress, 0)
     }
@@ -28,7 +28,7 @@ export class EnvironmentMapEntity extends MapEntity {
             this.onSelfDestroy()
         }
         return {
-            resourcesGained: multiplyNumericalValuesFunctional(this.resourcesGain, actionResult.progressDone)
+            ...(this.resourcesGain && {resourcesGained: multiplyNumericalValuesFunctional(this.resourcesGain, actionResult.progressDone)})
         }
     }
 
@@ -42,7 +42,7 @@ export class EnvironmentMapEntity extends MapEntity {
             "[" + this.actee.difficulty + "]" +
             "->"
         ]
-        if(this.resourcesGain.size > 0) {
+        if(this.resourcesGain) {
             textParts = textParts.concat(
                 resourcesToTextParts(multiplyNumericalValuesFunctional(this.resourcesGain, this.actee.progressLeft()))
             )

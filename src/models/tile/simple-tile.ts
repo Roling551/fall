@@ -5,7 +5,6 @@ import { MapEntity, MapEntityType } from "../map-entity";
 import { Obstacles } from "../obstacles";
 import { BaseTile } from "./base-tile";
 import { Estate } from "../estate";
-import { map } from "rxjs";
 
 export class SimpleTile extends BaseTile {
     playersMapEntity = createForceSignal<MapEntity|undefined>(undefined)

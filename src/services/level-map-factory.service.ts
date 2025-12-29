@@ -24,7 +24,7 @@ export class LevelMapFactoryService {
             new EnvironmentMapEntity(
                 "scrap",
                 5,
-                new Map([]),
+                undefined,
                 () => [
                     this.rewardFactoryService.createReward({
                         type: "Decision",
