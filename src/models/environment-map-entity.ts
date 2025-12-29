@@ -9,6 +9,7 @@ import { Reward } from "./reward";
 import { SimpleActee } from "./simple-actee";
 import { getSkillSymbol, Skill } from "./skill";
 import { TextPart } from "./text-part";
+import { Actee } from "./actee";
 
 export type SkillInstance = {
     skill: Skill,
@@ -18,14 +19,20 @@ export type SkillInstance = {
 
 export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
-    actee
+    actee?: SimpleActee
 
-    constructor(name: string, skillInstance: SkillInstance, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
+    constructor(name: string, skillInstance?: SkillInstance, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
-        this.actee = new SimpleActee(skillInstance.skill, skillInstance.maxProgress, skillInstance.difficulty)
+        if(skillInstance) {
+            this.actee = new SimpleActee(skillInstance.skill, skillInstance.maxProgress, skillInstance.difficulty)
+        }
+        
     }
 
     override skillAction(skills: Map<Skill,number>): SkillActionResult {
+        if(!this.actee) {
+            return {}
+        }
         const actionResult = this.actee.skillAction(skills)
         if(this.onDepletedRewardsGetter && actionResult.justFinished) {
             this.onDepletedRewardsGetter().forEach(x=>x.claim())
@@ -39,10 +46,13 @@ export class EnvironmentMapEntity extends MapEntity {
     }
 
     override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
-        return this.actee.canAttemptSkillAction(skills)
+        return !!this.actee && this.actee.canAttemptSkillAction(skills)
     }
 
     getDescription = computed<TextPart[]>(() => {
+        if(!this.actee) {
+            return []
+        }
         let textParts:TextPart[] =  [    
             getSkillSymbol(this.actee.mainSkill) +
             "[" + this.actee.difficulty + "]" +
