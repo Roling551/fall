@@ -163,7 +163,7 @@ export class UIStateService {
     this._additionalInfo.set({...this._additionalInfo.get(), ...ui.additionalInfo})
 
     if(ui.tileInfos) {
-      this._tileInfos.set(new Map([...(this._ui?.tileInfos || []), ...ui.tileInfos]))
+      this._tileInfos.set(new Map([...(this._ui?.tileInfos || []), ...this._baseTileInfo.get(), ...ui.tileInfos]))
       this._tileInfos.forceUpdate()
     }
 
