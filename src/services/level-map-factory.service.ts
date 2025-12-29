@@ -18,12 +18,28 @@ export class LevelMapFactoryService {
 
     tilePresets = new Map<string, () => EnvironmentMapEntity[]>([
         ["nothing", () => []],
-        ["forest", () => [new EnvironmentMapEntity("forest", 10, new Map([["water", 1]]))]],
-        ["oilSource", () => [new EnvironmentMapEntity("oil", 20, new Map([["oil", 1]]))]],
+        ["forest", () => [
+            new EnvironmentMapEntity("forest", {
+                skill: "mining",
+                maxProgress: 5,
+                difficulty: 0
+            }, 
+            new Map([["water", 1]]))]],
+        ["oilSource", () => [
+            new EnvironmentMapEntity("oil", {
+                skill: "mining",
+                maxProgress: 5,
+                difficulty: 0
+            }, 
+            new Map([["oil", 1]]))]],
         ["scrapPile", () => [
             new EnvironmentMapEntity(
                 "scrap",
-                5,
+                {
+                    skill: "mining",
+                    maxProgress: 5,
+                    difficulty: 0
+                },
                 undefined,
                 () => [
                     this.rewardFactoryService.createReward({

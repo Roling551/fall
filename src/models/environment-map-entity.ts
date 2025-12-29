@@ -10,13 +10,19 @@ import { SimpleActee } from "./simple-actee";
 import { getSkillSymbol, Skill } from "./skill";
 import { TextPart } from "./text-part";
 
+export type SkillInstance = {
+    skill: Skill,
+    difficulty: number,
+    maxProgress: number,
+}
+
 export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
     actee
 
-    constructor(name: string, maxProgress: number, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
+    constructor(name: string, skillInstance: SkillInstance, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
-        this.actee = new SimpleActee("mining", maxProgress, 0)
+        this.actee = new SimpleActee(skillInstance.skill, skillInstance.maxProgress, skillInstance.difficulty)
     }
 
     override skillAction(skills: Map<Skill,number>): SkillActionResult {
