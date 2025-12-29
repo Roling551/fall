@@ -27,11 +27,14 @@ export class LevelMapFactoryService {
             new Map([["water", 1]]))]],
         ["oilSource", () => [
             new EnvironmentMapEntity("oil", {
-                skill: "mining",
-                maxProgress: 5,
-                difficulty: 0
-            }, 
-            new Map([["oil", 1]]))]],
+                    skill: "mining",
+                    maxProgress: 5,
+                    difficulty: 0
+                },
+                new Map([["oil", 1]])
+            ),
+            new EnvironmentMapEntity("oil-left")
+        ]],
         ["scrapPile", () => [
             new EnvironmentMapEntity(
                 "scrap",
