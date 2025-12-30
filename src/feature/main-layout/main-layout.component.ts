@@ -8,10 +8,11 @@ import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.compo
 import { CardsComponent } from '../cards/cards.component';
 import { ActionsCardsService } from '../../services/action-cards/actions-cards.service';
 import { CharactersCardsService } from '../../services/character-cards/characters-cards.service';
+import { CardsListComponent } from '../cards-list/cards-list.component';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [WorldMapComponent, CardsComponent, GameInfoPanelComponent],
+  imports: [WorldMapComponent, CardsComponent, GameInfoPanelComponent, CardsListComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })

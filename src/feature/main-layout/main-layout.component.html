@@ -8,15 +8,13 @@
     <div style="overflow: hidden;">
         <app-world-map/>
     </div>
-    <div class="footer">
+    <div class="left-container">
         @if(actionsCards) {
-            <div>
-                <app-cards [cardsHand]="actionsCards"></app-cards>
-            </div>
+            <app-cards-list [cardsHand]="actionsCards"></app-cards-list>
         }
-        <div>
-            <app-cards [cardsHand]="charactersCards"></app-cards>
-        </div>
+    </div>
+    <div class="footer">
+        <app-cards [cardsHand]="charactersCards"></app-cards>
     </div>
 
 </div>

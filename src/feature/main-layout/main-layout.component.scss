@@ -3,18 +3,22 @@
 .container {
     display: grid;
     grid-template-rows: 50px auto (vars.$card-height + 20px);
-    grid-template-columns: 120px auto;
+    grid-template-columns: 120px auto 480px;
     height: 100%;
 }
 
 .header {
-    grid-column: span 2;
+    grid-column: span 3;
     grid-row: span 1;
 }
 
 .footer {
     grid-column: span 2;
     grid-row: span 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+}
+
+.left-container {
+    grid-column: span 1;
+    grid-row: span 2;
+    min-height: 0;
 }
