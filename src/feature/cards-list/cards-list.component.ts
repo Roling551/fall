@@ -2,6 +2,7 @@ import { Component, computed, Input } from '@angular/core';
 import { CardsHand } from '../../models/card-hands/cards-hand';
 import { CardInfo } from '../../models/card-info';
 import { CardComponent } from '../card/card.component';
+import { GroupByCardsHand } from '../../models/card-hands/group-by-cards-hand';
 
 @Component({
   selector: 'app-cards-list',
@@ -10,12 +11,12 @@ import { CardComponent } from '../card/card.component';
   styleUrl: './cards-list.component.scss'
 })
 export class CardsListComponent<T extends CardInfo> {
-    @Input({required: true}) cardsHand!: CardsHand<T>;
+    @Input({required: true}) cardsHand!: GroupByCardsHand<T>;
 
     constructor() {}
 
-    hand = computed(()=>{
-        return this.cardsHand.hand.get()
+    groups = computed(()=>{
+        return this.cardsHand.groupedCards()
     })
 
         onCardClick(card: T) {

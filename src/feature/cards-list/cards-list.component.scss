@@ -1,14 +1,15 @@
 .container {
     padding-top: 8px;
-    display: grid;
     flex-wrap: wrap;
     overflow-y: scroll;
     height: 100%;
+    align-content: start;
+}
 
+.group {
+    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 8px;
-
-    align-content: start;
 }
 
 .selected {

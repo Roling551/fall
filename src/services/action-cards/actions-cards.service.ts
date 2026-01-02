@@ -17,13 +17,14 @@ import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-
 import { createForceSignal } from "../../util/force-signal";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { CardInfo } from "../../models/card-info";
+import { CardSource, GroupByCardsHand } from "../../models/card-hands/group-by-cards-hand";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActionsCardsService {
 
-    public cardsHand?: CardsHand<ActionCardInfo>
+    public cardsHand?: GroupByCardsHand<ActionCardInfo>
     private isActionHappening = signal(false)
 
     constructor(
@@ -44,7 +45,7 @@ export class ActionsCardsService {
     setCards(actionCardInfos: ActionCardInfo[]) {
         actionCardInfos = shuffleArray(actionCardInfos)
         const cards = actionCardInfos.map(x=>this.setMultiStageAction(x))
-        this.cardsHand = new TraditionalCardsHand<ActionCardInfo>(
+        this.cardsHand = new GroupByCardsHand<ActionCardInfo>(
             cards, 
             Infinity, 
             ()=>{this.uiStateService.cancel()}, 
@@ -55,6 +56,17 @@ export class ActionsCardsService {
             computed(()=>{
                 return this.uiStateService.additionalInfo()?.["selectedOverrideCards"]?.get()
             }),
+            (cardInfo: CardInfo, source: CardSource) => {
+                if(cardInfo instanceof ActionCardInfo && source === "hand") {
+                    if(cardInfo.additionalInfo.type === "EstateCardInputs") {
+                        return "estates"
+                    } else if(cardInfo.additionalInfo.type === "InstantExtractionCardInputs") {
+                        return "instant"
+                    }
+                }
+                return undefined
+            },
+            ["instant", "estates"],
         )
     }
 
