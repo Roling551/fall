@@ -18,6 +18,10 @@ import { createForceSignal } from "../../util/force-signal";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { CardInfo } from "../../models/card-info";
 import { CardSource, GroupByCardsHand } from "../../models/card-hands/group-by-cards-hand";
+import { ActionCardInfoFactoryService } from "./action-card-info-factory.service";
+import { InjectorService } from "../injector.service";
+import { TurnActorsService } from "../turn-actors.service";
+import { Estate } from "../../models/estate";
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +36,7 @@ export class ActionsCardsService {
         private charactersCardService: CharactersCardsService,
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
+        private turnActorsService: TurnActorsService
     ) {
         effect(()=>{
             charactersCardService.isHandFrozen.set(this.isActionHappening())
@@ -56,7 +61,7 @@ export class ActionsCardsService {
             computed(()=>{
                 return this.uiStateService.additionalInfo()?.["selectedOverrideCards"]?.get()
             }),
-            (cardInfo: CardInfo, source: CardSource) => {
+            (cardInfo: CardInfo, source: CardSource, additionalDeck?: string) => {
                 if(cardInfo instanceof ActionCardInfo && source === "hand") {
                     if(cardInfo.additionalInfo.type === "EstateCardInputs") {
                         return "estates"
@@ -64,9 +69,20 @@ export class ActionsCardsService {
                         return "instant"
                     }
                 }
+                if(cardInfo instanceof ActionCardInfo) {
+                    if(additionalDeck && additionalDeck === "estatesOnMap") {
+                        return "estatesOnMap"
+                    }
+                }
                 return undefined
             },
-            ["instant", "estates"],
+            ["instant", "estates", "estatesOnMap"],
+            computed(()=>{
+                return new Map([["estatesOnMap", this.turnActorsService.actors.get()
+                    .filter(x=>x instanceof Estate)
+                    .map(x=>(x as Estate)["actionCardGetAfterDestroy"] as ActionCardInfo)
+                ]])
+            }),
         )
     }
 

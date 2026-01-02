@@ -1,10 +1,11 @@
 import { computed, Signal, signal } from "@angular/core";
 import { CardInfo } from "../card-info";
 import { TraditionalCardsHand } from "./traditional-cards-hand";
+import { createForceSignal } from "../../util/force-signal";
 
-export type CardSource = "draw" | "hand" | "discard"
+export type CardSource = "draw" | "hand" | "discard" | "additionalDecks"
 
-export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T> {
+export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T> {    
     constructor(
         cards: T[], 
         drawsPerTurn: number, 
@@ -14,8 +15,9 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
         canSelectCard:Signal<boolean> = signal(true),
         overrideClick:() => ((card: CardInfo) => void) | undefined,
         overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>,
-        private groupingMethod: (cardInfo: CardInfo, source: CardSource)=>string|undefined,
+        private groupingMethod: (cardInfo: CardInfo, source: CardSource, additionalDeck?: string)=>string|undefined,
         private groups: string[],
+        public additionalDecks?: Signal<Map<string, T[]>>,
         selectCardInfo?: object,
     ) {
         super(
@@ -57,6 +59,16 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
                 groupedCards.get(chosenGroup)?.push(card)
             } else {
                 groupedCards.get("unavaliable")?.push(card)
+            }
+        }
+        if(this.additionalDecks) {
+            for(const [additionalDeck, cards] of this.additionalDecks()) {
+                for(const card of cards) {
+                    const chosenGroup = this.groupingMethod(card, "additionalDecks", additionalDeck)
+                    if(chosenGroup && groupedCards.has(chosenGroup)) {
+                        groupedCards.get(chosenGroup)?.push(card)
+                    }
+                }
             }
         }
         return [...this.groups, "rest", "unavaliable"].map(x=>({group: x, cards:groupedCards.get(x)||[]}))
