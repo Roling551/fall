@@ -7,7 +7,7 @@ import { addExistingNumericalValues } from "../../util/map-functions";
 import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
 import { InjectorService } from "../injector.service";
 import { UIStateService } from "../ui-state/ui-state.service";
-import { createRepeatCardAction, createRepeatMapAction } from "../ui-state/create-repeat-action";
+import { createInstantAction, createRepeatCardAction, createRepeatMapAction } from "../ui-state/create-repeat-action";
 import { CurrentLevelService } from "../current-level.service";
 import { createForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
@@ -103,6 +103,22 @@ export class CharactersCardsService {
                             this.cardsHand?.deselectAllCards()
                         },
                         actionInfo.repeatNumber
+                    )
+                }
+                return true
+            }
+        } else if(actionInfo.type === "Reward") {
+            card.onSelect = (selectCardInfo?:any)=>{
+                if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
+                    createInstantAction(
+                        this.uiStateService,
+                        ()=>{
+                            actionInfo.reward.claim()
+                            this.cardsHand?.discardCard(card)
+                        },
+                        ()=>{
+                            this.cardsHand?.deselectAllCards()
+                        }
                     )
                 }
                 return true

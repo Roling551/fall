@@ -1,12 +1,14 @@
 import { Injectable } from "@angular/core";
 import { CharacterCardInfoFactoryService } from "./character-card-info-factory.service";
 import { CharacterCardInfo } from "../../models/character-card-info";
+import { ResourcesReward } from "../../models/reward";
+import { RewardFactoryService } from "../reward-factory.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CharacterCardInfoList {
-    constructor(private characterCardFactory: CharacterCardInfoFactoryService) {}
+    constructor(private characterCardFactory: CharacterCardInfoFactoryService, private rewardFactoryService: RewardFactoryService) {}
 
     getCardsByNames(names: string[]) {
         return names.map(x=>this.list.get(x)).filter(x=>!!x).map(x=>x())
@@ -39,6 +41,19 @@ export class CharacterCardInfoList {
                     repeatNumber: 2,
                 },
                 cardPicture: "dwarf1",
+            })
+        ],
+        [
+            "accountant",
+            ()=>this.characterCardFactory.createCharacterCard({
+                name: "accountant",
+                skills: new Map([["construction", 1]],),
+                movement: 3,
+                characterAction: {
+                    name: "getReward",
+                    reward: this.rewardFactoryService.createReward({type: "Resources", resources: new Map([["computation",5]])}),
+                },
+                cardPicture: "dwarf3",
             })
         ]
     ])

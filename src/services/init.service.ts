@@ -54,7 +54,7 @@ export class InitService {
         // })
         const initialCardNames = ["handDrill", "automaticDrill", "automaticDrill", "miningTools", "road", "plasticFactory", "powerplant"]
         this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByNames(initialCardNames))
-        const initialCharacterCardNames = ["recycler", "demolisher"]
+        const initialCharacterCardNames = ["recycler", "demolisher", "accountant"]
         this.charactersCardsService.setCards(this.characterCardInfoList.getCardsByNames(initialCharacterCardNames))
     }
 

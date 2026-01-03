@@ -2,7 +2,9 @@ import { CardInfo } from "./card-info";
 import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
 import { ObstacleType } from "./obstacles";
+import { Reward } from "./reward";
 import { Skill } from "./skill";
+import { TextPart } from "./text-part";
 import { Tile } from "./tile/tile";
 
 export type CharacterActionInfo = {
@@ -15,6 +17,9 @@ export type CharacterActionInfo = {
     canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>boolean,
     finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => void,
     repeatNumber: number,
+} | {
+    type: "Reward",
+    reward: Reward
 }
 
 
@@ -24,7 +29,7 @@ export class CharacterCardInfo extends CardInfo{
         public skills: Map<Skill, number>, 
         public movement: number, 
         public actionInfo: CharacterActionInfo,
-        public actionDescription: string,
+        public actionDescription: TextPart[],
         public movementAdvantege?: Map<ObstacleType, number>,
         public cardPicture?: string,
     ) {

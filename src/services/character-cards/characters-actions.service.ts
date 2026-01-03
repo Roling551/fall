@@ -8,6 +8,8 @@ import { CharacterActionInfo } from "../../models/character-card-info";
 import { SimpleTile } from "../../models/tile/simple-tile";
 import { Resource } from "../../models/resource";
 import { addNumericalValues, multiplyNumericalValuesFunctional, roundDownFunctional } from "../../util/map-functions";
+import { Reward } from "../../models/reward";
+import { TextPart } from "../../models/text-part";
 
 export type CharacterActionInput = {
     name: "recycleActionCard",
@@ -17,6 +19,9 @@ export type CharacterActionInput = {
     name: "demolishEstate",
     refundFraction: number,
     repeatNumber?: number,
+} | {
+    name: "getReward",
+    reward: Reward,
 }
 
 @Injectable({
@@ -25,10 +30,10 @@ export type CharacterActionInput = {
 export class CharactersActionsService {
     constructor(private injectorService: InjectorService) {}
 
-    getCharacterActionInfoAndDescription(input: CharacterActionInput): {actionInfo:CharacterActionInfo, actionDescription:string} {
-        const repeatNumber = input.repeatNumber || 1
+    getCharacterActionInfoAndDescription(input: CharacterActionInput): {actionInfo:CharacterActionInfo, actionDescription:TextPart[]} {
         switch(input.name) {
-            case "recycleActionCard":
+            case "recycleActionCard": {
+                const repeatNumber = input.repeatNumber || 1
                 return {
                     actionInfo: {
                         type: "Card",
@@ -38,9 +43,11 @@ export class CharactersActionsService {
                         },
                         repeatNumber
                     },
-                    actionDescription: `Recycle card, get ${input.resourcesPerRecycled.toString()} scrap`
+                    actionDescription: [`Recycle card, get ${input.resourcesPerRecycled.toString()} `, {type: "emoticon",emoticon: "scrap"}]
                 }
-            case "demolishEstate":
+            }
+            case "demolishEstate": {
+                const repeatNumber = input.repeatNumber || 1
                 return {
                     actionInfo: {
                         type: "Tile",
@@ -52,7 +59,16 @@ export class CharactersActionsService {
                         },
                         repeatNumber
                     },
-                    actionDescription: `Demolish estate, get ${input.refundFraction} of resources back`
+                    actionDescription: [`Demolish estate, get ${input.refundFraction} of resources back`]
+                }
+            }
+            case "getReward":
+                return {
+                    actionInfo: {
+                        type: "Reward",
+                        reward: input.reward
+                    },
+                    actionDescription: input.reward.getTextParts()
                 }
         }
     }

@@ -8,8 +8,9 @@ import { createForceSignal } from "../../util/force-signal";
 import { BorderComponent } from "../../shared/border/border.component";
 import { CurrentLevelService } from "../current-level.service";
 import { CardInfo } from "../../models/card-info";
+import { AcceptActionComponent } from "../../feature/accept-action/accept-action.component";
 
-export function createRepeatMapAction<T>(
+export function createRepeatMapAction(
     uiStateService: UIStateService,
     levelService: CurrentLevelService,
     canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>boolean,
@@ -66,7 +67,7 @@ export function createRepeatMapAction<T>(
     )
 }
 
-export function createRepeatCardAction<T>(
+export function createRepeatCardAction(
     uiStateService: UIStateService,
     canSelectCard: (card: CardInfo)=>boolean,
     afterFinishAction: (selectedCards: Map<number, CardInfo>)=> void,
@@ -102,4 +103,21 @@ export function createRepeatCardAction<T>(
             }
         }
     )
+}
+
+export function createInstantAction(
+    uiStateService: UIStateService,
+    afterFinishAction: ()=>void,
+    cancelButtonAction: ()=>void,
+) {
+    uiStateService.setUI({
+        sideComponent: AcceptActionComponent,
+        sideComponentInputs: {
+            acceptAction: ()=>{
+                afterFinishAction()
+                uiStateService.cancel()
+            },
+        },
+        cancelButtonAction,
+    })
 }
