@@ -19,8 +19,8 @@ export class CardsListComponent<T extends CardInfo> {
         return this.cardsHand.groupedCards()
     })
 
-        onCardClick(card: T) {
-        this.cardsHand.selectCard(card)
+    onCardClick(card: T, avaliable: boolean) {
+        this.cardsHand.selectCard(card, !avaliable)
     }
 
     isCardSelected(card: T) {

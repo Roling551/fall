@@ -64,14 +64,14 @@ export class ActionsCardsService {
             (cardInfo: CardInfo, source: CardSource, additionalDeck?: string) => {
                 if(cardInfo instanceof ActionCardInfo && source === "hand") {
                     if(cardInfo.additionalInfo.type === "EstateCardInputs") {
-                        return "estates"
+                        return {group:"estates", avaliable: true}
                     } else if(cardInfo.additionalInfo.type === "InstantExtractionCardInputs") {
-                        return "instant"
+                        return {group:"instant", avaliable: true}
                     }
                 }
                 if(cardInfo instanceof ActionCardInfo) {
                     if(additionalDeck && additionalDeck === "estatesOnMap") {
-                        return "estatesOnMap"
+                        return {group:"estatesOnMap", avaliable: false}
                     }
                 }
                 return undefined

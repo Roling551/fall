@@ -15,7 +15,7 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
         canSelectCard:Signal<boolean> = signal(true),
         overrideClick:() => ((card: CardInfo) => void) | undefined,
         overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>,
-        private groupingMethod: (cardInfo: CardInfo, source: CardSource, additionalDeck?: string)=>string|undefined,
+        private groupingMethod: (cardInfo: CardInfo, source: CardSource, additionalDeck?: string)=>{group:string, avaliable:boolean}|undefined,
         private groups: string[],
         public additionalDecks?: Signal<Map<string, T[]>>,
         selectCardInfo?: object,
@@ -33,40 +33,40 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
         )
     }
 
-    groupedCards = computed<{group: string, cards: T[]}[]>(()=> {
-        const groupedCards = new Map<string, T[]>(this.groups.map(x=>[x, []]))
+    groupedCards = computed<{group: string, cards: {card:T, avaliable:boolean}[]}[]>(()=> {
+        const groupedCards = new Map<string, {card:T, avaliable:boolean}[]>(this.groups.map(x=>[x, []]))
         groupedCards.set("rest", [])
         groupedCards.set("unavaliable", [])
         for(const card of this.drawDeck.get()) {
-            const chosenGroup = this.groupingMethod(card, "draw")
-            if(chosenGroup && groupedCards.has(chosenGroup)) {
-                groupedCards.get(chosenGroup)?.push(card)
+            const groupedInfo = this.groupingMethod(card, "draw")
+            if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+                groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
             } else {
-                groupedCards.get("unavaliable")?.push(card)
+                groupedCards.get("unavaliable")?.push({card, avaliable: false})
             }
         }
         for(const card of this.hand.get()) {
-            const chosenGroup = this.groupingMethod(card, "hand")
-            if(chosenGroup && groupedCards.has(chosenGroup)) {
-                groupedCards.get(chosenGroup)?.push(card)
+            const groupedInfo = this.groupingMethod(card, "hand")
+            if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+                groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
             } else {
-                groupedCards.get("rest")?.push(card)
+                groupedCards.get("rest")?.push({card, avaliable: false})
             }
         }
         for(const card of this.discardDeck.get()) {
-            const chosenGroup = this.groupingMethod(card, "discard")
-            if(chosenGroup && groupedCards.has(chosenGroup)) {
-                groupedCards.get(chosenGroup)?.push(card)
+            const groupedInfo = this.groupingMethod(card, "discard")
+            if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+                groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
             } else {
-                groupedCards.get("unavaliable")?.push(card)
+                groupedCards.get("unavaliable")?.push({card, avaliable: false})
             }
         }
         if(this.additionalDecks) {
             for(const [additionalDeck, cards] of this.additionalDecks()) {
                 for(const card of cards) {
-                    const chosenGroup = this.groupingMethod(card, "additionalDecks", additionalDeck)
-                    if(chosenGroup && groupedCards.has(chosenGroup)) {
-                        groupedCards.get(chosenGroup)?.push(card)
+                    const groupedInfo = this.groupingMethod(card, "additionalDecks", additionalDeck)
+                    if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+                        groupedCards.get(groupedInfo.group)?.push({card, avaliable: false})
                     }
                 }
             }

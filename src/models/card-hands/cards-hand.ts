@@ -16,7 +16,7 @@ export interface CardsHand<T extends CardInfo> {
     discardSelectedCards(): void
     isCardSelected(card: T): boolean
     isCardOverrideSelected(card: T): boolean
-    selectCard(card: T): void
+    selectCard(card: T, isDisabled?: boolean): void
     deselectCard(card: T): void
     deselectAllCards(force?:boolean): void
     nextTurn(): void

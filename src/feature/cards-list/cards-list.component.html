@@ -2,8 +2,13 @@
     @for(group of groups(); track group.group) {
         {{group.group}}
         <div class="group">
-        @for(card of group.cards; track card.id)  {
-            <app-card [card]="card" [class.selected]="isCardSelected(card)" [class.override-selected]="isCardOverrideSelected(card)" (click)="onCardClick(card)"/>
+        @for(card of group.cards; track card.card.id)  {
+            <app-card 
+                [card]="card.card"
+                [avaliable]="card.avaliable"
+                [class.selected]="isCardSelected(card.card)" 
+                [class.override-selected]="isCardOverrideSelected(card.card)" 
+                (click)="onCardClick(card.card, card.avaliable)"/>
         }
         </div>
     }

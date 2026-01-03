@@ -65,7 +65,10 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         return overrideSelectedCards.has(card.id)
     }
 
-    selectCard(card: T) {
+    selectCard(card: T, isDisabled = false) {
+        if(isDisabled) {
+            return
+        }
         const overrideClick = this.overrideClick()
         if(overrideClick) {
             overrideClick(card)
