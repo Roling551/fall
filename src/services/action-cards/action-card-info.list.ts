@@ -115,6 +115,20 @@ export class ActionCardInfoList {
                     producedResources: new Map([["scrap", 1]]),
                 }
             )
+        ],[
+            "powerplant",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "powerplant",
+                    skillRequired: new Map([["construction", 2]]),
+                    affectedCoordinates:  [new Coordinate(0,0)],
+                    estateTexture: "plastic-factory",
+                    price: new Map([["scrap", 5]]),
+                    runCost: new Map([["oil", 1]]),
+                    producedResources: new Map([["electricity", 5]]),
+                }
+            )
         ]
     ])
 }
