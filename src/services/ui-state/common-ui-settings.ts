@@ -23,6 +23,7 @@ import { Resource } from "../../models/resource"
 import { Station } from "../../models/station"
 import { SimpleTile } from "../../models/tile/simple-tile"
 import { ActionsCardsService } from "../action-cards/actions-cards.service"
+import { HeadquartersPanelComponent } from "../../feature/headquarters-panel/headquarters-panel.component"
 
 
 export function getTileUI(
@@ -109,5 +110,11 @@ export function getChangeResourceUI() {
         // mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
         //     tile.value.resourcesSources.changeFirstOfType(editMapParameters)
         // }
+    }
+}
+
+export function getOpenHeadquartersPanelUI() {
+    return {
+        sideComponent: HeadquartersPanelComponent
     }
 }

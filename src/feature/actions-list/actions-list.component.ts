@@ -31,6 +31,9 @@ export class ActionsListComponent {
   onSwitchEnabledEstate(): void {
     this.uiStateService.setUI_.switchEnabledEstate()
   }
+  onOpenHeadquartersPanelClick(): void {
+    this.uiStateService.setUI_.openHeadquartersPanel()
+  }
   onTechTreeClick(): void {
     this.currentWindowService.currentWindow.set("tech-tree")
   }

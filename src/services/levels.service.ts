@@ -40,7 +40,7 @@ export class LevelsService {
                 [
                     {type:"resources", resources: new Map([["oil", 20]])}
                 ]))
-        this.turnActorService.clear()
+        this.turnActorService.nextLevel()
     }
 
     canNextLevel() {

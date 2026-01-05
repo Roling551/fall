@@ -4,12 +4,13 @@ import { createForceSignal } from "../util/force-signal";
 import { ResourcesService } from "./resources.service";
 import { Resource } from "../models/resource";
 import { addNumericalValues, substractNumericalValues } from "../util/map-functions";
+import { HeadquartersService } from "./headquarters.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnActorsService {
-    constructor(private resourcesService: ResourcesService) {}
+    constructor(private resourcesService: ResourcesService, private headquartersService: HeadquartersService) {}
 
     actors = createForceSignal<TurnActor[]>([])
     addActor(actor: TurnActor) {
@@ -51,6 +52,11 @@ export class TurnActorsService {
         for(const actor of this.actors.get()) {
             actor.turnAction()
         }
+    }
+
+    nextLevel() {
+        this.clear()
+        this.addActor(this.headquartersService.headquarters)
     }
 
     clear() {
