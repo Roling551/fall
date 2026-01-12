@@ -6,8 +6,7 @@ import { CharacterActionInput, CharactersActionsService } from "./characters-act
 
 export type CharacterCardInput = {
     name: string,
-    skills: Map<Skill, number>, 
-    movement: number, 
+    skills: Map<Skill, number>,
     characterAction: CharacterActionInput,
     movementAdvantege?: Map<ObstacleType, number>,
     cardPicture?: string,
@@ -24,7 +23,6 @@ export class CharacterCardInfoFactoryService {
         const card = new CharacterCardInfo(
             input.name,
             input.skills,
-            input.movement,
             actionInfo,
             actionDescription,
             input.movementAdvantege,

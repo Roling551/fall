@@ -26,8 +26,7 @@ export type CharacterActionInfo = {
 export class CharacterCardInfo extends CardInfo{
     constructor(
         name:string, 
-        public skills: Map<Skill, number>, 
-        public movement: number, 
+        public skills: Map<Skill, number>,
         public actionInfo: CharacterActionInfo,
         public actionDescription: TextPart[],
         public movementAdvantege?: Map<ObstacleType, number>,

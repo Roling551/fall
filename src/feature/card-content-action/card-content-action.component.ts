@@ -55,8 +55,4 @@ export class CardContentActionComponent {
     getTexture(card: ActionCardInfo) {
         return `assets/pictures/${(card.cardPicture||card.name)}.png`
     }
-
-    print(t: any) {
-        console.log(t)
-    }
 }

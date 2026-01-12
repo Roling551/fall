@@ -97,6 +97,7 @@ export class ActionCardInfoFactoryService {
             ],
             inputs,
             effectsDescriptions,
+            5,
             inputs.cardPicture,
             inputs.price,
             this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
@@ -126,6 +127,7 @@ export class ActionCardInfoFactoryService {
         let actionCardInfo: ActionCardInfo 
         const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
         const affectedCoordinates = inputs.affectedCoordinates || [new Coordinate(0,0)]
+        const maxDistance = 3
         const createEstateInfo = {
             getEstate: (tile_: Tile) => new Estate(
                 tile_, 
@@ -134,6 +136,7 @@ export class ActionCardInfoFactoryService {
                 affectedCoordinates,
                 inputs,
                 inputs.price || new Map(),
+                maxDistance,
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createExtractionAction(
                     createActionInfo, 
                     affectedCoordinates)
@@ -174,6 +177,7 @@ export class ActionCardInfoFactoryService {
             ],
             inputs,
             effectsDescriptions,
+            maxDistance,
             inputs.cardPicture,
             inputs.price,
             this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),

@@ -103,7 +103,7 @@ export class ActionsCardsService {
             tileInfos: new Map([...(actionCardInfo.cardCreationSteps[0].tileInfos||[]),["unavaliable", {
                 template: UnavaliableComponent,
                 doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
-                    return !this.reachableTiles().includes(tile.key.getKey())
+                    return this.isTileReacheable(tile.key.getKey(), actionCardInfo.maxDistance)
                 }
             }]])
         }
@@ -123,8 +123,7 @@ export class ActionsCardsService {
                 return false
             }
             for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-                const path = level.map.findPathByKey(station.key, tile.key.getKey())
-                if(!path || path.distance > characterCard.movement) {
+                if((level.distanceFromStation().get(tile.key.getKey()) ?? Infinity) > actionCardInfo.maxDistance) {
                     return false
                 }
             }
@@ -182,20 +181,13 @@ export class ActionsCardsService {
         return i
     }
 
-    reachableTiles = computed(()=>{
+    isTileReacheable(tile: string, maxDistance: number) {
         const level = this.levelService.level.get()
         if(!level) {
-            return []
-        }     
-
-        const station = level.station.get()
-        if(!station) {
-            return [] as string[]
+            return false
         }
-        let firstTile = true
-        let tiles:string[] = [...level.distanceFromStation().entries()].filter(x=>x[1]<=3).map(x=>x[0])
-        return tiles
-    })
+        return (level.distanceFromStation().get(tile) ?? Infinity) > maxDistance
+    }
 
     // getEdgeWidghtFunction(characterCard: CharacterCardInfo) {
     //     return (from: string, to: string)=>{
