@@ -54,6 +54,10 @@ export class LevelMap {
         return dijkstraAllNodes(this.getNeighbors, getEdgeWeight, start, distance)
     }
 
+    getDistancesFromTile(start: string) {
+        return dijkstraAllNodes(this.getNeighbors, this.getEdgeWeight, start)
+    }
+
     getDirectionsFunction(condition: (tile: KeyValuePair<Coordinate, Tile>)=>boolean) { 
         return (tileInfoIsAbout: KeyValuePair<Coordinate, Tile>)=> {
             return computed(

@@ -193,16 +193,7 @@ export class ActionsCardsService {
             return [] as string[]
         }
         let firstTile = true
-        let tiles:string[] = []
-        for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-            const cardsTiles = level.map.getReacheableTiles(station.key, characterCard.movement/*, this.getEdgeWidghtFunction(characterCard)*/).map(x=>x.node)
-            if(firstTile) {
-                tiles = cardsTiles
-                firstTile = false
-            } else {
-                tiles = tiles.filter(x => cardsTiles.includes(x));
-            }
-        }
+        let tiles:string[] = [...level.distanceFromStation().entries()].filter(x=>x[1]<=3).map(x=>x[0])
         return tiles
     })
 
