@@ -4,7 +4,9 @@ import { Resource } from "./resource";
 import { TurnActor } from "./turn-actor";
 
 export class Headquarters implements TurnActor {
-    turnAction(): void {
+    mapInteractionAction(): void {
+    }
+    mapGatheringAction(): void {
     }
     getRequiredResources(): Map<Resource, number> {
         return new Map([["water", 5]])

@@ -5,11 +5,14 @@ import { MapEntity, MapEntityType } from "../map-entity";
 import { Obstacles } from "../obstacles";
 import { BaseTile } from "./base-tile";
 import { Estate } from "../estate";
+import { Resource } from "../resource";
+import { addNumericalValues, substractNumericalValues } from "../../util/map-functions";
 
 export class SimpleTile extends BaseTile {
     playersMapEntity = createForceSignal<MapEntity|undefined>(undefined)
     upgrade = createForceSignal<MapEntity|undefined>(undefined)
     environmentMapEntities = createForceSignal<MapEntity[]>([])
+    extractedResources = createForceSignal<Map<Resource, number>>(new Map())
 
     constructor(
         coordinate: Coordinate,
@@ -107,5 +110,22 @@ export class SimpleTile extends BaseTile {
                 return undefined
             }
         }
+    }
+
+    override getExtractedResources(): Map<Resource, number> {
+        return this.extractedResources.get()
+    }
+
+    changeExtractedResources(change: Map<Resource, number>, remove?: number) {
+        if(!remove) {
+            addNumericalValues(this.extractedResources.get(), change)
+        } else {
+            substractNumericalValues(this.extractedResources.get(), change)
+        }
+        this.extractedResources.forceUpdate()
+    }
+
+    override clearExtractedResources(): void {
+        this.extractedResources.set(new Map())
     }
 }

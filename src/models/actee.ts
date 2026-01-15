@@ -1,5 +1,4 @@
 import { Signal } from "@angular/core"
-import { SkillActionResult } from "./map-entity"
 import { Skill } from "./skill"
 
 export interface SkillResult {

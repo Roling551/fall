@@ -30,7 +30,8 @@ export class Estate extends MapEntity implements TurnActor{
         private additionalInfo: EstateCardInputs,
         public costPaid: Map<Resource, number>,
         public maxDistance: number,
-        public action?: (tile: Tile)=>void, 
+        private mapInteractionAction_?: (tile: Tile)=>void,
+        private mapGatheringAction_?: (tile: Tile)=>void,
         public producedResources?: Map<Resource, number>,
         skillMapActionSkillBonus?: Map<Skill, number>,
         movementBonus?: number,
@@ -77,12 +78,17 @@ export class Estate extends MapEntity implements TurnActor{
         }
         return benefits
     })  
-
-    public turnAction() {
+    mapInteractionAction(): void {
         if(this.disabled()) {
             return
         }
-        this.action?.(this.tile)
+        this.mapInteractionAction_?.(this.tile)
+    }
+    mapGatheringAction(): void {
+        if(this.disabled()) {
+            return
+        }
+        this.mapGatheringAction_?.(this.tile)
     }
 
     disabled = computed(()=>{

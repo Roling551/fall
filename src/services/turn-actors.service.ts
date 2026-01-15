@@ -50,7 +50,10 @@ export class TurnActorsService {
             }
         }
         for(const actor of this.actors.get()) {
-            actor.turnAction()
+            actor.mapInteractionAction()
+        }
+        for(const actor of this.actors.get()) {
+            actor.mapGatheringAction()
         }
     }
 

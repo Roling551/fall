@@ -82,6 +82,8 @@ export class ActionCardInfoFactoryService {
         if(inputs.skillApplied) {
             effectsDescriptions.push(["apply:" + skillsToString(inputs.skillApplied)])
         }
+        const mapInteractionAction = this.skillMapActionFactoryService.createMapInteractionAction(createActionInfo, inputs.affectedCoordinates)
+        const mapCollectAction = this.skillMapActionFactoryService.createMapGatheringAction(createActionInfo, inputs.affectedCoordinates)
         return new ActionCardInfo(
             inputs.name,
             false,
@@ -89,7 +91,8 @@ export class ActionCardInfoFactoryService {
             [
                 {
                     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        this.skillMapActionFactoryService.createExtractionAction(createActionInfo, inputs.affectedCoordinates)(tile.value)
+                        mapInteractionAction(tile.value)
+                        mapCollectAction(tile.value)
                         return true
                     },
                     tileInfos: new Map([getBorderInfo(this.uiStateService, this.levelService, inputs.affectedCoordinates)])
@@ -137,7 +140,12 @@ export class ActionCardInfoFactoryService {
                 inputs,
                 inputs.price || new Map(),
                 maxDistance,
-                (!!createActionInfo) ? this.skillMapActionFactoryService.createExtractionAction(
+                (!!createActionInfo) ? this.skillMapActionFactoryService.createMapInteractionAction(
+                    createActionInfo, 
+                    affectedCoordinates)
+                : undefined,
+
+                (!!createActionInfo) ? this.skillMapActionFactoryService.createMapGatheringAction(
                     createActionInfo, 
                     affectedCoordinates)
                 : undefined,

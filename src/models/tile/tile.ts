@@ -23,6 +23,9 @@ export abstract class Tile {
     abstract canAddEntity(type: MapEntityType): boolean
     abstract removeMapEntity(mapEntity: MapEntity): boolean
     abstract getMapEntities(): Signal<MapEntity[]>
+    abstract getExtractedResources(): Map<Resource, number>
+    abstract changeExtractedResources(change: Map<Resource, number>, remove?: number): void
+    abstract clearExtractedResources(): void
 
     units = createForceSignal(new Set<Unit>())
 

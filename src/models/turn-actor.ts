@@ -5,7 +5,8 @@ import { Skill } from "./skill"
 import { Benefit } from "./benefit"
 
 export interface TurnActor {
-    turnAction(): void
+    mapInteractionAction(): void
+    mapGatheringAction(): void
     getRequiredResources(): Map<Resource, number>
     getProducedResources(): Map<Resource, number> | undefined
     disable: ()=>void

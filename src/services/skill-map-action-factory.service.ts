@@ -12,6 +12,10 @@ export interface CreateSkillMapActionInfo {
     times: number
 }
 
+export interface CreateGatheringActionInfo {
+
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +30,7 @@ export class SkillMapActionFactoryService {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
-    public createExtractionAction(createActionInfo: CreateSkillMapActionInfo, affectedCoordinates: Coordinate[]) {
+    public createMapInteractionAction(createActionInfo: CreateSkillMapActionInfo, affectedCoordinates: Coordinate[]) {
         const times = createActionInfo.times || 1
         return (tile: Tile)=>{
             const skills = addNumericalValuesFunctional(createActionInfo.skills,
@@ -45,11 +49,27 @@ export class SkillMapActionFactoryService {
                     if(t.canAttemptSkillAction(skills)) {
                         const actionResult = t.skillAction(skills)
                         if(actionResult.resourcesGained) {
-                            addExistingNumericalValues(this.resourcesService.resources.get(), actionResult.resourcesGained)
-                            this.resourcesService.resources.forceUpdate()
+                            tile.changeExtractedResources(actionResult.resourcesGained)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public createMapGatheringAction(createActionInfo: CreateGatheringActionInfo, affectedCoordinates: Coordinate[]) {
+        return (tile: Tile)=>{
+            const map = this.map()
+            if(!map) {
+                return
+            }
+            const tiles = affectedCoordinates
+                .map(c=>map.getTile(tile.coordinate.addCoordinates(c)))
+                .filter(t=>!!t)
+                .map(t=>t.value)
+            for(const t of tiles) {
+                this.resourcesService.addResources(t.getExtractedResources())
+                t.clearExtractedResources()
             }
         }
     }
