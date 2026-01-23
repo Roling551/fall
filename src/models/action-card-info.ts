@@ -21,13 +21,14 @@ export class ActionCardInfo extends CardInfo {
         name: string,
         public removeOnUse: boolean,
         public requiredSkills: Map<Skill, number>,
-        public cardCreationSteps: CardCreationStep[],
+        public action: CardCreationStep,
         public additionalInfo: FactoryCardInputs,
         public effectsDescriptions: TextPart[][],
         public maxDistance: number,
         public cardPicture?: string,
         public price?: Map<Resource, number>,
         public cardOnHandRewards?: Reward[],
+        public actionRepeatNumber?: number,
     ) {
         super(name, "ActionCard")
     }

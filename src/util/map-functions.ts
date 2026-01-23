@@ -69,8 +69,8 @@ export function roundDownFunctional(map: Map<any, number>) {
 }
 
 export function mapContainsMap(map1: Map<any, number>, map2: Map<any, number>) {
-    for (const [key, num] of map1.entries()) {
-        if(num < (map2.get(key) || 0)) {
+    for (const [key, num] of map2.entries()) {
+        if((map1.get(key) || 0) < num) {
             return false
         }
     }

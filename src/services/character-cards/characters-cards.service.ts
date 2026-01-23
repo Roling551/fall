@@ -7,7 +7,7 @@ import { addExistingNumericalValues } from "../../util/map-functions";
 import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
 import { InjectorService } from "../injector.service";
 import { UIStateService } from "../ui-state/ui-state.service";
-import { createInstantAction, createRepeatCardAction, createRepeatMapAction } from "../ui-state/create-repeat-action";
+import { createInstantAction, createRepeatCardAction, createRepeatMapAction } from "../ui-state/create-player-action";
 import { CurrentLevelService } from "../current-level.service";
 import { createForceSignal } from "../../util/force-signal";
 import { KeyValuePair } from "../../models/key-value-pair";
@@ -23,14 +23,13 @@ export type CharactersCardsServiceMode = 'action' | 'skill' | 'none'
 })
 export class CharactersCardsService {
     public cardsHand
-    public isHandFrozen = signal(false)
 
     nextTurn() {
         this.cardsHand?.nextTurn()
     }
 
-    isActionChosen:Signal<boolean> = computed(()=>{
-        return (this.cardsHand?.selectedCardsNumber() || 0) > 0 && !this.injectorService.actionsCardsService?.isActionChosen()
+    isPlayersActionChosen:Signal<boolean> = computed(()=>{
+        return this.uiStateService.additionalInfo()?.["playersAction"] === true
     })
 
     constructor(
@@ -57,9 +56,8 @@ export class CharactersCardsService {
                     this.uiStateService.cancel()   
                 }
             }, 
-            true, 
-            this.isHandFrozen,
-            computed(()=>{return !this.isActionChosen()||this.injectorService.getActionsCardsService().isActionChosen()}),
+            false,
+            computed(()=>{return !this.isPlayersActionChosen()}),
             this.uiStateService.cardAction,
             computed(()=>{
                 return this.uiStateService.additionalInfo()?.["selectedOverrideCards"]?.get()

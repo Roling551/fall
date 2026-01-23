@@ -1,4 +1,4 @@
-import { computed, effect, Injectable, signal } from "@angular/core";
+import { computed, effect, Injectable, Signal, signal } from "@angular/core";
 import { UIData, UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
@@ -22,6 +22,7 @@ import { ActionCardInfoFactoryService } from "./action-card-info-factory.service
 import { InjectorService } from "../injector.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
+import { createSkillsAndMapAction } from "../ui-state/create-player-action";
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +39,6 @@ export class ActionsCardsService {
         private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService
     ) {
-        effect(()=>{
-            charactersCardService.isHandFrozen.set(this.isActionHappening())
-        })
     }
 
     isActionChosen = computed(()=>{
@@ -54,9 +52,8 @@ export class ActionsCardsService {
             cards, 
             Infinity, 
             ()=>{this.uiStateService.cancel()}, 
-            false, 
-            undefined,
-            computed(()=>{return !this.charactersCardService.isActionChosen()}),
+            false,
+            computed(()=>{return !this.isPlayersActionChosen()}),
             this.uiStateService.cardAction,
             computed(()=>{
                 return this.uiStateService.additionalInfo()?.["selectedOverrideCards"]?.get()
@@ -96,52 +93,20 @@ export class ActionsCardsService {
         this.cardsHand?.nextTurn()
     }
 
+    isPlayersActionChosen:Signal<boolean> = computed(()=>{
+        return this.uiStateService.additionalInfo()?.["playersAction"] === true
+    })
+
     setMultiStageAction(actionCardInfo: ActionCardInfo) {
-        const oldCardActions0 = actionCardInfo.cardCreationSteps[0].action
-        const uis: UIData[] = actionCardInfo.cardCreationSteps.map(x=>{return {} as UIData})
-        uis[0]={
-            tileInfos: new Map([...(actionCardInfo.cardCreationSteps[0].tileInfos||[]),["unavaliable", {
-                template: UnavaliableComponent,
-                doRender: (tile: KeyValuePair<Coordinate, Tile>)=> {
-                    return this.isTileReacheable(tile.key.getKey(), actionCardInfo.maxDistance)
-                }
-            }]])
-        }
-        actionCardInfo.cardCreationSteps[0].action = (tile: KeyValuePair<Coordinate, Tile>)=>{
-            const level = this.levelService.level.get()
-            if(!level) {
-                return false
-            }
-            const station = level.station.get()
-            if(!station) {
-                return false
-            }
-            if(!(mapContainsMap(this.charactersCardService.sumOfSkills(), actionCardInfo.requiredSkills))) {
-                return false
-            }
-            if(actionCardInfo.price && !this.resourcesService.canAffordResources(actionCardInfo.price)) {
-                return false
-            }
-            for(const characterCard of this.charactersCardService.cardsHand.selectedCards.get()) {
-                if((level.distanceFromStation().get(tile.key.getKey()) ?? Infinity) > actionCardInfo.maxDistance) {
-                    return false
-                }
-            }
-            const isSuccesfull = oldCardActions0(tile)
-            this.isActionHappening.set(true)
-            return isSuccesfull
-        }
         actionCardInfo.onSelect = ()=>{
-            return createMultiStageAction(
+            createSkillsAndMapAction(
                 this.uiStateService,
-                actionCardInfo.cardCreationSteps.map(x=>x.action),
-                ()=>{
-                    this.isActionHappening.set(false)
-                    this.cardsHand!.deselectCard(actionCardInfo)
+                this.levelService,
+                (selectedTile: KeyValuePair<Coordinate, Tile>, selectedCards: Map<number, CharacterCardInfo>) => {
+                    actionCardInfo.action.action(selectedTile)
                 },
-                ()=>{
-                    this.isActionHappening.set(false)
-                    this.charactersCardService.cardsHand.discardSelectedCards()
+                (selectedCards: Map<number, CharacterCardInfo>) => {
+                    this.charactersCardService.cardsHand.discardCards([...selectedCards.values()])
                     if(actionCardInfo.price) {
                         this.resourcesService.spendResources(actionCardInfo.price)
                     }
@@ -150,11 +115,22 @@ export class ActionsCardsService {
                     } else {
                         this.cardsHand!.discardCard(actionCardInfo)
                     }
-                    
                 },
-                uis,
-                actionCardInfo.cardCreationSteps.map(x=>x.onStepStart),
+                (selectedTile: KeyValuePair<Coordinate, Tile>, selectedCards: Map<number, CharacterCardInfo>) => {
+                    if(actionCardInfo.price && !this.resourcesService.canAffordResources(actionCardInfo.price)) {
+                        return false
+                    }
+                    return true
+                },
+                actionCardInfo.requiredSkills,
+                ()=>{ 
+                    this.cardsHand!.deselectCard(actionCardInfo)
+                },
+                actionCardInfo.maxDistance,
+                [...actionCardInfo.action.tileInfos ?? []],
+                actionCardInfo.actionRepeatNumber
             )
+            return true
         }
         return actionCardInfo
     }
@@ -188,14 +164,4 @@ export class ActionsCardsService {
         }
         return (level.distanceFromStation().get(tile) ?? Infinity) > maxDistance
     }
-
-    // getEdgeWidghtFunction(characterCard: CharacterCardInfo) {
-    //     return (from: string, to: string)=>{
-    //         const level = this.levelService.level.get()
-    //         if(!level) {
-    //             return Infinity
-    //         }
-    //         return level.map.tiles.get(to)!.value.obstacles.get().getDistance(characterCard.movementAdvantege)
-    //     }
-    // }
 }

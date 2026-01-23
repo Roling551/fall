@@ -88,16 +88,14 @@ export class ActionCardInfoFactoryService {
             inputs.name,
             false,
             inputs.skillRequired,
-            [
-                {
-                    action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                        mapInteractionAction(tile.value)
-                        mapCollectAction(tile.value)
-                        return true
-                    },
-                    tileInfos: new Map([getBorderInfo(this.uiStateService, this.levelService, inputs.affectedCoordinates)])
-                }
-            ],
+            {
+                action:(tile: KeyValuePair<Coordinate, Tile>)=> {
+                    mapInteractionAction(tile.value)
+                    mapCollectAction(tile.value)
+                    return true
+                },
+                tileInfos: new Map([getBorderInfo(this.uiStateService, this.levelService, inputs.affectedCoordinates)])
+            },
             inputs,
             effectsDescriptions,
             5,
@@ -159,7 +157,7 @@ export class ActionCardInfoFactoryService {
             affectedCoordinates: inputs.affectedCoordinates,
             createActionInfo,
         }
-        const estatesActionAndTileInfo = inputs.instancesNumber===undefined ?
+        const estatesActionAndTileInfo =
             getCreateEstateActionAndTileInfo(
                 this.uiStateService,
                 this.levelService,
@@ -167,28 +165,19 @@ export class ActionCardInfoFactoryService {
                 createEstateInfo.getEstate,
                 mapEntityType,
                 affectedCoordinates
-            ) : getCreateMultipleEstatesActionAndTileInfo(
-                this.uiStateService,
-                this.levelService,
-                this.turnActorsService,
-                createEstateInfo.getEstate,
-                mapEntityType,
-                affectedCoordinates,
-                inputs.instancesNumber
             )
         actionCardInfo = new ActionCardInfo(
             inputs.name,
             inputs.instancesNumber===undefined,
             inputs.skillRequired,
-            [
-                estatesActionAndTileInfo
-            ],
+            estatesActionAndTileInfo,
             inputs,
             effectsDescriptions,
             maxDistance,
             inputs.cardPicture,
             inputs.price,
             this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
+            inputs.instancesNumber
         )
         return actionCardInfo
     }

@@ -22,8 +22,7 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         cards: T[], 
         public drawsPerTurn: number, 
         private onManualDeselect:()=>void, 
-        private canSelectMultiple = true, 
-        private frozen = signal(false), 
+        private canSelectMultiple = true,
         private canSelectCard:Signal<boolean> = signal(true),
         private overrideClick:() => ((card: CardInfo) => void) | undefined,
         overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>,
@@ -35,6 +34,14 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         this.overrideSelectedCards = overrideSelectedCards
     }
 
+    discardCards(cards: T[]) {
+        this.hand.set(this.hand.get().filter(c=>!cards.includes(c)))
+        this.hand.forceUpdate()
+        this.discardDeck.get().push(...cards)
+        this.discardDeck.forceUpdate()
+        this.selectedCards.get().filter(c=>!cards.includes(c))
+        this.selectedCards.forceUpdate()
+    }
 
     discardCard(card: T) {
         this.hand.set(this.hand.get().filter(c=>c!=card))
@@ -74,9 +81,6 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
             overrideClick(card)
             return
         }
-        if(this.frozen()) {
-            return
-        }
         if(this.isCardSelected(card)) {
             this.deselectCard(card)
             this.onManualDeselect()
@@ -95,9 +99,6 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
     }
 
     deselectCard(card: T) {
-        if(this.frozen()) {
-            return
-        }
         this.selectedCards.set(this.selectedCards.get().filter(c=>c!=card))
     }
 
@@ -142,7 +143,7 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
     })
 
     deselectAllCards(force?: boolean) {
-        if(this.frozen() && !(force==true)) {
+        if(!(force==true)) {
             return
         }
         this.selectedCards.set([])
