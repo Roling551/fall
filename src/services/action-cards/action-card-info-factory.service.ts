@@ -15,7 +15,7 @@ import { ActionCardInfo } from "../../models/action-card-info";
 import { Reward, RewardOption } from "../../models/reward";
 import { RewardFactoryService } from "../reward-factory.service";
 import { TextPart } from "../../models/text-part";
-import { Extraction } from "../../models/extraction";
+import { Extraction, ExtractionBonus } from "../../models/extraction";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -51,7 +51,7 @@ export interface EstateCardInputs {
     cardPicture?: string,
     price?: Map<Resource, number>,
     times?: number,
-    skillMapActionSkillBonus?: Map<Skill, number>,
+    extractionBonus?: ExtractionBonus,
     movementBonus?: number
     cardOnHandRewards?: RewardOption[],
     producedResources?: Map<Resource, number>,
@@ -116,8 +116,8 @@ export class ActionCardInfoFactoryService {
         if(inputs.extraction) {
             effectsDescriptions.push(["apply:" + inputs.extraction.strength])
         }
-        if(inputs.skillMapActionSkillBonus) {
-            effectsDescriptions.push(["bonus:" + skillsToString(inputs.skillMapActionSkillBonus)])
+        if(inputs.extractionBonus) {
+            effectsDescriptions.push(["bonus:" + inputs.extractionBonus.getText()])
         }
         if(inputs.producedResources) {
             effectsDescriptions.push((["produces:", ...resourcesToTextParts(inputs.producedResources)]))
@@ -149,7 +149,7 @@ export class ActionCardInfoFactoryService {
                     affectedCoordinates)
                 : undefined,
                 inputs.producedResources,
-                inputs.skillMapActionSkillBonus,
+                inputs.extractionBonus,
                 inputs.movementBonus,
                 actionCardInfo,
                 inputs.cardPicture,

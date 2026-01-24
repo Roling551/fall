@@ -8,14 +8,14 @@ import { TileDirection } from "./tile-direction"
 import { SimpleTile } from "./tile/simple-tile"
 import { EnvironmentMapEntity } from "./environment-map-entity"
 import { SignalsGroup } from "../util/signals-group"
-import { MovementBonus } from "./bonus"
+import { MovementBonusAndQualifier } from "./bonus"
 
 export class LevelMap {
     bonuses:Map<string, Signal<number>>
 
     constructor(
         public sizeX: number, public sizeY: number, 
-        public tiles:Map<string, KeyValuePair<Coordinate, Tile>>, movementBonuses: (tile: Tile) => SignalsGroup<string, MovementBonus, number>
+        public tiles:Map<string, KeyValuePair<Coordinate, Tile>>, movementBonuses: (tile: Tile) => SignalsGroup<string, MovementBonusAndQualifier, number>
     ) {
         this.bonuses = new Map(Array.from(this.tiles.entries()).map(([key, value]) => [key, movementBonuses(value.value).output]))
     }

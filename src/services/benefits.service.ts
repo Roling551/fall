@@ -3,7 +3,7 @@ import { TechnologiesService } from "./technologies/technologies.service";
 import { Benefit } from "../models/benefit";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { Estate } from "../models/estate";
-import { EstateProductionBonus, MovementBonus, SkillMapActionSkillBonus } from "../models/bonus";
+import { EstateProductionBonusAndQualifier, ExtractionBonusAndQualifier, MovementBonusAndQualifier } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { addNumericalValuesFunctional } from "../util/map-functions";
 import { InitService } from "./init.service";
@@ -14,6 +14,7 @@ import { Skill } from "../models/skill";
 import { TurnActorsService } from "./turn-actors.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
+import { ExtractionBonus } from "../models/extraction";
 
 type BenefitOfType<T extends Benefit["type"]> = Extract<Benefit, { type: T }>;
 
@@ -54,6 +55,9 @@ export class BenefitsService {
                     }
                 }
             }
+            for(const benefit of this.turnBenefitsService.benefits.get()) {
+                result.push(benefit[1] as BenefitOfType<T>)
+            }
             return result
         })
     }
@@ -67,7 +71,7 @@ export class BenefitsService {
         return result
     })
 
-    listenForSkillMapActionSkillBonuses
+    listenForExtractionBonuses
     listenForMovementBonuses
 
     constructor(
@@ -77,34 +81,32 @@ export class BenefitsService {
         private actionsCardsService: ActionsCardsService,
         private turnBenefitsService: TurnBenefitsService,
     ) {
-        const skillMapActionSkillBonusesBenefits = this.getBenefitsOfType("skill-map-action-skill-bonus")
-        const skillMapActionSkillBonusesList = computed(()=> {
-            let result = new Map<string, SkillMapActionSkillBonus>();
+        const listenForExtractionBonusesBenefits = this.getBenefitsOfType("extraction-bonus")
+        const listenForExtractionBonusesList = computed(()=> {
+            let result = new Map<string, ExtractionBonusAndQualifier>();
             
-            for(const benefit of skillMapActionSkillBonusesBenefits()) {
+            for(const benefit of listenForExtractionBonusesBenefits()) {
                 result.set(benefit.bonus.name || "", benefit.bonus)
             }
-            
-            result = new Map([...result, ...this.turnBenefitsService.skillMapActionSkillBonuses.get()])
             return result
         })
 
-        const skillMapActionSkillBonuses = new SignalChangesEmitter<any, SkillMapActionSkillBonus>(skillMapActionSkillBonusesList);
-        this.listenForSkillMapActionSkillBonuses = (tile: Tile) => {
+        const extractionBonuses = new SignalChangesEmitter<any, ExtractionBonusAndQualifier>(listenForExtractionBonusesList);
+        this.listenForExtractionBonuses = (tile: Tile) => {
             return new SignalsGroup(
-                skillMapActionSkillBonuses,
-                (key: string, item: SkillMapActionSkillBonus)=>{
+                extractionBonuses,
+                (key: string, item: ExtractionBonusAndQualifier)=>{
                     return (!item.qualifier) || item.qualifier(tile)
                 },
-                (key: string, item: SkillMapActionSkillBonus)=>item.bonus,
-                addNumericalValuesFunctional,
-                ()=>new Map<Skill, number>()
+                (key: string, item: ExtractionBonusAndQualifier)=>item.bonus,
+                ExtractionBonus.addFunctional,
+                ()=>new ExtractionBonus(0)
             )
         }
 
         const movementBonusesBenefits = this.getBenefitsOfType("movement-bonus")
         const movementBonusesList = computed(()=> {
-            let result = new Map<string, MovementBonus>();
+            let result = new Map<string, MovementBonusAndQualifier>();
             for(const turnActors of turnActorService.actors.get()) {
                 for(const benefit of movementBonusesBenefits()) {
                     result.set(benefit.bonus.name, benefit.bonus)
@@ -112,14 +114,14 @@ export class BenefitsService {
             }
             return result
         })
-        const movementBonuses = new SignalChangesEmitter<any, MovementBonus>(movementBonusesList);
+        const movementBonuses = new SignalChangesEmitter<any, MovementBonusAndQualifier>(movementBonusesList);
         this.listenForMovementBonuses = (tile: Tile) => {
-            return new SignalsGroup<string, MovementBonus, number>(
+            return new SignalsGroup<string, MovementBonusAndQualifier, number>(
                 movementBonuses,
-                (key: string, item: MovementBonus)=>{
+                (key: string, item: MovementBonusAndQualifier)=>{
                     return item.qualifier(tile)
                 },
-                (key: string, item: MovementBonus)=>item.bonus,
+                (key: string, item: MovementBonusAndQualifier)=>item.bonus,
                 (x,y)=>x+y,
                 ()=>0
             )

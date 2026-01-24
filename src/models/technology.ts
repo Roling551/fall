@@ -1,7 +1,7 @@
 import { signal } from "@angular/core";
 import { Building } from "./building"
 import { Estate } from "./estate"
-import { EstateProductionBonus } from "./bonus";
+import { EstateProductionBonusAndQualifier } from "./bonus";
 import { Benefit } from "./benefit";
 
 export class Technology {

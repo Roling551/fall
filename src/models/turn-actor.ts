@@ -1,7 +1,5 @@
 import { Signal } from "@angular/core"
-import { MovementBonus, SkillMapActionSkillBonus } from "./bonus"
 import { Resource } from "./resource"
-import { Skill } from "./skill"
 import { Benefit } from "./benefit"
 
 export interface TurnActor {

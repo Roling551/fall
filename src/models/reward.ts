@@ -1,5 +1,5 @@
 import { DecisionFactoryOption } from "../services/decision-factory.service"
-import { SkillMapActionSkillBonus } from "./bonus"
+import { ExtractionBonusAndQualifier } from "./bonus"
 import { CardInfo } from "./card-info"
 import { Resource, resourcesToTextParts } from "./resource"
 import { skillsToString } from "./skill"
@@ -12,14 +12,14 @@ export type RewardOption = {
     type: "Resources",
     resources: Map<Resource, number>
 } | {
-    type: "SkillMapActionSkillBonus",
-    skillBonus: SkillMapActionSkillBonus
+    type: "ExtractionActionBonus",
+    extractionBonus: ExtractionBonusAndQualifier
 } | {
     type: "Decision",
     decisionFactoryOptions: DecisionFactoryOption[]
 }
 
-export type RewardType = "Card" | "Resources" | "SkillMapActionSkillBonus" | "Decision"
+export type RewardType = "Card" | "Resources" | "ExtractionActionBonus" | "Decision"
 
 export interface Reward {
     rewardType: RewardType
@@ -49,11 +49,11 @@ export class ResourcesReward implements Reward {
     }
 }
 
-export class SkillMapActionSkillBonusReward implements Reward {
-    rewardType: RewardType = "SkillMapActionSkillBonus";
-    constructor(public skillBonus: SkillMapActionSkillBonus, private claimFunction: ()=>void) {}
+export class ExtractionActionBonusReward implements Reward {
+    rewardType: RewardType = "ExtractionActionBonus";
+    constructor(public extractionBonus: ExtractionBonusAndQualifier, private claimFunction: ()=>void) {}
     getTextParts() {
-        return ["skill bonus: " + skillsToString(this.skillBonus.bonus)]
+        return ["skill bonus: " + this.extractionBonus.bonus.getText()]
     }
     claim() {
         this.claimFunction()

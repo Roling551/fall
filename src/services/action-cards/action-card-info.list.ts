@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ActionCardInfoFactoryService } from "./action-card-info-factory.service";
 import { Coordinate } from "../../models/coordinate";
 import { ActionCardInfo } from "../../models/action-card-info";
-import { Extraction } from "../../models/extraction";
+import { Extraction, ExtractionBonus } from "../../models/extraction";
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +95,7 @@ export class ActionCardInfoList {
                     type: "EstateCardInputs",
                     name: "miningTools",
                     skillRequired: new Map([["construction", 2]]),
-                    //skillMapActionSkillBonus: new Map([["mining",1]]),
+                    extractionBonus: new ExtractionBonus(1),
                     affectedCoordinates:  [new Coordinate(0,0), new Coordinate(0,1), new Coordinate(0,-1)],
                     estateTexture: "workshop",
                     price: new Map([["scrap", 5]]),
