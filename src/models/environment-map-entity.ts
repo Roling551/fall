@@ -6,24 +6,21 @@ import { Building } from "./building";
 import { MapEntity, MapEntityType, SkillActionResult } from "./map-entity";
 import { Resource, resourcesToTextParts } from "./resource";
 import { Reward } from "./reward";
-import { SimpleActee } from "./simple-actee";
+import { ActeeSettings, SimpleActee } from "./simple-actee";
 import { getSkillSymbol, Skill } from "./skill";
 import { TextPart } from "./text-part";
 import { Actee } from "./actee";
 import { Extraction } from "./extraction";
 
-export type SkillInstance = {
-    maxProgress: number,
-}
 
 export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
     actee?: SimpleActee
 
-    constructor(name: string, skillInstance?: SkillInstance, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
+    constructor(name: string, acteeSettings?: ActeeSettings, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
-        if(skillInstance) {
-            this.actee = new SimpleActee(skillInstance.maxProgress)
+        if(acteeSettings) {
+            this.actee = new SimpleActee(acteeSettings)
         }
         
     }

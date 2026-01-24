@@ -3,15 +3,28 @@ import { Actee, SkillResult } from "./actee";
 import { Skill } from "./skill";
 import { Extraction } from "./extraction";
 
+export type ActeeModifications = "Hardness" | "Fragility"
+
+export type ActeeSettings = {
+    maxProgress: number, 
+    modifications?: Map<ActeeModifications, number>
+}
+
 export class SimpleActee implements Actee {
 
     currentProgress = signal(0)
 
-    constructor(public maxProgress: number) {}
+    public maxProgress: number
+    public modifications: Map<ActeeModifications, number>
+
+    constructor(settings: ActeeSettings) {
+        this.maxProgress = settings.maxProgress
+        this.modifications = settings.modifications || new Map()
+    }
     
     extractionAction(extraction: Extraction): SkillResult {
         const previousProgress = this.currentProgress()
-        this.currentProgress.update(x=>Math.min(this.maxProgress, x+Math.max(0, extraction.strength)))
+        this.currentProgress.update(x=>Math.min(this.maxProgress, x+Math.max(0, this.extractionStrengthApplied(extraction))))
         const isDone = this.currentProgress() >= this.maxProgress
         return {
             progressDone: this.currentProgress() - previousProgress,
@@ -19,6 +32,10 @@ export class SimpleActee implements Actee {
             isDone,
             justFinished: isDone && previousProgress < this.maxProgress 
         }
+    }
+
+    extractionStrengthApplied(extraction: Extraction) {
+        return extraction.strength - (this.modifications.get("Hardness") || 0)
     }
 
     canAttemptExtractionAction(extraction: Extraction): boolean {

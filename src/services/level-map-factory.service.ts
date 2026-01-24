@@ -25,7 +25,7 @@ export class LevelMapFactoryService {
             new Map([["water", 1]]))]],
         ["oilSource", () => [
             new EnvironmentMapEntity("oil", {
-                    maxProgress: 5,
+                    maxProgress: 5
                 },
                 new Map([["oil", 1]])
             ),
@@ -36,6 +36,7 @@ export class LevelMapFactoryService {
                 "scrap",
                 {
                     maxProgress: 5,
+                    modifications: new Map([["Hardness", 1]])
                 },
                 undefined,
                 () => [
