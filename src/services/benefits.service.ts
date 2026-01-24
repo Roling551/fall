@@ -14,7 +14,7 @@ import { Skill } from "../models/skill";
 import { TurnActorsService } from "./turn-actors.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
-import { ExtractionBonus } from "../models/extraction";
+import { Extraction } from "../models/extraction";
 
 type BenefitOfType<T extends Benefit["type"]> = Extract<Benefit, { type: T }>;
 
@@ -99,8 +99,8 @@ export class BenefitsService {
                     return (!item.qualifier) || item.qualifier(tile)
                 },
                 (key: string, item: ExtractionBonusAndQualifier)=>item.bonus,
-                ExtractionBonus.addFunctional,
-                ()=>new ExtractionBonus(0)
+                Extraction.addFunctional,
+                ()=>new Extraction(0)
             )
         }
 

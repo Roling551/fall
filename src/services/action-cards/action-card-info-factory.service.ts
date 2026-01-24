@@ -15,7 +15,7 @@ import { ActionCardInfo } from "../../models/action-card-info";
 import { Reward, RewardOption } from "../../models/reward";
 import { RewardFactoryService } from "../reward-factory.service";
 import { TextPart } from "../../models/text-part";
-import { Extraction, ExtractionBonus } from "../../models/extraction";
+import { Extraction } from "../../models/extraction";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -51,7 +51,7 @@ export interface EstateCardInputs {
     cardPicture?: string,
     price?: Map<Resource, number>,
     times?: number,
-    extractionBonus?: ExtractionBonus,
+    extractionBonus?: Extraction,
     movementBonus?: number
     cardOnHandRewards?: RewardOption[],
     producedResources?: Map<Resource, number>,

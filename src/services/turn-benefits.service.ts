@@ -1,7 +1,5 @@
 import { Injectable } from "@angular/core";
 import { createForceSignal } from "../util/force-signal";
-import { ExtractionBonus } from "../models/extraction";
-import { ExtractionBonusAndQualifier } from "../models/bonus";
 import { Benefit } from "../models/benefit";
 
 @Injectable({

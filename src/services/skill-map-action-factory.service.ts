@@ -34,7 +34,7 @@ export class SkillMapActionFactoryService {
     public createMapInteractionAction(createActionInfo: CreateExtractionInfo, affectedCoordinates: Coordinate[]) {
         const times = createActionInfo.times || 1
         return (tile: Tile)=>{  
-            const extraction = createActionInfo.extraction.addBonus(this.benefitsService.listenForExtractionBonuses(tile).output())
+            const extraction = Extraction.addFunctional(createActionInfo.extraction, this.benefitsService.listenForExtractionBonuses(tile).output())
 
             const map = this.map()
             if(!map) {

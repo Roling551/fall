@@ -1,5 +1,5 @@
 import { Estate } from "./estate";
-import { ExtractionBonus } from "./extraction";
+import { Extraction } from "./extraction";
 import { Skill } from "./skill";
 import { Tile } from "./tile/tile";
 
@@ -13,7 +13,7 @@ export interface EstateProductionBonusAndQualifier {
 export interface ExtractionBonusAndQualifier {
     name: string,
     qualifier?: (tile: Tile)=>boolean,
-    bonus: ExtractionBonus
+    bonus: Extraction
 }
 
 export interface MovementBonusAndQualifier {

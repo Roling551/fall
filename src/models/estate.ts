@@ -13,7 +13,7 @@ import { ActionCardInfo } from "./action-card-info";
 import { Benefit } from "./benefit";
 import { EstateCardInputs } from "../services/action-cards/action-card-info-factory.service";
 import { TextPart } from "./text-part";
-import { Extraction, ExtractionBonus } from "./extraction";
+import { Extraction } from "./extraction";
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
@@ -34,7 +34,7 @@ export class Estate extends MapEntity implements TurnActor{
         private mapInteractionAction_?: (tile: Tile)=>void,
         private mapGatheringAction_?: (tile: Tile)=>void,
         public producedResources?: Map<Resource, number>,
-        extractionBonus?: ExtractionBonus,
+        extractionBonus?: Extraction,
         movementBonus?: number,
         public actionCardGetAfterDestroy?: ActionCardInfo,
         public picture?: String,
