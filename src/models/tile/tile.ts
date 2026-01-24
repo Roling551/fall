@@ -6,6 +6,7 @@ import { Resource } from "../resource";
 import { Coordinate } from "../coordinate";
 import { Obstacles } from "../obstacles";
 import { Skill } from "../skill";
+import { Extraction } from "../extraction";
 
 
 export abstract class Tile {
@@ -17,8 +18,8 @@ export abstract class Tile {
         Tile.count += 1
     }
 
-    abstract skillAction(skills: Map<Skill,number>): SkillActionResult
-    abstract canAttemptSkillAction(skills: Map<Skill,number>): boolean
+    abstract extractionAction(extraction: Extraction): SkillActionResult
+    abstract canAttemptExtractionAction(extraction: Extraction): boolean
     abstract addMapEntity(mapEntity: MapEntity): boolean
     abstract canAddEntity(type: MapEntityType): boolean
     abstract removeMapEntity(mapEntity: MapEntity): boolean

@@ -1,3 +1,4 @@
+import { Extraction } from "./extraction";
 import { MapEntity, MapEntityType } from "./map-entity";
 import { Skill } from "./skill";
 
@@ -8,11 +9,11 @@ export class Station extends MapEntity {
         super("city", 0)
     }
 
-    override skillAction(skills: Map<Skill,number>) {
+    override extractionAction(extraction: Extraction) {
         return {}
     }
 
-    override canAttemptSkillAction(skills: Map<Skill,number>) {
+    override canAttemptExtractionAction(extraction: Extraction) {
         return false
     }
 } 

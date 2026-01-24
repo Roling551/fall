@@ -20,16 +20,12 @@ export class LevelMapFactoryService {
         ["nothing", () => []],
         ["forest", () => [
             new EnvironmentMapEntity("forest", {
-                skill: "mining",
                 maxProgress: 5,
-                difficulty: 0
             }, 
             new Map([["water", 1]]))]],
         ["oilSource", () => [
             new EnvironmentMapEntity("oil", {
-                    skill: "mining",
                     maxProgress: 5,
-                    difficulty: 0
                 },
                 new Map([["oil", 1]])
             ),
@@ -39,9 +35,7 @@ export class LevelMapFactoryService {
             new EnvironmentMapEntity(
                 "scrap",
                 {
-                    skill: "mining",
                     maxProgress: 5,
-                    difficulty: 0
                 },
                 undefined,
                 () => [

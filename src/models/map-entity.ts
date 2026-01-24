@@ -5,6 +5,7 @@ import { Building } from "./building"
 import { addExistingNumericalValues } from "../util/map-functions"
 import { Skill } from "./skill"
 import { Resource } from "./resource"
+import { Extraction } from "./extraction"
 
 export type MapEntityType = "estate" | "upgrade" | "station" | "environment"
 
@@ -34,6 +35,6 @@ export abstract class MapEntity {
         this.buildings.forceUpdate()
     }
 
-    abstract skillAction(skills: Map<Skill,number>): SkillActionResult
-    abstract canAttemptSkillAction(skills: Map<Skill, number>): boolean
+    abstract extractionAction(extraction: Extraction): SkillActionResult
+    abstract canAttemptExtractionAction(extraction: Extraction): boolean
 }

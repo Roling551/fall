@@ -13,6 +13,7 @@ import { ActionCardInfo } from "./action-card-info";
 import { Benefit } from "./benefit";
 import { EstateCardInputs } from "../services/action-cards/action-card-info-factory.service";
 import { TextPart } from "./text-part";
+import { Extraction } from "./extraction";
 
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
@@ -108,18 +109,18 @@ export class Estate extends MapEntity implements TurnActor{
         this.manuallyDisabled.update(x=>!x)
     }
 
-    override skillAction(skills: Map<Skill,number>) {
+    override extractionAction(extraction: Extraction) {
         return {}
     }
 
-    override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
+    override canAttemptExtractionAction(extraction: Extraction): boolean {
         return false
     }
 
     effectsDescriptions = computed(()=>{
         const descriptions: TextPart[][] = []
-        if(this.additionalInfo.skillApplied) {
-            descriptions.push(["apply:" + skillsToString(this.additionalInfo.skillApplied)])
+        if(this.additionalInfo.extraction) {
+            descriptions.push(["apply:" + this.additionalInfo.extraction])
         }
         if(this.additionalInfo.skillMapActionSkillBonus) {
             descriptions.push(["bonus:" + skillsToString(this.additionalInfo.skillMapActionSkillBonus)])

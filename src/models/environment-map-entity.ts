@@ -10,10 +10,9 @@ import { SimpleActee } from "./simple-actee";
 import { getSkillSymbol, Skill } from "./skill";
 import { TextPart } from "./text-part";
 import { Actee } from "./actee";
+import { Extraction } from "./extraction";
 
 export type SkillInstance = {
-    skill: Skill,
-    difficulty: number,
     maxProgress: number,
 }
 
@@ -24,16 +23,16 @@ export class EnvironmentMapEntity extends MapEntity {
     constructor(name: string, skillInstance?: SkillInstance, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
         if(skillInstance) {
-            this.actee = new SimpleActee(skillInstance.skill, skillInstance.maxProgress, skillInstance.difficulty)
+            this.actee = new SimpleActee(skillInstance.maxProgress)
         }
         
     }
 
-    override skillAction(skills: Map<Skill,number>): SkillActionResult {
+    override extractionAction(extraction: Extraction): SkillActionResult {
         if(!this.actee) {
             return {}
         }
-        const actionResult = this.actee.skillAction(skills)
+        const actionResult = this.actee.extractionAction(extraction)
         if(this.onDepletedRewardsGetter && actionResult.justFinished) {
             this.onDepletedRewardsGetter().forEach(x=>x.claim())
         }
@@ -45,19 +44,15 @@ export class EnvironmentMapEntity extends MapEntity {
         }
     }
 
-    override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
-        return !!this.actee && this.actee.canAttemptSkillAction(skills)
+    override canAttemptExtractionAction(extraction: Extraction): boolean {
+        return !!this.actee && this.actee.canAttemptExtractionAction(extraction)
     }
 
     getDescription = computed<TextPart[]>(() => {
         if(!this.actee) {
             return []
         }
-        let textParts:TextPart[] =  [    
-            getSkillSymbol(this.actee.mainSkill) +
-            "[" + this.actee.difficulty + "]" +
-            "->"
-        ]
+        let textParts:TextPart[] =  []
         if(this.resourcesGain) {
             textParts = textParts.concat(
                 resourcesToTextParts(multiplyNumericalValuesFunctional(this.resourcesGain, this.actee.progressLeft()))

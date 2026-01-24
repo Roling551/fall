@@ -6,9 +6,10 @@ import { ResourcesService } from "./resources.service";
 import { addExistingNumericalValues, addNumericalValuesFunctional } from "../util/map-functions";
 import { CurrentLevelService } from "./current-level.service";
 import { BenefitsService } from "./benefits.service";
+import { Extraction } from "../models/extraction";
 
-export interface CreateSkillMapActionInfo {
-    skills: Map<Skill, number>
+export interface CreateExtractionInfo {
+    extraction: Extraction
     times: number
 }
 
@@ -30,12 +31,13 @@ export class SkillMapActionFactoryService {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
-    public createMapInteractionAction(createActionInfo: CreateSkillMapActionInfo, affectedCoordinates: Coordinate[]) {
+    public createMapInteractionAction(createActionInfo: CreateExtractionInfo, affectedCoordinates: Coordinate[]) {
         const times = createActionInfo.times || 1
         return (tile: Tile)=>{
-            const skills = addNumericalValuesFunctional(createActionInfo.skills,
-                this.benefitsService.listenForSkillMapActionSkillBonuses(tile).output())
-            
+            //const skills = addNumericalValuesFunctional(createActionInfo.skills,
+            //    this.benefitsService.listenForSkillMapActionSkillBonuses(tile).output())
+            const extraction = createActionInfo.extraction
+
             const map = this.map()
             if(!map) {
                 return
@@ -46,8 +48,8 @@ export class SkillMapActionFactoryService {
                     .filter(t=>!!t)
                     .map(t=>t.value)
                 for(const t of tiles) {
-                    if(t.canAttemptSkillAction(skills)) {
-                        const actionResult = t.skillAction(skills)
+                    if(t.canAttemptExtractionAction(extraction)) {
+                        const actionResult = t.extractionAction(extraction)
                         if(actionResult.resourcesGained) {
                             tile.changeExtractedResources(actionResult.resourcesGained)
                         }

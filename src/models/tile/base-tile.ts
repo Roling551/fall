@@ -5,22 +5,23 @@ import { Skill } from "../skill"
 import { Tile } from "./tile"
 import { Coordinate } from "../coordinate"
 import { Obstacles } from "../obstacles"
+import { Extraction } from "../extraction"
 
 export abstract class BaseTile extends Tile {
     terrainType
     abstract mapEntities: Signal<MapEntity[]>
 
-    override skillAction(skills: Map<Skill, number>): SkillActionResult {
+    override extractionAction(extraction: Extraction): SkillActionResult {
         for(const mapEntity of this.mapEntities()) {
-            if(mapEntity.canAttemptSkillAction(skills)) {
-                return mapEntity.skillAction(skills) 
+            if(mapEntity.canAttemptExtractionAction(extraction)) {
+                return mapEntity.extractionAction(extraction) 
             }
         }
         throw Error("Skill action can not be attempted")
     }
-    override canAttemptSkillAction(skills: Map<Skill, number>): boolean {
+    override canAttemptExtractionAction(extraction: Extraction): boolean {
         for(const mapEntity of this.mapEntities()) {
-            if(mapEntity.canAttemptSkillAction(skills)) {
+            if(mapEntity.canAttemptExtractionAction(extraction)) {
                 return true
             }
         }

@@ -1,5 +1,6 @@
 import { Signal } from "@angular/core"
 import { Skill } from "./skill"
+import { Extraction } from "./extraction"
 
 export interface SkillResult {
     progressDone: number,
@@ -9,8 +10,8 @@ export interface SkillResult {
 }
 
 export interface Actee {
-    skillAction(skills: Map<Skill,number>): SkillResult
-    canAttemptSkillAction(skills: Map<Skill,number>): boolean
+    extractionAction(extraction: Extraction): SkillResult
+    canAttemptExtractionAction(extraction: Extraction): boolean
     maxProgress: number
     currentProgress: Signal<number>
     progressLeft: Signal<number>

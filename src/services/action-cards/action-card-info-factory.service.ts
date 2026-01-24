@@ -2,7 +2,7 @@ import { computed, Injectable } from "@angular/core";
 import { Coordinate } from "../../models/coordinate";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Tile } from "../../models/tile/tile";
-import { CreateSkillMapActionInfo, SkillMapActionFactoryService } from "../skill-map-action-factory.service";
+import { CreateExtractionInfo, SkillMapActionFactoryService } from "../skill-map-action-factory.service";
 import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
@@ -15,6 +15,7 @@ import { ActionCardInfo } from "../../models/action-card-info";
 import { Reward, RewardOption } from "../../models/reward";
 import { RewardFactoryService } from "../reward-factory.service";
 import { TextPart } from "../../models/text-part";
+import { Extraction } from "../../models/extraction";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -31,7 +32,7 @@ export interface InstantExtractionCardInputs {
     type: "InstantExtractionCardInputs",
     name: string,
     skillRequired: Map<Skill, number>,
-    skillApplied: Map<Skill, number>,
+    extraction: Extraction,
     affectedCoordinates: Coordinate[],
     cardPicture?: string,
     price?: Map<Resource, number>,
@@ -43,7 +44,7 @@ export interface EstateCardInputs {
     type: "EstateCardInputs",
     name: string,
     skillRequired: Map<Skill, number>,
-    skillApplied?: Map<Skill, number>,
+    extraction?: Extraction,
     affectedCoordinates?: Coordinate[],
     estateTexture: string,
     runCost?: Map<Resource, number>,
@@ -74,16 +75,16 @@ export class ActionCardInfoFactoryService {
     instantExtractionCard(
         inputs: InstantExtractionCardInputs
     ): ActionCardInfo {
-        const createActionInfo: CreateSkillMapActionInfo = {
-            skills: inputs.skillApplied,
+        const createExtractionInfo: CreateExtractionInfo = {
+            extraction: inputs.extraction,
             times: inputs.times!=undefined ? inputs.times : 1
         }
         const effectsDescriptions: TextPart[][] = []
-        if(inputs.skillApplied) {
-            effectsDescriptions.push(["apply:" + skillsToString(inputs.skillApplied)])
+        if(inputs.extraction) {
+            effectsDescriptions.push(["apply:" + inputs.extraction.strength])
         }
-        const mapInteractionAction = this.skillMapActionFactoryService.createMapInteractionAction(createActionInfo, inputs.affectedCoordinates)
-        const mapCollectAction = this.skillMapActionFactoryService.createMapGatheringAction(createActionInfo, inputs.affectedCoordinates)
+        const mapInteractionAction = this.skillMapActionFactoryService.createMapInteractionAction(createExtractionInfo, inputs.affectedCoordinates)
+        const mapCollectAction = this.skillMapActionFactoryService.createMapGatheringAction(createExtractionInfo, inputs.affectedCoordinates)
         return new ActionCardInfo(
             inputs.name,
             false,
@@ -106,14 +107,14 @@ export class ActionCardInfoFactoryService {
     }
 
     estateCard(inputs: EstateCardInputs): ActionCardInfo {
-        const createActionInfo: CreateSkillMapActionInfo | undefined = (!!inputs.skillApplied) ? {
-            skills: inputs.skillApplied,
+        const createActionInfo: CreateExtractionInfo | undefined = (!!inputs.extraction) ? {
+            extraction: inputs.extraction,
             times: inputs.times!=undefined ? inputs.times : 1
         } : undefined
 
         let effectsDescriptions: TextPart[][] = []
-        if(inputs.skillApplied) {
-            effectsDescriptions.push(["apply:" + skillsToString(inputs.skillApplied)])
+        if(inputs.extraction) {
+            effectsDescriptions.push(["apply:" + inputs.extraction.strength])
         }
         if(inputs.skillMapActionSkillBonus) {
             effectsDescriptions.push(["bonus:" + skillsToString(inputs.skillMapActionSkillBonus)])
