@@ -81,7 +81,7 @@ export class ActionCardInfoFactoryService {
         }
         const effectsDescriptions: TextPart[][] = []
         if(inputs.extraction) {
-            effectsDescriptions.push(["apply:" + inputs.extraction.strength])
+            effectsDescriptions.push(["apply:", ...inputs.extraction.getTextParts()])
         }
         const mapInteractionAction = this.skillMapActionFactoryService.createMapInteractionAction(createExtractionInfo, inputs.affectedCoordinates)
         const mapCollectAction = this.skillMapActionFactoryService.createMapGatheringAction(createExtractionInfo, inputs.affectedCoordinates)
@@ -114,10 +114,10 @@ export class ActionCardInfoFactoryService {
 
         let effectsDescriptions: TextPart[][] = []
         if(inputs.extraction) {
-            effectsDescriptions.push(["apply:" + inputs.extraction.strength])
+            effectsDescriptions.push(["apply:", ...inputs.extraction.getTextParts()])
         }
         if(inputs.extractionBonus) {
-            effectsDescriptions.push(["bonus:" + inputs.extractionBonus.getText()])
+            effectsDescriptions.push(["bonus:" + inputs.extractionBonus.getTextParts()])
         }
         if(inputs.producedResources) {
             effectsDescriptions.push((["produces:", ...resourcesToTextParts(inputs.producedResources)]))

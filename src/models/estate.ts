@@ -124,7 +124,7 @@ export class Estate extends MapEntity implements TurnActor{
             descriptions.push(["apply:" + this.additionalInfo.extraction])
         }
         if(this.additionalInfo.extractionBonus) {
-            descriptions.push(["bonus:" + this.additionalInfo.extractionBonus.getText()])
+            descriptions.push(["bonus:" + this.additionalInfo.extractionBonus.getTextParts()])
         }
         if(this.additionalInfo.movementBonus) {
             descriptions.push(["move:+" + this.additionalInfo.movementBonus])

@@ -29,7 +29,7 @@ export class SimpleActee implements Actee {
     }
 
     extractionStrengthApplied(extraction: Extraction) {
-        const hardnessEffect = Math.max(0, (this.modifications.get("hardness") || 0) - (extraction.modyfications.get("sharpness") || 0))
+        const hardnessEffect = Math.max(0, (this.modifications.get("hardness") || 0) - (extraction.modifications.get("sharpness") || 0))
         return extraction.strength - hardnessEffect
     }
 

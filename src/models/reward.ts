@@ -53,7 +53,7 @@ export class ExtractionActionBonusReward implements Reward {
     rewardType: RewardType = "ExtractionActionBonus";
     constructor(public extractionBonus: ExtractionBonusAndQualifier, private claimFunction: ()=>void) {}
     getTextParts() {
-        return ["skill bonus: " + this.extractionBonus.bonus.getText()]
+        return ["skill bonus: " + this.extractionBonus.bonus.getTextParts()]
     }
     claim() {
         this.claimFunction()

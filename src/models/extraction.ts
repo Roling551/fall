@@ -1,15 +1,20 @@
 import { addNumericalValuesFunctional } from "../util/map-functions"
+import { TextPart } from "./text-part"
 
-export type ExtractionModyfications = "sharpness" | "precission"
+export type ExtractionModifications = "sharpness" | "precission"
+
+export function extractionModificationsToTextPart(extractableModifications: Map<ExtractionModifications, number>): TextPart[] {
+    return [...extractableModifications.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0]}," "])
+}
 
 export class Extraction {
-    constructor(public strength: number, public modyfications: Map<ExtractionModyfications, number> = new Map()) {}
+    constructor(public strength: number, public modifications: Map<ExtractionModifications, number> = new Map()) {}
     
     static addFunctional(bonus1: Extraction, bonus2: Extraction) {
-        return new Extraction(bonus1.strength + bonus2.strength, addNumericalValuesFunctional(bonus1.modyfications, bonus2.modyfications))
+        return new Extraction(bonus1.strength + bonus2.strength, addNumericalValuesFunctional(bonus1.modifications, bonus2.modifications))
     }
 
-    getText() {
-        return this.strength.toString()
+    getTextParts(): TextPart[] {
+        return [this.strength.toString(), "+", ...extractionModificationsToTextPart(this.modifications)]
     }
 }
