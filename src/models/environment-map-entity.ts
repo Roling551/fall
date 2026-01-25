@@ -12,7 +12,11 @@ import { TextPart } from "./text-part";
 import { Actee } from "./actee";
 import { Extraction } from "./extraction";
 
-export type ExtractableModifications = "Hardness" | "Fragility"
+export type ExtractableModifications = "hardness" | "fragility"
+
+export function extractableModificationsToTextPart(extractableModifications: Map<ExtractableModifications, number>): TextPart[] {
+    return [...extractableModifications.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0]}," "])
+}
 
 export type ExtractableSettings = {
     maxProgress: number, 
@@ -23,10 +27,13 @@ export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
     actee?: SimpleActee
 
-    constructor(name: string, extractableSettings?: ExtractableSettings, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
+    public extractableModifications?: Map<ExtractableModifications, number>
+
+    constructor(name: string, public extractableSettings?: ExtractableSettings, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
         if(extractableSettings) {
             this.actee = new SimpleActee(extractableSettings)
+            this.extractableModifications = extractableSettings.modifications
         }
     }
 
@@ -61,6 +68,11 @@ export class EnvironmentMapEntity extends MapEntity {
             )
         } else {
             textParts = textParts.concat(this.actee.progressLeft() + "/" + this.actee.maxProgress)
+        }
+        if(this.extractableModifications) {
+            textParts = textParts.concat("(")
+            textParts = textParts.concat(extractableModificationsToTextPart(this.extractableModifications))
+            textParts = textParts.concat(")")
         }
         return textParts
     })

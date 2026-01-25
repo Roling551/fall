@@ -1,6 +1,6 @@
 import { addNumericalValuesFunctional } from "../util/map-functions"
 
-export type ExtractionModyfications = "Sharpness" | "Precission"
+export type ExtractionModyfications = "sharpness" | "precission"
 
 export class Extraction {
     constructor(public strength: number, public modyfications: Map<ExtractionModyfications, number> = new Map()) {}

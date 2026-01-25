@@ -1,3 +1,4 @@
+import { ExtractableModifications } from "./environment-map-entity"
 import { Resource } from "./resource"
 
 export type TextPartType = "string" | "emoticon"
@@ -18,7 +19,7 @@ export function getTextPartType(textPart: TextPart): TextPartType {
 }
 
 
-export type Emoticon = Resource
+export type Emoticon = Resource | ExtractableModifications
 
 export function getEmoticonSource(part: TextPart) {
     if(typeof part != "object" || part["type"]!="emoticon") {

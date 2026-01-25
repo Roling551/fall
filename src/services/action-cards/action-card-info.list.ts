@@ -53,7 +53,7 @@ export class ActionCardInfoList {
                     type: "InstantExtractionCardInputs",
                     name: "handDrill",
                     skillRequired: new Map([["construction", 2]]),
-                    extraction: new Extraction(3, new Map([["Sharpness", 1]])),
+                    extraction: new Extraction(3, new Map([["sharpness", 1]])),
                     affectedCoordinates: [new Coordinate(0,0)]
                 }
             )

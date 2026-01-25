@@ -36,7 +36,7 @@ export class LevelMapFactoryService {
                 "scrap",
                 {
                     maxProgress: 5,
-                    modifications: new Map([["Hardness", 1]])
+                    modifications: new Map([["hardness", 1]])
                 },
                 undefined,
                 () => [
