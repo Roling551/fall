@@ -6,23 +6,28 @@ import { Building } from "./building";
 import { MapEntity, MapEntityType, SkillActionResult } from "./map-entity";
 import { Resource, resourcesToTextParts } from "./resource";
 import { Reward } from "./reward";
-import { ActeeSettings, SimpleActee } from "./simple-actee";
+import { SimpleActee } from "./simple-actee";
 import { getSkillSymbol, Skill } from "./skill";
 import { TextPart } from "./text-part";
 import { Actee } from "./actee";
 import { Extraction } from "./extraction";
 
+export type ExtractableModifications = "Hardness" | "Fragility"
+
+export type ExtractableSettings = {
+    maxProgress: number, 
+    modifications?: Map<ExtractableModifications, number>
+}
 
 export class EnvironmentMapEntity extends MapEntity {
     readonly type = "environment";
     actee?: SimpleActee
 
-    constructor(name: string, acteeSettings?: ActeeSettings, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
+    constructor(name: string, extractableSettings?: ExtractableSettings, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
         super(name);
-        if(acteeSettings) {
-            this.actee = new SimpleActee(acteeSettings)
+        if(extractableSettings) {
+            this.actee = new SimpleActee(extractableSettings)
         }
-        
     }
 
     override extractionAction(extraction: Extraction): SkillActionResult {

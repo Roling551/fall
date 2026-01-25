@@ -2,22 +2,16 @@ import { computed, Signal, signal } from "@angular/core";
 import { Actee, SkillResult } from "./actee";
 import { Skill } from "./skill";
 import { Extraction } from "./extraction";
-
-export type ActeeModifications = "Hardness" | "Fragility"
-
-export type ActeeSettings = {
-    maxProgress: number, 
-    modifications?: Map<ActeeModifications, number>
-}
+import { ExtractableModifications, ExtractableSettings } from "./environment-map-entity";
 
 export class SimpleActee implements Actee {
 
     currentProgress = signal(0)
 
     public maxProgress: number
-    public modifications: Map<ActeeModifications, number>
+    public modifications: Map<ExtractableModifications, number>
 
-    constructor(settings: ActeeSettings) {
+    constructor(settings: ExtractableSettings) {
         this.maxProgress = settings.maxProgress
         this.modifications = settings.modifications || new Map()
     }
