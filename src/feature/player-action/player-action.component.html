@@ -1,0 +1,9 @@
+@if(repeatInfo) {
+    <p>{{getRepetitionInfo()}}</p>
+}
+@if(skillInfo) {
+    <div><app-transform-text [textParts]="getSkillInfo()"/></div>
+}
+@if(acceptAction) {
+    <button (click)="onAcceptClick()" [disabled]="!isWithinLimit()">Accept</button>
+}

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RepeatActionComponent } from './repeat-action.component';
+import { PlayerActionComponent } from './player-action.component';
 
-describe('RepeatActionComponent', () => {
-  let component: RepeatActionComponent;
-  let fixture: ComponentFixture<RepeatActionComponent>;
+describe('PlayerActionComponent', () => {
+  let component: PlayerActionComponent;
+  let fixture: ComponentFixture<PlayerActionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RepeatActionComponent]
+      imports: [PlayerActionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RepeatActionComponent);
+    fixture = TestBed.createComponent(PlayerActionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

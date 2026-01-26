@@ -1,5 +1,5 @@
 import { computed } from "@angular/core";
-import { RepeatActionComponent } from "../../feature/repeat-action/repeat-action.component";
+import { PlayerActionComponent } from "../../feature/player-action/player-action.component";
 import { Coordinate } from "../../models/coordinate";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Tile } from "../../models/tile/tile";
@@ -27,14 +27,16 @@ export function createRepeatMapAction(
     const doRenderBorder = (tile:KeyValuePair<Coordinate, Tile>)=>selectedTiles.get().has(tile.key.getKey())
     uiStateService.setUI(
         {
-            sideComponent: RepeatActionComponent,
+            sideComponent: PlayerActionComponent,
             sideComponentInputs: {
                 acceptAction: ()=>{
                     afterFinishAction(selectedTiles.get())
                     uiStateService.cancel()
                 },
-                repeatsNumber,
-                selectedItems: selectedTiles
+                repeatInfo: {
+                    repeatsNumber,
+                    selectedItems: selectedTiles
+                }
             },
             tileInfos: new Map([
                 [
@@ -82,14 +84,16 @@ export function createRepeatCardAction(
     const selectedCards = createForceSignal(new Map<number, CardInfo>())
     uiStateService.setUI(
         {
-            sideComponent: RepeatActionComponent,
+            sideComponent: PlayerActionComponent,
             sideComponentInputs: {
                 acceptAction: ()=>{
                     afterFinishAction(selectedCards.get())
                     uiStateService.cancel()
                 },
-                repeatsNumber,
-                selectedItems: selectedCards
+                repeatInfo: {
+                    repeatsNumber,
+                    selectedItems: selectedCards
+                }
             },
             cancelButtonAction,
             cardAction: (card: CardInfo) => {
@@ -180,6 +184,13 @@ export function createSkillsAndMapAction(
             ...unavaliableTileInfo,
             ...additionalTileInfos
         ]),
+        sideComponent: PlayerActionComponent,
+        sideComponentInputs: {
+            skillInfo: {
+                requiredSkills,
+                sumOfSkills
+            }
+        },
         cardAction: (card: CardInfo) => {
             if(selectedCards.get().has(card.id)) {
                 selectedCards.get().delete(card.id)
@@ -287,7 +298,7 @@ export function createSkillsAndRepeatMapAction(
     ]] as [string, TileInfo][] : [])]
 
     uiStateService.setUI({
-        sideComponent: RepeatActionComponent,
+        sideComponent: PlayerActionComponent,
         sideComponentInputs: {
             acceptAction: ()=>{
                 for(const tile of selectedTiles.get()) {
@@ -296,8 +307,14 @@ export function createSkillsAndRepeatMapAction(
                 afterFinishAction(selectedCards.get())
                 uiStateService.cancel()
             },
-            repeatsNumber,
-            selectedItems: selectedTiles
+            repeatInfo: {
+                repeatsNumber,
+                selectedItems: selectedTiles
+            },
+            skillInfo: {
+                requiredSkills,
+                sumOfSkills
+            }
         },
         tileInfos: new Map([
             ...selectedTilesTileInfo,

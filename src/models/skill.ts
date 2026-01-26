@@ -12,5 +12,8 @@ export function getSkillSymbol(skill: Skill) {
 }
 
 export function skillsToTextPart(skills: Map<Skill, number>): TextPart[] {
+    if(skills.size == 0) {
+        return ["-"]
+    }
     return [...skills.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0]}," "])
 }
