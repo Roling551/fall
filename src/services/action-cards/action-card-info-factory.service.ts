@@ -6,7 +6,7 @@ import { CreateExtractionInfo, SkillMapActionFactoryService } from "../skill-map
 import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
-import { Skill, skillsToString } from "../../models/skill";
+import { Skill } from "../../models/skill";
 import { Resource, resourcesToTextParts } from "../../models/resource";
 import { getBorderInfo, getCreateEstateActionAndTileInfo, getCreateMultipleEstatesActionAndTileInfo } from "./actions-cards-functions";
 import { TurnActorsService } from "../turn-actors.service";

@@ -1,6 +1,6 @@
 import { Component, computed, Input } from '@angular/core';
 import { ActionCardInfo } from '../../models/action-card-info';
-import { skillsToString } from '../../models/skill';
+import { skillsToTextPart } from '../../models/skill';
 import { resourcesToTextParts } from '../../models/resource';
 import { getFactoryCardInputsReadable } from '../../services/action-cards/action-card-info-factory.service';
 import { TextPart } from '../../models/text-part';
@@ -15,8 +15,8 @@ import { TransformTextComponent } from '../../shared/transform-text/transform-te
 export class CardContentActionComponent {
     @Input({required: true}) card!: ActionCardInfo
 
-    requiredSkills = computed(()=>{
-        return skillsToString(this.card.requiredSkills)
+    requiredSkills = computed<TextPart[]>(()=>{
+        return skillsToTextPart(this.card.requiredSkills)
     })
 
     price = computed(()=>{
@@ -29,9 +29,9 @@ export class CardContentActionComponent {
 
     cardOnHandRewards = computed(()=>{
         if(!this.card.cardOnHandRewards) {
-            return undefined
+            return []
         }
-        return this.card.cardOnHandRewards.map(x=>x.getTextParts())
+        return this.card.cardOnHandRewards.flatMap(x=>x.getTextParts())
     })
 
     cardActionType = computed(()=>{

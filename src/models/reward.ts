@@ -2,7 +2,6 @@ import { DecisionFactoryOption } from "../services/decision-factory.service"
 import { ExtractionBonusAndQualifier } from "./bonus"
 import { CardInfo } from "./card-info"
 import { Resource, resourcesToTextParts } from "./resource"
-import { skillsToString } from "./skill"
 import { TextPart } from "./text-part"
 
 export type RewardOption = {
