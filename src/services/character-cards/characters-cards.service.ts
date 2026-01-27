@@ -50,7 +50,7 @@ export class CharactersCardsService {
     private createCardsHand(cards: CharacterCardInfo[]) {
         return new TraditionalCardsHand<CharacterCardInfo>(
             cards, 
-            Infinity, 
+            3, 
             ()=>{
                 if(!this.injectorService.actionsCardsService?.isActionChosen()) {
                     this.uiStateService.cancel()   

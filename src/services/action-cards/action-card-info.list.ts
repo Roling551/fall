@@ -52,8 +52,8 @@ export class ActionCardInfoList {
                 {
                     type: "InstantExtractionCardInputs",
                     name: "handDrill",
-                    skillRequired: new Map([["construction", 2]]),
-                    extraction: new Extraction(3, new Map([["sharpness", 1]])),
+                    skillRequired: new Map([["mining", 4], ["engineering", 1]]),
+                    extraction: new Extraction(10, new Map([["sharpness", 1]])),
                     affectedCoordinates: [new Coordinate(0,0)]
                 }
             )
@@ -63,10 +63,10 @@ export class ActionCardInfoList {
             ()=>this.factory.estateCard(
                 {
                     type: "EstateCardInputs",
-                    name: "automaticDrill",
+                    name: "Pin",
                     cardPicture: "pin-drill",
-                    skillRequired: new Map([["construction", 2]]),
-                    extraction: new Extraction(3),
+                    skillRequired: new Map([["mining", 2],["engineering", 4]]),
+                    extraction: new Extraction(8),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "drill",
                     price: new Map([["scrap", 5]]),
@@ -108,12 +108,12 @@ export class ActionCardInfoList {
                 {
                     type: "EstateCardInputs",
                     name: "plasticFactory",
-                    skillRequired: new Map([["construction", 2]]),
+                    skillRequired: new Map([["construction", 2],["engineering", 6]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "plastic-factory",
                     price: new Map([["scrap", 5]]),
-                    runCost: new Map([["oil", 1], ["electricity", 1]]),
-                    producedResources: new Map([["scrap", 1]]),
+                    runCost: new Map([["oil", 6]]),
+                    producedResources: new Map([["plastic", 2]]),
                 }
             )
         ],[
@@ -122,7 +122,7 @@ export class ActionCardInfoList {
                 {
                     type: "EstateCardInputs",
                     name: "powerplant",
-                    skillRequired: new Map([["construction", 2]]),
+                    skillRequired: new Map([["construction", 4],["engineering", 4]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "plastic-factory",
                     price: new Map([["scrap", 5]]),

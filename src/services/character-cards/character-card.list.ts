@@ -19,7 +19,7 @@ export class CharacterCardInfoList {
             "recycler",
             ()=>this.characterCardFactory.createCharacterCard({
                 name: "recycler",
-                skills: new Map([["construction", 1]],),
+                skills: new Map([["engineering", 5], ["construction", 2], ["mining", 2]]),
                 characterAction: {
                     name: "recycleActionCard",
                     repeatNumber: 2,
@@ -32,7 +32,7 @@ export class CharacterCardInfoList {
             "demolisher",
             ()=>this.characterCardFactory.createCharacterCard({
                 name: "demolisher",
-                skills: new Map([["construction", 1]],),
+                skills: new Map([["engineering", 2], ["construction", 5], ["mining", 2]]),
                 characterAction: {
                     name: "demolishEstate",
                     refundFraction: 0.5,
@@ -45,12 +45,24 @@ export class CharacterCardInfoList {
             "accountant",
             ()=>this.characterCardFactory.createCharacterCard({
                 name: "accountant",
-                skills: new Map([["construction", 1]],),
+                skills: new Map([["engineering", 2], ["construction", 2], ["mining", 2]],),
                 characterAction: {
                     name: "getReward",
                     reward: this.rewardFactoryService.createReward({type: "Resources", resources: new Map([["computation",5]])}),
                 },
                 cardPicture: "dwarf3",
+            })
+        ],
+        [
+            "miner",
+            ()=>this.characterCardFactory.createCharacterCard({
+                name: "miner",
+                skills: new Map([["engineering", 2], ["construction", 2], ["mining", 5]],),
+                characterAction: {
+                    name: "getReward",
+                    reward: this.rewardFactoryService.createReward({type: "Resources", resources: new Map([["oil",1]])}),
+                },
+                cardPicture: "dwarf4",
             })
         ]
     ])

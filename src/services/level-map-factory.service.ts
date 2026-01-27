@@ -7,7 +7,7 @@ import { SimpleTile } from "../models/tile/simple-tile";
 import { Tile } from "../models/tile/tile";
 import { getRandomVoronoi } from "../util/voronoi";
 import { RewardFactoryService } from "./reward-factory.service";
-import { chooseRandom } from "../util/random-functions";
+import { chooseRandom, randomFunctionFromRange } from "../util/random-functions";
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +20,12 @@ export class LevelMapFactoryService {
         ["nothing", () => []],
         ["forest", () => [
             new EnvironmentMapEntity("forest", {
-                maxProgress: 5,
+                maxProgress: randomFunctionFromRange(80,100),
             }, 
             new Map([["water", 1]]))]],
         ["oilSource", () => [
             new EnvironmentMapEntity("oil", {
-                    maxProgress: 5
+                    maxProgress: randomFunctionFromRange(80,100)
                 },
                 new Map([["oil", 1]])
             ),
@@ -35,7 +35,7 @@ export class LevelMapFactoryService {
             new EnvironmentMapEntity(
                 "scrap",
                 {
-                    maxProgress: 5,
+                    maxProgress: randomFunctionFromRange(15,20),
                     modifications: new Map([["hardness", 1]])
                 },
                 undefined,

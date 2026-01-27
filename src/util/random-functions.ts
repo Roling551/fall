@@ -13,3 +13,10 @@ export function chooseRandom<T>(values: DistributionAndValues<T>, randomNumber?:
     }
     return values[values.length-1][1]
 }
+
+export function randomFunctionFromRange(minInclusive: number, maxExclusive: number, randomNumber?: number) {
+    if(randomNumber == undefined) {
+        randomNumber = Math.random()
+    }
+    return Math.floor(randomNumber * (maxExclusive - minInclusive)) + minInclusive;
+}

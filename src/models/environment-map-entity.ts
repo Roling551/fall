@@ -7,7 +7,6 @@ import { MapEntity, MapEntityType, SkillActionResult } from "./map-entity";
 import { Resource, resourcesToTextParts } from "./resource";
 import { Reward } from "./reward";
 import { SimpleActee } from "./simple-actee";
-import { getSkillSymbol, Skill } from "./skill";
 import { TextPart } from "./text-part";
 import { Actee } from "./actee";
 import { Extraction } from "./extraction";
