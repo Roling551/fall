@@ -142,10 +142,7 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         return this.selectedCards.get().length
     })
 
-    deselectAllCards(force?: boolean) {
-        if(!(force==true)) {
-            return
-        }
+    deselectAllCards() {
         this.selectedCards.set([])
     }
 }

@@ -136,6 +136,6 @@ export class CharactersCardsService {
     })
 
     onRightClick() {
-       this.cardsHand?.deselectAllCards(false) 
+       this.cardsHand?.deselectAllCards() 
     }
 }
