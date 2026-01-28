@@ -112,19 +112,7 @@ export class ActionCardInfoFactoryService {
             times: inputs.times!=undefined ? inputs.times : 1
         } : undefined
 
-        let effectsDescriptions: TextPart[][] = []
-        if(inputs.extraction) {
-            effectsDescriptions.push(["apply:", ...inputs.extraction.getTextParts()])
-        }
-        if(inputs.extractionBonus) {
-            effectsDescriptions.push(["bonus:" + inputs.extractionBonus.getTextParts()])
-        }
-        if(inputs.producedResources) {
-            effectsDescriptions.push((["produces:", ...resourcesToTextParts(inputs.producedResources)]))
-        }
-        if(inputs.movementBonus) {
-            effectsDescriptions.push(["move:+" + inputs.movementBonus])
-        }
+        let effectsDescriptions = Estate.getEffectsDescriptionsFunction(inputs)
 
         let actionCardInfo: ActionCardInfo 
         const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
@@ -173,7 +161,7 @@ export class ActionCardInfoFactoryService {
             inputs.skillRequired,
             estatesActionAndTileInfo,
             inputs,
-            effectsDescriptions,
+            effectsDescriptions(),
             maxDistance,
             inputs.cardPicture,
             inputs.price,

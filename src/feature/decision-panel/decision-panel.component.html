@@ -11,12 +11,12 @@ Choose one:
         </div>
         <app-card [card]="card"/>
     }
-    @if(getResourcesString(option); as resourcesString) {
+    @if(getResourcesTextPart(option); as resourcesTextPart) {
         <div>
             Receive resources:
         </div>
         <div>
-            {{resourcesString}}
+            <div><app-transform-text [textParts]="resourcesTextPart"/></div>
         </div>
     }
     </div>

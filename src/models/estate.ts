@@ -5,7 +5,7 @@ import { EstateProductionBonusAndQualifier, MovementBonusAndQualifier } from "./
 import { MapEntity } from "./map-entity";
 import { TurnActor } from "./turn-actor";
 import { Tile } from "./tile/tile";
-import { Resource } from "./resource";
+import { Resource, resourcesToTextParts } from "./resource";
 import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
 import { ActionCardInfo } from "./action-card-info";
@@ -21,6 +21,7 @@ export class Estate extends MapEntity implements TurnActor{
     public movementBonus
     affectedCoordinates
     readonly type
+    effectsDescriptions: Signal<TextPart[][]>
 
     constructor(
         public tile: Tile, 
@@ -44,6 +45,7 @@ export class Estate extends MapEntity implements TurnActor{
         this.movementBonus = createForceSignal(movementBonus)
         this.affectedCoordinates = affectedCoordinates.map(x=>x.addCoordinates(tile.coordinate).getKey())
         this.type = type || "estate"
+        this.effectsDescriptions = Estate.getEffectsDescriptionsFunction(this.additionalInfo)
     }
 
     getProducedResources(): Map<Resource, number> | undefined {
@@ -117,17 +119,22 @@ export class Estate extends MapEntity implements TurnActor{
         return false
     }
 
-    effectsDescriptions = computed(()=>{
-        const descriptions: TextPart[][] = []
-        if(this.additionalInfo.extraction) {
-            descriptions.push(["apply:" + this.additionalInfo.extraction])
-        }
-        if(this.additionalInfo.extractionBonus) {
-            descriptions.push(["bonus:" + this.additionalInfo.extractionBonus.getTextParts()])
-        }
-        if(this.additionalInfo.movementBonus) {
-            descriptions.push(["move:+" + this.additionalInfo.movementBonus])
-        }
-        return descriptions
-    })
+    static getEffectsDescriptionsFunction(additionalInfo: EstateCardInputs) {
+        return computed(()=>{
+            const descriptions: TextPart[][] = []
+            if(additionalInfo.extraction) {
+                descriptions.push(["apply:", ...additionalInfo.extraction.getTextParts()])
+            }
+            if(additionalInfo.extractionBonus) {
+                descriptions.push(["bonus:", ...additionalInfo.extractionBonus.getTextParts()])
+            }
+            if(additionalInfo.producedResources) {
+                descriptions.push((["produces:", ...resourcesToTextParts(additionalInfo.producedResources)]))
+            }
+            if(additionalInfo.movementBonus) {
+                descriptions.push(["move:+" + additionalInfo.movementBonus])
+            }
+            return descriptions
+        })
+    }
 }

@@ -5,10 +5,11 @@ import { CardComponent } from '../card/card.component';
 import { resourcesToTextParts } from '../../models/resource';
 import { CardReward, ResourcesReward, Reward } from '../../models/reward';
 import { Decision } from '../../models/decision';
+import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
 
 @Component({
   selector: 'app-decision-panel',
-  imports: [CardComponent],
+  imports: [CardComponent, TransformTextComponent],
   templateUrl: './decision-panel.component.html',
   styleUrl: './decision-panel.component.scss'
 })
@@ -41,7 +42,7 @@ export class DecisionPanelComponent {
         return undefined
     }
 
-    getResourcesString(reward: Reward) {
+    getResourcesTextPart(reward: Reward) {
         if(reward.rewardType == "Resources") {
             const r = reward as ResourcesReward
             return resourcesToTextParts(r.resources)
