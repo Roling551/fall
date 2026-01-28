@@ -14,25 +14,6 @@ export class ActionCardInfoList {
         return names.map(x=>this.list.get(x)).filter(x=>!!x).map(x=>x())
     }
 
-    getRandomByLevelAndRarity(level: number, rarity: 0 | 1 | 2, randomNumber?: number) {
-        if(randomNumber == undefined) {
-            randomNumber = Math.random()
-        } 
-        let cards:string[] = []
-        while(cards.length <= 0) {
-            cards = this.listByLevelAndRarity[level][rarity]
-            if(rarity > 0) {
-                rarity -= 1
-            } else if(level >= 0) {
-                rarity = 2
-                level -= 1
-            } else {
-                throw new Error("Picking random card failed")
-            }
-        }
-        return cards[Math.floor(randomNumber * cards.length)];
-    }
-
     listByLevelAndRarity: [string[], string[], string[]][] = [
         [
             ["handDrill"],

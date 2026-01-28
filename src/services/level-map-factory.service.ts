@@ -7,25 +7,26 @@ import { SimpleTile } from "../models/tile/simple-tile";
 import { Tile } from "../models/tile/tile";
 import { getRandomVoronoi } from "../util/voronoi";
 import { RewardFactoryService } from "./reward-factory.service";
-import { chooseRandom, randomFunctionFromRange } from "../util/random-functions";
+import { randomNumberFromRange, randomValue } from "../util/random-functions";
+import { RandomCardService } from "./random-card.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LevelMapFactoryService {
 
-    constructor(private rewardFactoryService: RewardFactoryService) {}
+    constructor(private rewardFactoryService: RewardFactoryService, private randomCardService: RandomCardService) {}
 
     tilePresets = new Map<string, () => EnvironmentMapEntity[]>([
         ["nothing", () => []],
         ["forest", () => [
             new EnvironmentMapEntity("forest", {
-                maxProgress: randomFunctionFromRange(80,100),
+                maxProgress: randomNumberFromRange(80,100),
             }, 
             new Map([["water", 1]]))]],
         ["oilSource", () => [
             new EnvironmentMapEntity("oil", {
-                    maxProgress: randomFunctionFromRange(80,100)
+                    maxProgress: randomNumberFromRange(80,100)
                 },
                 new Map([["oil", 1]])
             ),
@@ -35,7 +36,7 @@ export class LevelMapFactoryService {
             new EnvironmentMapEntity(
                 "scrap",
                 {
-                    maxProgress: randomFunctionFromRange(15,20),
+                    maxProgress: randomNumberFromRange(15,20),
                     modifications: new Map([["hardness", 1]])
                 },
                 undefined,
@@ -43,8 +44,8 @@ export class LevelMapFactoryService {
                     this.rewardFactoryService.createReward({
                         type: "Decision",
                         decisionFactoryOptions: [
-                            { metaOptionType: "RandomCard", level: [[0.5, 0], [0.5, 1]], rarity: [[0.4, 0], [0.3, 1], [0.3, 2]] },
-                            { metaOptionType: "RandomCard", level: 0, rarity: 0 },
+                            { type: "Card", cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]]) },
+                            { type: "Card", cardName: this.randomCardService.getRandomByLevelAndRarity(1,1)},
                             { type: "Resources", resources: new Map([["scrap", 5]])}
                         ]
                     })
@@ -56,17 +57,17 @@ export class LevelMapFactoryService {
     repeat = 20
     terrains = [
         ()=>{
-            return chooseRandom(
+            return randomValue(
                 [[0.7, "forest"],[0.3, "empty"]]
             )
         },
         ()=>{
-            return chooseRandom(
+            return randomValue(
                 [[0.7, "oilSource"],[0.3, "empty"]]
             )
         },
         ()=>{
-            return chooseRandom(
+            return randomValue(
                 [[0.3, "scrapPile"],[0.7, "empty"]]
             )
         }

@@ -3,6 +3,7 @@ import { CardReward, DecisionReward, ExtractionActionBonusReward, ResourcesRewar
 import { InjectorService } from "./injector.service";
 import { ResourcesService } from "./resources.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
+import { Decision } from "../models/decision";
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +44,7 @@ export class RewardFactoryService {
                 )
             case "Decision":
                 return new DecisionReward(()=>{
-                    const decision = this.injectorService.getDecisionFactoryService().getDecision(rewardOption.decisionFactoryOptions)
+                    const decision = new Decision(rewardOption.decisionFactoryOptions.map(x=>this.createReward(x)))
                     this.injectorService.getDecisionsService().addDecision(decision)
                 })
         }

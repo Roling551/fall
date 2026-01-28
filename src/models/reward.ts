@@ -1,4 +1,3 @@
-import { DecisionFactoryOption } from "../services/decision-factory.service"
 import { ExtractionBonusAndQualifier } from "./bonus"
 import { CardInfo } from "./card-info"
 import { Resource, resourcesToTextParts } from "./resource"
@@ -15,7 +14,7 @@ export type RewardOption = {
     extractionBonus: ExtractionBonusAndQualifier
 } | {
     type: "Decision",
-    decisionFactoryOptions: DecisionFactoryOption[]
+    decisionFactoryOptions: RewardOption[]
 }
 
 export type RewardType = "Card" | "Resources" | "ExtractionActionBonus" | "Decision"

@@ -1,6 +1,6 @@
-export type DistributionAndValues<T> = [chance:number, ValueChangeEvent:T][]
+export type DistributionAndValues<T> = [number, T][]
 
-export function chooseRandom<T>(values: DistributionAndValues<T>, randomNumber?: number):T {
+export function randomValue<T>(values: DistributionAndValues<T>, randomNumber?: number):T {
     if(randomNumber == undefined) {
         randomNumber = Math.random()
     }
@@ -14,7 +14,7 @@ export function chooseRandom<T>(values: DistributionAndValues<T>, randomNumber?:
     return values[values.length-1][1]
 }
 
-export function randomFunctionFromRange(minInclusive: number, maxExclusive: number, randomNumber?: number) {
+export function randomNumberFromRange(minInclusive: number, maxExclusive: number, randomNumber?: number) {
     if(randomNumber == undefined) {
         randomNumber = Math.random()
     }
