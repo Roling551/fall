@@ -36,10 +36,10 @@ export class ActionCardInfoList {
     listByLevelAndRarity: [string[], string[], string[]][] = [
         [
             ["handDrill"],
-            ["automaticDrill", "road"],
+            ["pin", "road"],
             []
         ], [
-            ["miningTools"],
+            ["miningTools", "needle"],
             [],
             []
         ]
@@ -59,7 +59,7 @@ export class ActionCardInfoList {
             )
         ],
         [
-            "automaticDrill",
+            "pin",
             ()=>this.factory.estateCard(
                 {
                     type: "EstateCardInputs",
@@ -70,6 +70,22 @@ export class ActionCardInfoList {
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "drill",
                     price: new Map([["scrap", 5]]),
+                    runCost: new Map([["oil", 1]]),
+                }
+            )
+        ],
+        [
+            "needle",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "Needle",
+                    cardPicture: "needle",
+                    skillRequired: new Map([["mining", 4],["engineering", 8]]),
+                    extraction: new Extraction(15, new Map([["sharpness", 5]])),
+                    affectedCoordinates:  [new Coordinate(0,0)],
+                    estateTexture: "drill",
+                    price: new Map([["scrap", 10],["plastic", 5]]),
                     runCost: new Map([["oil", 1]]),
                 }
             )
