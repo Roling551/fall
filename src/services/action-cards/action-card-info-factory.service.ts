@@ -151,7 +151,7 @@ export class ActionCardInfoFactoryService {
                 inputs.producedResources,
                 inputs.extractionBonus,
                 inputs.movementBonus,
-                actionCardInfo,
+                inputs.instancesNumber===undefined ? actionCardInfo : undefined,
                 inputs.cardPicture,
                 mapEntityType
             ),

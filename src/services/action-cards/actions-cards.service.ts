@@ -76,7 +76,7 @@ export class ActionsCardsService {
             ["instant", "estates", "estatesOnMap"],
             computed(()=>{
                 return new Map([["estatesOnMap", this.turnActorsService.actors.get()
-                    .filter(x=>x instanceof Estate)
+                    .filter(x=>x instanceof Estate && (x as Estate)["actionCardGetAfterDestroy"])
                     .map(x=>(x as Estate)["actionCardGetAfterDestroy"] as ActionCardInfo)
                 ]])
             }),
