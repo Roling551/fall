@@ -140,7 +140,7 @@ export class ActionCardInfoFactoryService {
                 inputs.extractionBonus,
                 inputs.movementBonus,
                 inputs.instancesNumber===undefined ? actionCardInfo : undefined,
-                inputs.cardPicture,
+                inputs.cardPicture || inputs.estateTexture,
                 mapEntityType
             ),
             affectedCoordinates: inputs.affectedCoordinates,
@@ -163,7 +163,7 @@ export class ActionCardInfoFactoryService {
             inputs,
             effectsDescriptions(),
             maxDistance,
-            inputs.cardPicture,
+            inputs.cardPicture || inputs.estateTexture,
             inputs.price,
             this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
             inputs.instancesNumber

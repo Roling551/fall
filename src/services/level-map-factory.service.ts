@@ -42,13 +42,13 @@ export class LevelMapFactoryService {
                 undefined,
                 () => [
                     this.rewardFactoryService.createReward({
-                        type: "Decision",
-                        decisionFactoryOptions: [
-                            { type: "Card", cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]]) },
-                            { type: "Card", cardName: this.randomCardService.getRandomByLevelAndRarity(1,1)},
-                            { type: "Resources", resources: new Map([["scrap", 5]])}
-                        ]
-                    })
+                        type: "Card",
+                        cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
+                    }),
+                    this.rewardFactoryService.createReward({
+                        type: "Card",
+                        cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
+                    }),
                 ]
             )
         ]]

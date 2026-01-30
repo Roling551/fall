@@ -49,7 +49,7 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["mining", 2],["engineering", 4]]),
                     extraction: new Extraction(8),
                     affectedCoordinates:  [new Coordinate(0,0)],
-                    estateTexture: "drill",
+                    estateTexture: "pin-on-map",
                     price: new Map([["scrap", 5]]),
                     runCost: new Map([["oil", 1]]),
                 }
@@ -65,9 +65,9 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["mining", 4],["engineering", 8]]),
                     extraction: new Extraction(15, new Map([["sharpness", 5]])),
                     affectedCoordinates:  [new Coordinate(0,0)],
-                    estateTexture: "drill",
+                    estateTexture: "needle-on-map",
                     price: new Map([["scrap", 10],["plastic", 5]]),
-                    runCost: new Map([["oil", 1]]),
+                    runCost: new Map([["electricity", 4]]),
                 }
             )
         ],
@@ -107,7 +107,7 @@ export class ActionCardInfoList {
                     name: "plasticFactory",
                     skillRequired: new Map([["construction", 2],["engineering", 6]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
-                    estateTexture: "plastic-factory",
+                    estateTexture: "plastic-factory-on-map",
                     price: new Map([["scrap", 5]]),
                     runCost: new Map([["oil", 6]]),
                     producedResources: new Map([["plastic", 2]]),
@@ -121,9 +121,9 @@ export class ActionCardInfoList {
                     name: "powerplant",
                     skillRequired: new Map([["construction", 4],["engineering", 4]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
-                    estateTexture: "plastic-factory",
+                    estateTexture: "powerplant-on-map",
                     price: new Map([["scrap", 5]]),
-                    runCost: new Map([["oil", 1]]),
+                    runCost: new Map([["oil", 2]]),
                     producedResources: new Map([["electricity", 5]]),
                 }
             )
