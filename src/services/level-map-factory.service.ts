@@ -49,12 +49,16 @@ export class LevelMapFactoryService {
                         type: "Card",
                         cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
                     }),
+                    this.rewardFactoryService.createReward({
+                        type: "Card",
+                        cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
+                    }),
                 ]
             )
         ]]
     ]);
 
-    repeat = 20
+    repeat = 10
     terrains = [
         ()=>{
             return randomValue(

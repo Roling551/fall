@@ -3,6 +3,7 @@ import { ActionCardInfoFactoryService } from "./action-card-info-factory.service
 import { Coordinate } from "../../models/coordinate";
 import { ActionCardInfo } from "../../models/action-card-info";
 import { Extraction } from "../../models/extraction";
+import { generateRangeCoordiantes } from "../../util/generate-coordinates";
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ export class ActionCardInfoList {
                     extraction: new Extraction(8),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "pin-on-map",
-                    price: new Map([["scrap", 5]]),
+                    price: new Map([["scrap", 10]]),
                     runCost: new Map([["oil", 1]]),
                 }
             )
@@ -91,12 +92,11 @@ export class ActionCardInfoList {
                 {
                     type: "EstateCardInputs",
                     name: "miningTools",
-                    skillRequired: new Map([["construction", 2]]),
+                    skillRequired: new Map([["construction", 3], ["engineering", 1]]),
                     extractionBonus: new Extraction(1),
-                    affectedCoordinates:  [new Coordinate(0,0), new Coordinate(0,1), new Coordinate(0,-1)],
+                    affectedCoordinates:  generateRangeCoordiantes(1),
                     estateTexture: "workshop",
-                    price: new Map([["scrap", 5]]),
-                    runCost: new Map([["oil", 1]])
+                    price: new Map([["scrap", 5]])
                 }
             )
         ],[
@@ -108,7 +108,7 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["construction", 2],["engineering", 6]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "plastic-factory-on-map",
-                    price: new Map([["scrap", 5]]),
+                    price: new Map([["scrap", 12]]),
                     runCost: new Map([["oil", 6]]),
                     producedResources: new Map([["plastic", 2]]),
                 }
@@ -122,7 +122,7 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["construction", 4],["engineering", 4]]),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "powerplant-on-map",
-                    price: new Map([["scrap", 5]]),
+                    price: new Map([["scrap", 10]]),
                     runCost: new Map([["oil", 2]]),
                     producedResources: new Map([["electricity", 5]]),
                 }
