@@ -35,7 +35,7 @@ export class ActionCardInfoList {
                     type: "InstantExtractionCardInputs",
                     name: "handDrill",
                     skillRequired: new Map([["mining", 4], ["engineering", 1]]),
-                    extraction: new Extraction(10, new Map([["sharpness", 1]])),
+                    extraction: new Extraction(12, new Map([["sharpness", 1]])),
                     affectedCoordinates: [new Coordinate(0,0)]
                 }
             )
@@ -52,7 +52,7 @@ export class ActionCardInfoList {
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "pin-on-map",
                     price: new Map([["scrap", 10]]),
-                    runCost: new Map([["oil", 1]]),
+                    runCost: new Map([["oil", 3]]),
                 }
             )
         ],
@@ -93,7 +93,7 @@ export class ActionCardInfoList {
                     type: "EstateCardInputs",
                     name: "miningTools",
                     skillRequired: new Map([["construction", 3], ["engineering", 1]]),
-                    extractionBonus: new Extraction(1),
+                    extractionBonus: new Extraction(2),
                     affectedCoordinates:  generateRangeCoordiantes(1),
                     estateTexture: "workshop",
                     price: new Map([["scrap", 5]])

@@ -28,11 +28,27 @@ export class EnvironmentMapEntity extends MapEntity {
 
     public extractableModifications?: Map<ExtractableModifications, number>
 
-    constructor(name: string, public extractableSettings?: ExtractableSettings, public resourcesGain?: Map<Resource, number>, private onDepletedRewardsGetter?: ()=>Reward[]) {
+    constructor(
+        name: string, 
+        public extractableSettings?: ExtractableSettings, 
+        public resourcesGain?: Map<Resource, number>, 
+        private onDepletedRewardsGetter?: ()=>Reward[],
+        private onStepRewardWithChance?: {chance: number, rewards: ()=>Reward[]}[]
+    ) {
         super(name);
         if(extractableSettings) {
             this.actee = new SimpleActee(extractableSettings)
             this.extractableModifications = extractableSettings.modifications
+        }
+    }
+
+    gainOnStepRewards() {
+        for(const rewardsWithChance of this.onStepRewardWithChance!) {
+            if(Math.random() < rewardsWithChance.chance) {
+                for(const reward of rewardsWithChance.rewards()) {
+                    reward.claim()
+                }
+            }
         }
     }
 
@@ -46,6 +62,11 @@ export class EnvironmentMapEntity extends MapEntity {
         }
         if(this.onSelfDestroy && actionResult.justFinished) {
             this.onSelfDestroy()
+        }
+        if(this.onStepRewardWithChance) {
+            for(let i = 0; i<actionResult.progressDone; i++) {
+                this.gainOnStepRewards()
+            }
         }
         return {
             ...(this.resourcesGain && {resourcesGained: multiplyNumericalValuesFunctional(this.resourcesGain, actionResult.progressDone)})

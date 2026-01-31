@@ -36,23 +36,21 @@ export class LevelMapFactoryService {
             new EnvironmentMapEntity(
                 "scrap",
                 {
-                    maxProgress: randomNumberFromRange(15,20),
+                    maxProgress: randomNumberFromRange(30,60),
                     modifications: new Map([["hardness", 1]])
                 },
                 undefined,
-                () => [
-                    this.rewardFactoryService.createReward({
-                        type: "Card",
-                        cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
-                    }),
-                    this.rewardFactoryService.createReward({
-                        type: "Card",
-                        cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
-                    }),
-                    this.rewardFactoryService.createReward({
-                        type: "Card",
-                        cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
-                    }),
+                undefined,
+                [
+                    {
+                        chance: 0.15,
+                        rewards:
+                        () => [
+                        this.rewardFactoryService.createReward({
+                            type: "Card",
+                            cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
+                        })] 
+                    }
                 ]
             )
         ]]
