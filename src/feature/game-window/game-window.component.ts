@@ -4,10 +4,11 @@ import { CurrentWindowService } from '../../services/current-window.service';
 import { TechTreeComponent } from '../tech-tree/tech-tree.component';
 import { InitService } from '../../services/init.service';
 import { DecisionPanelComponent } from '../decision-panel/decision-panel.component';
+import { FinishLevelComponent } from '../finish-level/finish-level.component';
 
 @Component({
   selector: 'app-game-window',
-  imports: [MainLayoutComponent, TechTreeComponent, DecisionPanelComponent],
+  imports: [MainLayoutComponent, TechTreeComponent, DecisionPanelComponent, FinishLevelComponent],
   templateUrl: './game-window.component.html',
   styleUrl: './game-window.component.scss'
 })

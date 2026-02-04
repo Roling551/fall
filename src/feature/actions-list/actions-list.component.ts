@@ -41,10 +41,7 @@ export class ActionsListComponent {
     this.currentWindowService.currentWindow.set("decision")
   }
   onNextLevel(): void {
-    this.levelsService.nextLevel()
-  }
-  canNextLevel(): boolean {
-    return this.levelsService.canNextLevel()
+    this.currentWindowService.currentWindow.set("finish-level")
   }
 
 

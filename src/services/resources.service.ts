@@ -1,7 +1,7 @@
 import { computed, Injectable } from "@angular/core";
 import { createForceSignal } from "../util/force-signal";
 import { isResourcePermanent, Resource, ResourceKeys } from "../models/resource";
-import { addNumericalValuesFunctional, mapContainsMap, substractNumericalValuesFunctional } from "../util/map-functions";
+import { addNumericalValuesFunctional, mapContainsMap, removeNonPositiveValuesFunctional, substractNumericalValuesFunctional } from "../util/map-functions";
 
 @Injectable({
     providedIn: 'root'
@@ -9,12 +9,16 @@ import { addNumericalValuesFunctional, mapContainsMap, substractNumericalValuesF
 export class ResourcesService {
     resources = createForceSignal<Map<Resource,number>>(new Map(ResourceKeys.map(x=>[x,0])))
 
-    canAffordResources(price: Map<string, number>) {
+    canAffordResources(price: Map<Resource, number>) {
         return mapContainsMap(this.resources.get(), price)
     }
 
-    canAffordResourcesExcludeNonPermanent(price: Map<string, number>) {
+    canAffordResourcesExcludeNonPermanent(price: Map<Resource, number>) {
         return mapContainsMap(new Map([...this.resources.get()].map(x=>[x[0],isResourcePermanent(x[0])?x[1]:0])), price)
+    }
+
+    getResourcesLeftToAfford(price: Map<Resource, number>) {
+        return removeNonPositiveValuesFunctional(substractNumericalValuesFunctional(price, this.resources.get()))
     }
 
     spendResources(price: Map<Resource, number>) {

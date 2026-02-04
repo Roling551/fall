@@ -52,4 +52,8 @@ export class TurnService {
         this.cardOnHandRewardService.nextTurn()
         this.turn.update(x=>x+1)
     }
+
+    public nextLevel() {
+        this.turn.set(0)
+    }
 }

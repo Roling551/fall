@@ -1,0 +1,20 @@
+<div>
+    <button (click)="onCancel()">Cancel</button>
+</div>
+<div>
+    {{goalsNumberText()}}
+</div>
+@for(goal of goals(); track $index) {
+    <div class="goal-container">
+        <input
+            type="checkbox"
+            [checked]="goal.isChecked()"
+            [disabled]="!goal.isMet()"
+            (click)="goal.check($event)"
+        />
+        <app-transform-text [textParts]="goal.text"/>
+    </div>
+}
+<div>
+    <button (click)="onNextLevel()" [disabled]="!canNextLevel()">Next level</button>
+</div>

@@ -40,6 +40,24 @@ export function substractNumericalValuesFunctional(map1: Map<any, number>, map2:
     return newMap
 }
 
+export function removeNonPositiveValues(map: Map<any, number>) {
+    for (const [key, num] of map.entries()) {
+        if(num <= 0) {
+            map.delete(key)
+        }
+    }
+}
+
+export function removeNonPositiveValuesFunctional(map: Map<any, number>) {
+    const newMap = new Map(map)
+    for (const [key, num] of newMap.entries()) {
+        if(num <= 0) {
+            newMap.delete(key)
+        }
+    }
+    return newMap
+}
+
 export function multiplyNumericalValues(map: Map<any, number>, multiplicant: number) {
     for (const [key, num] of map.entries()) {
         map.set(key, map.get(key)!*multiplicant)

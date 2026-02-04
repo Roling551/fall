@@ -5,10 +5,10 @@ import { CurrentLevelService } from "./current-level.service";
 import { TurnActorsService } from "./turn-actors.service";
 import { ResourcesService } from "./resources.service";
 import { LevelGoalsService } from "./level-goals.service";
-import { LevelInfo } from "../models/level-info";
 import { LevelMap } from "../models/level-map";
 import { BenefitsService } from "./benefits.service";
 import { LevelMapFactoryService } from "./level-map-factory.service";
+import { TurnService } from "./turn.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,7 @@ export class LevelsService {
         private levelGoalsService: LevelGoalsService,
         private benefitsService: BenefitsService,
         private levelMapFactoryService: LevelMapFactoryService,
+        private turnService: TurnService,
     ) {}
     
     nextLevel() {
@@ -33,17 +34,14 @@ export class LevelsService {
             xSize, ySize,
             tiles,
             this.benefitsService.listenForMovementBonuses)
+        this.levelGoalsService.nextLevel()
         const level = new Level(levelMap)
         this.currentLevelService.level.set(level)
-        this.currentLevelService.levelInfo.set(
-            new LevelInfo(
-                [
-                    {type:"resources", resources: new Map([["oil", 20]])}
-                ]))
+        this.levelGoalsService.setGoals({goalsRequired: 2}, [
+            {type: "resources", resources: new Map([["oil", 30]])},
+            {type: "turnsPassed", turns: 3}
+        ])
         this.turnActorService.nextLevel()
-    }
-
-    canNextLevel() {
-        return this.levelGoalsService.isGoalsMet()
+        this.turnService.nextLevel()
     }
 }
