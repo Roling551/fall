@@ -16,6 +16,9 @@ import { Reward, RewardOption } from "../../models/reward";
 import { RewardFactoryService } from "../reward-factory.service";
 import { TextPart } from "../../models/text-part";
 import { Extraction } from "../../models/extraction";
+import { CardInfo } from "../../models/card-info";
+import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
+import { InjectorService } from "../injector.service";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -26,6 +29,15 @@ export function getFactoryCardInputsReadable(type: "InstantExtractionCardInputs"
         case "EstateCardInputs":
             return "Estate"
     }
+}
+
+
+export interface CardOverlayCardInputs {
+    name: string,
+    overlayedCardName: string,
+    actionType: "buyCard",
+    skillRequired?: Map<Skill, number>,
+    price?: Map<Resource, number>,
 }
 
 export interface InstantExtractionCardInputs {
@@ -70,7 +82,17 @@ export class ActionCardInfoFactoryService {
         private skillMapActionFactoryService: SkillMapActionFactoryService,
         private turnActorsService: TurnActorsService,
         private rewardFactoryService: RewardFactoryService,
+        private injectorService: InjectorService
     ) {}
+
+    cardOverlayCard(inputs: CardOverlayCardInputs): CardOverlayCardInfo {
+        return new CardOverlayCardInfo(
+            inputs.name,
+            this.injectorService.getActionCardInfoList().getCardByName(inputs.overlayedCardName),
+            inputs.skillRequired,
+            inputs.price
+        )
+    }
 
     instantExtractionCard(
         inputs: InstantExtractionCardInputs

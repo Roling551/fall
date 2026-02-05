@@ -117,20 +117,54 @@ export function createRepeatCardAction(
 
 export function createInstantAction(
     uiStateService: UIStateService,
-    afterFinishAction: ()=>void,
+    afterFinishAction: (selectedCards: Map<number, CharacterCardInfo>)=>void,
     cancelButtonAction: ()=>void,
+    isAllowed?:()=>boolean,
+    requiredSkills?: Map<Skill, number>,
 ) {
+    const selectedCards = createForceSignal(new Map<number, CharacterCardInfo>())
+    const sumOfSkills = computed(() => {
+        const sum = new Map()
+        if(selectedCards) {
+            for(const card of selectedCards.get()) {
+                addNumericalValues(sum, card[1].skills)
+            }
+        }
+        return sum
+    })
     uiStateService.setUI({
-        sideComponent: AcceptActionComponent,
+        sideComponent: PlayerActionComponent,
         sideComponentInputs: {
             acceptAction: ()=>{
-                afterFinishAction()
+                if(requiredSkills && !(mapContainsMap(sumOfSkills(), requiredSkills))) {
+                    return
+                }
+                if(isAllowed && !isAllowed()) {
+                    return
+                }
+                afterFinishAction(selectedCards.get())
                 uiStateService.cancel()
             },
+            skillInfo: requiredSkills ? {
+                requiredSkills,
+                sumOfSkills
+            } : undefined,
         },
+        cardAction: requiredSkills ? (card: CardInfo) => {
+            if(selectedCards.get().has(card.id)) {
+                selectedCards.get().delete(card.id)
+                selectedCards.forceUpdate()
+            } else {
+                if(card.type === "CharacterCard" && (card instanceof CharacterCardInfo)) {
+                    selectedCards.get().set(card.id, card)
+                    selectedCards.forceUpdate()
+                }
+            }
+        } : undefined,
         cancelButtonAction,
         additionalInfo: {
             playersAction: true,
+            selectedOverrideCards: selectedCards,
         },
     })
 }
@@ -257,16 +291,6 @@ export function createSkillsAndRepeatMapAction(
         return sum
     })
 
-    const ifAllowedAll = (selectedTile: KeyValuePair<Coordinate, Tile>) => {
-        if(!(mapContainsMap(sumOfSkills(), requiredSkills))) {
-            return false
-        }
-        if(!ifAllowed(selectedTile, selectedCards.get())) {
-            return false
-        }
-        return true
-    }
-
     const isTileReacheable = maxDistanceFromHeadquarters != undefined ? (tile: KeyValuePair<Coordinate, Tile>)=> {
                 return (level.distanceFromStation().get(tile.key.getKey()) ?? Infinity) > (maxDistanceFromHeadquarters)
             } : undefined
@@ -301,6 +325,14 @@ export function createSkillsAndRepeatMapAction(
         sideComponent: PlayerActionComponent,
         sideComponentInputs: {
             acceptAction: ()=>{
+                if(!(mapContainsMap(sumOfSkills(), requiredSkills))) {
+                    return
+                }
+                for(const tile of selectedTiles.get()) {
+                    if(!ifAllowed(tile[1], selectedCards.get())) {
+                        return
+                    }
+                }
                 for(const tile of selectedTiles.get()) {
                     forTileAction(tile[1], selectedCards.get())
                 }

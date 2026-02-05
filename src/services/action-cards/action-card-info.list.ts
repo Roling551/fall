@@ -4,12 +4,17 @@ import { Coordinate } from "../../models/coordinate";
 import { ActionCardInfo } from "../../models/action-card-info";
 import { Extraction } from "../../models/extraction";
 import { generateRangeCoordiantes } from "../../util/generate-coordinates";
+import { CardInfo } from "../../models/card-info";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActionCardInfoList {
     constructor(private factory: ActionCardInfoFactoryService) {}
+
+    getCardByName(name: string) {
+        return this.list.get(name)!()
+    }
 
     getCardsByNames(names: string[]) {
         return names.map(x=>this.list.get(x)).filter(x=>!!x).map(x=>x())
@@ -27,7 +32,19 @@ export class ActionCardInfoList {
         ]
     ]
 
-    list = new Map<string, ()=>ActionCardInfo>([
+    list = new Map<string, ()=>CardInfo>([
+        [
+            "q",
+            ()=>this.factory.cardOverlayCard(
+                {
+                    name: "q",
+                    overlayedCardName: "handDrill",
+                    actionType: "buyCard",
+                    skillRequired: new Map([["engineering",3]]),
+                    price: new Map([["scrap", 5]])
+                }
+            )
+        ],
         [
             "handDrill",
             ()=>this.factory.instantExtractionCard(

@@ -22,14 +22,15 @@ import { ActionCardInfoFactoryService } from "./action-card-info-factory.service
 import { InjectorService } from "../injector.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
-import { createSkillsAndMapAction } from "../ui-state/create-player-action";
+import { createInstantAction, createSkillsAndMapAction } from "../ui-state/create-player-action";
+import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActionsCardsService {
 
-    public cardsHand?: GroupByCardsHand<ActionCardInfo>
+    public cardsHand?: GroupByCardsHand<CardInfo>
     private isActionHappening = signal(false)
 
     constructor(
@@ -45,10 +46,10 @@ export class ActionsCardsService {
         return (this.cardsHand?.selectedCardsNumber() || 0) > 0
     })
 
-    setCards(actionCardInfos: ActionCardInfo[]) {
+    setCards(actionCardInfos: CardInfo[]) {
         actionCardInfos = shuffleArray(actionCardInfos)
-        const cards = actionCardInfos.map(x=>this.setMultiStageAction(x))
-        this.cardsHand = new GroupByCardsHand<ActionCardInfo>(
+        const cards = actionCardInfos.map(x=>this.setOnClickAction(x))
+        this.cardsHand = new GroupByCardsHand<CardInfo>(
             cards, 
             Infinity, 
             ()=>{this.uiStateService.cancel()}, 
@@ -65,6 +66,8 @@ export class ActionsCardsService {
                     } else if(cardInfo.additionalInfo.type === "InstantExtractionCardInputs") {
                         return {group:"instant", avaliable: true}
                     }
+                } else if(cardInfo instanceof CardOverlayCardInfo && source === "hand") {
+                    return {group:"cardsToRecover", avaliable: true}
                 }
                 if(cardInfo instanceof ActionCardInfo) {
                     if(additionalDeck && additionalDeck === "estatesOnMap") {
@@ -73,7 +76,7 @@ export class ActionsCardsService {
                 }
                 return undefined
             },
-            ["instant", "estates", "estatesOnMap"],
+            ["instant", "estates", "cardsToRecover", "estatesOnMap"],
             computed(()=>{
                 return new Map([["estatesOnMap", this.turnActorsService.actors.get()
                     .filter(x=>x instanceof Estate && (x as Estate)["actionCardGetAfterDestroy"])
@@ -83,8 +86,8 @@ export class ActionsCardsService {
         )
     }
 
-    addNewCardToDiscard(actionCardInfo: ActionCardInfo) {
-        const card = this.setMultiStageAction(actionCardInfo)
+    addNewCardToDiscard(actionCardInfo: CardInfo) {
+        const card = this.setOnClickAction(actionCardInfo)
         this.cardsHand?.discardDeck.get().push(card)
         this.cardsHand?.discardDeck.forceUpdate()
     }
@@ -97,7 +100,42 @@ export class ActionsCardsService {
         return this.uiStateService.additionalInfo()?.["playersAction"] === true
     })
 
-    setMultiStageAction(actionCardInfo: ActionCardInfo) {
+    setOnClickAction(cardInfo: CardInfo) {
+        if(cardInfo instanceof ActionCardInfo) {
+            return this.setOnClickActionForActionCard(cardInfo)
+        } else if(cardInfo instanceof CardOverlayCardInfo) {
+            return this.setOnClickActionForCardOverlayCard(cardInfo)
+        }
+        return cardInfo
+    }
+
+    private setOnClickActionForCardOverlayCard(cardInfo: CardOverlayCardInfo) {
+        cardInfo.onSelect = ()=>{
+            createInstantAction(
+                this.uiStateService,
+                (selectedCards: Map<number, CharacterCardInfo>)=>{
+                    this.charactersCardService.cardsHand.discardCards([...selectedCards.values()])
+                    if(cardInfo.price) {
+                        this.resourcesService.spendResources(cardInfo.price)
+                    }
+                    
+                    this.addNewCardToDiscard(cardInfo.overlayedCard)
+                    this.removeCardFromHand(cardInfo)
+                },
+                ()=>{ 
+                    this.cardsHand!.deselectCard(cardInfo)
+                },
+                cardInfo.price ? ()=>{
+                    return !(cardInfo.price && !this.resourcesService.canAffordResources(cardInfo.price))
+                }: undefined,
+                cardInfo.skillRequired
+            )
+            return true
+        }
+        return cardInfo
+    }
+
+    private setOnClickActionForActionCard(actionCardInfo: ActionCardInfo) {
         actionCardInfo.onSelect = ()=>{
             createSkillsAndMapAction(
                 this.uiStateService,
@@ -155,13 +193,5 @@ export class ActionsCardsService {
             return false
         }))
         return i
-    }
-
-    isTileReacheable(tile: string, maxDistance: number) {
-        const level = this.levelService.level.get()
-        if(!level) {
-            return false
-        }
-        return (level.distanceFromStation().get(tile) ?? Infinity) > maxDistance
     }
 }

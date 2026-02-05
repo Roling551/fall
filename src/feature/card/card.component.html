@@ -3,6 +3,6 @@
 } @else if(cardAsActionCardInfo()) {
     <app-card-content-action [card]="cardAsActionCardInfo()!"/>
 }
-@if(false) {
-    <app-card-overlay/>
+@if(cardAsOverlay(); as cardOverlay) {
+    <app-card-overlay [card]="cardOverlay"/>
 }

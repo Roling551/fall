@@ -5,6 +5,7 @@ import { ActionCardInfo } from '../../models/action-card-info';
 import { CardContentCharacterComponent } from '../card-content-character/card-content-character.component';
 import { CardContentActionComponent } from '../card-content-action/card-content-action.component';
 import { CardOverlayComponent } from '../card-overlay/card-overlay.component';
+import { CardOverlayCardInfo } from '../../models/card-overlay-card-info';
 
 @Component({
   selector: 'app-card',
@@ -20,6 +21,14 @@ export class CardComponent {
     @HostBinding('class.disabled')
     disabled = false;
 
+    displayedCard = computed(()=>{
+        if(this.card instanceof CardOverlayCardInfo) {
+            return this.card.overlayedCard
+        } else {
+            return this.card
+        }
+    })
+
     constructor() {
         effect(() => {
             this.disabled = !this.avaliable();
@@ -27,14 +36,23 @@ export class CardComponent {
     }
 
     cardAsCharacterCardInfo = computed(()=>{
-        if(this.card instanceof CharacterCardInfo) {
-            return this.card as CharacterCardInfo
+        const card = this.displayedCard()
+        if(card instanceof CharacterCardInfo) {
+            return card as CharacterCardInfo
         }
         return undefined
     })
     cardAsActionCardInfo = computed(()=>{
-        if(this.card instanceof ActionCardInfo) {
-            return this.card as ActionCardInfo
+        const card = this.displayedCard()
+        if(card instanceof ActionCardInfo) {
+            return card as ActionCardInfo
+        }
+        return undefined
+    })
+    cardAsOverlay = computed(()=>{
+        const card = this.card
+        if(card instanceof CardOverlayCardInfo) {
+            return card as CardOverlayCardInfo
         }
         return undefined
     })
