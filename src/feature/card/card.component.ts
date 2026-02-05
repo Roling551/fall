@@ -4,10 +4,11 @@ import { CharacterCardInfo } from '../../models/character-card-info';
 import { ActionCardInfo } from '../../models/action-card-info';
 import { CardContentCharacterComponent } from '../card-content-character/card-content-character.component';
 import { CardContentActionComponent } from '../card-content-action/card-content-action.component';
+import { CardOverlayComponent } from '../card-overlay/card-overlay.component';
 
 @Component({
   selector: 'app-card',
-  imports: [CardContentActionComponent, CardContentCharacterComponent],
+  imports: [CardContentActionComponent, CardContentCharacterComponent, CardOverlayComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
