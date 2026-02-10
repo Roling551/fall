@@ -20,7 +20,7 @@ export class RewardFactoryService {
     createReward(rewardOption: RewardOption) {
         switch(rewardOption.type) {
             case "Card":
-                const card = this.injectorService.getActionCardInfoList().list.get(rewardOption.cardName)!()
+                const card = this.injectorService.getActionCardInfoList().getCardByIdentifier(rewardOption.cardName)
                 return new CardReward(
                     card,
                     ()=>{this.injectorService.getActionsCardsService().addNewCardToDiscard(card)}

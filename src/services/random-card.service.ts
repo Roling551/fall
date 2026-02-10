@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActionCardInfoList } from "./action-cards/action-card-info.list";
+import { ActionCardInfoList, CardIdentifier } from "./action-cards/action-card-info.list";
 import { DistributionAndValues, randomValue } from "../util/random-functions";
 
 export type PossibleRarity = 0 | 1 | 2
@@ -10,11 +10,23 @@ export type PossibleRarity = 0 | 1 | 2
 export class RandomCardService {
     constructor(private actionCardInfoList: ActionCardInfoList) {}
 
+    listByLevelAndRarity: [CardIdentifier[], CardIdentifier[], CardIdentifier[]][] = [
+        [
+            ["handDrill"],
+            ["pin", "road"],
+            []
+        ], [
+            ["miningTools", {name:"needle", state: "broken"}],
+            [],
+            []
+        ]
+    ]
+
     getRandomByLevelAndRarity(level: number | DistributionAndValues<number>, rarity: PossibleRarity | DistributionAndValues<PossibleRarity>, randomNumber?: number) {
         if(randomNumber == undefined) {
             randomNumber = Math.random()
         } 
-        let cards:string[] = []
+        let cards:CardIdentifier[] = []
         let level_
         if(typeof level != "number") {
             level_ = randomValue(level)
@@ -28,7 +40,7 @@ export class RandomCardService {
             rarity_ = rarity
         }
         while(cards.length <= 0) {
-            cards = this.actionCardInfoList.listByLevelAndRarity[level_][rarity_]
+            cards = this.listByLevelAndRarity[level_][rarity_]
             if(rarity_ > 0) {
                 rarity_ -= 1
             } else if(level_ >= 0) {

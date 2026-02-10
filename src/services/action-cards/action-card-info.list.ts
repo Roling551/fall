@@ -5,6 +5,12 @@ import { ActionCardInfo } from "../../models/action-card-info";
 import { Extraction } from "../../models/extraction";
 import { generateRangeCoordiantes } from "../../util/generate-coordinates";
 import { CardInfo } from "../../models/card-info";
+import { Resource } from "../../models/resource";
+import { Skill } from "../../models/skill";
+
+export type CardState = "regular" | "broken"
+
+export type CardIdentifier = string | {name:string, state:CardState}
 
 @Injectable({
   providedIn: 'root'
@@ -12,27 +18,46 @@ import { CardInfo } from "../../models/card-info";
 export class ActionCardInfoList {
     constructor(private factory: ActionCardInfoFactoryService) {}
 
-    getCardByName(name: string) {
-        return this.list.get(name)!()
+    getCardByIdentifier(identifier: CardIdentifier) {
+        let name
+        let state
+        if(typeof identifier == "string") {
+            name = identifier
+            state = "regular"
+        } else {
+            name = identifier.name
+            state = identifier.state
+        }
+        if(state === "regular") {
+            return this.list.get(name)!()
+        } else// if(state === "broken") 
+        {
+            if(this.repairCostList.has(name)) {
+                const cost = this.repairCostList.get(name)!()
+                return this.factory.cardOverlayCard(
+                    {
+                        name: "broken " + name,
+                        overlayedCardName: name,
+                        actionType: "buyCard",
+                        skillRequired: cost.skill,
+                        price: cost.price
+                    }
+                )
+            } else {
+                return this.list.get(name)!()
+            }
+        }
     }
 
-    getCardsByNames(names: string[]) {
-        return names.map(x=>this.list.get(x)).filter(x=>!!x).map(x=>x())
+    getCardsByIdentifiers(identifiers: CardIdentifier[]): CardInfo[] {
+        return identifiers.map(x=>this.getCardByIdentifier(x))
     }
 
-    listByLevelAndRarity: [string[], string[], string[]][] = [
-        [
-            ["handDrill"],
-            ["pin", "road"],
-            []
-        ], [
-            ["miningTools", "needle"],
-            [],
-            []
-        ]
-    ]
+    private repairCostList = new Map<string, ()=>{price:Map<Resource, number>, skill:Map<Skill, number>}>([[
+        "needle", ()=>({price:new Map([["plastic", 2]]), skill:new Map([["mining", 2]])})
+    ]])
 
-    list = new Map<string, ()=>CardInfo>([
+    private list = new Map<string, ()=>CardInfo>([
         [
             "q",
             ()=>this.factory.cardOverlayCard(

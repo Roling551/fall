@@ -33,7 +33,7 @@ export function getFactoryCardInputsReadable(type: "InstantExtractionCardInputs"
 
 
 export interface CardOverlayCardInputs {
-    name: string,
+    name?: string,
     overlayedCardName: string,
     actionType: "buyCard",
     skillRequired?: Map<Skill, number>,
@@ -87,8 +87,8 @@ export class ActionCardInfoFactoryService {
 
     cardOverlayCard(inputs: CardOverlayCardInputs): CardOverlayCardInfo {
         return new CardOverlayCardInfo(
-            inputs.name,
-            this.injectorService.getActionCardInfoList().getCardByName(inputs.overlayedCardName),
+            inputs.name || ("broken "+inputs.overlayedCardName),
+            this.injectorService.getActionCardInfoList().getCardByIdentifier(inputs.overlayedCardName),
             inputs.skillRequired,
             inputs.price
         )

@@ -1,3 +1,4 @@
+import { CardIdentifier } from "../services/action-cards/action-card-info.list"
 import { ExtractionBonusAndQualifier } from "./bonus"
 import { CardInfo } from "./card-info"
 import { Resource, resourcesToTextParts } from "./resource"
@@ -5,7 +6,7 @@ import { TextPart } from "./text-part"
 
 export type RewardOption = {
     type: "Card",
-    cardName: string
+    cardName: CardIdentifier
 } | {
     type: "Resources",
     resources: Map<Resource, number>
