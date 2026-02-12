@@ -19,6 +19,7 @@ import { Extraction } from "../../models/extraction";
 import { CardInfo } from "../../models/card-info";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { InjectorService } from "../injector.service";
+import { Attribute, AttributesService } from "../attributes.service";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -64,7 +65,8 @@ export interface EstateCardInputs {
     price?: Map<Resource, number>,
     times?: number,
     extractionBonus?: Extraction,
-    movementBonus?: number
+    movementBonus?: number,
+    attributes?: Map<Attribute, number>,
     cardOnHandRewards?: RewardOption[],
     producedResources?: Map<Resource, number>,
     isUpgrade?: boolean,
@@ -82,7 +84,8 @@ export class ActionCardInfoFactoryService {
         private skillMapActionFactoryService: SkillMapActionFactoryService,
         private turnActorsService: TurnActorsService,
         private rewardFactoryService: RewardFactoryService,
-        private injectorService: InjectorService
+        private injectorService: InjectorService,
+        private attributesService: AttributesService,
     ) {}
 
     cardOverlayCard(inputs: CardOverlayCardInputs): CardOverlayCardInfo {
@@ -134,7 +137,12 @@ export class ActionCardInfoFactoryService {
             times: inputs.times!=undefined ? inputs.times : 1
         } : undefined
 
-        let effectsDescriptions = Estate.getEffectsDescriptionsFunction(inputs)
+        let effectsDescriptions = computed(()=>{
+            return [
+                ...Estate.getEffectsDescriptionsFunction(inputs)(), 
+                ...(inputs.attributes ? this.attributesService.getAttributesDescribtions(inputs.attributes) : [])
+            ]
+        })
 
         let actionCardInfo: ActionCardInfo 
         const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
@@ -151,7 +159,8 @@ export class ActionCardInfoFactoryService {
                 maxDistance,
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createMapInteractionAction(
                     createActionInfo, 
-                    affectedCoordinates)
+                    affectedCoordinates,
+                    inputs.attributes)
                 : undefined,
 
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createMapGatheringAction(

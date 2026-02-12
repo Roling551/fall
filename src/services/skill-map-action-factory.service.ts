@@ -7,6 +7,7 @@ import { addExistingNumericalValues, addNumericalValuesFunctional } from "../uti
 import { CurrentLevelService } from "./current-level.service";
 import { BenefitsService } from "./benefits.service";
 import { Extraction } from "../models/extraction";
+import { Attribute, AttributesService } from "./attributes.service";
 
 export interface CreateExtractionInfo {
     extraction: Extraction
@@ -27,14 +28,21 @@ export class SkillMapActionFactoryService {
         private resourcesService: ResourcesService,
         private currentLevelService: CurrentLevelService,
         private benefitsService: BenefitsService,
+        private attributesService: AttributesService,
     ) {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
-    public createMapInteractionAction(createActionInfo: CreateExtractionInfo, affectedCoordinates: Coordinate[]) {
+    public createMapInteractionAction(createActionInfo: CreateExtractionInfo, affectedCoordinates: Coordinate[], attributes: Map<Attribute, number>=new Map()) {
         const times = createActionInfo.times || 1
-        return (tile: Tile)=>{  
-            const extraction = Extraction.addFunctional(createActionInfo.extraction, this.benefitsService.listenForExtractionBonuses(tile).output())
+        return (tile: Tile)=>{
+            const attributesEffects = this.attributesService.getAttributesEffects(attributes, {location: tile.coordinate})
+            const extraction = 
+                Extraction.addFunctional(
+                    Extraction.addFunctional(
+                        createActionInfo.extraction, 
+                        this.benefitsService.listenForExtractionBonuses(tile).output()), 
+                        attributesEffects.extractionBonus)
 
             const map = this.map()
             if(!map) {
