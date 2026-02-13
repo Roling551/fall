@@ -6,17 +6,17 @@ import { CurrentLevelService } from "./current-level.service";
 import { SimpleTile } from "../models/tile/simple-tile";
 import { getPlayersEstate } from "../models/tile/tile-util";
 
-export type Attribute = "synchronized"
+export type ActionAttribute = "synchronized"
 
-export type OtherAttributesEffectInputs = {
+export type ActionAttributesEffectInputs = {
     location: Coordinate,
 }
 
-export type AttributesEffect = {
+export type ActionAttributesEffect = {
     extractionBonus: Extraction
 }
 
-function addAttributesEffects(a1: AttributesEffect, a2: AttributesEffect): AttributesEffect {
+function addActionAttributesEffects(a1: ActionAttributesEffect, a2: ActionAttributesEffect): ActionAttributesEffect {
     return {
         extractionBonus: Extraction.addFunctional(a1.extractionBonus, a2.extractionBonus)
     }
@@ -25,10 +25,10 @@ function addAttributesEffects(a1: AttributesEffect, a2: AttributesEffect): Attri
 @Injectable({
   providedIn: 'root'
 })
-export class AttributesService {
+export class ActionAttributesService {
     constructor(private currentLevelService: CurrentLevelService) {}
 
-    getAttributeEffects(attribute: [Attribute, number], inputs: OtherAttributesEffectInputs): AttributesEffect {
+    getAttributeEffects(attribute: [ActionAttribute, number], inputs: ActionAttributesEffectInputs): ActionAttributesEffect {
         switch(attribute[0]) {
             case "synchronized":
                 let bonus = 0
@@ -44,24 +44,24 @@ export class AttributesService {
         }
     }
 
-    getAttributesEffects(attributes: Map<Attribute, number>, inputs: OtherAttributesEffectInputs): AttributesEffect {
-        let effect: AttributesEffect = {
+    getAttributesEffects(attributes: Map<ActionAttribute, number>, inputs: ActionAttributesEffectInputs): ActionAttributesEffect {
+        let effect: ActionAttributesEffect = {
             extractionBonus: new Extraction(0),
         }
         for(const attribute of attributes) {
-            effect = addAttributesEffects(effect, this.getAttributeEffects(attribute, inputs))
+            effect = addActionAttributesEffects(effect, this.getAttributeEffects(attribute, inputs))
         }
         return effect
     }
 
-    getAttributeDescribtion(attribute: [Attribute, number]): TextPart[][] {
+    getAttributeDescribtion(attribute: [ActionAttribute, number]): TextPart[][] {
         switch(attribute[0]) {
             case "synchronized":
                 return [["Synchronized-", attribute[1].toString()]]
         }
     }
 
-    getAttributesDescribtions(attributes: Map<Attribute, number>): TextPart[][] {
+    getAttributesDescribtions(attributes: Map<ActionAttribute, number>): TextPart[][] {
         let describtions: TextPart[][] = []
         for(const attribute of attributes) {
             describtions = [...describtions, ...this.getAttributeDescribtion(attribute)]

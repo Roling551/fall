@@ -19,7 +19,7 @@ import { Extraction } from "../../models/extraction";
 import { CardInfo } from "../../models/card-info";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { InjectorService } from "../injector.service";
-import { Attribute, AttributesService } from "../attributes.service";
+import { ActionAttribute, ActionAttributesService } from "../action-attributes.service";
 
 export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
 
@@ -66,7 +66,7 @@ export interface EstateCardInputs {
     times?: number,
     extractionBonus?: Extraction,
     movementBonus?: number,
-    attributes?: Map<Attribute, number>,
+    attributes?: Map<ActionAttribute, number>,
     cardOnHandRewards?: RewardOption[],
     producedResources?: Map<Resource, number>,
     isUpgrade?: boolean,
@@ -85,7 +85,7 @@ export class ActionCardInfoFactoryService {
         private turnActorsService: TurnActorsService,
         private rewardFactoryService: RewardFactoryService,
         private injectorService: InjectorService,
-        private attributesService: AttributesService,
+        private attributesService: ActionAttributesService,
     ) {}
 
     cardOverlayCard(inputs: CardOverlayCardInputs): CardOverlayCardInfo {
