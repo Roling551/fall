@@ -124,7 +124,7 @@ export class ActionCardInfoList {
                     skillRequired: new Map([["mining", 2],["engineering", 4]]),
                     extraction: new Extraction(3),
                     affectedCoordinates:  [new Coordinate(0,0)],
-                    estateTexture: "pin-on-map",
+                    estateTexture: "dance-jack-on-map",
                     price: new Map([["scrap", 10]]),
                     runCost: new Map([["oil", 3]]),
                     attributes: new Map([["synchronized", 1]])
