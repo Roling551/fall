@@ -4,6 +4,8 @@ import { ResourcesService } from '../../services/resources.service';
 import { TurnActorsService } from '../../services/turn-actors.service';
 import { TextPart } from '../../models/text-part';
 import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
+import { CurrentLevelService } from '../../services/current-level.service';
+import { toTextParts } from '../../models/level-attributes';
 
 @Component({
   selector: 'app-game-info-panel',
@@ -15,12 +17,16 @@ export class GameInfoPanelComponent {
 
   canNextTurn: Signal<boolean>
 
-  constructor(private resourcesService: ResourcesService, private turnService: TurnService, private turnActorsService: TurnActorsService){
+  constructor(private resourcesService: ResourcesService, private turnService: TurnService, private turnActorsService: TurnActorsService, private currentLevelService: CurrentLevelService){
     this.canNextTurn = this.turnService.canNextTurn
   }
 
   public turnText = computed(()=>{
     return "Turn: " + this.turnService.turn()
+  })
+
+  public levelAttributesText = computed<TextPart[]>(()=>{
+    return toTextParts(this.currentLevelService.level.get()?.levelAttributes.get() || new Map())
   })
 
   public resourcesText = computed<TextPart[]>(() => {

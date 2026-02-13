@@ -1,10 +1,11 @@
-import { computed } from "@angular/core";
+import { Attribute, computed } from "@angular/core";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { LevelMap } from "../level-map";
 import { KeyValuePair } from "../key-value-pair";
 import { Benefit } from "../benefit";
 import { Station } from "../station";
 import { dijkstraAllNodes } from "../../util/path-finding";
+import { LevelAttribute } from "../level-attributes";
 
 export class Level {
     constructor(public map: LevelMap){}
@@ -16,7 +17,12 @@ export class Level {
     })
 
     public nextTurn() {
+        const attributes = this.levelAttributes.get()
+        attributes.set("heat", attributes.get("heat")! + 1)
+        this.levelAttributes.forceUpdate()
     }
+
+    levelAttributes = createForceSignal(new Map<LevelAttribute, number>([["heat", 0]]))
 
     benefits = computed<Map<string, Benefit>>(()=>{
         let result = new Map<string, Benefit>();
