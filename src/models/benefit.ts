@@ -1,4 +1,4 @@
-import { EstateProductionBonusAndQualifier, ExtractionBonusAndQualifier, MovementBonusAndQualifier } from "./bonus";
+import { EstateProductionBonusAndQualifier, MovementBonusAndQualifier, TileBonusAndQualifier } from "./bonus";
 import { Building } from "./building";
 import { Estate } from "./estate";
 
@@ -21,9 +21,10 @@ export type Benefit =
     }
         |
     {
-        type: "extraction-bonus";
-        bonus: ExtractionBonusAndQualifier
-    }        |
+        type: "tile-bonus";
+        bonus: TileBonusAndQualifier
+    }
+        |
     {
         type: "movement-bonus";
         bonus: MovementBonusAndQualifier

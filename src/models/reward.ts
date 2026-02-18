@@ -1,5 +1,5 @@
 import { CardIdentifier } from "../services/action-cards/action-card-info.list"
-import { ExtractionBonusAndQualifier } from "./bonus"
+import { TileBonus, TileBonusAndQualifier } from "./bonus"
 import { CardInfo } from "./card-info"
 import { Resource, resourcesToTextParts } from "./resource"
 import { TextPart } from "./text-part"
@@ -11,14 +11,11 @@ export type RewardOption = {
     type: "Resources",
     resources: Map<Resource, number>
 } | {
-    type: "ExtractionActionBonus",
-    extractionBonus: ExtractionBonusAndQualifier
-} | {
     type: "Decision",
     decisionFactoryOptions: RewardOption[]
 }
 
-export type RewardType = "Card" | "Resources" | "ExtractionActionBonus" | "Decision"
+export type RewardType = "Card" | "Resources" | "Decision"
 
 export interface Reward {
     rewardType: RewardType
@@ -42,17 +39,6 @@ export class ResourcesReward implements Reward {
     constructor(public resources: Map<Resource, number>, private claimFunction: ()=>void) {}
     getTextParts() {
         return ["receive resources: ", ...resourcesToTextParts(this.resources)]
-    }
-    claim() {
-        this.claimFunction()
-    }
-}
-
-export class ExtractionActionBonusReward implements Reward {
-    rewardType: RewardType = "ExtractionActionBonus";
-    constructor(public extractionBonus: ExtractionBonusAndQualifier, private claimFunction: ()=>void) {}
-    getTextParts() {
-        return ["skill bonus: " + this.extractionBonus.bonus.getTextParts()]
     }
     claim() {
         this.claimFunction()

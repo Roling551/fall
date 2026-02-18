@@ -54,13 +54,13 @@ export class Estate extends MapEntity implements TurnActor{
 
     benefits = computed<Benefit[]>(() => {
         const benefits:Benefit[] = []
-        const bonus = this.extractionBonus.get()
-        if (bonus) {
+        const extractionBonus = this.extractionBonus.get()
+        if (extractionBonus) {
             benefits.push({
-                type: "extraction-bonus",
+                type: "tile-bonus",
                 bonus: {
-                    name: "extraction-bonus:"+this.tile.coordinate.getKey(),
-                    bonus,
+                    name: "tile-bonus:"+this.tile.coordinate.getKey(),
+                    bonus: {extraction: extractionBonus},
                     qualifier: (tile: Tile)=> {
                         return this.affectedCoordinates.includes(tile.coordinate.getKey())
                     }

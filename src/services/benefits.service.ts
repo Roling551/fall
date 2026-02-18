@@ -3,18 +3,14 @@ import { TechnologiesService } from "./technologies/technologies.service";
 import { Benefit } from "../models/benefit";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { Estate } from "../models/estate";
-import { EstateProductionBonusAndQualifier, ExtractionBonusAndQualifier, MovementBonusAndQualifier } from "../models/bonus";
+import { addTileBonuses, getZeroTileBonus, MovementBonusAndQualifier, TileBonusAndQualifier } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
-import { addNumericalValuesFunctional } from "../util/map-functions";
-import { InitService } from "./init.service";
 import { createForceSignal } from "../util/force-signal";
 import { CurrentLevelService } from "./current-level.service";
 import { Tile } from "../models/tile/tile";
-import { Skill } from "../models/skill";
 import { TurnActorsService } from "./turn-actors.service";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { TurnBenefitsService } from "./turn-benefits.service";
-import { Extraction } from "../models/extraction";
 
 type BenefitOfType<T extends Benefit["type"]> = Extract<Benefit, { type: T }>;
 
@@ -71,7 +67,7 @@ export class BenefitsService {
         return result
     })
 
-    listenForExtractionBonuses
+    listenForTileBonuses
     listenForMovementBonuses
 
     constructor(
@@ -81,26 +77,26 @@ export class BenefitsService {
         private actionsCardsService: ActionsCardsService,
         private turnBenefitsService: TurnBenefitsService,
     ) {
-        const listenForExtractionBonusesBenefits = this.getBenefitsOfType("extraction-bonus")
-        const listenForExtractionBonusesList = computed(()=> {
-            let result = new Map<string, ExtractionBonusAndQualifier>();
+        const listenForTileBonusesBenefits = this.getBenefitsOfType("tile-bonus")
+        const listenForTileBonusesList = computed(()=> {
+            let result = new Map<string, TileBonusAndQualifier>();
             
-            for(const benefit of listenForExtractionBonusesBenefits()) {
+            for(const benefit of listenForTileBonusesBenefits()) {
                 result.set(benefit.bonus.name || "", benefit.bonus)
             }
             return result
         })
 
-        const extractionBonuses = new SignalChangesEmitter<any, ExtractionBonusAndQualifier>(listenForExtractionBonusesList);
-        this.listenForExtractionBonuses = (tile: Tile) => {
+        const extractionBonuses = new SignalChangesEmitter<any, TileBonusAndQualifier>(listenForTileBonusesList);
+        this.listenForTileBonuses = (tile: Tile) => {
             return new SignalsGroup(
                 extractionBonuses,
-                (key: string, item: ExtractionBonusAndQualifier)=>{
+                (key: string, item: TileBonusAndQualifier)=>{
                     return (!item.qualifier) || item.qualifier(tile)
                 },
-                (key: string, item: ExtractionBonusAndQualifier)=>item.bonus,
-                Extraction.addFunctional,
-                ()=>new Extraction(0)
+                (key: string, item: TileBonusAndQualifier)=>item.bonus,
+                addTileBonuses,
+                ()=>getZeroTileBonus()
             )
         }
 

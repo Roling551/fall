@@ -41,7 +41,7 @@ export class SkillMapActionFactoryService {
                 Extraction.addFunctional(
                     Extraction.addFunctional(
                         createActionInfo.extraction, 
-                        this.benefitsService.listenForExtractionBonuses(tile).output()), 
+                        this.benefitsService.listenForTileBonuses(tile).output().extraction), 
                         attributesEffects.extractionBonus)
 
             const map = this.map()
