@@ -63,14 +63,19 @@ export class EnvironmentMapEntity extends MapEntity {
         if(this.onSelfDestroy && actionResult.justFinished) {
             this.onSelfDestroy()
         }
+        const effectiveProgress = this.calculateEffectiveProgressDone(actionResult.progressDone, extraction)
         if(this.onStepRewardWithChance) {
-            for(let i = 0; i<actionResult.progressDone; i++) {
+            for(let i = 0; i<effectiveProgress; i++) {
                 this.gainOnStepRewards()
             }
         }
         return {
-            ...(this.resourcesGain && {resourcesGained: multiplyNumericalValuesFunctional(this.resourcesGain, actionResult.progressDone)})
+            ...(this.resourcesGain && {resourcesGained: multiplyNumericalValuesFunctional(this.resourcesGain, effectiveProgress)})
         }
+    }
+
+    private calculateEffectiveProgressDone(progressDone: number, extraction: Extraction): number {
+        return Math.max(0, progressDone - Math.max(0, (this.extractableModifications?.get("fragility")||0) - (extraction.modifications.get("precission")||0)))
     }
 
     override canAttemptExtractionAction(extraction: Extraction): boolean {

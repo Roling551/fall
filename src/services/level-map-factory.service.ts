@@ -21,7 +21,8 @@ export class LevelMapFactoryService {
         ["nothing", () => []],
         ["forest", () => [
             new EnvironmentMapEntity("forest", {
-                maxProgress: randomNumberFromRange(80,100),
+                maxProgress: randomNumberFromRange(50,100),
+                modifications: new Map([["fragility", 2]])
             }, 
             new Map([["water", 1]]))]],
         ["oilSource", () => [

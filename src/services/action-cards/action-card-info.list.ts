@@ -59,25 +59,13 @@ export class ActionCardInfoList {
 
     private list = new Map<string, ()=>CardInfo>([
         [
-            "q",
-            ()=>this.factory.cardOverlayCard(
-                {
-                    name: "q",
-                    overlayedCardName: "handDrill",
-                    actionType: "buyCard",
-                    skillRequired: new Map([["engineering",3]]),
-                    price: new Map([["scrap", 5]])
-                }
-            )
-        ],
-        [
             "handDrill",
             ()=>this.factory.instantExtractionCard(
                 {
                     type: "InstantExtractionCardInputs",
                     name: "handDrill",
                     skillRequired: new Map([["mining", 4], ["engineering", 1]]),
-                    extraction: new Extraction(12, new Map([["sharpness", 1]])),
+                    extraction: new Extraction(12, new Map([["sharpness", 5], ["precission", 5]])),
                     affectedCoordinates: [new Coordinate(0,0)]
                 }
             )
@@ -125,7 +113,7 @@ export class ActionCardInfoList {
                     extraction: new Extraction(3),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "dance-jack-on-map",
-                    price: new Map([["scrap", 10]]),
+                    price: new Map([["scrap", 8],["plastic", 2]]),
                     runCost: new Map([["oil", 3]]),
                     attributes: new Map([["synchronized", 1]])
                 }
