@@ -1,4 +1,4 @@
-import { computed, Injectable } from "@angular/core";
+import { computed, Injectable, signal } from "@angular/core";
 import { Skill } from "../models/skill";
 import { Coordinate } from "../models/coordinate";
 import { Tile } from "../models/tile/tile";
@@ -41,7 +41,7 @@ export class SkillMapActionFactoryService {
                 Extraction.addFunctional(
                     Extraction.addFunctional(
                         createActionInfo.extraction, 
-                        this.benefitsService.listenForTileBonuses(tile).output().extraction), 
+                        this.benefitsService.listenForTileBonuses(signal(tile)).output().extraction), 
                         attributesEffects.extractionBonus)
 
             const map = this.map()

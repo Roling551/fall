@@ -6,7 +6,10 @@ export function addExistingNumericalValues(map: Map<any, number>, addedMap: Map<
     }
 }
 
-export function addNumericalValues(map1: Map<any, number>, map2: Map<any, number>) {
+export function addNumericalValues(map1: Map<any, number>, map2?: Map<any, number>) {
+    if(!map2) {
+        return
+    }
     for (const [key, num] of map2.entries()) {
         map1.set(key, num + (map1.get(key) || 0))
     }

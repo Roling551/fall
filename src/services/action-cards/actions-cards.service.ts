@@ -24,6 +24,7 @@ import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
 import { createInstantAction, createSkillsAndMapAction } from "../ui-state/create-player-action";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
+import { BenefitsService } from "../benefits.service";
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,8 @@ export class ActionsCardsService {
         private charactersCardService: CharactersCardsService,
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
-        private turnActorsService: TurnActorsService
+        private turnActorsService: TurnActorsService,
+        private benefitsService: BenefitsService
     ) {
     }
 
@@ -140,6 +142,7 @@ export class ActionsCardsService {
             createSkillsAndMapAction(
                 this.uiStateService,
                 this.levelService,
+                this.benefitsService,
                 (selectedTile: KeyValuePair<Coordinate, Tile>, selectedCards: Map<number, CharacterCardInfo>) => {
                     actionCardInfo.action.action(selectedTile)
                 },

@@ -1,3 +1,4 @@
+import { addNumericalValues, addNumericalValuesFunctional } from "../util/map-functions";
 import { Estate } from "./estate";
 import { Extraction } from "./extraction";
 import { Skill, skillsToTextPart } from "./skill";
@@ -35,8 +36,9 @@ export function tileBonusToTextParts(tileBonus: TileBonus) {
     ]
 }
 
-export function addTileBonuses(bonus1: TileBonus, bonus2: TileBonus) {
+export function addTileBonuses(bonus1: TileBonus, bonus2: TileBonus): TileBonus {
     return {
-        extraction: Extraction.addFunctional(bonus1.extraction, bonus2.extraction)
+        extraction: Extraction.addFunctional(bonus1.extraction, bonus2.extraction),
+        skillsBonus: addNumericalValuesFunctional(bonus1.skillsBonus, bonus2.skillsBonus),
     }
 }

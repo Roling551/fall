@@ -8,14 +8,14 @@ export class SignalsGroup<T, U, V> {
     private signals = createForceSignal(new Map<T, {getter:Signal<V>, qualifier: Signal<boolean>}>());
     constructor(
         emitter: SetChangesEmitter<T, U> | SignalChangesEmitter<T, U>,
-        qualifier: (key: T, value: U)=>boolean,
+        qualifier: Signal<(key: T, value: U)=>boolean>,
         getter: (key: T, value: U)=>V,
         combinator: (cumulation: V, item: V) => V,
         getCombinatorInitialValue: ()=>V
     ) {
         this.listener = emitter.getListener(
             (key: T, value: U)=>{
-                this.signals.get().set(key, {getter:computed(()=>getter(key, value)), qualifier:computed(()=>qualifier(key, value))})
+                this.signals.get().set(key, {getter:computed(()=>getter(key, value)), qualifier:computed(()=>qualifier()(key, value))})
                 this.signals.forceUpdate()
             },
             (key: T, value: U)=>{

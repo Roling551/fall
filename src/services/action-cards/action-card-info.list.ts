@@ -157,7 +157,7 @@ export class ActionCardInfoList {
                     name: "engineeringTools",
                     skillRequired: new Map([["construction", 3], ["engineering", 1]]),
                     tileBonus: {
-                        extraction: new Extraction(2)
+                        skillsBonus: new Map([["engineering", 1]])
                     },
                     affectedCoordinates:  generateRangeCoordiantes(1),
                     estateTexture: "workshop",

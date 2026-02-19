@@ -14,6 +14,7 @@ import { Skill } from "../../models/skill";
 import { addNumericalValues, mapContainsMap } from "../../util/map-functions";
 import { LevelsService } from "../levels.service";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
+import { BenefitsService } from "../benefits.service";
 
 export function createRepeatMapAction(
     uiStateService: UIStateService,
@@ -172,6 +173,7 @@ export function createInstantAction(
 export function createSkillsAndMapAction(
     uiStateService: UIStateService,
     levelService: CurrentLevelService,
+    benefitsService: BenefitsService,
     forTileAction: (selectedTile: KeyValuePair<Coordinate, Tile>, selectedCards: Map<number, CharacterCardInfo>) => void,
     afterFinishAction: (selectedCards: Map<number, CharacterCardInfo>) => void,
     ifAllowed: (selectedTile: KeyValuePair<Coordinate, Tile>, selectedCards: Map<number, CharacterCardInfo>) => boolean,
@@ -193,13 +195,15 @@ export function createSkillsAndMapAction(
         return
     }
     const selectedCards = createForceSignal(new Map<number, CharacterCardInfo>())
+    const skillBonus = benefitsService.listenForTileBonuses(computed(()=>uiStateService.hoverTile()?.value)).output
     const sumOfSkills = computed(() => {
-        const sum = new Map()
+        const sum = new Map<Skill, number>()
         if(selectedCards) {
             for(const card of selectedCards.get()) {
                 addNumericalValues(sum, card[1].skills)
             }
         }
+        addNumericalValues(sum, skillBonus().skillsBonus)
         return sum
     })
 

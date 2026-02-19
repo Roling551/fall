@@ -1,4 +1,4 @@
-import { computed, Injectable, Signal } from "@angular/core";
+import { computed, Injectable, signal, Signal } from "@angular/core";
 import { TechnologiesService } from "./technologies/technologies.service";
 import { Benefit } from "../models/benefit";
 import { SignalChangesEmitter } from "../util/set-changes";
@@ -74,7 +74,6 @@ export class BenefitsService {
         private technologiesService: TechnologiesService,
         private levelService: CurrentLevelService,
         private turnActorService: TurnActorsService,
-        private actionsCardsService: ActionsCardsService,
         private turnBenefitsService: TurnBenefitsService,
     ) {
         const listenForTileBonusesBenefits = this.getBenefitsOfType("tile-bonus")
@@ -88,12 +87,13 @@ export class BenefitsService {
         })
 
         const extractionBonuses = new SignalChangesEmitter<any, TileBonusAndQualifier>(listenForTileBonusesList);
-        this.listenForTileBonuses = (tile: Tile) => {
+        this.listenForTileBonuses = (tile: Signal<Tile|undefined>) => {
             return new SignalsGroup(
                 extractionBonuses,
-                (key: string, item: TileBonusAndQualifier)=>{
-                    return (!item.qualifier) || item.qualifier(tile)
-                },
+                computed(()=>(key: string, item: TileBonusAndQualifier)=>{
+                    const t = tile()
+                    return (!item.qualifier) || (!!t && item.qualifier(t))
+                }),
                 (key: string, item: TileBonusAndQualifier)=>item.bonus,
                 addTileBonuses,
                 ()=>({} as TileBonus)
@@ -114,9 +114,9 @@ export class BenefitsService {
         this.listenForMovementBonuses = (tile: Tile) => {
             return new SignalsGroup<string, MovementBonusAndQualifier, number>(
                 movementBonuses,
-                (key: string, item: MovementBonusAndQualifier)=>{
+                computed(()=>(key: string, item: MovementBonusAndQualifier)=>{
                     return item.qualifier(tile)
-                },
+                }),
                 (key: string, item: MovementBonusAndQualifier)=>item.bonus,
                 (x,y)=>x+y,
                 ()=>0
