@@ -3,7 +3,7 @@ import { TechnologiesService } from "./technologies/technologies.service";
 import { Benefit } from "../models/benefit";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { Estate } from "../models/estate";
-import { addTileBonuses, getZeroTileBonus, MovementBonusAndQualifier, TileBonusAndQualifier } from "../models/bonus";
+import { addTileBonuses, MovementBonusAndQualifier, TileBonus, TileBonusAndQualifier } from "../models/bonus";
 import { SignalsGroup } from "../util/signals-group";
 import { createForceSignal } from "../util/force-signal";
 import { CurrentLevelService } from "./current-level.service";
@@ -96,7 +96,7 @@ export class BenefitsService {
                 },
                 (key: string, item: TileBonusAndQualifier)=>item.bonus,
                 addTileBonuses,
-                ()=>getZeroTileBonus()
+                ()=>({} as TileBonus)
             )
         }
 

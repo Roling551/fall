@@ -16,7 +16,7 @@ export class RandomCardService {
             ["pin", "road"],
             []
         ], [
-            ["miningTools", {name:"needle", state: "broken"}],
+            ["drillsMaintenance", "engineeringTools", {name:"needle", state: "broken"}],
             [],
             []
         ]

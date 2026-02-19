@@ -52,7 +52,7 @@ export class InitService {
         //         bonus: (tile: Tile)=>new Map<Skill, number>([["mining",1]])
         //     }
         // })
-        const initialCardNames = ["handDrill", "pin", "pin", "needle", "miningTools", "miningTools", "road", "plasticFactory", "powerplant", "danceJack"]
+        const initialCardNames = ["handDrill", "pin", "pin", "needle", "drillsMaintenance", "engineeringTools", "road", "plasticFactory", "powerplant", "danceJack"]
         this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByIdentifiers(initialCardNames))
         const initialCharacterCardNames = ["recycler", "demolisher", "accountant", "miner"]
         this.charactersCardsService.setCards(this.characterCardInfoList.getCardsByNames(initialCharacterCardNames))

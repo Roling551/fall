@@ -10,8 +10,8 @@ export function extractionModificationsToTextPart(extractableModifications: Map<
 export class Extraction {
     constructor(public strength: number, public modifications: Map<ExtractionModifications, number> = new Map()) {}
     
-    static addFunctional(bonus1: Extraction, bonus2: Extraction) {
-        return new Extraction(bonus1.strength + bonus2.strength, addNumericalValuesFunctional(bonus1.modifications, bonus2.modifications))
+    static addFunctional(bonus1?: Extraction, bonus2?: Extraction) {
+        return new Extraction((bonus1?.strength||0) + (bonus2?.strength||0), addNumericalValuesFunctional(bonus1?.modifications, bonus2?.modifications))
     }
 
     getTextParts(): TextPart[] {

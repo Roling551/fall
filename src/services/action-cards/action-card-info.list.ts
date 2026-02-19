@@ -134,19 +134,38 @@ export class ActionCardInfoList {
             )
         ],
         [
-            "miningTools",
+            "drillsMaintenance",
             ()=>this.factory.estateCard(
                 {
                     type: "EstateCardInputs",
-                    name: "miningTools",
+                    name: "drillsMaintenance",
                     skillRequired: new Map([["construction", 3], ["engineering", 1]]),
-                    extractionBonus: new Extraction(2),
+                    tileBonus: {
+                        extraction: new Extraction(2)
+                    },
                     affectedCoordinates:  generateRangeCoordiantes(1),
                     estateTexture: "workshop",
                     price: new Map([["scrap", 5]])
                 }
             )
-        ],[
+        ],
+        [
+            "engineeringTools",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "engineeringTools",
+                    skillRequired: new Map([["construction", 3], ["engineering", 1]]),
+                    tileBonus: {
+                        extraction: new Extraction(2)
+                    },
+                    affectedCoordinates:  generateRangeCoordiantes(1),
+                    estateTexture: "workshop",
+                    price: new Map([["scrap", 5]])
+                }
+            )
+        ],
+        [
             "plasticFactory",
             ()=>this.factory.estateCard(
                 {

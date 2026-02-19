@@ -1,6 +1,6 @@
 import { Estate } from "./estate";
 import { Extraction } from "./extraction";
-import { Skill } from "./skill";
+import { Skill, skillsToTextPart } from "./skill";
 import { Tile } from "./tile/tile";
 
 export interface EstateProductionBonusAndQualifier {
@@ -24,17 +24,19 @@ export interface TileBonusAndQualifier {
 }
 
 export interface TileBonus {
-    extraction: Extraction
+    extraction?: Extraction,
+    skillsBonus?: Map<Skill, number>,
+}
+
+export function tileBonusToTextParts(tileBonus: TileBonus) {
+    return [
+        ...(tileBonus.extraction ? (["extraction: ", ...tileBonus.extraction.getTextParts()]) : []),
+        ...(tileBonus.skillsBonus ? (["skills: ", ...skillsToTextPart(tileBonus.skillsBonus)]) : []),
+    ]
 }
 
 export function addTileBonuses(bonus1: TileBonus, bonus2: TileBonus) {
     return {
         extraction: Extraction.addFunctional(bonus1.extraction, bonus2.extraction)
-    }
-}
-
-export function getZeroTileBonus() {
-    return {
-        extraction: new Extraction(0)
     }
 }

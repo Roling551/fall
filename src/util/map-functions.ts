@@ -12,13 +12,17 @@ export function addNumericalValues(map1: Map<any, number>, map2: Map<any, number
     }
 }
 
-export function addNumericalValuesFunctional(map1: Map<any, number>, map2: Map<any, number>) {
+export function addNumericalValuesFunctional(map1?: Map<any, number>, map2?: Map<any, number>) {
     const newMap = new Map<any, number>()
-    for (const [key, num] of map1.entries()) {
-        newMap.set(key, num + (newMap.get(key) || 0))
+    if(map1) {
+        for (const [key, num] of map1.entries()) {
+            newMap.set(key, num + (newMap.get(key) || 0))
+        }
     }
-    for (const [key, num] of map2.entries()) {
-        newMap.set(key, num + (newMap.get(key) || 0))
+    if(map2) {
+        for (const [key, num] of map2.entries()) {
+            newMap.set(key, num + (newMap.get(key) || 0))
+        }
     }
     return newMap
 }

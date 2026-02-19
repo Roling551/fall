@@ -1,7 +1,7 @@
 import { computed, Signal, signal } from "@angular/core";
 import { addExistingNumericalValues } from "../util/map-functions";
 import { SignalsGroup } from "../util/signals-group";
-import { EstateProductionBonusAndQualifier, MovementBonusAndQualifier } from "./bonus";
+import { EstateProductionBonusAndQualifier, MovementBonusAndQualifier, TileBonus, tileBonusToTextParts } from "./bonus";
 import { MapEntity } from "./map-entity";
 import { TurnActor } from "./turn-actor";
 import { Tile } from "./tile/tile";
@@ -17,7 +17,7 @@ import { Extraction } from "./extraction";
 export class Estate extends MapEntity implements TurnActor{
     private forcefullyDisabled = signal(false)
     private manuallyDisabled = signal(false)
-    public extractionBonus
+    public tileBonus
     public movementBonus
     affectedCoordinates
     readonly type
@@ -34,14 +34,14 @@ export class Estate extends MapEntity implements TurnActor{
         private mapInteractionAction_?: (tile: Tile)=>void,
         private mapGatheringAction_?: (tile: Tile)=>void,
         public producedResources?: Map<Resource, number>,
-        extractionBonus?: Extraction,
+        tileBonus?: TileBonus,
         movementBonus?: number,
         public actionCardGetAfterDestroy?: ActionCardInfo,
         public picture?: String,
         type?: "estate" | "upgrade",
     ) {
         super(name, 0)
-        this.extractionBonus = createForceSignal(extractionBonus)
+        this.tileBonus = createForceSignal(tileBonus)
         this.movementBonus = createForceSignal(movementBonus)
         this.affectedCoordinates = affectedCoordinates.map(x=>x.addCoordinates(tile.coordinate).getKey())
         this.type = type || "estate"
@@ -54,13 +54,13 @@ export class Estate extends MapEntity implements TurnActor{
 
     benefits = computed<Benefit[]>(() => {
         const benefits:Benefit[] = []
-        const extractionBonus = this.extractionBonus.get()
-        if (extractionBonus) {
+        const tileBonus = this.tileBonus.get()
+        if (tileBonus) {
             benefits.push({
                 type: "tile-bonus",
                 bonus: {
                     name: "tile-bonus:"+this.tile.coordinate.getKey(),
-                    bonus: {extraction: extractionBonus},
+                    bonus: tileBonus,
                     qualifier: (tile: Tile)=> {
                         return this.affectedCoordinates.includes(tile.coordinate.getKey())
                     }
@@ -125,8 +125,8 @@ export class Estate extends MapEntity implements TurnActor{
             if(additionalInfo.extraction) {
                 descriptions.push(["apply:", ...additionalInfo.extraction.getTextParts()])
             }
-            if(additionalInfo.extractionBonus) {
-                descriptions.push(["bonus:", ...additionalInfo.extractionBonus.getTextParts()])
+            if(additionalInfo.tileBonus) {
+                descriptions.push(["bonus:", ...tileBonusToTextParts(additionalInfo.tileBonus)])
             }
             if(additionalInfo.producedResources) {
                 descriptions.push((["produces:", ...resourcesToTextParts(additionalInfo.producedResources)]))
