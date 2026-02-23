@@ -110,12 +110,12 @@ export class ActionCardInfoList {
                     name: "Dance Jack",
                     cardPicture: "dance-jack",
                     skillRequired: new Map([["mining", 2],["engineering", 4]]),
-                    extraction: new Extraction(3),
+                    extraction: new Extraction(4),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "dance-jack-on-map",
                     price: new Map([["scrap", 8],["plastic", 2]]),
-                    runCost: new Map([["oil", 3]]),
-                    attributes: new Map([["synchronized", 1]])
+                    runCost: new Map([["oil", 2]]),
+                    attributes: new Map([["synchronized", 2]])
                 }
             )
         ],
@@ -159,7 +159,7 @@ export class ActionCardInfoList {
                     tileBonus: {
                         skillsBonus: new Map([["engineering", 1]])
                     },
-                    affectedCoordinates:  generateRangeCoordiantes(1),
+                    affectedCoordinates:  generateRangeCoordiantes(2),
                     estateTexture: "workshop",
                     price: new Map([["scrap", 5]])
                 }
