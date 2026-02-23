@@ -15,8 +15,7 @@ import { TextPart } from "./text-part";
 import { Extraction } from "./extraction";
 
 export class Estate extends MapEntity implements TurnActor{
-    private forcefullyDisabled = signal(false)
-    private manuallyDisabled = signal(false)
+    private isDisabled = signal(false)
     public tileBonus
     public movementBonus
     affectedCoordinates
@@ -95,20 +94,20 @@ export class Estate extends MapEntity implements TurnActor{
     }
 
     disabled = computed(()=>{
-        return this.forcefullyDisabled() || this.manuallyDisabled()
+        return this.isDisabled()
     })
 
     getRequiredResources(): Map<Resource, number> {
         return new Map(this.runCost)
     }
     disable() {
-        this.forcefullyDisabled.set(true)
+        this.isDisabled.set(true)
     }
     enable() {
-        this.forcefullyDisabled.set(false)
+        this.isDisabled.set(false)
     }
-    manuallySwitchEnabled() {
-        this.manuallyDisabled.update(x=>!x)
+    switchEnabled() {
+        this.isDisabled.update(x=>!x)
     }
 
     override extractionAction(extraction: Extraction) {

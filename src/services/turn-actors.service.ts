@@ -38,16 +38,12 @@ export class TurnActorsService {
 
     nextTurn() {
         for(const actor of this.actors.get()) {
-            if(this.resourcesService.canAffordResources(actor.getRequiredResources())) {
-                this.resourcesService.spendResources(actor.getRequiredResources())
-                const produced = actor.getProducedResources()
-                if(produced) {
-                    this.resourcesService.addResources(produced)
-                }
-                actor.enable()
-            } else {
-                actor.disable()
+            this.resourcesService.spendResources(actor.getRequiredResources())
+            const produced = actor.getProducedResources()
+            if(produced) {
+                this.resourcesService.addResources(produced)
             }
+            actor.enable()
         }
         for(const actor of this.actors.get()) {
             actor.mapInteractionAction()

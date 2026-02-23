@@ -50,7 +50,7 @@ export function getSwitchEnabledEstateUI():UIData {
             if(!entity || !(entity instanceof Estate)) {
                 return
             }
-            entity.manuallySwitchEnabled()
+            entity.switchEnabled()
         }
     }
 }
