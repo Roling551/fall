@@ -9,6 +9,7 @@ import { getRandomVoronoi } from "../util/voronoi";
 import { RewardFactoryService } from "./reward-factory.service";
 import { randomNumberFromRange, randomValue } from "../util/random-functions";
 import { RandomCardService } from "./random-card.service";
+import { ActionCardInfo } from "../models/action-card-info";
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,7 @@ export class LevelMapFactoryService {
                         () => [
                         this.rewardFactoryService.createReward({
                             type: "Card",
-                            cardName: this.randomCardService.getRandomByLevelAndRarity([[0.5, 0], [0.5, 1]], [[0.4, 0], [0.3, 1], [0.3, 2]])
+                            cardName: this.randomCardService.getRandomByLevelAndRarity([[0.6, 0], [0.4, 1]])
                         })] 
                     }
                 ]

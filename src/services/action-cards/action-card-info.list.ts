@@ -12,6 +12,10 @@ export type CardState = "regular" | "broken"
 
 export type CardIdentifier = string | {name:string, state:CardState}
 
+export function getCardIdentifierName(cardIdentifier: CardIdentifier): string {
+    return typeof cardIdentifier == "string" ? cardIdentifier : cardIdentifier.name
+}
+
 @Injectable({
   providedIn: 'root'
 })
