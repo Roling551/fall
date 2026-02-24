@@ -75,7 +75,7 @@ export class EnvironmentMapEntity extends MapEntity {
     }
 
     private calculateEffectiveProgressDone(progressDone: number, extraction: Extraction): number {
-        return Math.max(0, progressDone - Math.max(0, (this.extractableModifications?.get("fragility")||0) - (extraction.modifications.get("precission")||0)))
+        return Math.max(0, progressDone - Math.max(0, (this.extractableModifications?.get("fragility")||0) - (extraction.modifications.get("precission")||0)) - (extraction.modifications.get("waste")||0))
     }
 
     override canAttemptExtractionAction(extraction: Extraction): boolean {

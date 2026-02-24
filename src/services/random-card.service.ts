@@ -13,11 +13,11 @@ export class RandomCardService {
 
     listByLevelAndRarity: [CardIdentifier[], CardIdentifier[], CardIdentifier[]][] = [
         [
-            ["handDrill"],
-            ["pin", "road"],
+            ["handDrill", "pin", "road", "tick", "hammer"],
+            [],
             []
         ], [
-            ["drillsMaintenance", "engineeringTools", {name:"needle", state: "broken"}],
+            ["drillsMaintenance", "engineeringTools", {name:"needle", state: "broken"}, "danceJack"],
             [],
             []
         ]

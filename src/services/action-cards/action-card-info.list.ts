@@ -75,6 +75,21 @@ export class ActionCardInfoList {
             )
         ],
         [
+            "tick",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "Tick",
+                    skillRequired: new Map([["mining", 2],["engineering", 2]]),
+                    extraction: new Extraction(4),
+                    affectedCoordinates: [new Coordinate(0,0)],
+                    estateTexture: "tick-on-map",
+                    price: new Map([["scrap", 5]]),
+                    runCost: new Map([["oil", 2]]),
+                }
+            )
+        ],
+        [
             "pin",
             ()=>this.factory.estateCard(
                 {
@@ -120,6 +135,21 @@ export class ActionCardInfoList {
                     price: new Map([["scrap", 8],["plastic", 2]]),
                     runCost: new Map([["oil", 2]]),
                     attributes: new Map([["synchronized", 2]])
+                }
+            )
+        ],
+        [
+            "hammer",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "Hammer",
+                    skillRequired: new Map([["mining", 4],["engineering", 2]]),
+                    extraction: new Extraction(10, new Map([["sharpness", 3], ["waste", 2]])),
+                    affectedCoordinates:  [new Coordinate(0,0)],
+                    estateTexture: "hammer-on-map",
+                    price: new Map([["scrap", 8]]),
+                    runCost: new Map([["oil", 2]]),
                 }
             )
         ],

@@ -1,7 +1,7 @@
 import { addNumericalValuesFunctional } from "../util/map-functions"
 import { TextPart } from "./text-part"
 
-export type ExtractionModifications = "sharpness" | "precission"
+export type ExtractionModifications = "sharpness" | "precission" | "waste"
 
 export function extractionModificationsToTextPart(extractableModifications: Map<ExtractionModifications, number>): TextPart[] {
     return [...extractableModifications.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0]}," "])
