@@ -117,7 +117,7 @@ export class ActionCardInfoList {
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "needle-on-map",
                     price: new Map([["scrap", 10],["plastic", 5]]),
-                    runCost: new Map([["electricity", 4]]),
+                    runCost: new Map([["electricity", 5]]),
                 }
             )
         ],
@@ -255,10 +255,39 @@ export class ActionCardInfoList {
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "powerplant-on-map",
                     price: new Map([["scrap", 10]]),
-                    runCost: new Map([["oil", 2]]),
-                    producedResources: new Map([["electricity", 5]]),
+                    runCost: new Map([["oil", 4]]),
+                    producedResources: new Map([["electricity", 10]]),
                 }
             )
-        ]
+        ],
+        [
+            "shabby",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "shabby",
+                    skillRequired: new Map([["construction", 2],["engineering", 2]]),
+                    affectedCoordinates:  [new Coordinate(0,0)],
+                    estateTexture: "shabby-on-map",
+                    price: new Map([["scrap", 6]]),
+                    producedResources: new Map([["electricity", 3]]),
+                }
+            )
+        ],
+        [
+            "mosquito",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "Mosquito",
+                    skillRequired: new Map([["mining", 2],["engineering", 3]]),
+                    extraction: new Extraction(4, new Map([["sharpness", 1], ["precission", 1]])),
+                    affectedCoordinates: [new Coordinate(0,0)],
+                    estateTexture: "mosquito-on-map",
+                    price: new Map([["scrap", 6]]),
+                    runCost: new Map([["electricity", 2]]),
+                }
+            )
+        ],
     ])
 }
