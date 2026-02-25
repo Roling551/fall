@@ -22,7 +22,7 @@ export class CharacterCardInfoList {
                 skills: new Map([["engineering", 5], ["construction", 2], ["mining", 2]]),
                 characterAction: {
                     name: "recycleActionCard",
-                    repeatNumber: 2,
+                    repeatNumber: 3,
                     resourcesPerRecycled: 10,
                 },
                 cardPicture: "dwarf2",

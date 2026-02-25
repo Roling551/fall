@@ -96,7 +96,7 @@ export class ActionCardInfoList {
                     type: "EstateCardInputs",
                     name: "Pin",
                     cardPicture: "pin-drill",
-                    skillRequired: new Map([["mining", 2],["engineering", 4]]),
+                    skillRequired: new Map([["mining", 3],["engineering", 5]]),
                     extraction: new Extraction(8),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "pin-on-map",
@@ -113,7 +113,7 @@ export class ActionCardInfoList {
                     name: "Needle",
                     cardPicture: "needle",
                     skillRequired: new Map([["mining", 4],["engineering", 8]]),
-                    extraction: new Extraction(15, new Map([["sharpness", 5]])),
+                    extraction: new Extraction(15, new Map([["sharpness", 5], ["precission", 3]])),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "needle-on-map",
                     price: new Map([["scrap", 10],["plastic", 5]]),
@@ -128,7 +128,7 @@ export class ActionCardInfoList {
                     type: "EstateCardInputs",
                     name: "Dance Jack",
                     cardPicture: "dance-jack",
-                    skillRequired: new Map([["mining", 2],["engineering", 4]]),
+                    skillRequired: new Map([["mining", 3],["engineering", 5]]),
                     extraction: new Extraction(4),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "dance-jack-on-map",
@@ -144,8 +144,8 @@ export class ActionCardInfoList {
                 {
                     type: "EstateCardInputs",
                     name: "Hammer",
-                    skillRequired: new Map([["mining", 4],["engineering", 2]]),
-                    extraction: new Extraction(10, new Map([["sharpness", 3], ["waste", 2]])),
+                    skillRequired: new Map([["mining", 5],["engineering", 2]]),
+                    extraction: new Extraction(10, new Map([["sharpness", 3], ["waste", 3]])),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "hammer-on-map",
                     price: new Map([["scrap", 8]]),
@@ -193,7 +193,39 @@ export class ActionCardInfoList {
                     tileBonus: {
                         skillsBonus: new Map([["engineering", 1]])
                     },
-                    affectedCoordinates:  generateRangeCoordiantes(2),
+                    affectedCoordinates:  generateRangeCoordiantes(3),
+                    estateTexture: "workshop",
+                    price: new Map([["scrap", 5]])
+                }
+            )
+        ],
+        [
+            "miningTools",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "miningTools",
+                    skillRequired: new Map([["construction", 3], ["engineering", 1]]),
+                    tileBonus: {
+                        skillsBonus: new Map([["mining", 1]])
+                    },
+                    affectedCoordinates:  generateRangeCoordiantes(3),
+                    estateTexture: "workshop",
+                    price: new Map([["scrap", 5]])
+                }
+            )
+        ],
+        [
+            "constructionTools",
+            ()=>this.factory.estateCard(
+                {
+                    type: "EstateCardInputs",
+                    name: "constructionTools",
+                    skillRequired: new Map([["construction", 3], ["engineering", 1]]),
+                    tileBonus: {
+                        skillsBonus: new Map([["construction", 1]])
+                    },
+                    affectedCoordinates:  generateRangeCoordiantes(3),
                     estateTexture: "workshop",
                     price: new Map([["scrap", 5]])
                 }

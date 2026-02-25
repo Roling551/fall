@@ -36,19 +36,22 @@ export class TurnActorsService {
         return change
     })
 
+    enabledActors = computed(()=>{
+        return this.actors.get().filter(x=>!x.disabled())
+    })
+
     nextTurn() {
-        for(const actor of this.actors.get()) {
+        for(const actor of this.enabledActors()) {
             this.resourcesService.spendResources(actor.getRequiredResources())
             const produced = actor.getProducedResources()
             if(produced) {
                 this.resourcesService.addResources(produced)
             }
-            actor.enable()
         }
-        for(const actor of this.actors.get()) {
+        for(const actor of this.enabledActors()) {
             actor.mapInteractionAction()
         }
-        for(const actor of this.actors.get()) {
+        for(const actor of this.enabledActors()) {
             actor.mapGatheringAction()
         }
     }
