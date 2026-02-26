@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TextPart, getEmoticonSource, getTextPartType } from '../../models/text-part';
+import { TextPart, getEmoticonSource, getTextPartType, getTextPartsText } from '../../models/text-part';
 import { HoverInfoService } from '../../services/hover-info.service';
 
 @Component({
@@ -20,6 +20,10 @@ export class TransformTextComponent {
 
     public getEmoticonPicture(part: TextPart) {
         return getEmoticonSource(part)
+    }
+
+    public getTextPartsText(part: TextPart) {
+        return getTextPartsText(part)
     }
 
     getTextPartType(textPart: TextPart) {

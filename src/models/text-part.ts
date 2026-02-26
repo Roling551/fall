@@ -3,7 +3,7 @@ import { ExtractionModifications } from "./extraction"
 import { Resource } from "./resource"
 import { Skill } from "./skill"
 
-export type TextPartType = "string" | "emoticon"
+export type TextPartType = "string" | "text" | "emoticon"
 
 export type TextPart = 
 string |
@@ -13,8 +13,8 @@ string |
     hoverInfo?: TextPart[],
 } |
 {
-    type: "emoticon",
-    emoticon: Emoticon,
+    type: "text",
+    text: string,
     hoverInfo?: TextPart[],
 }
 
@@ -22,7 +22,7 @@ export function getTextPartType(textPart: TextPart): TextPartType {
     if(typeof textPart === "string") {
         return "string"
     } else {
-        return "emoticon"
+        return textPart.type
     }
 }
 
@@ -34,4 +34,11 @@ export function getEmoticonSource(part: TextPart) {
         return ``
     }
     return `assets/pictures/emoticons/${part.emoticon}.png`
+}
+
+export function getTextPartsText(part: TextPart) {
+    if(typeof part != "object" || part["type"]!="text") {
+        return ""
+    }
+    return part.text
 }
