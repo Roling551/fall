@@ -3,8 +3,19 @@ import { TextPart } from "./text-part"
 
 export type ExtractionModifications = "sharpness" | "precission" | "waste"
 
+function getHoverInfo(modification: ExtractionModifications): TextPart[] {
+    switch(modification) {
+        case "sharpness":
+            return ["Sharpness - cancels n points of hardness (", {type: "emoticon", emoticon: "hardness"}, ")"]
+        case "precission":
+            return ["Precission - cancels n points of fragility (", {type: "emoticon", emoticon: "fragility"}, ")"]
+        case "waste":
+            return ["Waste - resource yeld is n smaller"]
+    }
+}
+
 export function extractionModificationsToTextPart(extractableModifications: Map<ExtractionModifications, number>): TextPart[] {
-    return [...extractableModifications.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0]}," "])
+    return [...extractableModifications.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0],hoverInfo:getHoverInfo(x[0])}," "])
 }
 
 export class Extraction {
