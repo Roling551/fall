@@ -17,4 +17,15 @@
         <app-cards [cardsHand]="charactersCards"></app-cards>
     </div>
 
+    @if(getHover(); as hover) {
+        <div
+            class="overlay-window"
+            [style.top.px]="hover.y"
+            [style.left.px]="hover.x"
+            [class.left]="hover.isLeft"
+            [class.top]="hover.isTop"
+        >
+            <app-transform-text [textParts]="hover.textParts"/>
+        </div>
+    }
 </div>

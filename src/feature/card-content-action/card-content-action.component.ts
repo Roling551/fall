@@ -29,7 +29,7 @@ export class CardContentActionComponent {
 
     cardOnHandRewards = computed(()=>{
         if(!this.card.cardOnHandRewards) {
-            return []
+            return undefined
         }
         return this.card.cardOnHandRewards.flatMap(x=>x.getTextParts())
     })
@@ -38,7 +38,7 @@ export class CardContentActionComponent {
         return getFactoryCardInputsReadable(this.card.additionalInfo.type)
     })
 
-    cardActionEffect = computed<TextPart[]>(()=>{
+    cardActionEffect = computed<TextPart[]|undefined>(()=>{
         const info = this.card.additionalInfo
         if(info.type === "EstateCardInputs") {
             let textParts = this.card.effectsDescriptions.flatMap(x=>x)
@@ -49,7 +49,7 @@ export class CardContentActionComponent {
         } else if(info.type === "InstantExtractionCardInputs") {
             return this.card.effectsDescriptions.flatMap(x=>x)
         }
-        return []
+        return undefined
     })
     
     getTexture(card: ActionCardInfo) {

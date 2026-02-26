@@ -7,6 +7,10 @@
     <div class="cardPicture">
         <img [src]="getTexture(card)" onerror="this.onerror=null; this.src='assets/pictures/default-action-card.png';" width="120" height="120">
     </div>
-    <div><app-transform-text [textParts]="cardActionEffect()"/></div>
-    <div><app-transform-text [textParts]="cardOnHandRewards()"/></div>
+    @if(cardActionEffect(); as cardActionEffect) {
+        <div><app-transform-text [textParts]="cardActionEffect"/></div>
+    }
+    @if(cardOnHandRewards(); as cardOnHandRewards) {
+        <div><app-transform-text [textParts]="cardOnHandRewards"/></div>
+    }
 </div>

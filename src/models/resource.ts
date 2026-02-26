@@ -12,7 +12,7 @@ export const ResourceKeys = [
 export type Resource = typeof ResourceKeys[number];
 
 export function resourcesToTextParts(resources: Map<Resource, number>): TextPart[] {
-    return [...resources.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0]}," "])
+    return [...resources.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0],hoverInfo: [x[0]]}," "])
 }
 
 export function isResourcePermanent(resource: Resource) {

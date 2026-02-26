@@ -36,7 +36,8 @@ export class GameInfoPanelComponent {
         const change = resourcesChange.get(resource)
             s.push({
                 type: "emoticon",
-                emoticon:resource
+                emoticon:resource,
+                hoverInfo: [resource]
             }) 
             s.push(`- ${currentAmount || 0}(${change || 0}) `)
     }

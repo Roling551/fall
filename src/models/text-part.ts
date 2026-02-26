@@ -9,7 +9,13 @@ export type TextPart =
 string |
 {
     type: "emoticon",
-    emoticon: Emoticon
+    emoticon: Emoticon,
+    hoverInfo?: TextPart[],
+} |
+{
+    type: "emoticon",
+    emoticon: Emoticon,
+    hoverInfo?: TextPart[],
 }
 
 export function getTextPartType(textPart: TextPart): TextPartType {

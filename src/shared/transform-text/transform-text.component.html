@@ -3,7 +3,7 @@
     @if(typeof part === 'string') {
         {{part}}
     } @else if(getTextPartType(part)==="emoticon") {
-        <img [src]="getEmoticonPicture(part)" class="emoticon">
+        <img [src]="getEmoticonPicture(part)" class="emoticon" (pointerenter)="enter($event, part)" (pointerleave)="leave()">
     }
 }
 </div>
