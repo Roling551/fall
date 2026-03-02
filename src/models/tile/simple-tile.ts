@@ -40,6 +40,25 @@ export class SimpleTile extends BaseTile {
         })
     }
 
+    override getVisibleMapEntities(): Signal<MapEntity[]> {
+        return computed(()=>{
+            const entities = []
+            const e1 = this.playersMapEntity.get()
+            if(e1) {
+                entities.push(e1)
+            }
+            const e2 = this.upgrade.get()
+            if(e2) {
+                entities.push(e2)
+            }
+            for(const e3 of this.environmentMapEntities.get()) {
+                entities.push(e3)
+                break;
+            }
+            return entities
+        })
+    }
+
     override addMapEntity(mapEntity: MapEntity): boolean {
         mapEntity.onSelfDestroy = ()=>{
             this.removeMapEntity(mapEntity)
