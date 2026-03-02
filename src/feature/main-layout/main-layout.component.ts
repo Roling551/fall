@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, computed, HostListener, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { WorldMapComponent } from '../world-map/world-map.component';
 import { Tile } from '../../models/tile/tile';
 import { MapEntity } from '../../models/map-entity';
@@ -63,4 +63,9 @@ export class MainLayoutComponent implements AfterViewInit {
             y,
         }
     })
+
+    @HostListener('document:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent) {
+        this.hoverInfoService.mouseEvent(event)
+    }
 }

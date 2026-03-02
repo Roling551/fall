@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { TextPart, getEmoticonSource, getTextPartType, getTextPartsText } from '../../models/text-part';
 import { HoverInfoService } from '../../services/hover-info.service';
+import { HoverInfoDirective } from '../hover-info.directive';
 
 @Component({
   selector: 'app-transform-text',
-  imports: [],
+  imports: [HoverInfoDirective],
   templateUrl: './transform-text.component.html',
   styleUrl: './transform-text.component.scss'
 })
@@ -30,19 +31,12 @@ export class TransformTextComponent {
         return getTextPartType(textPart)
     }
 
-    enter(event: MouseEvent, textPart: TextPart) {
-        let x = event.clientX;
-        let y = event.clientY; 
+    getHoverInfo(textPart: TextPart) {
         if(typeof textPart == "string") {
-            return
+            return undefined
+        } else {
+            return textPart.hoverInfo
         }
-        const hoverInfo = textPart.hoverInfo
-        if(!hoverInfo) {
-            return
-        }
-        this.hoverInfoService.enter({textParts: hoverInfo, element: event.target as HTMLElement})
     }
-    leave() {
-        this.hoverInfoService.leave()
-    }
+
 }
