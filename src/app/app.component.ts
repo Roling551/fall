@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { GameWindowComponent } from '../feature/game-window/game-window.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,8 @@ import { GameWindowComponent } from '../feature/game-window/game-window.componen
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'fall';
+    constructor(private translate: TranslateService) {
+        translate.use('en');
+    }
+    title = 'fall';
 }

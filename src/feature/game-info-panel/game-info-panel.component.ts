@@ -6,10 +6,11 @@ import { TextPart } from '../../models/text-part';
 import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
 import { CurrentLevelService } from '../../services/current-level.service';
 import { toTextParts } from '../../models/level-attributes';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-game-info-panel',
-  imports: [TransformTextComponent],
+  imports: [TransformTextComponent, TranslateModule],
   templateUrl: './game-info-panel.component.html',
   styleUrl: './game-info-panel.component.scss'
 })

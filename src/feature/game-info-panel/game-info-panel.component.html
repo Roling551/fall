@@ -1,6 +1,5 @@
 <div class="container">
-    <p>Game</p>
-    <button (click)="onNextTurn()" [disabled]="!canNextTurn()">Next turn</button>
+    <button (click)="onNextTurn()" [disabled]="!canNextTurn()">{{ 'GAME_INFO_PANEL.NEXT_TURN' | translate }}</button>
     <p>{{turnText()}}</p>
     <p><app-transform-text [textParts]="levelAttributesText()"/></p>
     <p><app-transform-text [textParts]="resourcesText()"/></p>
