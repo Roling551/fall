@@ -38,7 +38,7 @@ export type TileInfo = {
 }
 
 const defaultUISettings: UISettings = {
-  override: false,
+  override: true,
   skipBack: false,
   cantIterrupt: false,
   cantInterruptException: []
