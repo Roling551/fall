@@ -39,6 +39,7 @@ export class TurnService {
     })
 
     public nextTurn() {
+        this.uiStateService.cancel()
         this.resourcesService.removeNonPermanentResources()
         const level = this.levelService.level.get()
         if(!level) {
