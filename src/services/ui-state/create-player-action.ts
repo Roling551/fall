@@ -39,6 +39,7 @@ export function createRepeatMapAction(
                     selectedItems: selectedTiles
                 }
             },
+            cardAction: undefined,
             tileInfos: new Map([
                 [
                     "Selected tiles",
@@ -71,6 +72,9 @@ export function createRepeatMapAction(
                 }
             },
             cancelButtonAction,
+            additionalInfo: {
+                playersAction: true,
+            }
         }
     )
 }
