@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent {
     constructor(private translate: TranslateService) {
-        translate.use('pl');
+        translate.use('en');
     }
     title = 'fall';
 }
