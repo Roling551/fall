@@ -1,0 +1,28 @@
+{
+  "GAME_INFO_PANEL": {
+    "NEXT_TURN": "Kolejna tura"
+  },
+  "ACTIONS_LIST": {
+    "CREATE_STATION": "Umieść bazę",
+    "SWITCH_ENABLED": "włącz/wyłącz",
+    "TECH_TREE": "Technologie",
+    "NEXT_LEVEL": "Następny poziom",
+    "SAVE": "Zapisz grę",
+    "LOAD": "Wczyta grę",
+    "DECISIONS": "Decyzje",
+    "HEADQUARTERS": "Centrum op."
+  },
+  "CHARACTER_CARDS": {
+    "CARD_NAMES": {
+        "ACCOUNTANT": "Księgowy",
+        "MINER": "Górnik",
+        "DEMOLISHER": "Wyburzacz",
+        "RECYCLER": "Przetwórca"
+    },
+    "ACTIONS_DESCRIBTIONS": {
+        "RECYCLE": {
+            "1": ""
+        }
+    }
+  }
+}

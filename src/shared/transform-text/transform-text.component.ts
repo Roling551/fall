@@ -2,10 +2,11 @@ import { Component, Input } from '@angular/core';
 import { TextPart, getEmoticonSource, getTextPartType, getTextPartsText } from '../../models/text-part';
 import { HoverInfoService } from '../../services/hover-info.service';
 import { HoverInfoDirective } from '../hover-info.directive';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-transform-text',
-  imports: [HoverInfoDirective],
+  imports: [HoverInfoDirective, TranslateModule],
   templateUrl: './transform-text.component.html',
   styleUrl: './transform-text.component.scss'
 })

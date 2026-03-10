@@ -1,5 +1,28 @@
 {
   "GAME_INFO_PANEL": {
     "NEXT_TURN": "Next turn"
+  },
+  "ACTIONS_LIST": {
+    "CREATE_STATION": "Create station",
+    "SWITCH_ENABLED": "Switch enabled",
+    "TECH_TREE": "Tech tree",
+    "NEXT_LEVEL": "Next level",
+    "SAVE": "Save",
+    "LOAD": "Load",
+    "DECISIONS": "Decisions",
+    "HEADQUARTERS": "Headquarters"
+  },
+  "CHARACTER_CARDS": {
+    "CARD_NAMES": {
+        "ACCOUNTANT": "Accountant",
+        "MINER": "Miner",
+        "DEMOLISHER": "Demolisher",
+        "RECYCLER": "Recycler"
+    },
+    "ACTIONS_DESCRIBTIONS": {
+        "RECYCLE": {
+            "1": ""
+        }
+    }
   }
 }

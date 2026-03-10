@@ -10,10 +10,11 @@ import { ForceSignal } from '../../util/force-signal';
 import { CurrentWindowService } from '../../services/current-window.service';
 import { LevelsService } from '../../services/levels.service';
 import { CurrentLevelService } from '../../services/current-level.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-actions-list',
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './actions-list.component.html',
   styleUrl: './actions-list.component.scss'
 })
@@ -42,11 +43,6 @@ export class ActionsListComponent {
   }
   onNextLevel(): void {
     this.currentWindowService.currentWindow.set("finish-level")
-  }
-
-
-  onEditMapClick(): void {
-    this.uiStateService.setUI_.changeResource()
   }
   onSaveClick(): void {
     this.currentLevelService.save()

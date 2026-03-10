@@ -18,7 +18,7 @@ export class CharacterCardInfoList {
         [
             "recycler",
             ()=>this.characterCardFactory.createCharacterCard({
-                name: "recycler",
+                name: "RECYCLER",
                 skills: new Map([["engineering", 5], ["construction", 2], ["mining", 2]]),
                 characterAction: {
                     name: "recycleActionCard",
@@ -31,7 +31,7 @@ export class CharacterCardInfoList {
         [
             "demolisher",
             ()=>this.characterCardFactory.createCharacterCard({
-                name: "demolisher",
+                name: "DEMOLISHER",
                 skills: new Map([["engineering", 2], ["construction", 5], ["mining", 2]]),
                 characterAction: {
                     name: "demolishEstate",
@@ -44,7 +44,7 @@ export class CharacterCardInfoList {
         [
             "accountant",
             ()=>this.characterCardFactory.createCharacterCard({
-                name: "accountant",
+                name: "ACCOUNTANT",
                 skills: new Map([["engineering", 2], ["construction", 2], ["mining", 2]],),
                 characterAction: {
                     name: "getReward",
@@ -56,7 +56,7 @@ export class CharacterCardInfoList {
         [
             "miner",
             ()=>this.characterCardFactory.createCharacterCard({
-                name: "miner",
+                name: "MINER",
                 skills: new Map([["engineering", 2], ["construction", 2], ["mining", 5]],),
                 characterAction: {
                     name: "getReward",

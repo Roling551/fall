@@ -36,7 +36,10 @@ export function getEmoticonSource(part: TextPart) {
     return `assets/pictures/emoticons/${part.emoticon}.png`
 }
 
-export function getTextPartsText(part: TextPart) {
+export function getTextPartsText(part: TextPart): string {
+    if(typeof part == "string") {
+        return part as string
+    }
     if(typeof part != "object" || part["type"]!="text") {
         return ""
     }

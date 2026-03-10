@@ -101,18 +101,6 @@ export function getRemoveEstateUI(actionsCardsService: ActionsCardsService, turn
     }
 }
 
-export function getChangeResourceUI() {
-    //const editMapParameters = new EditMapParameters()
-    return {
-        // sideComponent: EditMapComponent,
-        // sideComponentInputs: {},
-        // additionalInfo: {editMapParameters},
-        // mapAction: (tile: KeyValuePair<Coordinate, Tile>)=>{
-        //     tile.value.resourcesSources.changeFirstOfType(editMapParameters)
-        // }
-    }
-}
-
 export function getOpenHeadquartersPanelUI() {
     return {
         sideComponent: HeadquartersPanelComponent

@@ -1,11 +1,11 @@
 <div class="container">
 @for(part of textParts; track $index) {
     @if(typeof part === 'string') {
-        {{part}}
+        {{getTextPartsText(part) | translate}}
     } @else if(getTextPartType(part)==="emoticon") {
         <img [src]="getEmoticonPicture(part)" class="emoticon" [hoverInfo]="getHoverInfo(part)">
     } @else if(getTextPartType(part)==="text") {
-        <div class="text" [hoverInfo]="getHoverInfo(part)">{{getTextPartsText(part)}}</div>
+        <div class="text" [hoverInfo]="getHoverInfo(part)">{{getTextPartsText(part) | translate}}</div>
     }
 }
 </div>
