@@ -31,12 +31,23 @@ export class ResourcesService {
         this.resources.forceUpdate()
     }
 
-    removeNonPermanentResources() {
-        const resources = this.resources.get()
+    removeNonPermanentResources(resources?: Map<Resource, number>) {
+        let isGlobalResources = !resources
+        resources = resources || this.resources.get()
         for(const [resource,_] of resources) {
             if(!isResourcePermanent(resource)) {
                 resources.set(resource, 0)
             }
+        }
+        if(isGlobalResources) {
+            this.resources.forceUpdate()
+        }
+    }
+
+    removeAllResources() {
+        const resources = this.resources.get()
+        for(const [resource,_] of this.resources.get()) {
+            resources.set(resource, 0)
         }
         this.resources.forceUpdate()
     }

@@ -39,7 +39,6 @@ export class LevelFactoryService {
             xSize, ySize,
             tiles,
             this.benefitsService.listenForMovementBonuses)
-        this.levelGoalsService.nextLevel()
         this.levelGoalsService.setGoals({goalsRequired: 2}, [
             {type: "resources", resources: new Map([["oil", 30]])},
             {type: "turnsPassed", turns: 3}

@@ -21,11 +21,15 @@ export class LevelsService {
     constructor(
         private currentLevelService: CurrentLevelService, 
         private turnActorService: TurnActorsService,
-
+        private levelGoalsService: LevelGoalsService,
         private turnService: TurnService,
         private levelFactoryService: LevelFactoryService,
     ) {}
     
+    endLevel() {
+        this.levelGoalsService.fulfillGoals()
+    }
+
     nextLevel() {
         const level = this.levelFactoryService.createLevel(this.levelNumber())
         this.currentLevelService.level.set(level)

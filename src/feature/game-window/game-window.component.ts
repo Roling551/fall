@@ -5,10 +5,11 @@ import { TechTreeComponent } from '../tech-tree/tech-tree.component';
 import { InitService } from '../../services/init.service';
 import { DecisionPanelComponent } from '../decision-panel/decision-panel.component';
 import { FinishLevelComponent } from '../finish-level/finish-level.component';
+import { PickProvisionComponent } from '../pick-provision/pick-provision.component';
 
 @Component({
   selector: 'app-game-window',
-  imports: [MainLayoutComponent, TechTreeComponent, DecisionPanelComponent, FinishLevelComponent],
+  imports: [MainLayoutComponent, TechTreeComponent, DecisionPanelComponent, FinishLevelComponent, PickProvisionComponent],
   templateUrl: './game-window.component.html',
   styleUrl: './game-window.component.scss'
 })

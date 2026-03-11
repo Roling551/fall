@@ -75,7 +75,7 @@ export class LevelGoalsService {
         this.goals.set(levelGoalsCreationInfo.map(x=>this.createGoal(x)))
     }
 
-    nextLevel() {
+    fulfillGoals() {
         for(const goal of this.goals.get()) {
             if(goal.isMet()) {
                 goal.fulfill?.()

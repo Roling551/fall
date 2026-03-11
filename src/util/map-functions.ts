@@ -79,6 +79,14 @@ export function multiplyNumericalValuesFunctional(map: Map<any, number>, multipl
     return newMap
 }
 
+export function divideNumericalValuesFunctional(map: Map<any, number>, divider : number) {
+    const newMap = new Map<any, number>()
+    for (const [key, num] of map.entries()) {
+        newMap.set(key, num/divider)
+    }
+    return newMap
+}
+
 export function roundDown(map: Map<any, number>) {
     for (const [key, num] of map.entries()) {
         map.set(key, Math.floor(num))
@@ -89,6 +97,22 @@ export function roundDownFunctional(map: Map<any, number>) {
     const newMap = new Map<any, number>()
     for (const [key, num] of map.entries()) {
         newMap.set(key, Math.floor(num))
+    }
+    return newMap
+}
+
+export function capFunctional(map1: Map<any, number>, map2: Map<any, number>) {
+    const newMap = new Map<any, number>()
+    for (const [key, num] of map1.entries()) {
+        newMap.set(key, Math.min(num, map2.get(key)||0))
+    }
+    return newMap
+}
+
+export function roundUpFunctional(map: Map<any, number>) {
+    const newMap = new Map<any, number>()
+    for (const [key, num] of map.entries()) {
+        newMap.set(key, Math.ceil(num))
     }
     return newMap
 }
@@ -117,4 +141,20 @@ export function withdrawFromMapValue(map: Map<any, number>, key: any, max: numbe
     const amountToWithdraw = Math.max(Math.min(map.get(key)!, max),0)
     addToMapValue(map, key, -amountToWithdraw)
     return amountToWithdraw
+}
+
+export function zeroValuesFunctional(map: Map<any, number>) {
+    const newMap = new Map()
+    for (const [key, num] of map.entries()) {
+        newMap.set(key, 0)
+    }
+    return newMap
+}
+
+export function sumMapValues(map: Map<any, number>) {
+    let sum = 0
+    for (const [key, num] of map.entries()) {
+        sum += num
+    }
+    return sum
 }

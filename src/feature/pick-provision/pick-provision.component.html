@@ -1,0 +1,15 @@
+<div>
+    <div>Pick provision: {{getAllocation()}}/{{getProvisionCapacity()}}</div>
+    <div>resources:</div>
+    @for(resource of getAvaliableResources(); track resource[0]) {
+        <div>
+            {{resource[0]}} 
+            <button (click)="changeResourcesPick(-1, resource[0])">-</button>
+            {{provisionValue().resources.get(resource[0])}}
+            <button (click)="changeResourcesPick(1, resource[0])">+</button>
+            
+        </div>
+        
+    }
+    <button (click)="onFinalizingPicking()">Embark</button>
+</div>

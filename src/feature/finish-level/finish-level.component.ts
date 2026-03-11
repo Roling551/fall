@@ -18,8 +18,9 @@ export class FinishLevelComponent {
         this.currentWindowService.currentWindow.set("world-map")
     }
     onNextLevel(): void {
-        this.levelsService.nextLevel()
-        this.currentWindowService.currentWindow.set("world-map")
+        this.levelsService.endLevel()
+        //this.levelsService.nextLevel()
+        this.currentWindowService.currentWindow.set("pick-provision")
     }
     canNextLevel(): boolean {
         return this.levelGoalsService.goalsCheckedNumber() >= this.levelGoalsService.goalsInfo().goalsRequired
