@@ -21,4 +21,6 @@ export interface CardsHand<T extends CardInfo> {
     deselectAllCards(force?:boolean): void
     nextTurn(): void
     manualDraw(): void
+    removeAllCards(): void
+    addCards(cards:T[]): void
 }

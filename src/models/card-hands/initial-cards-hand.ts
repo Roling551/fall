@@ -133,4 +133,15 @@ export class InitialCardsHand<T extends CardInfo> implements CardsHand<T> {
         }
         this.selectedCards.set([])
     }
+
+    removeAllCards(): void {
+        this.selectedCards.set([])
+        this.drawDeck.set([])
+        this.hand.set([])
+        this.discardDeck.set([])
+    }
+
+    addCards(cards: T[]) {
+        this.drawDeck.set(cards)
+    }
 }

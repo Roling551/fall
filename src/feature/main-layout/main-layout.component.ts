@@ -8,13 +8,13 @@ import { GameInfoPanelComponent } from '../game-info-panel/game-info-panel.compo
 import { CardsComponent } from '../cards/cards.component';
 import { ActionsCardsService } from '../../services/action-cards/actions-cards.service';
 import { CharactersCardsService } from '../../services/character-cards/characters-cards.service';
-import { CardsListComponent } from '../cards-list/cards-list.component';
+import { GroupedCardsListComponent } from '../grouped-cards-list/grouped-cards-list.component';
 import { HoverInfoService } from '../../services/hover-info.service';
 import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [WorldMapComponent, CardsComponent, GameInfoPanelComponent, CardsListComponent, TransformTextComponent],
+  imports: [WorldMapComponent, CardsComponent, GameInfoPanelComponent, GroupedCardsListComponent, TransformTextComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })

@@ -5,13 +5,14 @@ import { CardComponent } from '../card/card.component';
 import { GroupByCardsHand } from '../../models/card-hands/group-by-cards-hand';
 
 @Component({
-  selector: 'app-cards-list',
+  selector: 'app-grouped-cards-list',
   imports: [CardComponent],
-  templateUrl: './cards-list.component.html',
-  styleUrl: './cards-list.component.scss'
+  templateUrl: './grouped-cards-list.component.html',
+  styleUrl: './grouped-cards-list.component.scss'
 })
-export class CardsListComponent<T extends CardInfo> {
+export class GroupedCardsListComponent<T extends CardInfo> {
     @Input({required: true}) cardsHand!: GroupByCardsHand<T>;
+    @Input() forceOverrideClick: boolean = false
 
     constructor() {}
 
@@ -29,13 +30,5 @@ export class CardsListComponent<T extends CardInfo> {
 
     isCardOverrideSelected(card: T) {
         return this.cardsHand.isCardOverrideSelected(card)
-    }
-
-    onDiscardClick() {
-        this.cardsHand.discardSelectedCards()
-    }
-
-    drawCard() {
-        this.cardsHand.manualDraw()
     }
 }

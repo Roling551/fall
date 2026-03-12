@@ -2,6 +2,9 @@ import { computed, Injectable, signal } from "@angular/core";
 import { ResourcesService } from "./resources.service";
 import { Resource } from "../models/resource";
 import { capFunctional, divideNumericalValuesFunctional, multiplyNumericalValuesFunctional, roundUpFunctional, sumMapValues } from "../util/map-functions";
+import { ForceSignal } from "../util/force-signal";
+import { CardInfo } from "../models/card-info";
+import { ActionsCardsService } from "./action-cards/actions-cards.service";
 
 export interface ProvisionValue {
     resources: Map<Resource, number>
@@ -12,7 +15,8 @@ export interface MaxProvisionPick {
 }
 
 export interface ProvisionPick {
-    resources: Map<Resource, number>
+    resources: Map<Resource, number>,
+    cards: ForceSignal<Map<number, CardInfo>>
 }
 
 export interface PickProvisionSettings {
@@ -27,19 +31,19 @@ export function provisionPickToValues(pick: ProvisionPick, provision: ProvisionV
 }
 
 export function getProvisionPickAllocation(provisionPick: ProvisionPick) {
-    return sumMapValues(provisionPick.resources)
+    return sumMapValues(provisionPick.resources) + provisionPick.cards.get().size
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProvisionService {
-    constructor(private resourcesService: ResourcesService) {}
+    constructor(private resourcesService: ResourcesService, private actionCardsService: ActionsCardsService) {}
 
     currentProvision = signal<ProvisionValue|undefined>(undefined)
     currentPickProvisionSettings = computed(()=>{
         return {
-            capacity: 10,
+            capacity: 20,
             resourcesPerCapacity: 5
         }
     })
@@ -61,5 +65,7 @@ export class ProvisionService {
     public useProvision(pick: ProvisionPick) {
         const values = provisionPickToValues(pick, this.currentProvision()!,this.currentPickProvisionSettings())
         this.resourcesService.addResources(values.resources)
+        this.actionCardsService.cardsHand?.removeAllCards()
+        this.actionCardsService.cardsHand?.addCards([...pick.cards.get().values()], true)
     }
 }

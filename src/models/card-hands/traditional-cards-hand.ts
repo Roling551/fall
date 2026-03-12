@@ -145,4 +145,19 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
     deselectAllCards() {
         this.selectedCards.set([])
     }
+
+    removeAllCards(): void {
+        this.selectedCards.set([])
+        this.drawDeck.set([])
+        this.hand.set([])
+        this.discardDeck.set([])
+    }
+
+    addCards(cards: T[], addToHand = false) {
+        if(addToHand) {
+            this.hand.set(cards)
+        } else {
+            this.drawDeck.set(cards)
+        }
+    }
 }

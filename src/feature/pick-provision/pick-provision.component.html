@@ -1,4 +1,4 @@
-<div>
+<div style="overflow-y: scroll; height:100%">
     <div>Pick provision: {{getAllocation()}}/{{getProvisionCapacity()}}</div>
     <div>resources:</div>
     @for(resource of getAvaliableResources(); track resource[0]) {
@@ -11,5 +11,8 @@
         </div>
         
     }
+    <div style="width:775px;">
+        <app-grouped-cards-list [cardsHand]="actionsCards()" [forceOverrideClick]="true"></app-grouped-cards-list>
+    </div>
     <button (click)="onFinalizingPicking()">Embark</button>
 </div>

@@ -16,6 +16,33 @@ import { LevelsService } from "../levels.service";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
 import { BenefitsService } from "../benefits.service";
 
+export function createSelectAnyActionCards(
+    uiStateService: UIStateService,
+    canSelectCard?: (card: CardInfo)=>boolean,
+    selectedCards?: ForceSignal<Map<number, CardInfo>>
+) {
+    selectedCards = selectedCards || createForceSignal(new Map<number, CardInfo>())
+    uiStateService.setUI(
+        {
+            cardAction: (card: CardInfo) => {
+                if(selectedCards.get().has(card.id)) {
+                    selectedCards.get().delete(card.id)
+                    selectedCards.forceUpdate()
+                } else {
+                    if(!canSelectCard || canSelectCard(card)) {
+                        selectedCards.get().set(card.id, card)
+                        selectedCards.forceUpdate()
+                    }
+                }
+            },
+            additionalInfo: {
+                selectedOverrideCards: selectedCards,
+                playersAction: true,
+            }
+        }
+    )
+}
+
 export function createRepeatMapAction(
     uiStateService: UIStateService,
     levelService: CurrentLevelService,
