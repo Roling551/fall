@@ -36,13 +36,19 @@ export class ShopService {
                 buyAction: ()=>{
                     this.playerStatsService.provisionCapacity.update(x=>x+5)
                 }
+            },
+            {
+                price: 100,
+                describtion: ["Increase characters drawn per turn", this.playerStatsService.characterCardsDrawnPerTurn().toString() ,"->", (this.playerStatsService.characterCardsDrawnPerTurn()+1).toString()],
+                buyAction: ()=>{
+                    this.playerStatsService.characterCardsDrawnPerTurn.update(x=>x+1)
+                }
             }
         ].map(
             x=>({
                 ...x,
                 canAfford: computed(()=>this.canAfford(x.price)),
                 buyAction: ()=>{
-                    console.log("test")
                     this.spendMoney(x.price)
                     x.buyAction()
                 }

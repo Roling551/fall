@@ -1,4 +1,4 @@
-import { computed, Signal, signal } from "@angular/core";
+import { computed, Signal, signal, WritableSignal } from "@angular/core";
 import { CardInfo } from "../card-info";
 import { TraditionalCardsHand } from "./traditional-cards-hand";
 import { createForceSignal } from "../../util/force-signal";
@@ -8,7 +8,7 @@ export type CardSource = "draw" | "hand" | "discard" | "additionalDecks"
 export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T> {    
     constructor(
         cards: T[], 
-        drawsPerTurn: number, 
+        drawsPerTurn: Signal<number>, 
         onManualDeselect:()=>void, 
         canSelectMultiple = true,
         canSelectCard:Signal<boolean> = signal(true),

@@ -15,6 +15,7 @@ import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile/tile";
 import { CharacterCardInfoList } from "./character-card.list";
 import { shuffleArray } from "../../util/array-functions";
+import { PlayerStatsService } from "../player-stats.service";
 
 export type CharactersCardsServiceMode = 'action' | 'skill' | 'none'
 
@@ -36,6 +37,7 @@ export class CharactersCardsService {
         private injectorService: InjectorService,
         private uiStateService: UIStateService,
         private currentLevelService: CurrentLevelService,
+        private playerStatsService: PlayerStatsService,
     ) {
         const cards: CharacterCardInfo[] = []
         this.cardsHand = this.createCardsHand(cards)
@@ -50,7 +52,7 @@ export class CharactersCardsService {
     private createCardsHand(cards: CharacterCardInfo[]) {
         return new TraditionalCardsHand<CharacterCardInfo>(
             cards, 
-            3, 
+            this.playerStatsService.characterCardsDrawnPerTurn,
             ()=>{
                 if(!this.injectorService.actionsCardsService?.isActionChosen()) {
                     this.uiStateService.cancel()   

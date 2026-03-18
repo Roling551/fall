@@ -53,7 +53,7 @@ export class ActionsCardsService {
         const cards = actionCardInfos.map(x=>this.setOnClickAction(x))
         this.cardsHand = new GroupByCardsHand<CardInfo>(
             cards, 
-            Infinity, 
+            signal(Infinity),
             ()=>{this.uiStateService.cancel()}, 
             false,
             computed(()=>{return !this.isPlayersActionChosen()}),

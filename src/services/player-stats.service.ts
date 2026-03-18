@@ -5,4 +5,5 @@ import { Injectable, signal } from "@angular/core";
 })
 export class PlayerStatsService {
     provisionCapacity = signal(25)
+    characterCardsDrawnPerTurn = signal(3)
 }
