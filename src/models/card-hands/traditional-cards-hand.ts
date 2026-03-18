@@ -130,6 +130,12 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         this.hand.set([])
     }
 
+    public reshuffle() {
+        this.deselectAllCards()
+        this.discardCards(this.hand.get())
+        this.startTurn()
+    }
+
     private shuffleCards() {
         this.drawDeck.set(shuffleArray(this.discardDeck.get()))
         this.discardDeck.set([])

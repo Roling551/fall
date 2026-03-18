@@ -38,7 +38,7 @@ export class ShopService {
                 }
             },
             {
-                price: 100,
+                price: 10,
                 describtion: ["Increase characters drawn per turn", this.playerStatsService.characterCardsDrawnPerTurn().toString() ,"->", (this.playerStatsService.characterCardsDrawnPerTurn()+1).toString()],
                 buyAction: ()=>{
                     this.playerStatsService.characterCardsDrawnPerTurn.update(x=>x+1)
