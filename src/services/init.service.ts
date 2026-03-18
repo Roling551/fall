@@ -32,7 +32,7 @@ export class InitService {
     ) {}
 
     init() {
-        this.resourcesService.addResources(new Map([["oil",24], ["scrap",24], ["water",24],]))
+        this.resourcesService.addResources(new Map([["oil",24], ["scrap",24], ["water",24],["artifacts", 30]]))
         this.uiStateService.setBaseTileInfo("resourcesInfo", {
             template: ResourcesInfoComponent,
             doRender: (tile: KeyValuePair<Coordinate, Tile>) => true,

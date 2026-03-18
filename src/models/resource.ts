@@ -7,6 +7,7 @@ export const ResourceKeys = [
   "plastic",
   "electricity",
   "computation",
+  "artifacts",
 ] as const;
 
 export type Resource = typeof ResourceKeys[number];
@@ -17,17 +18,11 @@ export function resourcesToTextParts(resources: Map<Resource, number>): TextPart
 
 export function isResourcePermanent(resource: Resource) {
     switch(resource) {
-        case "water":
-            return true;
-        case "oil":
-            return true;
-        case "scrap":
-            return true;
-        case "plastic":
-            return true;
         case "electricity":
             return false;
         case "computation":
             return false;
+        default:
+            return true;
     }
 }

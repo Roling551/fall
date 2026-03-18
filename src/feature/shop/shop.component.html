@@ -1,0 +1,10 @@
+Current money:
+<app-transform-text [textParts]="currentMoney()"/>
+Purchases:
+@for(purchase of possibleUpgradePurchases(); track $index) {
+    <div>
+        <app-transform-text [textParts]="purchase.describtion"/>
+        <button [disabled]="!purchase.canAfford()" (click)="purchase.buyAction()">+</button>
+    </div>
+}
+<button (click)="onFinalizingShopping()">Exit shop</button>

@@ -19,8 +19,7 @@ export class FinishLevelComponent {
     }
     onNextLevel(): void {
         this.levelsService.endLevel()
-        //this.levelsService.nextLevel()
-        this.currentWindowService.currentWindow.set("pick-provision")
+        this.currentWindowService.currentWindow.set("shop")
     }
     canNextLevel(): boolean {
         return this.levelGoalsService.goalsCheckedNumber() >= this.levelGoalsService.goalsInfo().goalsRequired

@@ -6,10 +6,11 @@ import { InitService } from '../../services/init.service';
 import { DecisionPanelComponent } from '../decision-panel/decision-panel.component';
 import { FinishLevelComponent } from '../finish-level/finish-level.component';
 import { PickProvisionComponent } from '../pick-provision/pick-provision.component';
+import { ShopComponent } from '../shop/shop.component';
 
 @Component({
   selector: 'app-game-window',
-  imports: [MainLayoutComponent, TechTreeComponent, DecisionPanelComponent, FinishLevelComponent, PickProvisionComponent],
+  imports: [MainLayoutComponent, TechTreeComponent, DecisionPanelComponent, FinishLevelComponent, PickProvisionComponent, ShopComponent],
   templateUrl: './game-window.component.html',
   styleUrl: './game-window.component.scss'
 })

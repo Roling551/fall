@@ -1,6 +1,6 @@
 import { computed, Injectable } from "@angular/core";
 import { createForceSignal } from "../util/force-signal";
-import { isResourcePermanent, Resource, ResourceKeys } from "../models/resource";
+import { isResourcePermanent, Resource, ResourceKeys, resourcesToTextParts } from "../models/resource";
 import { addNumericalValuesFunctional, mapContainsMap, removeNonPositiveValuesFunctional, substractNumericalValuesFunctional } from "../util/map-functions";
 
 @Injectable({
@@ -29,6 +29,10 @@ export class ResourcesService {
     addResources(resources: Map<Resource, number>) {
         this.resources.set(addNumericalValuesFunctional(this.resources.get(), resources))
         this.resources.forceUpdate()
+    }
+
+    getResourceAsTextParts(resource: Resource) {
+        return resourcesToTextParts(new Map([[resource, this.resources.get().get(resource)||0]]))
     }
 
     removeNonPermanentResources(resources?: Map<Resource, number>) {

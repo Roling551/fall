@@ -5,6 +5,7 @@ import { capFunctional, divideNumericalValuesFunctional, multiplyNumericalValues
 import { ForceSignal } from "../util/force-signal";
 import { CardInfo } from "../models/card-info";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
+import { PlayerStatsService } from "./player-stats.service";
 
 export interface ProvisionValue {
     resources: Map<Resource, number>
@@ -38,12 +39,12 @@ export function getProvisionPickAllocation(provisionPick: ProvisionPick) {
   providedIn: 'root'
 })
 export class ProvisionService {
-    constructor(private resourcesService: ResourcesService, private actionCardsService: ActionsCardsService) {}
+    constructor(private resourcesService: ResourcesService, private actionCardsService: ActionsCardsService, private playerStatsService: PlayerStatsService) {}
 
     currentProvision = signal<ProvisionValue|undefined>(undefined)
     currentPickProvisionSettings = computed(()=>{
         return {
-            capacity: 20,
+            capacity: this.playerStatsService.provisionCapacity(),
             resourcesPerCapacity: 5
         }
     })
