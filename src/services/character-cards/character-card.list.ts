@@ -19,7 +19,7 @@ export class CharacterCardInfoList {
             "recycler",
             ()=>this.characterCardFactory.createCharacterCard({
                 name: "RECYCLER",
-                skills: new Map([["engineering", 5], ["construction", 2], ["mining", 2]]),
+                skills: new Map([["engineering", 3], ["construction", 1]]),
                 characterAction: {
                     name: "recycleActionCard",
                     repeatNumber: 3,
@@ -32,7 +32,7 @@ export class CharacterCardInfoList {
             "demolisher",
             ()=>this.characterCardFactory.createCharacterCard({
                 name: "DEMOLISHER",
-                skills: new Map([["engineering", 2], ["construction", 5], ["mining", 2]]),
+                skills: new Map([["mining", 1], ["construction", 3]]),
                 characterAction: {
                     name: "demolishEstate",
                     refundFraction: 0.5,
@@ -45,7 +45,7 @@ export class CharacterCardInfoList {
             "accountant",
             ()=>this.characterCardFactory.createCharacterCard({
                 name: "ACCOUNTANT",
-                skills: new Map([["engineering", 2], ["construction", 2], ["mining", 2]],),
+                skills: new Map([["engineering", 1], ["construction", 1]],),
                 characterAction: {
                     name: "getReward",
                     reward: this.rewardFactoryService.createReward({type: "Resources", resources: new Map([["computation",5]])}),
@@ -57,7 +57,7 @@ export class CharacterCardInfoList {
             "miner",
             ()=>this.characterCardFactory.createCharacterCard({
                 name: "MINER",
-                skills: new Map([["engineering", 2], ["construction", 2], ["mining", 5]],),
+                skills: new Map([["engineering", 1], ["mining", 3]],),
                 characterAction: {
                     name: "getReward",
                     reward: this.rewardFactoryService.createReward({type: "Resources", resources: new Map([["oil",1]])}),
