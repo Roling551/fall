@@ -67,7 +67,7 @@ export interface EstateCardInputs {
     times?: number,
     tileBonus?: TileBonus,
     movementBonus?: number,
-    attributes?: Map<ActionAttribute, number>,
+    attributes?: ActionAttribute[],
     cardOnHandRewards?: RewardOption[],
     producedResources?: Map<Resource, number>,
     isUpgrade?: boolean,

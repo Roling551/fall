@@ -33,16 +33,16 @@ export class SkillMapActionFactoryService {
         this.map = computed(()=>this.currentLevelService.level.get()?.map)
     }
 
-    public createMapInteractionAction(createActionInfo: CreateExtractionInfo, affectedCoordinates: Coordinate[], attributes: Map<ActionAttribute, number>=new Map()) {
+    public createMapInteractionAction(createActionInfo: CreateExtractionInfo, affectedCoordinates: Coordinate[], attributes: ActionAttribute[]=[]) {
         const times = createActionInfo.times || 1
         return (tile: Tile)=>{
-            const attributesEffects = this.attributesService.getAttributesEffects(attributes, {location: tile.coordinate})
+            const attributesEffects = this.attributesService.getAttributesExtractionEffects(attributes, {location: tile.coordinate})
             const extraction = 
                 Extraction.addFunctional(
                     Extraction.addFunctional(
                         createActionInfo.extraction, 
                         this.benefitsService.listenForTileBonuses(signal(tile)).output().extraction), 
-                        attributesEffects.extractionBonus)
+                        attributesEffects)
 
             const map = this.map()
             if(!map) {

@@ -6,21 +6,22 @@ import { CurrentLevelService } from "./current-level.service";
 import { SimpleTile } from "../models/tile/simple-tile";
 import { getPlayersEstate } from "../models/tile/tile-util";
 
-export type ActionAttribute = "synchronized"
-
 export type ActionAttributesEffectInputs = {
     location: Coordinate,
 }
 
-export type ActionAttributesEffect = {
-    extractionBonus: Extraction
+export type ActionAttribute = {
+    effect: AttributeEffect,
+    multiplier: AttributeMultiplier
 }
 
-function addActionAttributesEffects(a1: ActionAttributesEffect, a2: ActionAttributesEffect): ActionAttributesEffect {
-    return {
-        extractionBonus: Extraction.addFunctional(a1.extractionBonus, a2.extractionBonus)
-    }
+export type AttributeEffect = {
+    type: "Extraction",
+    bonus: Extraction
 }
+
+export type AttributeMultiplier =
+    "Extractions"
 
 @Injectable({
   providedIn: 'root'
@@ -28,43 +29,45 @@ function addActionAttributesEffects(a1: ActionAttributesEffect, a2: ActionAttrib
 export class ActionAttributesService {
     constructor(private currentLevelService: CurrentLevelService) {}
 
-    getAttributeEffects(attribute: [ActionAttribute, number], inputs: ActionAttributesEffectInputs): ActionAttributesEffect {
-        switch(attribute[0]) {
-            case "synchronized":
+    private getAttributeMultiplier(attribute: ActionAttribute, inputs: ActionAttributesEffectInputs): number {
+        switch(attribute.multiplier) {
+            case "Extractions":
                 let bonus = 0
                 for(const neighbour of this.currentLevelService.level.get()!.map.getNeighborTiles(inputs.location)) {
                     const estate = getPlayersEstate(neighbour[1].value)
                     if(estate && !estate.disabled() && estate.additionalInfo.extraction) {
-                        bonus += attribute[1]
+                        bonus += 1
                     }
                 }
-                return {
-                    extractionBonus: new Extraction(bonus)
-                }
+                return bonus
         }
     }
 
-    getAttributesEffects(attributes: Map<ActionAttribute, number>, inputs: ActionAttributesEffectInputs): ActionAttributesEffect {
-        let effect: ActionAttributesEffect = {
-            extractionBonus: new Extraction(0),
-        }
+    getAttributesExtractionEffects(attributes: ActionAttribute[], inputs: ActionAttributesEffectInputs): Extraction {
+        let effect = new Extraction(0)
         for(const attribute of attributes) {
-            effect = addActionAttributesEffects(effect, this.getAttributeEffects(attribute, inputs))
+            effect = Extraction.addFunctional(effect, Extraction.multiplyFunctional(attribute.effect.bonus, this.getAttributeMultiplier(attribute, inputs)))
         }
         return effect
     }
 
-    getAttributeDescribtion(attribute: [ActionAttribute, number]): TextPart[][] {
-        switch(attribute[0]) {
-            case "synchronized":
-                return [["Synchronized-", attribute[1].toString()]]
+    getAttributeDescribtion(attribute: ActionAttribute): TextPart[] {
+        let describtion: TextPart[] = []
+        switch(attribute.multiplier) {
+            case "Extractions":
+                describtion = describtion.concat(["For each neighbouring extractor "])
         }
+        switch(attribute.effect.type) {
+            case "Extraction":
+                describtion = describtion.concat(["gain ", ...attribute.effect.bonus.getTextParts()])
+        }
+        return describtion
     }
 
-    getAttributesDescribtions(attributes: Map<ActionAttribute, number>): TextPart[][] {
+    getAttributesDescribtions(attributes: ActionAttribute[]): TextPart[][] {
         let describtions: TextPart[][] = []
         for(const attribute of attributes) {
-            describtions = [...describtions, ...this.getAttributeDescribtion(attribute)]
+            describtions = [...describtions, this.getAttributeDescribtion(attribute)]
         }
         return describtions
     }

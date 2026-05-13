@@ -1,4 +1,4 @@
-import { addNumericalValuesFunctional } from "../util/map-functions"
+import { addNumericalValuesFunctional, multiplyNumericalValuesFunctional } from "../util/map-functions"
 import { TextPart } from "./text-part"
 
 export type ExtractionModifications = "sharpness" | "precission" | "waste"
@@ -23,6 +23,10 @@ export class Extraction {
     
     static addFunctional(bonus1?: Extraction, bonus2?: Extraction) {
         return new Extraction((bonus1?.strength||0) + (bonus2?.strength||0), addNumericalValuesFunctional(bonus1?.modifications, bonus2?.modifications))
+    }
+
+    static multiplyFunctional(bonus: Extraction, multiplier: number) {
+        return new Extraction(bonus.strength * multiplier, multiplyNumericalValuesFunctional(bonus.modifications, multiplier))
     }
 
     getTextParts(): TextPart[] {
