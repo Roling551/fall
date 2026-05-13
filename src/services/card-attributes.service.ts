@@ -6,11 +6,11 @@ import { CurrentLevelService } from "./current-level.service";
 import { SimpleTile } from "../models/tile/simple-tile";
 import { getPlayersEstate } from "../models/tile/tile-util";
 
-export type ActionAttributesEffectInputs = {
+export type AttributesEffectInputs = {
     location: Coordinate,
 }
 
-export type ActionAttribute = {
+export type CardAttribute = {
     effect: AttributeEffect,
     multiplier: AttributeMultiplier
 }
@@ -26,13 +26,13 @@ export type AttributeMultiplier =
 @Injectable({
   providedIn: 'root'
 })
-export class ActionAttributesService {
+export class CardAttributesService {
     constructor(private currentLevelService: CurrentLevelService) {}
 
-    private getAttributeMultiplier(attribute: ActionAttribute, inputs: ActionAttributesEffectInputs): number {
+    private getAttributeMultiplier(attribute: CardAttribute, inputs: AttributesEffectInputs): number {
+        let bonus = 0
         switch(attribute.multiplier) {
             case "Extractions":
-                let bonus = 0
                 for(const neighbour of this.currentLevelService.level.get()!.map.getNeighborTiles(inputs.location)) {
                     const estate = getPlayersEstate(neighbour[1].value)
                     if(estate && !estate.disabled() && estate.additionalInfo.extraction) {
@@ -43,15 +43,17 @@ export class ActionAttributesService {
         }
     }
 
-    getAttributesExtractionEffects(attributes: ActionAttribute[], inputs: ActionAttributesEffectInputs): Extraction {
+    getAttributesExtractionEffects(attributes: CardAttribute[], inputs: AttributesEffectInputs): Extraction {
         let effect = new Extraction(0)
         for(const attribute of attributes) {
-            effect = Extraction.addFunctional(effect, Extraction.multiplyFunctional(attribute.effect.bonus, this.getAttributeMultiplier(attribute, inputs)))
+            if(attribute.effect.type === "Extraction") {
+                effect = Extraction.addFunctional(effect, Extraction.multiplyFunctional(attribute.effect.bonus, this.getAttributeMultiplier(attribute, inputs)))
+            }
         }
         return effect
     }
 
-    getAttributeDescribtion(attribute: ActionAttribute): TextPart[] {
+    getAttributeDescribtion(attribute: CardAttribute): TextPart[] {
         let describtion: TextPart[] = []
         switch(attribute.multiplier) {
             case "Extractions":
@@ -64,7 +66,7 @@ export class ActionAttributesService {
         return describtion
     }
 
-    getAttributesDescribtions(attributes: ActionAttribute[]): TextPart[][] {
+    getAttributesDescribtions(attributes: CardAttribute[]): TextPart[][] {
         let describtions: TextPart[][] = []
         for(const attribute of attributes) {
             describtions = [...describtions, this.getAttributeDescribtion(attribute)]
