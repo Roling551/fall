@@ -69,7 +69,7 @@ export class ActionCardInfoList {
                     type: "InstantExtractionCardInputs",
                     name: "handDrill",
                     skillRequired: new Map([["mining", 2]]),
-                    extraction: new Extraction(12, new Map([["sharpness", 5], ["precission", 5]])),
+                    extraction: new Extraction(12, new Map([["sharpness", 5]])),
                     affectedCoordinates: [new Coordinate(0,0)]
                 }
             )
@@ -113,7 +113,7 @@ export class ActionCardInfoList {
                     name: "Needle",
                     cardPicture: "needle",
                     skillRequired: new Map([["mining", 1],["engineering", 3]]),
-                    extraction: new Extraction(15, new Map([["sharpness", 5], ["precission", 3]])),
+                    extraction: new Extraction(15, new Map([["sharpness", 5]])),
                     affectedCoordinates:  [new Coordinate(0,0)],
                     estateTexture: "needle-on-map",
                     price: new Map([["scrap", 10],["plastic", 5]]),
@@ -281,7 +281,7 @@ export class ActionCardInfoList {
                     type: "EstateCardInputs",
                     name: "Mosquito",
                     skillRequired: new Map([["mining", 1]]),
-                    extraction: new Extraction(4, new Map([["sharpness", 1], ["precission", 1]])),
+                    extraction: new Extraction(4, new Map([["sharpness", 1]])),
                     affectedCoordinates: [new Coordinate(0,0)],
                     estateTexture: "mosquito-on-map",
                     price: new Map([["scrap", 6]]),
