@@ -85,7 +85,14 @@ export class ActionCardInfoList {
                     affectedCoordinates: [new Coordinate(0,0)],
                     estateTexture: "tick-on-map",
                     price: new Map([["scrap", 5]]),
-                    runCost: new Map([["oil", 2]]),
+                    runCost: new Map([["oil", 2]]),                    
+                    // attributes: [{
+                    //     effect: {
+                    //         type: "Extraction",
+                    //         bonus: new Extraction(6)
+                    //     },
+                    //     multiplier: "Extractions"
+                    // }]
                 }
             )
         ],

@@ -1,13 +1,15 @@
-import { Injectable } from "@angular/core";
+import { computed, inject, Injectable, Injector, signal, Signal } from "@angular/core";
 import { Extraction } from "../models/extraction";
 import { TextPart } from "../models/text-part";
 import { Coordinate } from "../models/coordinate";
 import { CurrentLevelService } from "./current-level.service";
 import { SimpleTile } from "../models/tile/simple-tile";
 import { getPlayersEstate } from "../models/tile/tile-util";
+import { SignalChangesEmitter } from "../util/set-changes";
+import { SignalsGroup } from "../util/signals-group";
 
 export type AttributesEffectInputs = {
-    location: Coordinate,
+    location: Coordinate | null,
 }
 
 export type CardAttribute = {
@@ -27,13 +29,18 @@ export type AttributeMultiplier =
   providedIn: 'root'
 })
 export class CardAttributesService {
+    private injector = inject(Injector);
     constructor(private currentLevelService: CurrentLevelService) {}
 
-    private getAttributeMultiplier(attribute: CardAttribute, inputs: AttributesEffectInputs): number {
+    private getAttributeMultiplier(attribute: CardAttribute, inputs: Signal<AttributesEffectInputs>): number {
         let bonus = 0
         switch(attribute.multiplier) {
             case "Extractions":
-                for(const neighbour of this.currentLevelService.level.get()!.map.getNeighborTiles(inputs.location)) {
+                const location = inputs().location
+                if(!location) {
+                    return 0
+                }
+                for(const neighbour of this.currentLevelService.level.get()!.map.getNeighborTiles(location)) {
                     const estate = getPlayersEstate(neighbour[1].value)
                     if(estate && !estate.disabled() && estate.additionalInfo.extraction) {
                         bonus += 1
@@ -43,14 +50,27 @@ export class CardAttributesService {
         }
     }
 
-    getAttributesExtractionEffects(attributes: CardAttribute[], inputs: AttributesEffectInputs): Extraction {
-        let effect = new Extraction(0)
-        for(const attribute of attributes) {
-            if(attribute.effect.type === "Extraction") {
-                effect = Extraction.addFunctional(effect, Extraction.multiplyFunctional(attribute.effect.bonus, this.getAttributeMultiplier(attribute, inputs)))
+    getAttributesExtractionEffects(attributes: Signal<CardAttribute[]>, inputs: Signal<AttributesEffectInputs>): Signal<Extraction> {
+        const attributesList = computed(()=> {
+            let result = new Map<string, CardAttribute>();
+            
+            for(const attribute of attributes()) {
+                result.set(attribute.multiplier, attribute)
             }
-        }
-        return effect
+            return result
+        })
+        const multiplierType: AttributeMultiplier = "Extractions"
+        const attributesChangesEmitter = new SignalChangesEmitter<any, CardAttribute>(attributesList, this.injector);
+        const a =  new SignalsGroup(
+            attributesChangesEmitter,
+            computed(()=>(key: string, item: CardAttribute)=>{
+                return item.multiplier === multiplierType
+            }),
+            (key: string, item: CardAttribute)=>Extraction.multiplyFunctional(item.effect.bonus, this.getAttributeMultiplier(item, inputs)),
+            (x:Extraction,y:Extraction)=>Extraction.addFunctional(x,y),
+            ()=>(new Extraction(0))
+        )
+        return a.output
     }
 
     getAttributeDescribtion(attribute: CardAttribute): TextPart[] {

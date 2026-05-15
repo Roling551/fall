@@ -1,3 +1,4 @@
+import { Addable } from "../util/addable"
 import { addNumericalValuesFunctional, multiplyNumericalValuesFunctional } from "../util/map-functions"
 import { TextPart } from "./text-part"
 
@@ -18,7 +19,7 @@ export function extractionModificationsToTextPart(extractableModifications: Map<
     return [...extractableModifications.entries()].flatMap(x=>[x[1].toString(),{type:"emoticon",emoticon:x[0],hoverInfo:getHoverInfo(x[0])}," "])
 }
 
-export class Extraction {
+export class Extraction implements Addable<Extraction> {
     constructor(public strength: number, public modifications: Map<ExtractionModifications, number> = new Map()) {}
     
     static addFunctional(bonus1?: Extraction, bonus2?: Extraction) {
@@ -29,6 +30,15 @@ export class Extraction {
         return new Extraction(bonus.strength * multiplier, multiplyNumericalValuesFunctional(bonus.modifications, multiplier))
     }
 
+    add(t: Extraction): Extraction {
+        return Extraction.addFunctional(this, t)
+    }
+    multiply(n: number): Extraction {
+        return Extraction.multiplyFunctional(this, n)
+    }
+    zero(): Extraction {
+        return new Extraction(0)
+    }
     getTextParts(): TextPart[] {
         return [this.strength.toString(), "+", ...extractionModificationsToTextPart(this.modifications)]
     }

@@ -35,14 +35,17 @@ export class SkillMapActionFactoryService {
 
     public createMapInteractionAction(createActionInfo: CreateExtractionInfo, affectedCoordinates: Coordinate[], attributes: CardAttribute[]=[]) {
         const times = createActionInfo.times || 1
+        const coordinateSignal = signal<Coordinate|null>(null)
+        const attributeInputs = computed(()=>({location: coordinateSignal()}))
+        const attributesEffects = this.attributesService.getAttributesExtractionEffects(signal(attributes), attributeInputs)
         return (tile: Tile)=>{
-            const attributesEffects = this.attributesService.getAttributesExtractionEffects(attributes, {location: tile.coordinate})
+            coordinateSignal.set(tile.coordinate)
             const extraction = 
                 Extraction.addFunctional(
                     Extraction.addFunctional(
                         createActionInfo.extraction, 
                         this.benefitsService.listenForTileBonuses(signal(tile)).output().extraction), 
-                        attributesEffects)
+                        attributesEffects())
 
             const map = this.map()
             if(!map) {

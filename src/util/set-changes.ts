@@ -1,4 +1,4 @@
-import { computed, effect, Signal } from "@angular/core";
+import { computed, effect, Injector, Signal } from "@angular/core";
 import { BehaviorSubject, first, skip } from "rxjs";
 
 
@@ -27,10 +27,10 @@ export class SetChangesEmitter<T,U>{
 
 export class SignalChangesEmitter<T,U>{
     subject
-    constructor(public items:Signal<Map<T,U>>) {
+    constructor(public items:Signal<Map<T,U>>, injector?: Injector) {
         effect(()=>{
             this.subject.next(this.items())
-        })
+        }, {...(injector ? {injector} : {})})
         this.subject = new BehaviorSubject<Map<T,U>>(this.items())
     }
     getListener(
