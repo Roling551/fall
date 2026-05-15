@@ -17,10 +17,12 @@ export type CardAttribute = {
     multiplier: AttributeMultiplier
 }
 
-export type AttributeEffect = {
+export interface AttributeEffect {
     type: "Extraction",
-    bonus: Extraction
+    bonus: AttributeEffectBonus
 }
+
+export type AttributeEffectBonus = Extraction
 
 export type AttributeMultiplier =
     "Extractions"
@@ -50,7 +52,12 @@ export class CardAttributesService {
         }
     }
 
-    getAttributesExtractionEffects(attributes: Signal<CardAttribute[]>, inputs: Signal<AttributesEffectInputs>): Signal<Extraction> {
+    private getSignalGroupOutput<T extends AttributeEffectBonus>(
+        attributes: Signal<CardAttribute[]>, 
+        inputs: Signal<AttributesEffectInputs>,
+        multiplierType: AttributeMultiplier,
+        getZeroValue: ()=>T): Signal<T>
+    {
         const attributesList = computed(()=> {
             let result = new Map<string, CardAttribute>();
             
@@ -59,18 +66,23 @@ export class CardAttributesService {
             }
             return result
         })
-        const multiplierType: AttributeMultiplier = "Extractions"
         const attributesChangesEmitter = new SignalChangesEmitter<any, CardAttribute>(attributesList, this.injector);
-        const a =  new SignalsGroup(
+        const signalGroup =  new SignalsGroup(
             attributesChangesEmitter,
             computed(()=>(key: string, item: CardAttribute)=>{
                 return item.multiplier === multiplierType
             }),
-            (key: string, item: CardAttribute)=>Extraction.multiplyFunctional(item.effect.bonus, this.getAttributeMultiplier(item, inputs)),
-            (x:Extraction,y:Extraction)=>Extraction.addFunctional(x,y),
-            ()=>(new Extraction(0))
+            (key: string, item: CardAttribute)=>{
+                return (item.effect.bonus as T).multiply(this.getAttributeMultiplier(item, inputs)) as T
+            },
+            (x:T,y:T)=>x.add(y) as T,
+            ()=>(getZeroValue())
         )
-        return a.output
+        return signalGroup.output
+    }
+
+    getAttributesExtractionEffects(attributes: Signal<CardAttribute[]>, inputs: Signal<AttributesEffectInputs>): Signal<Extraction> {
+        return this.getSignalGroupOutput(attributes, inputs, "Extractions", ()=>new Extraction(0))
     }
 
     getAttributeDescribtion(attribute: CardAttribute): TextPart[] {
