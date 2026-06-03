@@ -1,36 +1,38 @@
 import { Injectable } from "@angular/core";
-import { InjectorService } from "../injector.service";
-import { CardInfo } from "../../models/card-info";
-import { Coordinate } from "../../models/coordinate";
-import { KeyValuePair } from "../../models/key-value-pair";
-import { Tile } from "../../models/tile/tile";
-import { CharacterActionInfo } from "../../models/character-card-info";
-import { SimpleTile } from "../../models/tile/simple-tile";
-import { Resource } from "../../models/resource";
-import { addNumericalValues, multiplyNumericalValuesFunctional, roundDownFunctional } from "../../util/map-functions";
-import { Reward } from "../../models/reward";
-import { TextPart } from "../../models/text-part";
+import { Reward } from "../models/reward";
+import { CardInfo } from "../models/card-info";
+import { Coordinate } from "../models/coordinate";
+import { KeyValuePair } from "../models/key-value-pair";
+import { TextPart } from "../models/text-part";
+import { SimpleTile } from "../models/tile/simple-tile";
+import { Tile } from "../models/tile/tile";
+import { addNumericalValues, roundDownFunctional, multiplyNumericalValuesFunctional } from "../util/map-functions";
+import { CardsActionInfo } from "./cards-actions.service";
+import { InjectorService } from "./injector.service";
+import { Resource } from "../models/resource";
 
-export type CharacterActionInput = {
-    name: "recycleActionCard",
-    resourcesPerRecycled: number,
-    repeatNumber?: number,
+export type CardOperationInput = {
+    name: "recycleActionCard";
+    resourcesPerRecycled: number;
+    repeatNumber?: number;
 } | {
-    name: "demolishEstate",
-    refundFraction: number,
-    repeatNumber?: number,
+    name: "demolishEstate";
+    refundFraction: number;
+    repeatNumber?: number;
 } | {
-    name: "getReward",
-    reward: Reward,
-}
+    name: "getReward";
+    reward: Reward;
+};
 
 @Injectable({
   providedIn: 'root'
 })
-export class CharactersActionsService {
-    constructor(private injectorService: InjectorService) {}
+export class CardsOperationsService {
+    constructor(
+        private injectorService: InjectorService,
+    ) {}
 
-    getCharacterActionInfoAndDescription(input: CharacterActionInput): {actionInfo:CharacterActionInfo, actionDescription:TextPart[]} {
+    getActionInfoAndDescription(input: CardOperationInput): {actionInfo:CardsActionInfo, actionDescription:TextPart[]} {
         switch(input.name) {
             case "recycleActionCard": {
                 const repeatNumber = input.repeatNumber || 1

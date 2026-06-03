@@ -2,12 +2,13 @@ import { Injectable } from "@angular/core";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { ObstacleType } from "../../models/obstacles";
 import { Skill } from "../../models/skill";
-import { CharacterActionInput, CharactersActionsService } from "./characters-actions.service";
+import { CardsActionsService } from "../cards-actions.service";
+import { CardOperationInput, CardsOperationsService } from "../cards-operations.service";
 
 export type CharacterCardInput = {
     name: string,
     skills: Map<Skill, number>,
-    characterAction: CharacterActionInput,
+    characterAction: CardOperationInput,
     movementAdvantege?: Map<ObstacleType, number>,
     cardPicture?: string,
 }
@@ -16,10 +17,10 @@ export type CharacterCardInput = {
   providedIn: 'root'
 })
 export class CharacterCardInfoFactoryService {
-    constructor(private charactersActionsService: CharactersActionsService) {}
+    constructor(private cardsOperationsService: CardsOperationsService) {}
 
     createCharacterCard(input: CharacterCardInput) {
-        const {actionInfo, actionDescription} = this.charactersActionsService.getCharacterActionInfoAndDescription(input.characterAction)
+        const {actionInfo, actionDescription} = this.cardsOperationsService.getActionInfoAndDescription(input.characterAction)
         const card = new CharacterCardInfo(
             input.name,
             input.skills,
