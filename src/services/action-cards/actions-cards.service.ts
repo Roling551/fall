@@ -1,28 +1,18 @@
-import { computed, effect, Injectable, Signal, signal } from "@angular/core";
-import { UIData, UIStateService } from "../ui-state/ui-state.service";
+import { computed, Injectable, Signal, signal } from "@angular/core";
+import { UIStateService } from "../ui-state/ui-state.service";
 import { KeyValuePair } from "../../models/key-value-pair";
 import { Coordinate } from "../../models/coordinate";
 import { Tile } from "../../models/tile/tile";
-import { CardsHand } from "../../models/card-hands/cards-hand";
-import { CharactersCardsService } from "../character-cards/characters-cards.service";
-import { createMultiStageAction } from "../ui-state/create-multi-stage-action";
-import { mapContainsMap } from "../../util/map-functions";
 import { ActionCardInfo } from "../../models/action-card-info";
-import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
-import { InitialCardsHand } from "../../models/card-hands/initial-cards-hand";
 import { shuffleArray } from "../../util/array-functions";
-import { TraditionalCardsHand } from "../../models/card-hands/traditional-cards-hand";
-import { createForceSignal } from "../../util/force-signal";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { CardInfo } from "../../models/card-info";
 import { CardSource, GroupByCardsHand } from "../../models/card-hands/group-by-cards-hand";
-import { ActionCardInfoFactoryService } from "./action-card-info-factory.service";
-import { InjectorService } from "../injector.service";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
-import { createInstantAction, createSkillsAndMapAction } from "../ui-state/create-player-action";
+import { createInstantAction, createMapAction } from "../ui-state/create-player-action";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { BenefitsService } from "../benefits.service";
 
@@ -32,11 +22,9 @@ import { BenefitsService } from "../benefits.service";
 export class ActionsCardsService {
 
     public cardsHand?: GroupByCardsHand<CardInfo>
-    private isActionHappening = signal(false)
 
     constructor(
         private uiStateService: UIStateService,
-        private charactersCardService: CharactersCardsService,
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService,
@@ -116,7 +104,6 @@ export class ActionsCardsService {
             createInstantAction(
                 this.uiStateService,
                 (selectedCards: Map<number, CharacterCardInfo>)=>{
-                    this.charactersCardService.cardsHand.discardCards([...selectedCards.values()])
                     if(cardInfo.price) {
                         this.resourcesService.spendResources(cardInfo.price)
                     }
@@ -130,7 +117,6 @@ export class ActionsCardsService {
                 cardInfo.price ? ()=>{
                     return !(cardInfo.price && !this.resourcesService.canAffordResources(cardInfo.price))
                 }: undefined,
-                cardInfo.skillRequired
             )
             return true
         }
@@ -139,15 +125,16 @@ export class ActionsCardsService {
 
     private setOnClickActionForActionCard(actionCardInfo: ActionCardInfo) {
         actionCardInfo.onSelect = ()=>{
-            createSkillsAndMapAction(
+            createMapAction(
                 this.uiStateService,
                 this.levelService,
-                this.benefitsService,
-                (selectedTile: KeyValuePair<Coordinate, Tile>, selectedCards: Map<number, CharacterCardInfo>) => {
-                    actionCardInfo.action.action(selectedTile)
-                },
-                (selectedCards: Map<number, CharacterCardInfo>) => {
-                    this.charactersCardService.cardsHand.discardCards([...selectedCards.values()])
+                (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
+                    if(actionCardInfo.price && !this.resourcesService.canAffordResources(actionCardInfo.price)) {
+                        return
+                    }
+                    for(const [_, selectedTile] of selectedTiles) {
+                        actionCardInfo.action.action(selectedTile)
+                    }
                     if(actionCardInfo.price) {
                         this.resourcesService.spendResources(actionCardInfo.price)
                     }
@@ -157,13 +144,9 @@ export class ActionsCardsService {
                         this.cardsHand!.discardCard(actionCardInfo)
                     }
                 },
-                (selectedTile: KeyValuePair<Coordinate, Tile>, selectedCards: Map<number, CharacterCardInfo>) => {
-                    if(actionCardInfo.price && !this.resourcesService.canAffordResources(actionCardInfo.price)) {
-                        return false
-                    }
+                (selectedTile: KeyValuePair<Coordinate, Tile>) => {
                     return true
                 },
-                actionCardInfo.requiredSkills,
                 ()=>{ 
                     this.cardsHand!.deselectCard(actionCardInfo)
                 },

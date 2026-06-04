@@ -8,8 +8,6 @@ import { KeyValuePair } from "../models/key-value-pair";
 import { ActionsCardsService } from "./action-cards/actions-cards.service";
 import { ActionCardInfoList } from "./action-cards/action-card-info.list";
 import { DecisionsService } from "./decisions.service";
-import { CharacterCardInfoList } from "./character-cards/character-card.list";
-import { CharactersCardsService, CharactersCardsServiceMode } from "./character-cards/characters-cards.service";
 import { MapImageComponent } from "../shared/map-image/map-image.component";
 import { Estate } from "../models/estate";
 import { SimpleTile } from "../models/tile/simple-tile";
@@ -25,8 +23,6 @@ export class InitService {
         private uiStateService: UIStateService,
         private actionsCardsService: ActionsCardsService,
         private actionCardInfoList: ActionCardInfoList,
-        private characterCardInfoList: CharacterCardInfoList,
-        private charactersCardsService: CharactersCardsService,
         private decisionsService: DecisionsService,
         private resourcesService: ResourcesService
     ) {}
@@ -54,8 +50,6 @@ export class InitService {
         // })
         const initialCardNames = ["handDrill", "pin", "hammer", "tick","needle", "drillsMaintenance", "engineeringTools", "miningTools", "constructionTools", "road", "plasticFactory", "powerplant", "danceJack", "shabby"]
         this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByIdentifiers(initialCardNames))
-        const initialCharacterCardNames = ["recycler", "demolisher", "accountant", "miner"]
-        this.charactersCardsService.setCards(this.characterCardInfoList.getCardsByNames(initialCharacterCardNames))
     }
 
     private isEntityDisabled(tile: KeyValuePair<Coordinate, Tile>) {

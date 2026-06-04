@@ -10,7 +10,6 @@ import { BenefitsService } from "./benefits.service";
 import { LevelMapFactoryService } from "./level-map-factory.service";
 import { TurnService } from "./turn.service";
 import { LevelFactoryService } from "./level-factory.service";
-import { CharactersCardsService } from "./character-cards/characters-cards.service";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +24,6 @@ export class LevelsService {
         private levelGoalsService: LevelGoalsService,
         private turnService: TurnService,
         private levelFactoryService: LevelFactoryService,
-        private charactersCardsService: CharactersCardsService,
     ) {}
     
     endLevel() {
@@ -37,7 +35,6 @@ export class LevelsService {
         this.currentLevelService.level.set(level)
         this.turnActorService.nextLevel()
         this.turnService.nextLevel()
-        this.charactersCardsService.cardsHand.reshuffle()
         this.levelNumber.update(x=>x+1)
     }
 }
