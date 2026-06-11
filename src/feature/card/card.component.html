@@ -1,6 +1,4 @@
-@if(cardAsCharacterCardInfo()) {
-    <app-card-content-character [card]="cardAsCharacterCardInfo()!"/>
-} @else if(cardAsActionCardInfo()) {
+if(cardAsActionCardInfo()) {
     <app-card-content-action [card]="cardAsActionCardInfo()!"/>
 }
 @if(cardAsOverlay(); as cardOverlay) {

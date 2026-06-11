@@ -10,7 +10,7 @@ import { createForceSignal } from "../util/force-signal";
 import { Coordinate } from "./coordinate";
 import { ActionCardInfo } from "./action-card-info";
 import { Benefit } from "./benefit";
-import { EstateCardInputs } from "../services/action-cards/action-card-info-factory.service";
+import { EstateInfoInput } from "../services/cards-operations.service";
 import { TextPart } from "./text-part";
 import { Extraction } from "./extraction";
 
@@ -27,7 +27,7 @@ export class Estate extends MapEntity implements TurnActor{
         public name: string, 
         public runCost: Map<Resource, number>,
         affectedCoordinates: Coordinate[],
-        public additionalInfo: EstateCardInputs,
+        public additionalInfo: EstateInfoInput,
         public costPaid: Map<Resource, number>,
         public maxDistance: number,
         private mapInteractionAction_?: (tile: Tile)=>void,
@@ -118,7 +118,7 @@ export class Estate extends MapEntity implements TurnActor{
         return false
     }
 
-    static getEffectsDescriptionsFunction(additionalInfo: EstateCardInputs) {
+    static getEffectsDescriptionsFunction(additionalInfo: EstateInfoInput) {
         return computed(()=>{
             const descriptions: TextPart[][] = []
             if(additionalInfo.extraction) {

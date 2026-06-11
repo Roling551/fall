@@ -2,7 +2,6 @@ import { Component, computed, Input } from '@angular/core';
 import { ActionCardInfo } from '../../models/action-card-info';
 import { skillsToTextPart } from '../../models/skill';
 import { resourcesToTextParts } from '../../models/resource';
-import { getFactoryCardInputsReadable } from '../../services/action-cards/action-card-info-factory.service';
 import { TextPart } from '../../models/text-part';
 import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
 
@@ -35,18 +34,17 @@ export class CardContentActionComponent {
     })
 
     cardActionType = computed(()=>{
-        return getFactoryCardInputsReadable(this.card.additionalInfo.type)
+        return this.card.inputsInfo.operation.name
     })
 
     cardActionEffect = computed<TextPart[]|undefined>(()=>{
-        const info = this.card.additionalInfo
-        if(info.type === "EstateCardInputs") {
+        if(true/*info.type === "EstateCardInputs"*/) {
             let textParts = this.card.effectsDescriptions.flatMap(x=>x)
-            if(info.runCost) {
-                textParts = textParts.concat(["/", ...resourcesToTextParts(info.runCost)])
-            }
+            // if(info.runCost) {
+            //     textParts = textParts.concat(["/", ...resourcesToTextParts(info.runCost)])
+            // }
             return textParts
-        } else if(info.type === "InstantExtractionCardInputs") {
+        } else if(false/*info.type === "InstantExtractionCardInputs"*/) {
             return this.card.effectsDescriptions.flatMap(x=>x)
         }
         return undefined

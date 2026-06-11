@@ -1,4 +1,4 @@
-import { FactoryCardInputs } from "../services/action-cards/action-card-info-factory.service";
+import { CardInput } from "../services/action-cards/action-card-info-factory.service";
 import { CardsActionInfo } from "../services/cards-actions.service";
 import { TileInfo } from "../services/ui-state/ui-state.service";
 import { CardInfo } from "./card-info";
@@ -22,7 +22,7 @@ export class ActionCardInfo extends CardInfo {
         public action: CardsActionInfo,
         public removeOnUse: boolean,
         public requiredSkills: Map<Skill, number>,
-        public additionalInfo: FactoryCardInputs,
+        public inputsInfo: CardInput,
         public effectsDescriptions: TextPart[][],
         public maxDistance: number,
         public cardPicture?: string,

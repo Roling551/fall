@@ -66,7 +66,6 @@ export class ActionCardInfoList {
             "test",
             ()=>this.factory.createCard(
                 {
-                    type: "",
                     name: "test",
                     skillRequired: new Map(),
                     operation: {
@@ -74,6 +73,24 @@ export class ActionCardInfoList {
                         refundFraction: 1,
                         repeatNumber: 2
                     },
+                }
+            )
+        ],
+        [
+            "tick",
+            ()=>this.factory.createCard(
+                {
+                    name: "tick",
+                    skillRequired: new Map(),
+                    operation: {
+                        name: "buildEstate",
+                        estateInfo: {
+                            name: "tick",
+                            estateTexture: "tick-on-map",
+                            extraction: new Extraction(4),
+                            runCost: new Map([["oil", 1]])
+                        }
+                    }
                 }
             )
         ]

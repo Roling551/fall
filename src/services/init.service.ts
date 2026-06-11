@@ -49,7 +49,7 @@ export class InitService {
         //     }
         // })
         //const initialCardNames = ["handDrill", "pin", "hammer", "tick","needle", "drillsMaintenance", "engineeringTools", "miningTools", "constructionTools", "road", "plasticFactory", "powerplant", "danceJack", "shabby"]
-        const initialCardNames = ["test"]
+        const initialCardNames = ["test", "tick"]
         this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByIdentifiers(initialCardNames))
     }
 

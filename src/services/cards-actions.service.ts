@@ -17,7 +17,7 @@ export type CardsActionInfo = {
     type: "Tile";
     canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>) => boolean;
     finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => void;
-    repeatNumber: number;
+    repeatNumber?: number;
 } | {
     type: "Reward";
     reward: Reward;

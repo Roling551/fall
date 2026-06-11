@@ -2,14 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, effect, HostBinding, inpu
 import { CardInfo } from '../../models/card-info';
 import { CharacterCardInfo } from '../../models/character-card-info';
 import { ActionCardInfo } from '../../models/action-card-info';
-import { CardContentCharacterComponent } from '../card-content-character/card-content-character.component';
 import { CardContentActionComponent } from '../card-content-action/card-content-action.component';
 import { CardOverlayComponent } from '../card-overlay/card-overlay.component';
 import { CardOverlayCardInfo } from '../../models/card-overlay-card-info';
 
 @Component({
   selector: 'app-card',
-  imports: [CardContentActionComponent, CardContentCharacterComponent, CardOverlayComponent],
+  imports: [CardContentActionComponent, CardOverlayComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,14 +33,6 @@ export class CardComponent {
             this.disabled = !this.avaliable();
         });
     }
-
-    cardAsCharacterCardInfo = computed(()=>{
-        const card = this.displayedCard()
-        if(card instanceof CharacterCardInfo) {
-            return card as CharacterCardInfo
-        }
-        return undefined
-    })
     cardAsActionCardInfo = computed(()=>{
         const card = this.displayedCard()
         if(card instanceof ActionCardInfo) {

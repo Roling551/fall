@@ -53,9 +53,9 @@ export class ActionsCardsService {
             }),
             (cardInfo: CardInfo, source: CardSource, additionalDeck?: string) => {
                 if(cardInfo instanceof ActionCardInfo && source === "hand") {
-                    if(cardInfo.additionalInfo.type === "EstateCardInputs" || cardInfo.additionalInfo.type === "") {
+                    if(true/*cardInfo.additionalInfo.type === "EstateCardInputs" || cardInfo.additionalInfo.type === ""*/) {
                         return {group:"estates", avaliable: true}
-                    } else if(cardInfo.additionalInfo.type === "InstantExtractionCardInputs") {
+                    } else if(false/*cardInfo.additionalInfo.type === "InstantExtractionCardInputs"*/) {
                         return {group:"instant", avaliable: true}
                     }
                 } else if(cardInfo instanceof CardOverlayCardInfo && source === "hand") {
