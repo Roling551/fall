@@ -1,4 +1,5 @@
 import { FactoryCardInputs } from "../services/action-cards/action-card-info-factory.service";
+import { CardsActionInfo } from "../services/cards-actions.service";
 import { TileInfo } from "../services/ui-state/ui-state.service";
 import { CardInfo } from "./card-info";
 import { Coordinate } from "./coordinate";
@@ -18,9 +19,9 @@ export interface CardCreationStep {
 export class ActionCardInfo extends CardInfo {
     constructor(
         name: string,
+        public action: CardsActionInfo,
         public removeOnUse: boolean,
         public requiredSkills: Map<Skill, number>,
-        public action: CardCreationStep,
         public additionalInfo: FactoryCardInputs,
         public effectsDescriptions: TextPart[][],
         public maxDistance: number,

@@ -17,7 +17,6 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
         private groupingMethod: (cardInfo: CardInfo, source: CardSource, additionalDeck?: string)=>{group:string, avaliable:boolean}|undefined,
         private groups: string[],
         public additionalDecks?: Signal<Map<string, T[]>>,
-        selectCardInfo?: object,
     ) {
         super(
             cards,
@@ -27,7 +26,6 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
             canSelectCard,
             overrideClick,
             overrideSelectedCards,
-            selectCardInfo
         )
     }
 

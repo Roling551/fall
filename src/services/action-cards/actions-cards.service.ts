@@ -15,6 +15,7 @@ import { Estate } from "../../models/estate";
 import { createInstantAction, createMapAction } from "../ui-state/create-player-action";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { BenefitsService } from "../benefits.service";
+import { CardsActionsService } from "../cards-actions.service";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,8 @@ export class ActionsCardsService {
         private levelService: CurrentLevelService,
         private resourcesService: ResourcesService,
         private turnActorsService: TurnActorsService,
-        private benefitsService: BenefitsService
+        private benefitsService: BenefitsService,
+        private cardsActionsService: CardsActionsService,
     ) {
     }
 
@@ -51,7 +53,7 @@ export class ActionsCardsService {
             }),
             (cardInfo: CardInfo, source: CardSource, additionalDeck?: string) => {
                 if(cardInfo instanceof ActionCardInfo && source === "hand") {
-                    if(cardInfo.additionalInfo.type === "EstateCardInputs") {
+                    if(cardInfo.additionalInfo.type === "EstateCardInputs" || cardInfo.additionalInfo.type === "") {
                         return {group:"estates", avaliable: true}
                     } else if(cardInfo.additionalInfo.type === "InstantExtractionCardInputs") {
                         return {group:"instant", avaliable: true}
@@ -124,38 +126,7 @@ export class ActionsCardsService {
     }
 
     private setOnClickActionForActionCard(actionCardInfo: ActionCardInfo) {
-        actionCardInfo.onSelect = ()=>{
-            createMapAction(
-                this.uiStateService,
-                this.levelService,
-                (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
-                    if(actionCardInfo.price && !this.resourcesService.canAffordResources(actionCardInfo.price)) {
-                        return
-                    }
-                    for(const [_, selectedTile] of selectedTiles) {
-                        actionCardInfo.action.action(selectedTile)
-                    }
-                    if(actionCardInfo.price) {
-                        this.resourcesService.spendResources(actionCardInfo.price)
-                    }
-                    if(actionCardInfo.removeOnUse) {
-                        this.removeCardFromHand(actionCardInfo)
-                    } else {
-                        this.cardsHand!.discardCard(actionCardInfo)
-                    }
-                },
-                (selectedTile: KeyValuePair<Coordinate, Tile>) => {
-                    return true
-                },
-                ()=>{ 
-                    this.cardsHand!.deselectCard(actionCardInfo)
-                },
-                actionCardInfo.maxDistance,
-                [...actionCardInfo.action.tileInfos ?? []],
-                actionCardInfo.actionRepeatNumber
-            )
-            return true
-        }
+        this.cardsActionsService.setCardsAction(actionCardInfo, actionCardInfo.action, ()=>this.cardsHand!.discardCard(actionCardInfo), ()=>this.cardsHand!.deselectAllCards())
         return actionCardInfo
     }
 

@@ -26,7 +26,6 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
         private canSelectCard:Signal<boolean> = signal(true),
         private overrideClick:() => ((card: CardInfo) => void) | undefined,
         overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>,
-        private selectCardInfo?: object,
     ) {
         this.drawDeck.set([...cards])
         this.discardDeck.forceUpdate()
@@ -90,7 +89,7 @@ export class TraditionalCardsHand<T extends CardInfo> implements CardsHand<T> {
             return
         }
         if(this.canSelectCard()) {
-            const canSelect = (card.onSelect==undefined) || card.onSelect?.(this.selectCardInfo)
+            const canSelect = (card.onSelect==undefined) || card.onSelect?.()
             if(canSelect) {
                 this.selectedCards.get().push(card)
                 this.selectedCards.forceUpdate()

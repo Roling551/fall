@@ -10,7 +10,7 @@ export class CardInfo {
     constructor(
         public name: string, 
         public type: CardInfoType,
-        public onSelect?: ((selectCardInfo?:any)=>boolean),
+        public onSelect?: (()=>boolean),
     ){
         this.id = CardInfo.cardsAmount
         CardInfo.cardsAmount += 1

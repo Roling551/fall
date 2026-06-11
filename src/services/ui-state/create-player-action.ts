@@ -146,7 +146,6 @@ export function createMapAction(
             ...unavaliableTileInfo,
             ...additionalTileInfos
         ]),
-        sideComponent: PlayerActionComponent,
         cardAction: (card: CardInfo) => {
             if(selectedCards.get().has(card.id)) {
                 selectedCards.get().delete(card.id)

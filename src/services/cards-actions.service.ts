@@ -34,44 +34,40 @@ export class CardsActionsService {
 
     public setCardsAction(card: CardInfo, actionInfo: CardsActionInfo, discardCard: ()=> void, deselectAllCards: ()=>void) {
         if(actionInfo.type === "Card") {
-            card.onSelect = (selectCardInfo?:any)=>{
-                if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
-                    createRepeatCardAction(
-                        this.uiStateService,
-                        actionInfo.canSelectCard,
-                        (selectedCards:Map<number, CardInfo>)=>{
-                            actionInfo.finishAction(selectedCards)
-                            discardCard()
-                        },
-                        ()=>{
-                            deselectAllCards()
-                        },
-                        actionInfo.repeatNumber
-                    )
-                }
+            card.onSelect = ()=>{
+                createRepeatCardAction(
+                    this.uiStateService,
+                    actionInfo.canSelectCard,
+                    (selectedCards:Map<number, CardInfo>)=>{
+                        actionInfo.finishAction(selectedCards)
+                        discardCard()
+                    },
+                    ()=>{
+                        deselectAllCards()
+                    },
+                    actionInfo.repeatNumber
+                )
                 return true
             }
         } else if(actionInfo.type === "Tile") {
-            card.onSelect = (selectCardInfo?:any)=>{
-                if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
-                    createMapAction(
-                        this.uiStateService,
-                        this.currentLevelService,
-                        (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
-                            actionInfo.finishAction(selectedTiles)
-                            discardCard()
-                        },
-                        (selectedTile: KeyValuePair<Coordinate, Tile>) => {
-                            return true
-                        },
-                        ()=>{
-                            deselectAllCards()
-                        },
-                        3,
-                        undefined,
-                        actionInfo.repeatNumber
-                    )
-                }
+            card.onSelect = ()=>{
+                createMapAction(
+                    this.uiStateService,
+                    this.currentLevelService,
+                    (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
+                        actionInfo.finishAction(selectedTiles)
+                        discardCard()
+                    },
+                    (selectedTile: KeyValuePair<Coordinate, Tile>) => {
+                        return actionInfo.canSelectTile(selectedTile)
+                    },
+                    ()=>{
+                        deselectAllCards()
+                    },
+                    3,
+                    undefined,
+                    actionInfo.repeatNumber
+                )
                 return true
             }
         } else if(actionInfo.type === "Reward") {

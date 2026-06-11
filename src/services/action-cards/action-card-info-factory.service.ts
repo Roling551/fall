@@ -21,18 +21,27 @@ import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { InjectorService } from "../injector.service";
 import { TileBonus } from "../../models/bonus";
 import { CardAttribute, CardAttributesService } from "../card-attributes.service";
+import { CardOperationInput, CardsOperationsService } from "../cards-operations.service";
 
-export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs
+export type FactoryCardInputs = InstantExtractionCardInputs | EstateCardInputs | CardInput
 
-export function getFactoryCardInputsReadable(type: "InstantExtractionCardInputs" | "EstateCardInputs") {
+export function getFactoryCardInputsReadable(type: "InstantExtractionCardInputs" | "EstateCardInputs" | "") {
     switch(type) {
         case "InstantExtractionCardInputs":
             return "Instant"
         case "EstateCardInputs":
             return "Estate"
+        case "":
+            return "";
     }
 }
 
+export interface CardInput {
+    type: "",
+    name: string,
+    skillRequired: Map<Skill, number>,
+    operation: CardOperationInput
+}
 
 export interface CardOverlayCardInputs {
     name?: string,
@@ -87,7 +96,22 @@ export class ActionCardInfoFactoryService {
         private rewardFactoryService: RewardFactoryService,
         private injectorService: InjectorService,
         private attributesService: CardAttributesService,
+        private cardsOperationsService: CardsOperationsService,
     ) {}
+
+    createCard(input: CardInput) {
+        const action = this.cardsOperationsService.getActionInfoAndDescription(input.operation)
+        const actionCard = new ActionCardInfo(
+            input.name,
+            action.actionInfo,
+            false,
+            input.skillRequired,
+            input,
+            [],
+            1
+        )
+        return actionCard
+    }
 
     cardOverlayCard(inputs: CardOverlayCardInputs): CardOverlayCardInfo {
         return new CardOverlayCardInfo(
@@ -98,108 +122,104 @@ export class ActionCardInfoFactoryService {
         )
     }
 
-    instantExtractionCard(
-        inputs: InstantExtractionCardInputs
-    ): ActionCardInfo {
-        const createExtractionInfo: CreateExtractionInfo = {
-            extraction: inputs.extraction,
-            times: inputs.times!=undefined ? inputs.times : 1
-        }
-        const effectsDescriptions: TextPart[][] = []
-        if(inputs.extraction) {
-            effectsDescriptions.push(["apply:", ...inputs.extraction.getTextParts()])
-        }
-        const mapInteractionAction = this.skillMapActionFactoryService.createMapInteractionAction(createExtractionInfo, inputs.affectedCoordinates)
-        const mapCollectAction = this.skillMapActionFactoryService.createMapGatheringAction(createExtractionInfo, inputs.affectedCoordinates)
-        return new ActionCardInfo(
-            inputs.name,
-            false,
-            inputs.skillRequired,
-            {
-                action:(tile: KeyValuePair<Coordinate, Tile>)=> {
-                    mapInteractionAction(tile.value)
-                    mapCollectAction(tile.value)
-                    return true
-                },
-                tileInfos: new Map([getBorderInfo(this.uiStateService, this.levelService, inputs.affectedCoordinates)])
-            },
-            inputs,
-            effectsDescriptions,
-            5,
-            inputs.cardPicture,
-            inputs.price,
-            this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
-        )
-    }
+    // instantExtractionCard(
+    //     inputs: InstantExtractionCardInputs
+    // ): ActionCardInfo {
+    //     const createExtractionInfo: CreateExtractionInfo = {
+    //         extraction: inputs.extraction,
+    //         times: inputs.times!=undefined ? inputs.times : 1
+    //     }
+    //     const effectsDescriptions: TextPart[][] = []
+    //     if(inputs.extraction) {
+    //         effectsDescriptions.push(["apply:", ...inputs.extraction.getTextParts()])
+    //     }
+    //     const mapInteractionAction = this.skillMapActionFactoryService.createMapInteractionAction(createExtractionInfo, inputs.affectedCoordinates)
+    //     const mapCollectAction = this.skillMapActionFactoryService.createMapGatheringAction(createExtractionInfo, inputs.affectedCoordinates)
+    //     return new ActionCardInfo(
+    //         inputs.name,
+    //         false,
+    //         inputs.skillRequired,
+    //         // {
+    //         //     action:(tile: KeyValuePair<Coordinate, Tile>)=> {
+    //         //         mapInteractionAction(tile.value)
+    //         //         mapCollectAction(tile.value)
+    //         //         return true
+    //         //     },
+    //         //     tileInfos: new Map([getBorderInfo(this.uiStateService, this.levelService, inputs.affectedCoordinates)])
+    //         // },
+    //         inputs,
+    //         effectsDescriptions,
+    //         5,
+    //         inputs.cardPicture,
+    //         inputs.price,
+    //         this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
+    //     )
+    // }
 
-    estateCard(inputs: EstateCardInputs): ActionCardInfo {
-        const createActionInfo: CreateExtractionInfo | undefined = (!!inputs.extraction) ? {
-            extraction: inputs.extraction,
-            times: inputs.times!=undefined ? inputs.times : 1
-        } : undefined
+    // estateCard(inputs: EstateCardInputs): ActionCardInfo {
+    //     const createActionInfo: CreateExtractionInfo | undefined = (!!inputs.extraction) ? {
+    //         extraction: inputs.extraction,
+    //         times: inputs.times!=undefined ? inputs.times : 1
+    //     } : undefined
 
-        let effectsDescriptions = computed(()=>{
-            return [
-                ...Estate.getEffectsDescriptionsFunction(inputs)(), 
-                ...(inputs.attributes ? this.attributesService.getAttributesDescribtions(inputs.attributes) : [])
-            ]
-        })
+    //     let effectsDescriptions = computed(()=>{
+    //         return [
+    //             ...Estate.getEffectsDescriptionsFunction(inputs)(), 
+    //             ...(inputs.attributes ? this.attributesService.getAttributesDescribtions(inputs.attributes) : [])
+    //         ]
+    //     })
 
-        let actionCardInfo: ActionCardInfo 
-        const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
-        const affectedCoordinates = inputs.affectedCoordinates || [new Coordinate(0,0)]
-        const maxDistance = 3
-        const createEstateInfo = {
-            getEstate: (tile_: Tile) => new Estate(
-                tile_, 
-                inputs.estateTexture, 
-                inputs.runCost || (new Map([])), 
-                affectedCoordinates,
-                inputs,
-                inputs.price || new Map(),
-                maxDistance,
-                (!!createActionInfo) ? this.skillMapActionFactoryService.createMapInteractionAction(
-                    createActionInfo, 
-                    affectedCoordinates,
-                    inputs.attributes)
-                : undefined,
+    //     let actionCardInfo: ActionCardInfo 
+    //     const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
+    //     const affectedCoordinates = inputs.affectedCoordinates || [new Coordinate(0,0)]
+    //     const maxDistance = 3
+    //     const createEstate = (tile_: Tile) => new Estate(
+    //             tile_, 
+    //             inputs.estateTexture, 
+    //             inputs.runCost || (new Map([])), 
+    //             affectedCoordinates,
+    //             inputs,
+    //             inputs.price || new Map(),
+    //             maxDistance,
+    //             (!!createActionInfo) ? this.skillMapActionFactoryService.createMapInteractionAction(
+    //                 createActionInfo, 
+    //                 affectedCoordinates,
+    //                 inputs.attributes)
+    //             : undefined,
 
-                (!!createActionInfo) ? this.skillMapActionFactoryService.createMapGatheringAction(
-                    createActionInfo, 
-                    affectedCoordinates)
-                : undefined,
-                inputs.producedResources,
-                inputs.tileBonus,
-                inputs.movementBonus,
-                inputs.instancesNumber===undefined ? actionCardInfo : undefined,
-                inputs.cardPicture || inputs.estateTexture,
-                mapEntityType
-            ),
-            affectedCoordinates: inputs.affectedCoordinates,
-            createActionInfo,
-        }
-        const estatesActionAndTileInfo =
-            getCreateEstateActionAndTileInfo(
-                this.uiStateService,
-                this.levelService,
-                this.turnActorsService,
-                createEstateInfo.getEstate,
-                mapEntityType,
-                affectedCoordinates
-            )
-        actionCardInfo = new ActionCardInfo(
-            inputs.name,
-            inputs.instancesNumber===undefined,
-            inputs.skillRequired,
-            estatesActionAndTileInfo,
-            inputs,
-            effectsDescriptions(),
-            maxDistance,
-            inputs.cardPicture || inputs.estateTexture,
-            inputs.price,
-            this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
-            inputs.instancesNumber
-        )
-        return actionCardInfo
-    }
+    //             (!!createActionInfo) ? this.skillMapActionFactoryService.createMapGatheringAction(
+    //                 createActionInfo, 
+    //                 affectedCoordinates)
+    //             : undefined,
+    //             inputs.producedResources,
+    //             inputs.tileBonus,
+    //             inputs.movementBonus,
+    //             inputs.instancesNumber===undefined ? actionCardInfo : undefined,
+    //             inputs.cardPicture || inputs.estateTexture,
+    //             mapEntityType
+    //         )
+    //     const estatesActionAndTileInfo =
+    //         getCreateEstateActionAndTileInfo(
+    //             this.uiStateService,
+    //             this.levelService,
+    //             this.turnActorsService,
+    //             createEstate,
+    //             mapEntityType,
+    //             affectedCoordinates
+    //         )
+    //     actionCardInfo = new ActionCardInfo(
+    //         inputs.name,
+    //         inputs.instancesNumber===undefined,
+    //         inputs.skillRequired,
+    //         //estatesActionAndTileInfo,
+    //         inputs,
+    //         effectsDescriptions(),
+    //         maxDistance,
+    //         inputs.cardPicture || inputs.estateTexture,
+    //         inputs.price,
+    //         this.rewardFactoryService.createRewards(inputs.cardOnHandRewards),
+    //         inputs.instancesNumber
+    //     )
+    //     return actionCardInfo
+    // }
 }
