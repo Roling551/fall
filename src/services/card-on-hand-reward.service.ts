@@ -9,8 +9,8 @@ export class CardOnHandRewardService {
     constructor(private actionsCardsService: ActionsCardsService) {}
 
     nextTurn() {
-        if(this.actionsCardsService.cardsHand) {
-            for(const card of this.actionsCardsService.cardsHand!.hand.get()) {
+        if(this.actionsCardsService.cardsSet) {
+            for(const card of this.actionsCardsService.cardsSet!.hand.get()) {
                 if(card instanceof ActionCardInfo && card.cardOnHandRewards) {
                     for(const reward of card.cardOnHandRewards) {
                         reward.claim()

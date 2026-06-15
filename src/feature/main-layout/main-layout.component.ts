@@ -24,7 +24,7 @@ export class MainLayoutComponent implements AfterViewInit {
         private actionsCardsService: ActionsCardsService,
         private hoverInfoService: HoverInfoService,
     ) {
-        this.actionsCards = this.actionsCardsService.cardsHand
+        this.actionsCards = this.actionsCardsService.cardsSet
     }
 
     ngAfterViewInit(): void {

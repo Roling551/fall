@@ -2,7 +2,7 @@ import { Component, computed, Input } from '@angular/core';
 import { CardsHand } from '../../models/card-hands/cards-hand';
 import { CardInfo } from '../../models/card-info';
 import { CardComponent } from '../card/card.component';
-import { GroupByCardsHand } from '../../models/card-hands/group-by-cards-hand';
+import { GroupByCardsSet } from '../../models/cards-set/group-by-cards-set';
 
 @Component({
   selector: 'app-grouped-cards-list',
@@ -11,7 +11,7 @@ import { GroupByCardsHand } from '../../models/card-hands/group-by-cards-hand';
   styleUrl: './grouped-cards-list.component.scss'
 })
 export class GroupedCardsListComponent<T extends CardInfo> {
-    @Input({required: true}) cardsHand!: GroupByCardsHand<T>;
+    @Input({required: true}) cardsHand!: GroupByCardsSet<T>;
     @Input() forceOverrideClick: boolean = false
 
     constructor() {}

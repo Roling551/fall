@@ -1,11 +1,11 @@
 import { computed, Signal, signal, WritableSignal } from "@angular/core";
 import { CardInfo } from "../card-info";
-import { TraditionalCardsHand } from "./traditional-cards-hand";
 import { createForceSignal } from "../../util/force-signal";
+import { TraditionalCardsSet } from "./traditional-cards-set";
 
 export type CardSource = "draw" | "hand" | "discard" | "additionalDecks"
 
-export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T> {    
+export class GroupByCardsSet<T extends CardInfo> extends TraditionalCardsSet<T> {    
     constructor(
         cards: T[], 
         drawsPerTurn: Signal<number>, 
@@ -33,14 +33,14 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
         const groupedCards = new Map<string, {card:T, avaliable:boolean}[]>(this.groups.map(x=>[x, []]))
         groupedCards.set("rest", [])
         groupedCards.set("unavaliable", [])
-        for(const card of this.drawDeck.get()) {
-            const groupedInfo = this.groupingMethod(card, "draw")
-            if(groupedInfo && groupedCards.has(groupedInfo.group)) {
-                groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
-            } else {
-                groupedCards.get("unavaliable")?.push({card, avaliable: false})
-            }
-        }
+        // for(const card of this.drawDeck.get()) {
+        //     const groupedInfo = this.groupingMethod(card, "draw")
+        //     if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+        //         groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
+        //     } else {
+        //         groupedCards.get("unavaliable")?.push({card, avaliable: false})
+        //     }
+        // }
         for(const card of this.hand.get()) {
             const groupedInfo = this.groupingMethod(card, "hand")
             if(groupedInfo && groupedCards.has(groupedInfo.group)) {
@@ -49,14 +49,14 @@ export class GroupByCardsHand<T extends CardInfo> extends TraditionalCardsHand<T
                 groupedCards.get("rest")?.push({card, avaliable: false})
             }
         }
-        for(const card of this.discardDeck.get()) {
-            const groupedInfo = this.groupingMethod(card, "discard")
-            if(groupedInfo && groupedCards.has(groupedInfo.group)) {
-                groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
-            } else {
-                groupedCards.get("unavaliable")?.push({card, avaliable: false})
-            }
-        }
+        // for(const card of this.discardDeck.get()) {
+        //     const groupedInfo = this.groupingMethod(card, "discard")
+        //     if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+        //         groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
+        //     } else {
+        //         groupedCards.get("unavaliable")?.push({card, avaliable: false})
+        //     }
+        // }
         if(this.additionalDecks) {
             for(const [additionalDeck, cards] of this.additionalDecks()) {
                 for(const card of cards) {

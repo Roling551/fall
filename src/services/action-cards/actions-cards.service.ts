@@ -1,28 +1,25 @@
 import { computed, Injectable, Signal, signal } from "@angular/core";
 import { UIStateService } from "../ui-state/ui-state.service";
-import { KeyValuePair } from "../../models/key-value-pair";
-import { Coordinate } from "../../models/coordinate";
-import { Tile } from "../../models/tile/tile";
 import { ActionCardInfo } from "../../models/action-card-info";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
 import { shuffleArray } from "../../util/array-functions";
 import { CharacterCardInfo } from "../../models/character-card-info";
 import { CardInfo } from "../../models/card-info";
-import { CardSource, GroupByCardsHand } from "../../models/card-hands/group-by-cards-hand";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
-import { createInstantAction, createMapAction } from "../ui-state/create-player-action";
+import { createInstantAction } from "../ui-state/create-player-action";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { BenefitsService } from "../benefits.service";
 import { CardsActionsService } from "../cards-actions.service";
+import { CardSource, GroupByCardsSet } from "../../models/cards-set/group-by-cards-set";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActionsCardsService {
 
-    public cardsHand?: GroupByCardsHand<CardInfo>
+    public cardsSet?: GroupByCardsSet<CardInfo>
 
     constructor(
         private uiStateService: UIStateService,
@@ -35,13 +32,13 @@ export class ActionsCardsService {
     }
 
     isActionChosen = computed(()=>{
-        return (this.cardsHand?.selectedCardsNumber() || 0) > 0
+        return (this.cardsSet?.selectedCardsNumber() || 0) > 0
     })
 
     setCards(actionCardInfos: CardInfo[]) {
         actionCardInfos = shuffleArray(actionCardInfos)
         const cards = actionCardInfos.map(x=>this.setOnClickAction(x))
-        this.cardsHand = new GroupByCardsHand<CardInfo>(
+        this.cardsSet = new GroupByCardsSet<CardInfo>(
             cards, 
             signal(Infinity),
             ()=>{this.uiStateService.cancel()}, 
@@ -80,12 +77,11 @@ export class ActionsCardsService {
 
     addNewCardToDiscard(actionCardInfo: CardInfo) {
         const card = this.setOnClickAction(actionCardInfo)
-        this.cardsHand?.discardDeck.get().push(card)
-        this.cardsHand?.discardDeck.forceUpdate()
+        this.cardsSet?.addCards([card])
     }
 
     nextTurn() {
-        this.cardsHand?.nextTurn()
+        this.cardsSet?.nextTurn()
     }
 
     isPlayersActionChosen:Signal<boolean> = computed(()=>{
@@ -114,7 +110,7 @@ export class ActionsCardsService {
                     this.removeCardFromHand(cardInfo)
                 },
                 ()=>{ 
-                    this.cardsHand!.deselectCard(cardInfo)
+                    this.cardsSet!.deselectCard(cardInfo)
                 },
                 cardInfo.price ? ()=>{
                     return !(cardInfo.price && !this.resourcesService.canAffordResources(cardInfo.price))
@@ -126,23 +122,23 @@ export class ActionsCardsService {
     }
 
     private setOnClickActionForActionCard(actionCardInfo: ActionCardInfo) {
-        this.cardsActionsService.setCardsAction(actionCardInfo, actionCardInfo.action, ()=>this.cardsHand!.discardCard(actionCardInfo), ()=>this.cardsHand!.deselectAllCards())
+        this.cardsActionsService.setCardsAction(actionCardInfo, actionCardInfo.action, ()=>this.cardsSet!.discardCard(actionCardInfo), ()=>this.cardsSet!.deselectAllCards())
         return actionCardInfo
     }
 
     removeCardFromHand(actionCardInfo: CardInfo) {
-        if(!this.cardsHand) {
+        if(!this.cardsSet) {
             return
         }
-        this.cardsHand.hand.set(this.cardsHand.hand.get().filter(c=>c!=actionCardInfo))
+        this.cardsSet.hand.set(this.cardsSet.hand.get().filter(c=>c!=actionCardInfo))
     }
 
     removeCardsFromHandAndCount(cards: CardInfo[]) {
-        if(!this.cardsHand) {
+        if(!this.cardsSet) {
             return 0
         }
         let i = 0
-        this.cardsHand.hand.set(this.cardsHand.hand.get().filter(c=>{
+        this.cardsSet.hand.set(this.cardsSet.hand.get().filter(c=>{
             if(!cards.includes(c)) {
                 return true
             }

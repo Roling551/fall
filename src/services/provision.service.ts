@@ -66,7 +66,7 @@ export class ProvisionService {
     public useProvision(pick: ProvisionPick) {
         const values = provisionPickToValues(pick, this.currentProvision()!,this.currentPickProvisionSettings())
         this.resourcesService.addResources(values.resources)
-        this.actionCardsService.cardsHand?.removeAllCards()
-        this.actionCardsService.cardsHand?.addCards([...pick.cards.get().values()], true)
+        this.actionCardsService.cardsSet?.removeAllCards()
+        this.actionCardsService.cardsSet?.addCards([...pick.cards.get().values()])
     }
 }

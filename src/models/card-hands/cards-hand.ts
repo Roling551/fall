@@ -2,8 +2,9 @@
 import { CardInfo } from "../card-info";
 import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { Signal } from "@angular/core";
+import { CardsSet } from "../cards-set/cards-set";
 
-export interface CardsHand<T extends CardInfo> {
+export interface CardsHand<T extends CardInfo> extends CardsSet<T> {
     drawDeck: ForceSignal<T[]>
     hand: ForceSignal<T[]>
     discardDeck: ForceSignal<T[]>

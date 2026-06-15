@@ -49,7 +49,7 @@ export class PickProvisionComponent {
     })
 
     actionsCards = computed(()=>{
-        return this.actionsCardsService.cardsHand!
+        return this.actionsCardsService.cardsSet!
     })
 
     onFinalizingPicking(): void {
