@@ -91,8 +91,8 @@ export function getRemoveEstateUI(actionsCardsService: ActionsCardsService, turn
                 if(!entity) {
                     return
                 }
-                if(entity.actionCardGetAfterDestroy) {
-                    actionsCardsService.addNewCardToDiscard(entity.actionCardGetAfterDestroy)
+                if(entity.cardEstateOriginatedFrom) {
+                    actionsCardsService.addNewCardToDiscard(entity.cardEstateOriginatedFrom)
                 }
                 turnActorsService.removeActor(entity)
             }

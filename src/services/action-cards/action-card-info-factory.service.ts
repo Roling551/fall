@@ -11,12 +11,12 @@ import { Resource, resourcesToTextParts } from "../../models/resource";
 import { getBorderInfo, getCreateEstateActionAndTileInfo, getCreateMultipleEstatesActionAndTileInfo } from "./actions-cards-functions";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
-import { ActionCardInfo } from "../../models/action-card-info";
+import { ActionCardInfo, ActionCardType } from "../../models/action-card-info";
 import { Reward, RewardOption } from "../../models/reward";
 import { RewardFactoryService } from "../reward-factory.service";
 import { TextPart } from "../../models/text-part";
 import { Extraction } from "../../models/extraction";
-import { CardInfo } from "../../models/card-info";
+import { CardInfo, CardUsesInfo, DefaultCardUsesInfo } from "../../models/card-info";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { InjectorService } from "../injector.service";
 import { CardAttributesService } from "../card-attributes.service";
@@ -24,6 +24,7 @@ import { CardOperationInput, CardsOperationsService, EstateInfoInput } from "../
 
 export interface CardInput {
     name: string,
+    type: ActionCardType,
     skillRequired: Map<Skill, number>,
     operation: CardOperationInput
 }
@@ -66,14 +67,25 @@ export class ActionCardInfoFactoryService {
 
     createCard(input: CardInput) {
         const action = this.cardsOperationsService.getActionInfoAndDescription(input.operation)
+        let cardUsesInfo: CardUsesInfo | undefined = undefined
+        if(input.type === "Estate") {
+            cardUsesInfo = {
+                ...DefaultCardUsesInfo,
+                ...{   
+                    refreshManually: true
+                }
+            }
+        }
         const actionCard = new ActionCardInfo(
             input.name,
+            input.type,
             action.actionInfo,
             false,
             input.skillRequired,
             input,
             [],
-            1
+            1,
+            cardUsesInfo
         )
         return actionCard
     }

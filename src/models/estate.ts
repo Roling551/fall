@@ -13,6 +13,7 @@ import { Benefit } from "./benefit";
 import { EstateInfoInput } from "../services/cards-operations.service";
 import { TextPart } from "./text-part";
 import { Extraction } from "./extraction";
+import { CardInfo } from "./card-info";
 
 export class Estate extends MapEntity implements TurnActor{
     private isDisabled = signal(false)
@@ -35,7 +36,7 @@ export class Estate extends MapEntity implements TurnActor{
         public producedResources?: Map<Resource, number>,
         tileBonus?: TileBonus,
         movementBonus?: number,
-        public actionCardGetAfterDestroy?: ActionCardInfo,
+        public cardEstateOriginatedFrom?: CardInfo,
         public picture?: String,
         type?: "estate" | "upgrade",
     ) {
@@ -135,5 +136,9 @@ export class Estate extends MapEntity implements TurnActor{
             }
             return descriptions
         })
+    }
+
+    onDestroy() {
+        this.cardEstateOriginatedFrom?.manualRefresh()
     }
 }

@@ -76,7 +76,7 @@ export class CardsOperationsService {
                     actionInfo: {
                         type: "Card",
                         canSelectCard: (card: CardInfo) => card.type == "ActionCard",
-                        finishAction: (selectedCards:Map<number, CardInfo>) => {
+                        finishAction: (usedCard: CardInfo, selectedCards:Map<number, CardInfo>) => {
                             this.recycleCards(selectedCards, input.resourcesPerRecycled)
                         },
                         repeatNumber
@@ -92,7 +92,7 @@ export class CardsOperationsService {
                         canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>{
                             return this.canDemolishEstate(selectedTile)
                         },
-                        finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
+                        finishAction: (usedCard: CardInfo, selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
                             this.demolishEstates(selectedTiles, input.refundFraction)
                         },
                         repeatNumber
@@ -115,9 +115,9 @@ export class CardsOperationsService {
                         canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>)=>{
                             return true
                         },
-                        finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
+                        finishAction: (usedCard: CardInfo, selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
                             for(const tile of selectedTiles) {
-                                this.buildEstate(input.estateInfo, tile[1])
+                                this.buildEstate(usedCard, input.estateInfo, tile[1])
                             }
                         },
                         repeatNumber: input.estateInfo.instancesNumber
@@ -127,7 +127,7 @@ export class CardsOperationsService {
         }
     }
 
-    private buildEstate(inputs: EstateInfoInput, tile: KeyValuePair<Coordinate, Tile>) {
+    private buildEstate(usedCard: CardInfo, inputs: EstateInfoInput, tile: KeyValuePair<Coordinate, Tile>) {
 
         const createActionInfo: CreateExtractionInfo | undefined = (!!inputs.extraction) ? {
             extraction: inputs.extraction,
@@ -166,7 +166,7 @@ export class CardsOperationsService {
                 inputs.producedResources,
                 inputs.tileBonus,
                 inputs.movementBonus,
-                undefined,
+                usedCard,
                 inputs.estateTexture,
                 mapEntityType
             )
@@ -206,9 +206,7 @@ export class CardsOperationsService {
                     return
                 }
                 addNumericalValues(price, entity.costPaid)
-                if(entity.actionCardGetAfterDestroy) {
-                    this.injectorService.getActionsCardsService().addNewCardToDiscard(entity.actionCardGetAfterDestroy)
-                }
+                entity.onDestroy()
                 this.injectorService.getTurnActorsService().removeActor(entity)
             }   
         }

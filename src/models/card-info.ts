@@ -12,7 +12,7 @@ export type CardUsesInfo = {
     refreshManually: boolean,
 }
 
-const defaultCardUsesInfo: CardUsesInfo = {
+export const DefaultCardUsesInfo: CardUsesInfo = {
     maxUses: 1,
     usesPerRefresh: 1,
     turnsForRefresh: 1,
@@ -34,7 +34,7 @@ export abstract class CardInfo {
         cardUsesInfo?: CardUsesInfo,
         public onSelect?: (()=>boolean),
     ){
-        this.cardUsesInfo = {...defaultCardUsesInfo, ...cardUsesInfo}
+        this.cardUsesInfo = {...DefaultCardUsesInfo, ...cardUsesInfo}
         this.usesLeft.set(this.cardUsesInfo.maxUses)
         this.id = CardInfo.cardsAmount
         CardInfo.cardsAmount += 1
@@ -60,11 +60,18 @@ export abstract class CardInfo {
                     this.turnsForRefreshLeft.update(x=>x-1)
                     if(this.turnsForRefreshLeft() <= 0) {
                         this.avaliable.set(true)
+                        this.usesLeft.set(this.cardUsesInfo.maxUses)
                     }
                 }
             } :
             ()=>{
 
             }
+    }
+
+    manualRefresh() {
+        this.avaliable.set(true)
+        this.usesLeft.set(this.cardUsesInfo.maxUses)
+        this.turnsForRefreshLeft.set(0)
     }
 }

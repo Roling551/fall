@@ -67,12 +67,12 @@ export class ActionsCardsService {
                 return undefined
             },
             ["instant", "estates", "cardsToRecover", "estatesOnMap"],
-            computed(()=>{
-                return new Map([["estatesOnMap", this.turnActorsService.actors.get()
-                    .filter(x=>x instanceof Estate && (x as Estate)["actionCardGetAfterDestroy"])
-                    .map(x=>(x as Estate)["actionCardGetAfterDestroy"] as ActionCardInfo)
-                ]])
-            }),
+            // computed(()=>{
+            //     return new Map([["estatesOnMap", this.turnActorsService.actors.get()
+            //         .filter(x=>x instanceof Estate && (x as Estate)["cardEstateOriginatedFrom"])
+            //         .map(x=>(x as Estate)["cardEstateOriginatedFrom"] as ActionCardInfo)
+            //     ]])
+            // }),
         )
     }
 

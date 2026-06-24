@@ -67,6 +67,7 @@ export class ActionCardInfoList {
             ()=>this.factory.createCard(
                 {
                     name: "test",
+                    type: "Instant",
                     skillRequired: new Map(),
                     operation: {
                         name: "demolishEstate",
@@ -81,6 +82,7 @@ export class ActionCardInfoList {
             ()=>this.factory.createCard(
                 {
                     name: "tick",
+                    type: "Estate",
                     skillRequired: new Map(),
                     operation: {
                         name: "buildEstate",

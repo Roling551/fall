@@ -11,12 +11,12 @@ import { CurrentLevelService } from "./current-level.service";
 export type CardsActionInfo = {
     type: "Card";
     canSelectCard: (card: CardInfo) => boolean;
-    finishAction: (selectedCards: Map<number, CardInfo>) => void;
+    finishAction: (usedCard: CardInfo, selectedCards: Map<number, CardInfo>) => void;
     repeatNumber: number;
 } | {
     type: "Tile";
     canSelectTile: (selectedTile: KeyValuePair<Coordinate, Tile>) => boolean;
-    finishAction: (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => void;
+    finishAction: (usedCard: CardInfo, selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => void;
     repeatNumber?: number;
 } | {
     type: "Reward";
@@ -39,7 +39,7 @@ export class CardsActionsService {
                     this.uiStateService,
                     actionInfo.canSelectCard,
                     (selectedCards:Map<number, CardInfo>)=>{
-                        actionInfo.finishAction(selectedCards)
+                        actionInfo.finishAction(card, selectedCards)
                         onCardUse()
                     },
                     ()=>{
@@ -55,7 +55,7 @@ export class CardsActionsService {
                     this.uiStateService,
                     this.currentLevelService,
                     (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
-                        actionInfo.finishAction(selectedTiles)
+                        actionInfo.finishAction(card, selectedTiles)
                         onCardUse()
                     },
                     (selectedTile: KeyValuePair<Coordinate, Tile>) => {

@@ -1,7 +1,7 @@
 import { CardInput } from "../services/action-cards/action-card-info-factory.service";
 import { CardsActionInfo } from "../services/cards-actions.service";
 import { TileInfo } from "../services/ui-state/ui-state.service";
-import { CardInfo } from "./card-info";
+import { CardInfo, CardUsesInfo } from "./card-info";
 import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
 import { Resource } from "./resource";
@@ -9,6 +9,8 @@ import { Reward } from "./reward";
 import { Skill } from "./skill";
 import { TextPart } from "./text-part";
 import { Tile } from "./tile/tile";
+
+export type ActionCardType = "Estate" | "Instant"
 
 export interface CardCreationStep {
     action: ((tile: KeyValuePair<Coordinate, Tile>)=>boolean);
@@ -19,17 +21,19 @@ export interface CardCreationStep {
 export class ActionCardInfo extends CardInfo {
     constructor(
         name: string,
+        public actionCardType: ActionCardType,
         public action: CardsActionInfo,
         public removeOnUse: boolean,
         public requiredSkills: Map<Skill, number>,
         public inputsInfo: CardInput,
         public effectsDescriptions: TextPart[][],
         public maxDistance: number,
+        cardUsesInfo?: CardUsesInfo,
         public cardPicture?: string,
         public price?: Map<Resource, number>,
         public cardOnHandRewards?: Reward[],
         public actionRepeatNumber?: number,
     ) {
-        super(name, "ActionCard")
+        super(name, "ActionCard", cardUsesInfo)
     }
 }
