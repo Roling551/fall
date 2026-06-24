@@ -4,7 +4,6 @@ import { ActionCardInfo } from "../../models/action-card-info";
 import { ResourcesService } from "../resources.service";
 import { CurrentLevelService } from "../current-level.service";
 import { shuffleArray } from "../../util/array-functions";
-import { CharacterCardInfo } from "../../models/character-card-info";
 import { CardInfo } from "../../models/card-info";
 import { TurnActorsService } from "../turn-actors.service";
 import { Estate } from "../../models/estate";
@@ -51,7 +50,9 @@ export class ActionsCardsService {
             (cardInfo: CardInfo, source: CardSource, additionalDeck?: string) => {
                 if(cardInfo instanceof ActionCardInfo && source === "hand") {
                     if(true/*cardInfo.additionalInfo.type === "EstateCardInputs" || cardInfo.additionalInfo.type === ""*/) {
-                        return {group:"estates", avaliable: true}
+                        if(cardInfo.avaliable()) {
+                            return {group:"estates", avaliable: true}
+                        }
                     } else if(false/*cardInfo.additionalInfo.type === "InstantExtractionCardInputs"*/) {
                         return {group:"instant", avaliable: true}
                     }
@@ -101,7 +102,7 @@ export class ActionsCardsService {
         cardInfo.onSelect = ()=>{
             createInstantAction(
                 this.uiStateService,
-                (selectedCards: Map<number, CharacterCardInfo>)=>{
+                ()=>{
                     if(cardInfo.price) {
                         this.resourcesService.spendResources(cardInfo.price)
                     }
@@ -122,7 +123,7 @@ export class ActionsCardsService {
     }
 
     private setOnClickActionForActionCard(actionCardInfo: ActionCardInfo) {
-        this.cardsActionsService.setCardsAction(actionCardInfo, actionCardInfo.action, ()=>this.cardsSet!.discardCard(actionCardInfo), ()=>this.cardsSet!.deselectAllCards())
+        this.cardsActionsService.setCardsAction(actionCardInfo, actionCardInfo.action, ()=>actionCardInfo.onUse(), ()=>this.cardsSet!.deselectAllCards())
         return actionCardInfo
     }
 

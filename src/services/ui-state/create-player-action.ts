@@ -8,7 +8,6 @@ import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { BorderComponent } from "../../shared/border/border.component";
 import { CurrentLevelService } from "../current-level.service";
 import { CardInfo } from "../../models/card-info";
-import { CharacterCardInfo } from "../../models/character-card-info";
 import { Skill } from "../../models/skill";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
 import { BenefitsService } from "../benefits.service";
@@ -83,11 +82,10 @@ export function createRepeatCardAction(
 
 export function createInstantAction(
     uiStateService: UIStateService,
-    afterFinishAction: (selectedCards: Map<number, CharacterCardInfo>)=>void,
+    afterFinishAction: ()=>void,
     cancelButtonAction: ()=>void,
     isAllowed?:()=>boolean,
 ) {
-    const selectedCards = createForceSignal(new Map<number, CharacterCardInfo>())
     uiStateService.setUI({
         sideComponent: PlayerActionComponent,
         sideComponentInputs: {
@@ -95,7 +93,8 @@ export function createInstantAction(
                 if(isAllowed && !isAllowed()) {
                     return
                 }
-                afterFinishAction(selectedCards.get())
+                afterFinishAction()
+                
                 uiStateService.cancel()
             }
         },
@@ -103,7 +102,6 @@ export function createInstantAction(
         cancelButtonAction,
         additionalInfo: {
             playersAction: true,
-            selectedOverrideCards: selectedCards,
         },
     })
 }
@@ -129,8 +127,6 @@ export function createMapAction(
     if(!level) {
         return
     }
-    const selectedCards = createForceSignal(new Map<number, CharacterCardInfo>())
-
     const isTileReacheable = maxDistanceFromHeadquarters != undefined ? (tile: KeyValuePair<Coordinate, Tile>)=> {
                 return (level.distanceFromStation().get(tile.key.getKey()) ?? Infinity) > (maxDistanceFromHeadquarters)
             } : undefined
@@ -146,17 +142,6 @@ export function createMapAction(
             ...unavaliableTileInfo,
             ...additionalTileInfos
         ]),
-        cardAction: (card: CardInfo) => {
-            if(selectedCards.get().has(card.id)) {
-                selectedCards.get().delete(card.id)
-                selectedCards.forceUpdate()
-            } else {
-                if(card.type === "CharacterCard" && (card instanceof CharacterCardInfo)) {
-                    selectedCards.get().set(card.id, card)
-                    selectedCards.forceUpdate()
-                }
-            }
-        },
         mapAction: (selectedTile: KeyValuePair<Coordinate, Tile>) => {
             if(maxDistanceFromHeadquarters != undefined) {
                 const station = level.station.get()
@@ -174,7 +159,6 @@ export function createMapAction(
             uiStateService.cancel()
         },
         additionalInfo: {
-            selectedOverrideCards: selectedCards,
             playersAction: true,
         },
         cancelButtonAction

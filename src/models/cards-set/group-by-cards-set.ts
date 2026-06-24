@@ -42,21 +42,26 @@ export class GroupByCardsSet<T extends CardInfo> extends TraditionalCardsSet<T> 
         //     }
         // }
         for(const card of this.hand.get()) {
-            const groupedInfo = this.groupingMethod(card, "hand")
-            if(groupedInfo && groupedCards.has(groupedInfo.group)) {
-                groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
-            } else {
-                groupedCards.get("rest")?.push({card, avaliable: false})
+            if(card.avaliable()) {
+                const groupedInfo = this.groupingMethod(card, "hand")
+                if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+                    groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
+                } else {
+                    groupedCards.get("rest")?.push({card, avaliable: false})
+                }
             }
         }
-        // for(const card of this.discardDeck.get()) {
-        //     const groupedInfo = this.groupingMethod(card, "discard")
-        //     if(groupedInfo && groupedCards.has(groupedInfo.group)) {
-        //         groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
-        //     } else {
-        //         groupedCards.get("unavaliable")?.push({card, avaliable: false})
-        //     }
-        // }
+        for(const card of this.hand.get()) {
+            // const groupedInfo = this.groupingMethod(card, "discard")
+            // if(groupedInfo && groupedCards.has(groupedInfo.group)) {
+            //     groupedCards.get(groupedInfo.group)?.push({card, avaliable: groupedInfo.avaliable})
+            // } else {
+            //     groupedCards.get("unavaliable")?.push({card, avaliable: false})
+            // }
+            if(!card.avaliable()) {
+                groupedCards.get("unavaliable")?.push({card, avaliable: false})
+            }
+        }
         if(this.additionalDecks) {
             for(const [additionalDeck, cards] of this.additionalDecks()) {
                 for(const card of cards) {

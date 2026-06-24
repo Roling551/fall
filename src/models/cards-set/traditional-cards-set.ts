@@ -22,17 +22,7 @@ export class TraditionalCardsSet<T extends CardInfo> implements CardsSet<T>{
         overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>,
     ) {
         this.hand.set(cards)
-        this.startTurn()
         this.overrideSelectedCards = overrideSelectedCards
-    }
-
-    discardCards(cards: T[]) {
-    }
-
-    discardCard(card: T) {
-    }
-
-    discardSelectedCards() {
     }
 
     isCardSelected(card: T) {
@@ -78,14 +68,9 @@ export class TraditionalCardsSet<T extends CardInfo> implements CardsSet<T>{
     }
 
     nextTurn() {
-        this.endTurn()
-        this.startTurn()
-    }
-
-    private startTurn() {
-    }
-
-    private endTurn() {
+        for(const cardInfo of this.hand.get()) {
+            cardInfo.onTurnEnd()
+        }
     }
 
     selectedCardsNumber = computed(()=>{

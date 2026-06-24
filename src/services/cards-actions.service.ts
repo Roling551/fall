@@ -32,7 +32,7 @@ export class CardsActionsService {
         private currentLevelService: CurrentLevelService
     ) {}
 
-    public setCardsAction(card: CardInfo, actionInfo: CardsActionInfo, discardCard: ()=> void, deselectAllCards: ()=>void) {
+    public setCardsAction(card: CardInfo, actionInfo: CardsActionInfo, onCardUse: ()=> void, deselectAllCards: ()=>void) {
         if(actionInfo.type === "Card") {
             card.onSelect = ()=>{
                 createRepeatCardAction(
@@ -40,7 +40,7 @@ export class CardsActionsService {
                     actionInfo.canSelectCard,
                     (selectedCards:Map<number, CardInfo>)=>{
                         actionInfo.finishAction(selectedCards)
-                        discardCard()
+                        onCardUse()
                     },
                     ()=>{
                         deselectAllCards()
@@ -56,7 +56,7 @@ export class CardsActionsService {
                     this.currentLevelService,
                     (selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>)=>{
                         actionInfo.finishAction(selectedTiles)
-                        discardCard()
+                        onCardUse()
                     },
                     (selectedTile: KeyValuePair<Coordinate, Tile>) => {
                         return actionInfo.canSelectTile(selectedTile)
@@ -77,7 +77,7 @@ export class CardsActionsService {
                         this.uiStateService,
                         ()=>{
                             actionInfo.reward.claim()
-                            discardCard()
+                            onCardUse()
                         },
                         ()=>{
                             deselectAllCards()

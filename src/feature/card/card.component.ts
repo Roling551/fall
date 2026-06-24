@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, HostBinding, input, Input } from '@angular/core';
 import { CardInfo } from '../../models/card-info';
-import { CharacterCardInfo } from '../../models/character-card-info';
 import { ActionCardInfo } from '../../models/action-card-info';
 import { CardContentActionComponent } from '../card-content-action/card-content-action.component';
 import { CardOverlayComponent } from '../card-overlay/card-overlay.component';
