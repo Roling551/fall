@@ -68,10 +68,9 @@ export class ActionsCardsService {
             },
             ["instant", "estates", "cardsToRecover", "estatesOnMap"],
             // computed(()=>{
-            //     return new Map([["estatesOnMap", this.turnActorsService.actors.get()
+            //     return this.turnActorsService.actors.get()
             //         .filter(x=>x instanceof Estate && (x as Estate)["cardEstateOriginatedFrom"])
             //         .map(x=>(x as Estate)["cardEstateOriginatedFrom"] as ActionCardInfo)
-            //     ]])
             // }),
         )
     }
