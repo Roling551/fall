@@ -19,6 +19,7 @@ export class Estate extends MapEntity implements TurnActor{
     private isDisabled = signal(false)
     public tileBonus
     public movementBonus
+    public cardsGenerated
     affectedCoordinates
     readonly type
     effectsDescriptions: Signal<TextPart[][]>
@@ -36,6 +37,7 @@ export class Estate extends MapEntity implements TurnActor{
         public producedResources?: Map<Resource, number>,
         tileBonus?: TileBonus,
         movementBonus?: number,
+        cardsGenerated?: CardInfo[],
         public cardEstateOriginatedFrom?: CardInfo,
         public picture?: String,
         type?: "estate" | "upgrade",
@@ -43,6 +45,7 @@ export class Estate extends MapEntity implements TurnActor{
         super(name, 0)
         this.tileBonus = createForceSignal(tileBonus)
         this.movementBonus = createForceSignal(movementBonus)
+        this.cardsGenerated = createForceSignal(cardsGenerated)
         this.affectedCoordinates = affectedCoordinates.map(x=>x.addCoordinates(tile.coordinate).getKey())
         this.type = type || "estate"
         this.effectsDescriptions = Estate.getEffectsDescriptionsFunction(this.additionalInfo)

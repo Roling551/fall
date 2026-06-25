@@ -32,9 +32,9 @@ export class CardsActionsService {
         private currentLevelService: CurrentLevelService
     ) {}
 
-    public setCardsAction(card: CardInfo, actionInfo: CardsActionInfo, onCardUse: ()=> void, deselectAllCards: ()=>void) {
+    public getCardsAction(card: CardInfo, actionInfo: CardsActionInfo, onCardUse: ()=> void, deselectAllCards: ()=>void) {
         if(actionInfo.type === "Card") {
-            card.onSelect = ()=>{
+            return ()=>{
                 createRepeatCardAction(
                     this.uiStateService,
                     actionInfo.canSelectCard,
@@ -50,7 +50,7 @@ export class CardsActionsService {
                 return true
             }
         } else if(actionInfo.type === "Tile") {
-            card.onSelect = ()=>{
+            return ()=>{
                 createMapAction(
                     this.uiStateService,
                     this.currentLevelService,
@@ -70,8 +70,8 @@ export class CardsActionsService {
                 )
                 return true
             }
-        } else if(actionInfo.type === "Reward") {
-            card.onSelect = (selectCardInfo?:any)=>{
+        } else/* if(actionInfo.type === "Reward") */{
+            return (selectCardInfo?:any)=>{
                 if(selectCardInfo && selectCardInfo["canSetAction"]?.()) {
                     createInstantAction(
                         this.uiStateService,

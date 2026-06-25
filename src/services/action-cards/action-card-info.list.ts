@@ -95,6 +95,35 @@ export class ActionCardInfoList {
                     }
                 }
             )
+        ],
+        [
+            "demolisher",
+            ()=>this.factory.createCard(
+                {
+                    name: "demolisher",
+                    type: "Estate",
+                    skillRequired: new Map(),
+                    operation: {
+                        name: "buildEstate",
+                        estateInfo: {
+                            name: "demolisher",
+                            estateTexture: "tick-on-map",
+                            cardsGenerated: [
+                                {
+                                    name: "test",
+                                    type: "Instant",
+                                    skillRequired: new Map(),
+                                    operation: {
+                                        name: "demolishEstate",
+                                        refundFraction: 1,
+                                        repeatNumber: 2
+                                    },
+                                }
+                            ]
+                        }
+                    }
+                }
+            )
         ]
         // [
         //     "handDrill",

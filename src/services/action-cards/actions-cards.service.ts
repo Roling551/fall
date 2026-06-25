@@ -35,10 +35,8 @@ export class ActionsCardsService {
     })
 
     setCards(actionCardInfos: CardInfo[]) {
-        actionCardInfos = shuffleArray(actionCardInfos)
-        const cards = actionCardInfos.map(x=>this.setOnClickAction(x))
         this.cardsSet = new GroupByCardsSet<CardInfo>(
-            cards, 
+            actionCardInfos, 
             signal(Infinity),
             ()=>{this.uiStateService.cancel()}, 
             false,
@@ -67,17 +65,30 @@ export class ActionsCardsService {
                 return undefined
             },
             ["instant", "estates", "cardsToRecover", "estatesOnMap"],
-            // computed(()=>{
-            //     return this.turnActorsService.actors.get()
-            //         .filter(x=>x instanceof Estate && (x as Estate)["cardEstateOriginatedFrom"])
-            //         .map(x=>(x as Estate)["cardEstateOriginatedFrom"] as ActionCardInfo)
-            // }),
+            (card: CardInfo)=>this.onCardSelect(card),
+            computed(()=>{
+                return this.turnActorsService.actors.get()
+                    .filter(x=>x instanceof Estate && (x as Estate)["cardsGenerated"])
+                    .flatMap(x=>(x as Estate).cardsGenerated.get()||[])
+            }),
         )
     }
 
+    onCardSelect(cardInfo: CardInfo) : boolean {
+        console.log("on card select")
+        if(cardInfo instanceof ActionCardInfo) {
+            console.log(this.cardsActionsService)
+            return this.cardsActionsService.getCardsAction(cardInfo, cardInfo.action, ()=>cardInfo.onUse(), ()=>this.cardsSet!.deselectAllCards())()
+        } else if(cardInfo instanceof CardOverlayCardInfo) {
+            return this.getOnClickActionForCardOverlayCard(cardInfo)()
+        }
+        return false
+    }
+
+    //this.cardsActionsService.getCardsAction(actionCardInfo, actionCardInfo.action, ()=>actionCardInfo.onUse(), ()=>this.cardsSet!.deselectAllCards())
+
     addNewCardToDiscard(actionCardInfo: CardInfo) {
-        const card = this.setOnClickAction(actionCardInfo)
-        this.cardsSet?.addCards([card])
+        this.cardsSet?.addCards([actionCardInfo])
     }
 
     nextTurn() {
@@ -88,17 +99,8 @@ export class ActionsCardsService {
         return this.uiStateService.additionalInfo()?.["playersAction"] === true
     })
 
-    setOnClickAction(cardInfo: CardInfo) {
-        if(cardInfo instanceof ActionCardInfo) {
-            return this.setOnClickActionForActionCard(cardInfo)
-        } else if(cardInfo instanceof CardOverlayCardInfo) {
-            return this.setOnClickActionForCardOverlayCard(cardInfo)
-        }
-        return cardInfo
-    }
-
-    private setOnClickActionForCardOverlayCard(cardInfo: CardOverlayCardInfo) {
-        cardInfo.onSelect = ()=>{
+    private getOnClickActionForCardOverlayCard(cardInfo: CardOverlayCardInfo) {
+        return ()=>{
             createInstantAction(
                 this.uiStateService,
                 ()=>{
@@ -118,12 +120,6 @@ export class ActionsCardsService {
             )
             return true
         }
-        return cardInfo
-    }
-
-    private setOnClickActionForActionCard(actionCardInfo: ActionCardInfo) {
-        this.cardsActionsService.setCardsAction(actionCardInfo, actionCardInfo.action, ()=>actionCardInfo.onUse(), ()=>this.cardsSet!.deselectAllCards())
-        return actionCardInfo
     }
 
     removeCardFromHand(actionCardInfo: CardInfo) {

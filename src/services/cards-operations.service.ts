@@ -20,6 +20,7 @@ import { getCreateEstateActionAndTileInfo } from "./action-cards/actions-cards-f
 import { CurrentLevelService } from "./current-level.service";
 import { TurnActorsService } from "./turn-actors.service";
 import { UIStateService } from "./ui-state/ui-state.service";
+import { ActionCardInfoFactoryService, CardInput } from "./action-cards/action-card-info-factory.service";
 
 export interface EstateInfoInput {
     name: string;
@@ -32,6 +33,7 @@ export interface EstateInfoInput {
     times?: number;
     tileBonus?: TileBonus;
     movementBonus?: number;
+    cardsGenerated?: CardInput[];
     attributes?: CardAttribute[];
     cardOnHandRewards?: RewardOption[];
     producedResources?: Map<Resource, number>;
@@ -166,6 +168,7 @@ export class CardsOperationsService {
                 inputs.producedResources,
                 inputs.tileBonus,
                 inputs.movementBonus,
+                inputs.cardsGenerated?.map(x=>this.injectorService.getActionCardInfoFactoryService().createCard(x)),
                 usedCard,
                 inputs.estateTexture,
                 mapEntityType

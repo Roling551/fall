@@ -32,7 +32,6 @@ export abstract class CardInfo {
         public name: string, 
         public type: CardInfoType,
         cardUsesInfo?: CardUsesInfo,
-        public onSelect?: (()=>boolean),
     ){
         this.cardUsesInfo = {...DefaultCardUsesInfo, ...cardUsesInfo}
         this.usesLeft.set(this.cardUsesInfo.maxUses)

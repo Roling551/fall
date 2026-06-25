@@ -19,6 +19,7 @@ export class TraditionalCardsSet<T extends CardInfo> implements CardsSet<T>{
         private canSelectMultiple = true,
         private canSelectCard:Signal<boolean> = signal(true),
         private overrideClick:() => ((card: CardInfo) => void) | undefined,
+        private onCardSelect:((card: CardInfo) => boolean),
         overrideSelectedCards: Signal<Map<number, CardInfo>|undefined>,
     ) {
         this.hand.set(cards)
@@ -55,7 +56,7 @@ export class TraditionalCardsSet<T extends CardInfo> implements CardsSet<T>{
             return
         }
         if(this.canSelectCard()) {
-            const canSelect = (card.onSelect==undefined) || card.onSelect?.()
+            const canSelect = (this.onCardSelect(card)==undefined) || this.onCardSelect(card)
             if(canSelect) {
                 this.selectedCards.get().push(card)
                 this.selectedCards.forceUpdate()
