@@ -101,7 +101,7 @@ export class Estate extends MapEntity implements TurnActor{
         return this.isDisabled()
     })
 
-    getRequiredResources(): Map<Resource, number> {
+    getRunCost(): Map<Resource, number> {
         return new Map(this.runCost)
     }
     disable() {

@@ -30,7 +30,7 @@ export class TurnActorsService {
                 if(produced) {
                     addNumericalValues(change, produced)
                 }
-                substractNumericalValues(change, actor.getRequiredResources())
+                substractNumericalValues(change, actor.getRunCost())
             }
         }
         return change
@@ -42,7 +42,7 @@ export class TurnActorsService {
 
     nextTurn() {
         for(const actor of this.enabledActors()) {
-            this.resourcesService.spendResources(actor.getRequiredResources())
+            this.resourcesService.spendResources(actor.getRunCost())
             const produced = actor.getProducedResources()
             if(produced) {
                 this.resourcesService.addResources(produced)

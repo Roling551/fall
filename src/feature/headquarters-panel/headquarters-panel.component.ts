@@ -13,6 +13,6 @@ export class HeadquartersPanelComponent {
     constructor(private headquartersService: HeadquartersService) {}
 
     requiredResourcesText() {
-        return ["Upkeep: ", ...resourcesToTextParts(this.headquartersService.headquarters.getRequiredResources())]
+        return ["Upkeep: ", ...resourcesToTextParts(this.headquartersService.headquarters.getRunCost())]
     }
 }

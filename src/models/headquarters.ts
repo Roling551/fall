@@ -12,7 +12,7 @@ export class Headquarters implements TurnActor {
     }
     mapGatheringAction(): void {
     }
-    getRequiredResources(): Map<Resource, number> {
+    getRunCost(): Map<Resource, number> {
         return new Map([["water", this.levelAttributes().get("heat")||0]])
     }
     getProducedResources(): Map<Resource, number> | undefined {
