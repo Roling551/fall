@@ -7,6 +7,7 @@ import { SimpleTile } from "../models/tile/simple-tile";
 import { getPlayersEstate } from "../models/tile/tile-util";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { SignalsGroup } from "../util/signals-group";
+import { Resource } from "../models/resource";
 
 export type AttributesEffectInputs = {
     location: Coordinate | null,
@@ -17,10 +18,12 @@ export type CardAttribute = {
     multiplier: AttributeMultiplier
 }
 
-export interface AttributeEffect {
-    type: "Extraction",
-    bonus: AttributeEffectBonus
+export type AttributeEffect = {
+    type: "Extraction";
+    bonus: Extraction;
 }
+
+export type AttributeEffectType = AttributeEffect["type"]
 
 export type AttributeEffectBonus = Extraction
 
@@ -55,7 +58,7 @@ export class CardAttributesService {
     private getSignalGroupOutput<T extends AttributeEffectBonus>(
         attributes: Signal<CardAttribute[]>, 
         inputs: Signal<AttributesEffectInputs>,
-        multiplierType: AttributeMultiplier,
+        attributeEffectType: AttributeEffectType,
         getZeroValue: ()=>T): Signal<T>
     {
         const attributesList = computed(()=> {
@@ -70,7 +73,7 @@ export class CardAttributesService {
         const signalGroup =  new SignalsGroup(
             attributesChangesEmitter,
             computed(()=>(key: string, item: CardAttribute)=>{
-                return item.multiplier === multiplierType
+                return item.effect.type === attributeEffectType
             }),
             (key: string, item: CardAttribute)=>{
                 return (item.effect.bonus as T).multiply(this.getAttributeMultiplier(item, inputs)) as T
@@ -82,7 +85,7 @@ export class CardAttributesService {
     }
 
     getAttributesExtractionEffects(attributes: Signal<CardAttribute[]>, inputs: Signal<AttributesEffectInputs>): Signal<Extraction> {
-        return this.getSignalGroupOutput(attributes, inputs, "Extractions", ()=>new Extraction(0))
+        return this.getSignalGroupOutput(attributes, inputs, "Extraction", ()=>new Extraction(0))
     }
 
     getAttributeDescribtion(attribute: CardAttribute): TextPart[] {
