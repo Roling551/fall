@@ -139,13 +139,13 @@ export class ActionCardInfoList {
                             name: "danceJack",
                             estateTexture: "dance-jack-on-map",
                             runCost: new Map([["oil", 2]]),
-                            extraction: new Extraction(4),
+                            extraction: new Extraction(1),
                             attributes: [{
                                 effect: {
-                                    type: "EstateRunCostReduction",
-                                    bonus: new NumberMap(new Map([["oil", 2]]))
+                                    type: "Extraction",
+                                    bonus: new Extraction(1)
                                 },
-                                multiplier: "Extractions"
+                                multiplier: "NoEstates"
                             }]
                         }
                     }

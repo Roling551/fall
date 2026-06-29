@@ -34,7 +34,7 @@ export type AttributeEffectType = AttributeEffect["type"]
 export type AttributeEffectBonus = Extraction | NumberMap<Resource>
 
 export type AttributeMultiplier =
-    "Extractions"
+    "Extractions" | "NoEstates"
 
 @Injectable({
   providedIn: 'root'
@@ -45,9 +45,9 @@ export class CardAttributesService {
 
     private getAttributeMultiplier(attribute: CardAttribute, inputs: Signal<AttributesEffectInputs>): number {
         let bonus = 0
+        const location = inputs().location
         switch(attribute.multiplier) {
             case "Extractions":
-                const location = inputs().location
                 if(!location) {
                     return 0
                 }
@@ -58,6 +58,18 @@ export class CardAttributesService {
                     }
                 }
                 return bonus
+            case "NoEstates":
+                if(!location) {
+                    return 0
+                }
+                for(const neighbour of this.currentLevelService.level.get()!.map.getNeighborTiles(location)) {
+                    const estate = getPlayersEstate(neighbour[1].value)
+                    if(!estate) {
+                        bonus += 1
+                    }
+                }
+                return bonus
+
         }
     }
 
