@@ -1,4 +1,4 @@
-import { computed, Injectable } from "@angular/core";
+import { computed, Injectable, signal } from "@angular/core";
 import { Reward, RewardOption } from "../models/reward";
 import { CardInfo } from "../models/card-info";
 import { Coordinate } from "../models/coordinate";
@@ -68,6 +68,7 @@ export class CardsOperationsService {
         private uiStateService: UIStateService,
         private levelService: CurrentLevelService,
         private turnActorsService: TurnActorsService,
+        private cardAttributesService: CardAttributesService,
     ) {}
 
     getActionInfoAndDescription(input: CardOperationInput): {actionInfo:CardsActionInfo, actionDescription:TextPart[]} {
@@ -147,6 +148,8 @@ export class CardsOperationsService {
 
         const affectedCoordinates = inputs.affectedCoordinates || [new Coordinate(0,0)]
 
+        const attrubitesInputs = signal({location: tile.key})
+
         const createEstate = (tile_: Tile) => new Estate(
                 tile_, 
                 inputs.estateTexture, 
@@ -155,12 +158,12 @@ export class CardsOperationsService {
                 inputs,
                 inputs.price || new Map(),
                 3,
+                this.attributesService.getAttributesEstatesEffects(signal(inputs.attributes!), attrubitesInputs),
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createMapInteractionAction(
                     createActionInfo, 
                     affectedCoordinates,
                     inputs.attributes)
                 : undefined,
-
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createMapGatheringAction(
                     createActionInfo, 
                     affectedCoordinates)

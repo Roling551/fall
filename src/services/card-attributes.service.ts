@@ -8,6 +8,9 @@ import { getPlayersEstate } from "../models/tile/tile-util";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { SignalsGroup } from "../util/signals-group";
 import { Resource } from "../models/resource";
+import { NumberMap } from "../util/number-map";
+import { Addable } from "../util/addable";
+import { EstateAttributeEffectBonus } from "../models/estate";
 
 export type AttributesEffectInputs = {
     location: Coordinate | null,
@@ -21,11 +24,14 @@ export type CardAttribute = {
 export type AttributeEffect = {
     type: "Extraction";
     bonus: Extraction;
+} | {
+    type: "EstateRunCostReduction";
+    bonus: NumberMap<Resource>
 }
 
 export type AttributeEffectType = AttributeEffect["type"]
 
-export type AttributeEffectBonus = Extraction
+export type AttributeEffectBonus = Extraction | NumberMap<Resource>
 
 export type AttributeMultiplier =
     "Extractions"
@@ -55,7 +61,7 @@ export class CardAttributesService {
         }
     }
 
-    private getSignalGroupOutput<T extends AttributeEffectBonus>(
+    private getSignalGroupOutput<T extends Addable<T>>(
         attributes: Signal<CardAttribute[]>, 
         inputs: Signal<AttributesEffectInputs>,
         attributeEffectType: AttributeEffectType,
@@ -64,8 +70,10 @@ export class CardAttributesService {
         const attributesList = computed(()=> {
             let result = new Map<string, CardAttribute>();
             
-            for(const attribute of attributes()) {
-                result.set(attribute.multiplier, attribute)
+            if(attributes()) {
+                for(const attribute of attributes()) {
+                    result.set(attribute.multiplier, attribute) 
+                }
             }
             return result
         })
@@ -76,7 +84,7 @@ export class CardAttributesService {
                 return item.effect.type === attributeEffectType
             }),
             (key: string, item: CardAttribute)=>{
-                return (item.effect.bonus as T).multiply(this.getAttributeMultiplier(item, inputs)) as T
+                return (item.effect.bonus as unknown as T).multiply(this.getAttributeMultiplier(item, inputs)) as T
             },
             (x:T,y:T)=>x.add(y) as T,
             ()=>(getZeroValue())
@@ -85,7 +93,13 @@ export class CardAttributesService {
     }
 
     getAttributesExtractionEffects(attributes: Signal<CardAttribute[]>, inputs: Signal<AttributesEffectInputs>): Signal<Extraction> {
-        return this.getSignalGroupOutput(attributes, inputs, "Extraction", ()=>new Extraction(0))
+        return this.getSignalGroupOutput<Extraction>(attributes, inputs, "Extraction", ()=>new Extraction(0))
+    }
+
+    getAttributesEstatesEffects(attributes: Signal<CardAttribute[]>, inputs: Signal<AttributesEffectInputs>): EstateAttributeEffectBonus {
+        return {
+            estateRunCostReduction: this.getSignalGroupOutput<NumberMap<Resource>>(attributes, inputs, "EstateRunCostReduction", ()=>new NumberMap())
+        }
     }
 
     getAttributeDescribtion(attribute: CardAttribute): TextPart[] {

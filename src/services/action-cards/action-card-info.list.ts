@@ -7,6 +7,7 @@ import { generateRangeCoordiantes } from "../../util/generate-coordinates";
 import { CardInfo } from "../../models/card-info";
 import { Resource } from "../../models/resource";
 import { Skill } from "../../models/skill";
+import { NumberMap } from "../../util/number-map";
 
 export type CardState = "regular" | "broken"
 
@@ -124,7 +125,33 @@ export class ActionCardInfoList {
                     }
                 }
             )
-        ]
+        ],
+        [
+            "danceJack",
+            ()=>this.factory.createCard(
+                {
+                    name: "danceJack",
+                    type: "Estate",
+                    skillRequired: new Map(),
+                    operation: {
+                        name: "buildEstate",
+                        estateInfo: {
+                            name: "danceJack",
+                            estateTexture: "dance-jack-on-map",
+                            runCost: new Map([["oil", 2]]),
+                            extraction: new Extraction(4),
+                            attributes: [{
+                                effect: {
+                                    type: "EstateRunCostReduction",
+                                    bonus: new NumberMap(new Map([["oil", 2]]))
+                                },
+                                multiplier: "Extractions"
+                            }]
+                        }
+                    }
+                }
+            )
+        ],
         // [
         //     "handDrill",
         //     ()=>this.factory.instantExtractionCard(

@@ -75,9 +75,7 @@ export class ActionsCardsService {
     }
 
     onCardSelect(cardInfo: CardInfo) : boolean {
-        console.log("on card select")
         if(cardInfo instanceof ActionCardInfo) {
-            console.log(this.cardsActionsService)
             return this.cardsActionsService.getCardsAction(cardInfo, cardInfo.action, ()=>cardInfo.onUse(), ()=>this.cardsSet!.deselectAllCards())()
         } else if(cardInfo instanceof CardOverlayCardInfo) {
             return this.getOnClickActionForCardOverlayCard(cardInfo)()

@@ -1,5 +1,5 @@
 import { computed, Signal, signal } from "@angular/core";
-import { addExistingNumericalValues } from "../util/map-functions";
+import { addExistingNumericalValues, substractNumericalValuesFunctional } from "../util/map-functions";
 import { SignalsGroup } from "../util/signals-group";
 import { EstateProductionBonusAndQualifier, MovementBonusAndQualifier, TileBonus, tileBonusToTextParts } from "./bonus";
 import { MapEntity } from "./map-entity";
@@ -14,6 +14,11 @@ import { EstateInfoInput } from "../services/cards-operations.service";
 import { TextPart } from "./text-part";
 import { Extraction } from "./extraction";
 import { CardInfo } from "./card-info";
+import { NumberMap } from "../util/number-map";
+
+export type EstateAttributeEffectBonus = {
+    estateRunCostReduction: Signal<NumberMap<Resource>>
+}
 
 export class Estate extends MapEntity implements TurnActor{
     private isDisabled = signal(false)
@@ -32,6 +37,7 @@ export class Estate extends MapEntity implements TurnActor{
         public additionalInfo: EstateInfoInput,
         public costPaid: Map<Resource, number>,
         public maxDistance: number,
+        public attributeBonuses: EstateAttributeEffectBonus,
         private mapInteractionAction_?: (tile: Tile)=>void,
         private mapGatheringAction_?: (tile: Tile)=>void,
         public producedResources?: Map<Resource, number>,
@@ -102,7 +108,7 @@ export class Estate extends MapEntity implements TurnActor{
     })
 
     getRunCost(): Map<Resource, number> {
-        return new Map(this.runCost)
+        return substractNumericalValuesFunctional(new Map(this.runCost), this.attributeBonuses.estateRunCostReduction().map)
     }
     disable() {
         this.isDisabled.set(true)
