@@ -19,13 +19,14 @@ import { Extraction } from "../../models/extraction";
 import { CardInfo, CardUsesInfo, DefaultCardUsesInfo } from "../../models/card-info";
 import { CardOverlayCardInfo } from "../../models/card-overlay-card-info";
 import { InjectorService } from "../injector.service";
-import { CardAttributesService } from "../card-attributes.service";
+import { CardAttribute, CardAttributesService } from "../card-attributes.service";
 import { CardOperationInput, CardsOperationsService, EstateInfoInput } from "../cards-operations.service";
 
 export interface CardInput {
     name: string,
     type: ActionCardType,
     skillRequired: Map<Skill, number>,
+    attributes?: CardAttribute[];
     operation: CardOperationInput
 }
 
@@ -66,7 +67,7 @@ export class ActionCardInfoFactoryService {
     ) {}
 
     createCard(input: CardInput) {
-        const action = this.cardsOperationsService.getActionInfoAndDescription(input.operation)
+        const action = this.cardsOperationsService.getActionInfoAndDescription(input)
         let cardUsesInfo: CardUsesInfo | undefined = undefined
         if(input.type === "Estate") {
             cardUsesInfo = {

@@ -12,6 +12,7 @@ import { MapImageComponent } from "../shared/map-image/map-image.component";
 import { Estate } from "../models/estate";
 import { SimpleTile } from "../models/tile/simple-tile";
 import { ResourcesService } from "./resources.service";
+import { ActionCardInfoGeneratorService } from "./action-cards/action-card-info-generator.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class InitService {
         private actionsCardsService: ActionsCardsService,
         private actionCardInfoList: ActionCardInfoList,
         private decisionsService: DecisionsService,
-        private resourcesService: ResourcesService
+        private resourcesService: ResourcesService,
+        private actionCardInfoGeneratorService: ActionCardInfoGeneratorService,
     ) {}
 
     init() {
@@ -49,8 +51,8 @@ export class InitService {
         //     }
         // })
         //const initialCardNames = ["handDrill", "pin", "hammer", "tick","needle", "drillsMaintenance", "engineeringTools", "miningTools", "constructionTools", "road", "plasticFactory", "powerplant", "danceJack", "shabby"]
-        const initialCardNames = ["test", "tick", "demolisher", "danceJack"]
-        this.actionsCardsService.setCards(this.actionCardInfoList.getCardsByIdentifiers(initialCardNames))
+        const initialCardNames = ["test", "demolisher", "danceJack"]
+        this.actionsCardsService.setCards([...this.actionCardInfoList.getCardsByIdentifiers(initialCardNames), this.actionCardInfoGeneratorService.getActionCardInfo()])
     }
 
     private isEntityDisabled(tile: KeyValuePair<Coordinate, Tile>) {

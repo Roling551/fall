@@ -21,6 +21,7 @@ import { CurrentLevelService } from "./current-level.service";
 import { TurnActorsService } from "./turn-actors.service";
 import { UIStateService } from "./ui-state/ui-state.service";
 import { ActionCardInfoFactoryService, CardInput } from "./action-cards/action-card-info-factory.service";
+import { ActionCardInfo } from "../models/action-card-info";
 
 export interface EstateInfoInput {
     name: string;
@@ -34,7 +35,7 @@ export interface EstateInfoInput {
     tileBonus?: TileBonus;
     movementBonus?: number;
     cardsGenerated?: CardInput[];
-    attributes?: CardAttribute[];
+    //attributes?: CardAttribute[];
     cardOnHandRewards?: RewardOption[];
     producedResources?: Map<Resource, number>;
     isUpgrade?: boolean;
@@ -71,24 +72,25 @@ export class CardsOperationsService {
         private cardAttributesService: CardAttributesService,
     ) {}
 
-    getActionInfoAndDescription(input: CardOperationInput): {actionInfo:CardsActionInfo, actionDescription:TextPart[]} {
-        switch(input.name) {
+    getActionInfoAndDescription(input: CardInput): {actionInfo:CardsActionInfo, actionDescription:TextPart[]} {
+        const operationInput = input.operation
+        switch(operationInput.name) {
             case "recycleActionCard": {
-                const repeatNumber = input.repeatNumber || 1
+                const repeatNumber = operationInput.repeatNumber || 1
                 return {
                     actionInfo: {
                         type: "Card",
                         canSelectCard: (card: CardInfo) => card.type == "ActionCard",
                         finishAction: (usedCard: CardInfo, selectedCards:Map<number, CardInfo>) => {
-                            this.recycleCards(selectedCards, input.resourcesPerRecycled)
+                            this.recycleCards(selectedCards, operationInput.resourcesPerRecycled)
                         },
                         repeatNumber
                     },
-                    actionDescription: [`Recycle card, get ${input.resourcesPerRecycled.toString()} `, {type: "emoticon",emoticon: "scrap"}]
+                    actionDescription: [`Recycle card, get ${operationInput.resourcesPerRecycled.toString()} `, {type: "emoticon",emoticon: "scrap"}]
                 }
             }
             case "demolishEstate": {
-                const repeatNumber = input.repeatNumber || 1
+                const repeatNumber = operationInput.repeatNumber || 1
                 return {
                     actionInfo: {
                         type: "Tile",
@@ -96,20 +98,20 @@ export class CardsOperationsService {
                             return this.canDemolishEstate(selectedTile)
                         },
                         finishAction: (usedCard: CardInfo, selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
-                            this.demolishEstates(selectedTiles, input.refundFraction)
+                            this.demolishEstates(selectedTiles, operationInput.refundFraction)
                         },
                         repeatNumber
                     },
-                    actionDescription: [`Demolish estate, get ${input.refundFraction} of resources back`]
+                    actionDescription: [`Demolish estate, get ${operationInput.refundFraction} of resources back`]
                 }
             }
             case "getReward":
                 return {
                     actionInfo: {
                         type: "Reward",
-                        reward: input.reward
+                        reward: operationInput.reward
                     },
-                    actionDescription: input.reward.getTextParts()
+                    actionDescription: operationInput.reward.getTextParts()
                 }
             case "buildEstate":
                 return {
@@ -120,60 +122,59 @@ export class CardsOperationsService {
                         },
                         finishAction: (usedCard: CardInfo, selectedTiles: Map<string, KeyValuePair<Coordinate, Tile>>) => {
                             for(const tile of selectedTiles) {
-                                this.buildEstate(usedCard, input.estateInfo, tile[1])
+                                this.buildEstate(usedCard, operationInput.estateInfo, input, tile[1])
                             }
                         },
-                        repeatNumber: input.estateInfo.instancesNumber
+                        repeatNumber: operationInput.estateInfo.instancesNumber
                     },
                     actionDescription: []
                 }
         }
     }
 
-    private buildEstate(usedCard: CardInfo, inputs: EstateInfoInput, tile: KeyValuePair<Coordinate, Tile>) {
-
-        const createActionInfo: CreateExtractionInfo | undefined = (!!inputs.extraction) ? {
-            extraction: inputs.extraction,
-            times: inputs.times!=undefined ? inputs.times : 1
+    private buildEstate(usedCard: CardInfo, estateInputs: EstateInfoInput, cardInput: CardInput, tile: KeyValuePair<Coordinate, Tile>) {
+        const createActionInfo: CreateExtractionInfo | undefined = (!!estateInputs.extraction) ? {
+            extraction: estateInputs.extraction,
+            times: estateInputs.times!=undefined ? estateInputs.times : 1
         } : undefined
 
-        const mapEntityType = inputs.isUpgrade ? "upgrade" : "estate"
+        const mapEntityType = estateInputs.isUpgrade ? "upgrade" : "estate"
 
         let effectsDescriptions = computed(()=>{
             return [
-                ...Estate.getEffectsDescriptionsFunction(inputs)(), 
-                ...(inputs.attributes ? this.attributesService.getAttributesDescribtions(inputs.attributes) : [])
+                ...Estate.getEffectsDescriptionsFunction(estateInputs)(), 
+                ...(cardInput.attributes ? this.attributesService.getAttributesDescribtions(cardInput.attributes) : [])
             ]
         })
 
-        const affectedCoordinates = inputs.affectedCoordinates || [new Coordinate(0,0)]
+        const affectedCoordinates = estateInputs.affectedCoordinates || [new Coordinate(0,0)]
 
         const attrubitesInputs = signal({location: tile.key})
 
         const createEstate = (tile_: Tile) => new Estate(
                 tile_, 
-                inputs.estateTexture, 
-                inputs.runCost || (new Map([])), 
+                estateInputs.estateTexture, 
+                estateInputs.runCost || (new Map([])), 
                 affectedCoordinates,
-                inputs,
-                inputs.price || new Map(),
+                estateInputs,
+                estateInputs.price || new Map(),
                 3,
-                this.attributesService.getAttributesEstatesEffects(signal(inputs.attributes!), attrubitesInputs),
+                this.attributesService.getAttributesEstatesEffects(signal(cardInput.attributes!), attrubitesInputs),
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createMapInteractionAction(
                     createActionInfo, 
                     affectedCoordinates,
-                    inputs.attributes)
+                    cardInput.attributes)
                 : undefined,
                 (!!createActionInfo) ? this.skillMapActionFactoryService.createMapGatheringAction(
                     createActionInfo, 
                     affectedCoordinates)
                 : undefined,
-                inputs.producedResources,
-                inputs.tileBonus,
-                inputs.movementBonus,
-                inputs.cardsGenerated?.map(x=>this.injectorService.getActionCardInfoFactoryService().createCard(x)),
+                estateInputs.producedResources,
+                estateInputs.tileBonus,
+                estateInputs.movementBonus,
+                estateInputs.cardsGenerated?.map(x=>this.injectorService.getActionCardInfoFactoryService().createCard(x)),
                 usedCard,
-                inputs.estateTexture,
+                estateInputs.estateTexture,
                 mapEntityType
             )
         const estatesActionAndTileInfo =

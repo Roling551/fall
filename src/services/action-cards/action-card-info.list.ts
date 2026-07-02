@@ -133,6 +133,13 @@ export class ActionCardInfoList {
                     name: "danceJack",
                     type: "Estate",
                     skillRequired: new Map(),
+                    attributes: [{
+                        effect: {
+                            type: "Extraction",
+                            bonus: new Extraction(1)
+                        },
+                        multiplier: "NoEstates"
+                    }],
                     operation: {
                         name: "buildEstate",
                         estateInfo: {
@@ -140,13 +147,6 @@ export class ActionCardInfoList {
                             estateTexture: "dance-jack-on-map",
                             runCost: new Map([["oil", 2]]),
                             extraction: new Extraction(1),
-                            attributes: [{
-                                effect: {
-                                    type: "Extraction",
-                                    bonus: new Extraction(1)
-                                },
-                                multiplier: "NoEstates"
-                            }]
                         }
                     }
                 }

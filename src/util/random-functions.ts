@@ -20,3 +20,10 @@ export function randomNumberFromRange(minInclusive: number, maxExclusive: number
     }
     return Math.floor(randomNumber * (maxExclusive - minInclusive)) + minInclusive;
 }
+
+export function randomNumber(maxExclusive: number, randomNumber?: number) {
+    if(randomNumber == undefined) {
+        randomNumber = Math.random()
+    }
+    return Math.floor(randomNumber * (maxExclusive));
+}
