@@ -84,7 +84,7 @@ export class ActionCardInfoFactoryService {
             false,
             input.skillRequired,
             input,
-            [],
+            [action.actionDescription],
             1,
             cardUsesInfo
         )

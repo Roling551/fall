@@ -114,6 +114,12 @@ export class CardsOperationsService {
                     actionDescription: operationInput.reward.getTextParts()
                 }
             case "buildEstate":
+                let effectsDescriptions = computed(()=>{
+                    return [
+                        ...Estate.getEffectsDescriptionsFunction(operationInput.estateInfo)(), 
+                        ...(input.attributes ? this.attributesService.getAttributesDescribtions(input.attributes) : [])
+                    ]
+                })
                 return {
                     actionInfo: {
                         type: "Tile",
@@ -127,7 +133,7 @@ export class CardsOperationsService {
                         },
                         repeatNumber: operationInput.estateInfo.instancesNumber
                     },
-                    actionDescription: []
+                    actionDescription: effectsDescriptions().flatMap(x=>x)
                 }
         }
     }
@@ -139,13 +145,6 @@ export class CardsOperationsService {
         } : undefined
 
         const mapEntityType = estateInputs.isUpgrade ? "upgrade" : "estate"
-
-        let effectsDescriptions = computed(()=>{
-            return [
-                ...Estate.getEffectsDescriptionsFunction(estateInputs)(), 
-                ...(cardInput.attributes ? this.attributesService.getAttributesDescribtions(cardInput.attributes) : [])
-            ]
-        })
 
         const affectedCoordinates = estateInputs.affectedCoordinates || [new Coordinate(0,0)]
 

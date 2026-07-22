@@ -7,7 +7,7 @@ import { SimpleTile } from "../models/tile/simple-tile";
 import { getPlayersEstate } from "../models/tile/tile-util";
 import { SignalChangesEmitter } from "../util/set-changes";
 import { SignalsGroup } from "../util/signals-group";
-import { Resource } from "../models/resource";
+import { Resource, resourcesToTextParts } from "../models/resource";
 import { NumberMap } from "../util/number-map";
 import { Addable } from "../util/addable";
 import { EstateAttributeEffectBonus } from "../models/estate";
@@ -119,10 +119,19 @@ export class CardAttributesService {
         switch(attribute.multiplier) {
             case "Extractions":
                 describtion = describtion.concat(["For each neighbouring extractor "])
+                break
+            case "NoEstates":
+                describtion = describtion.concat(["For each neighbouring empty tile"])
+                break
         }
+        
         switch(attribute.effect.type) {
             case "Extraction":
                 describtion = describtion.concat(["gain ", ...attribute.effect.bonus.getTextParts()])
+                break
+            case "EstateRunCostReduction":
+                describtion = describtion.concat(["gain ", ...resourcesToTextParts(attribute.effect.bonus.map), " cost redution"])
+                break
         }
         return describtion
     }
