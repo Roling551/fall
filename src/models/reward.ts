@@ -6,7 +6,7 @@ import { TextPart } from "./text-part"
 
 export type RewardOption = {
     type: "Card",
-    cardName: CardIdentifier
+    card: CardInfo
 } | {
     type: "Resources",
     resources: Map<Resource, number>

@@ -10,13 +10,16 @@ import { RewardFactoryService } from "./reward-factory.service";
 import { randomNumberFromRange, randomValue } from "../util/random-functions";
 import { RandomCardService } from "./random-card.service";
 import { ActionCardInfo } from "../models/action-card-info";
+import { ActionCardInfoGeneratorService } from "./action-cards/action-card-info-generator.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LevelMapFactoryService {
 
-    constructor(private rewardFactoryService: RewardFactoryService, private randomCardService: RandomCardService) {}
+    constructor(
+        private rewardFactoryService: RewardFactoryService, 
+        private actionCardInfoGeneratorService: ActionCardInfoGeneratorService) {}
 
     tilePresets = new Map<string, () => EnvironmentMapEntity[]>([
         ["nothing", () => []],
@@ -44,12 +47,12 @@ export class LevelMapFactoryService {
                 undefined,
                 [
                     {
-                        chance: 0.15,
+                        chance: 0.3,
                         rewards:
                         () => [
                         this.rewardFactoryService.createReward({
                             type: "Card",
-                            cardName: this.randomCardService.getRandomByLevelAndRarity([[0.6, 0], [0.4, 1]])
+                            card: this.actionCardInfoGeneratorService.getActionCardInfo()
                         })] 
                     }
                 ]
