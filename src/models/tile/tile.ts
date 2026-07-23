@@ -5,7 +5,6 @@ import { Unit } from "../unit";
 import { Resource } from "../resource";
 import { Coordinate } from "../coordinate";
 import { Obstacles } from "../obstacles";
-import { Skill } from "../skill";
 import { Extraction } from "../extraction";
 
 

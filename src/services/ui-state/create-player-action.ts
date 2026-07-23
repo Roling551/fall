@@ -8,7 +8,6 @@ import { createForceSignal, ForceSignal } from "../../util/force-signal";
 import { BorderComponent } from "../../shared/border/border.component";
 import { CurrentLevelService } from "../current-level.service";
 import { CardInfo } from "../../models/card-info";
-import { Skill } from "../../models/skill";
 import { UnavaliableComponent } from "../../shared/unavaliable/unavaliable.component";
 import { BenefitsService } from "../benefits.service";
 

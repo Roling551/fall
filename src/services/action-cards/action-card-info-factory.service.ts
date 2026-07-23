@@ -6,7 +6,6 @@ import { CreateExtractionInfo, SkillMapActionFactoryService } from "../skill-map
 import { BorderComponent } from "../../shared/border/border.component";
 import { TileInfo, UIStateService } from "../ui-state/ui-state.service";
 import { CurrentLevelService } from "../current-level.service";
-import { Skill } from "../../models/skill";
 import { Resource, resourcesToTextParts } from "../../models/resource";
 import { getBorderInfo, getCreateEstateActionAndTileInfo, getCreateMultipleEstatesActionAndTileInfo } from "./actions-cards-functions";
 import { TurnActorsService } from "../turn-actors.service";
@@ -25,7 +24,6 @@ import { CardOperationInput, CardsOperationsService, EstateInfoInput } from "../
 export interface CardInput {
     name: string,
     type: ActionCardType,
-    skillRequired: Map<Skill, number>,
     attributes?: CardAttribute[];
     operation: CardOperationInput
 }
@@ -34,7 +32,6 @@ export interface CardOverlayCardInputs {
     name?: string,
     overlayedCardName: string,
     actionType: "buyCard",
-    skillRequired?: Map<Skill, number>,
     price?: Map<Resource, number>,
 }
 
@@ -82,7 +79,6 @@ export class ActionCardInfoFactoryService {
             input.type,
             action.actionInfo,
             false,
-            input.skillRequired,
             input,
             [action.actionDescription],
             1,
@@ -95,7 +91,6 @@ export class ActionCardInfoFactoryService {
         return new CardOverlayCardInfo(
             inputs.name || ("broken "+inputs.overlayedCardName),
             this.injectorService.getActionCardInfoList().getCardByIdentifier(inputs.overlayedCardName),
-            inputs.skillRequired,
             inputs.price
         )
     }

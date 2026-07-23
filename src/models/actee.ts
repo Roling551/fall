@@ -1,5 +1,4 @@
 import { Signal } from "@angular/core"
-import { Skill } from "./skill"
 import { Extraction } from "./extraction"
 
 export interface SkillResult {

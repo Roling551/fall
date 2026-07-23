@@ -1,7 +1,5 @@
 import { Signal, signal } from "@angular/core"
-import { createForceSignal } from "../../util/force-signal"
 import { MapEntity, SkillActionResult } from "../map-entity"
-import { Skill } from "../skill"
 import { Tile } from "./tile"
 import { Coordinate } from "../coordinate"
 import { Obstacles } from "../obstacles"

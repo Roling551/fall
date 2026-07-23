@@ -1,6 +1,5 @@
 import { computed, Signal, signal } from "@angular/core";
 import { Actee, SkillResult } from "./actee";
-import { Skill } from "./skill";
 import { Extraction } from "./extraction";
 import { ExtractableModifications, ExtractableSettings } from "./environment-map-entity";
 

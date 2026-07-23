@@ -15,7 +15,6 @@ import { CardAttribute, CardAttributesService } from "./card-attributes.service"
 import { TileBonus } from "../models/bonus";
 import { CreateExtractionInfo, SkillMapActionFactoryService } from "./skill-map-action-factory.service";
 import { Estate } from "../models/estate";
-import { Skill } from "../models/skill";
 import { getCreateEstateActionAndTileInfo } from "./action-cards/actions-cards-functions";
 import { CurrentLevelService } from "./current-level.service";
 import { TurnActorsService } from "./turn-actors.service";

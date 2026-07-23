@@ -22,7 +22,6 @@ const baseList: CardBase[] = [
         base: {
             name: "tick",
             type: "Estate",
-            skillRequired: new Map(),
             operation: {
                 name: "buildEstate",
                 estateInfo: {
@@ -42,7 +41,6 @@ const baseList: CardBase[] = [
         base: {
             name: "pin",
             type: "Estate",
-            skillRequired: new Map(),
             operation: {
                 name: "buildEstate",
                 estateInfo: {

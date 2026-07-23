@@ -6,7 +6,6 @@ import { Coordinate } from "./coordinate";
 import { KeyValuePair } from "./key-value-pair";
 import { Resource } from "./resource";
 import { Reward } from "./reward";
-import { Skill } from "./skill";
 import { TextPart } from "./text-part";
 import { Tile } from "./tile/tile";
 
@@ -24,7 +23,6 @@ export class ActionCardInfo extends CardInfo {
         public actionCardType: ActionCardType,
         public action: CardsActionInfo,
         public removeOnUse: boolean,
-        public requiredSkills: Map<Skill, number>,
         public inputsInfo: CardInput,
         public effectsDescriptions: TextPart[][],
         public maxDistance: number,

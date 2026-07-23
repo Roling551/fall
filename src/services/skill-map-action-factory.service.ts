@@ -1,5 +1,4 @@
 import { computed, Injectable, signal } from "@angular/core";
-import { Skill } from "../models/skill";
 import { Coordinate } from "../models/coordinate";
 import { Tile } from "../models/tile/tile";
 import { ResourcesService } from "./resources.service";

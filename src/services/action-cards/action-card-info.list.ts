@@ -6,7 +6,6 @@ import { Extraction } from "../../models/extraction";
 import { generateRangeCoordiantes } from "../../util/generate-coordinates";
 import { CardInfo } from "../../models/card-info";
 import { Resource } from "../../models/resource";
-import { Skill } from "../../models/skill";
 import { NumberMap } from "../../util/number-map";
 
 export type CardState = "regular" | "broken"
@@ -44,7 +43,6 @@ export class ActionCardInfoList {
                         name: "broken " + name,
                         overlayedCardName: name,
                         actionType: "buyCard",
-                        skillRequired: cost.skill,
                         price: cost.price
                     }
                 )
@@ -58,7 +56,7 @@ export class ActionCardInfoList {
         return identifiers.map(x=>this.getCardByIdentifier(x))
     }
 
-    private repairCostList = new Map<string, ()=>{price:Map<Resource, number>, skill:Map<Skill, number>}>([[
+    private repairCostList = new Map<string, ()=>{price:Map<Resource, number>}>([[
         "needle", ()=>({price:new Map([["plastic", 2]]), skill:new Map([["mining", 2]])})
     ]])
 
@@ -69,7 +67,6 @@ export class ActionCardInfoList {
                 {
                     name: "test",
                     type: "Instant",
-                    skillRequired: new Map(),
                     operation: {
                         name: "demolishEstate",
                         refundFraction: 1,
@@ -84,7 +81,6 @@ export class ActionCardInfoList {
                 {
                     name: "tick",
                     type: "Estate",
-                    skillRequired: new Map(),
                     operation: {
                         name: "buildEstate",
                         estateInfo: {
@@ -103,7 +99,6 @@ export class ActionCardInfoList {
                 {
                     name: "demolisher",
                     type: "Estate",
-                    skillRequired: new Map(),
                     operation: {
                         name: "buildEstate",
                         estateInfo: {
@@ -113,7 +108,6 @@ export class ActionCardInfoList {
                                 {
                                     name: "test",
                                     type: "Instant",
-                                    skillRequired: new Map(),
                                     operation: {
                                         name: "demolishEstate",
                                         refundFraction: 1,
@@ -132,7 +126,6 @@ export class ActionCardInfoList {
                 {
                     name: "danceJack",
                     type: "Estate",
-                    skillRequired: new Map(),
                     attributes: [{
                         effect: {
                             type: "Extraction",

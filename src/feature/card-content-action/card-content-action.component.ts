@@ -1,6 +1,5 @@
 import { Component, computed, Input } from '@angular/core';
 import { ActionCardInfo } from '../../models/action-card-info';
-import { skillsToTextPart } from '../../models/skill';
 import { resourcesToTextParts } from '../../models/resource';
 import { TextPart } from '../../models/text-part';
 import { TransformTextComponent } from '../../shared/transform-text/transform-text.component';
@@ -13,10 +12,6 @@ import { TransformTextComponent } from '../../shared/transform-text/transform-te
 })
 export class CardContentActionComponent {
     @Input({required: true}) card!: ActionCardInfo
-
-    requiredSkills = computed<TextPart[]>(()=>{
-        return skillsToTextPart(this.card.requiredSkills)
-    })
 
     price = computed(()=>{
         const price = this.card.price

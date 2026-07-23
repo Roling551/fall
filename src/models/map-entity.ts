@@ -3,7 +3,6 @@ import { createForceSignal, ForceSignal } from "../util/force-signal"
 import { LimitedSet } from "../util/limited-set"
 import { Building } from "./building"
 import { addExistingNumericalValues } from "../util/map-functions"
-import { Skill } from "./skill"
 import { Resource } from "./resource"
 import { Extraction } from "./extraction"
 

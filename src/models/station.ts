@@ -1,6 +1,5 @@
 import { Extraction } from "./extraction";
 import { MapEntity, MapEntityType } from "./map-entity";
-import { Skill } from "./skill";
 
 export class Station extends MapEntity {
     override type: MapEntityType = "station"
